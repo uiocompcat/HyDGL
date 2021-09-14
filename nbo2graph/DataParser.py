@@ -1,7 +1,9 @@
+from os import name
 from FileHandler import FileHandler
 from QmData import QmData
 
 import re
+from operator import add
 
 class DataParser:
     
@@ -37,6 +39,9 @@ class DataParser:
 
             if 'Wiberg bond index matrix' in self.lines[i]:
                 qmData.wibergIndexMatrix = self.extractWibergIndexMatrix(i + 4)
+
+            if 'Bond orbital / Coefficients / Hybrids' in self.lines[i]:
+                a = self.extractNboData(i + 2)
         
         return qmData
 
@@ -117,18 +122,154 @@ class DataParser:
         # setup nAtoms x nAtoms matrix for Wiberg indeces
         wibergIndexMatrix = [[0 for x in range(self.nAtoms)] for y in range(self.nAtoms)] 
 
-        for i in range(startIndex, startIndex + self.nAtoms, 1):
+        # counter for keeping track how many columns have been taken care of
+        # this is necessary because the Gaussian output file prints the Wiberg
+        # index matrix in blocks of columns
+        nColumnsProcessed = 0
+
+        # run until all columns have been processed
+        while nColumnsProcessed < self.nAtoms:
+
+            nColumns = None
+            for i in range(startIndex, startIndex + self.nAtoms, 1):
+                # split line at any white space
+                lineSplit = ' '.join(self.lines[i].split()).split(' ')
+                # drop first two columns so that only Wiberg indeces remain
+                lineSplit = lineSplit[2:]
+            
+                # check that the number of columns is the same
+                if nColumns == None:
+                    nColumns = len(lineSplit)
+                else:
+                    assert nColumns == len(lineSplit)
+
+                # read out data (index number based on Gaussian output format)
+                for j in range(len(lineSplit)):
+                    #if not wibergIndexMatrix[i-startIndex][j] == 0:
+                    #    print('Overwriting already set matrix element.')
+                    
+                    # write matrix element
+                    wibergIndexMatrix[i-startIndex][j + nColumnsProcessed] = float(lineSplit[j])
+
+            nColumnsProcessed += nColumns
+
+            # set startIndex to the next block
+            startIndex += self.nAtoms + 3
+
+        return wibergIndexMatrix
+
+    def extractNboData(self, startIndex):
+        
+        # output variable for lone pairs
+        lonePairData = [[0, [0,0,0,0]] for x in range(self.nAtoms)]
+
+        # variables for bond pairs
+        atomBondPairs = []
+        bondPairOccupations = []
+        bondPairData = []
+
+        i = startIndex
+
+        while not self.lines[i] == '':
+            
             # split line at any white space
             lineSplit = ' '.join(self.lines[i].split()).split(' ')
-            # drop first two columns so that only Wiberg indeces remain
-            lineSplit = lineSplit[2:]
-            # read out data (index number based on Gaussian output format)
-            for j in range(len(lineSplit)):
-                if not wibergIndexMatrix[i-startIndex][j] == 0:
-                    print('Overwriting already set matrix element.')
-                wibergIndexMatrix[i-startIndex][j] = float(lineSplit[j])
+            
+            if len(lineSplit) > 3:
 
-        print(wibergIndexMatrix)
+                # lone pairs
+                if lineSplit[2] == 'LP':
+                    atomPosition, occupations = self.extractLonePairData(i)
+                    lonePairData[atomPosition][0] += 1
+                    lonePairData[atomPosition][1] = list(map(add, lonePairData[atomPosition][1], occupations)) 
+
+                # bonds
+                if lineSplit[2] == 'BD':
+                    atomPositions, occupations = self.extractBondingData(i)
+
+                    # check if bond pair already exists
+                    # if so, add together
+                    # otherwise make new entry
+                    if atomPositions in atomBondPairs:
+                        bondPairIndex = atomBondPairs.index(atomPositions)
+                        bondPairOccupations[bondPairIndex] = list(map(add, bondPairOccupations[bondPairIndex], occupations))
+                    else:
+                        atomBondPairs.append(atomPositions)
+                        bondPairOccupations.append(occupations)
+
+            i += 1
+
+        # normalise lone pair occupations to sum to 1
+        for i in range(len(lonePairData)):
+            # only normalise when there is a significant difference that is not due to rounding errors
+            if sum(lonePairData[i][1]) > 1.1:
+                lonePairData[i][1] = [float(x)/sum(lonePairData[i][1]) for x in lonePairData[i][1]]
+
+        # normalise bond pair occupations to sum to 1
+        for i in range(len(bondPairOccupations)):
+            # only normalise when there is a significant difference that is not due to rounding errors
+            if sum(bondPairOccupations[i]) > 1.1:
+                bondPairOccupations[i] = [float(x)/sum(bondPairOccupations[i]) for x in bondPairOccupations[i]]
+
+        # build bond pair data
+        # check that atom position list and occupation list have the same length
+        if not len(atomBondPairs) == len(bondPairOccupations):
+            raise Exception('Length of extracted data arrays is not equal.')
+        else:
+            for i in range(len(atomBondPairs)):
+                bondPairData.append([atomBondPairs[i], bondPairOccupations[i]])
+
+        print(bondPairData)
+
+    def extractLonePairData(self, startIndex):
+
+        # obtain atom position
+        lineSplit = list(filter(None, re.split(r'\(|\)| ', self.lines[startIndex])))[5:]
+        atomPosition = int(lineSplit[0]) - 1
+
+        # get occupation from both lines using regex (values in brackets)
+        mergedLines = (self.lines[startIndex] + self.lines[startIndex + 1]).replace(' ', '')
+        result = re.findall('\((.{3,5})%\)', mergedLines)
+        occupations = list(map(float, result))
+
+        # return atom position for assignment in list
+        # divide occupations by 100 (get rid of %)
+        return atomPosition, [x / 100 for x in occupations]
+
+    def extractBondingData(self, startIndex):
+
+        # obtain atom positions
+        lineSplit = list(filter(None, re.split(r'\(|\)|-| ', self.lines[startIndex])))[4:]
+        atomPositions = [int(lineSplit[-3]) - 1, int(lineSplit[-1]) - 1]
+
+        # get occupation from both lines using regex (values in brackets)
+        mergedLines = (self.lines[startIndex + 1] + self.lines[startIndex + 2]).replace(' ', '')
+        result = re.findall('\((.{3,5})%\)', mergedLines)
+        occupations1 = list(map(float, result))[1:]
+        # append zeros to account for atoms that do not have higher orbital types
+        while len(occupations1) < 4:
+            occupations1.append(0)
+
+        # find line with second data
+        i = startIndex + 3
+        while not '(' in self.lines[i]:
+            i += 1
+
+        # get occupation from both lines using regex (values in brackets)
+        mergedLines = (self.lines[i] + self.lines[i + 1]).replace(' ', '')
+        result = re.findall('\((.{3,5})%\)', mergedLines)
+        occupations2 = list(map(float, result))[1:]
+        # append zeros to account for atoms that do not have higher orbital types
+        while len(occupations2) < 4:
+            occupations2.append(0)
+
+        # add contributions from both parts
+        occupations = list(map(add, occupations1, occupations2))
+
+        # return atom position for assignment in list
+        # divide occupations by 200 (average and get rid of %)
+        return atomPositions, [x / 200 for x in occupations]
+
 
     def getNumberOfAtoms(self):
 
