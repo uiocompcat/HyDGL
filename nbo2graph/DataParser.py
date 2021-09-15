@@ -41,7 +41,7 @@ class DataParser:
                 qmData.wibergIndexMatrix = self.extractWibergIndexMatrix(i + 4)
 
             if 'Bond orbital / Coefficients / Hybrids' in self.lines[i]:
-                a = self.extractNboData(i + 2)
+                qmData.lonePairData, qmData.loneVacancyData, qmData.bondPairData = self.extractNboData(i + 2)
         
         return qmData
 
@@ -145,9 +145,6 @@ class DataParser:
 
                 # read out data (index number based on Gaussian output format)
                 for j in range(len(lineSplit)):
-                    #if not wibergIndexMatrix[i-startIndex][j] == 0:
-                    #    print('Overwriting already set matrix element.')
-                    
                     # write matrix element
                     wibergIndexMatrix[i-startIndex][j + nColumnsProcessed] = float(lineSplit[j])
 
@@ -161,17 +158,29 @@ class DataParser:
     def extractNboData(self, startIndex):
         
         # output variable for lone pairs
-        lonePairData = [[0, [0,0,0,0]] for x in range(self.nAtoms)]
+        lonePairAtomPositions = []
+        lonePairCounts = []
+        lonePairOccupations = []
+        # final output variable
+        lonePairData = [] #[[0, [0,0,0,0]] for x in range(self.nAtoms)]
 
         # variables for bond pairs
-        atomBondPairs = []
+        bondPairAtomPositions = []
         bondPairOccupations = []
+        # final output variable
         bondPairData = []
+
+        # variables for lone vacancy
+        loneVacancyAtomPositions = []
+        loneVacancyCounts = []
+        loneVacancyOccupations = []
+        # final output variable
+        loneVacancyData = []
 
         i = startIndex
 
         while not self.lines[i] == '':
-            
+
             # split line at any white space
             lineSplit = ' '.join(self.lines[i].split()).split(' ')
             
@@ -180,30 +189,74 @@ class DataParser:
                 # lone pairs
                 if lineSplit[2] == 'LP':
                     atomPosition, occupations = self.extractLonePairData(i)
-                    lonePairData[atomPosition][0] += 1
-                    lonePairData[atomPosition][1] = list(map(add, lonePairData[atomPosition][1], occupations)) 
+                    
+                    # deprecated
+                    #lonePairData[atomPosition][0] += 1
+                    #lonePairData[atomPosition][1] = list(map(add, lonePairData[atomPosition][1], occupations)) 
+
+                    # check if lone pair atom already exists
+                    # if so add together
+                    # otherwise make new entry (with count 1)
+                    if atomPosition in lonePairAtomPositions:
+                        lonePairIndex = lonePairAtomPositions.index(atomPosition)
+                        lonePairCounts[lonePairIndex] += 1
+                        lonePairOccupations[lonePairIndex] = list(map(add, lonePairOccupations[lonePairIndex], occupations))
+                    else:
+                        lonePairAtomPositions.append(atomPosition)
+                        lonePairCounts.append(1)
+                        lonePairOccupations.append(occupations)
 
                 # bonds
                 if lineSplit[2] == 'BD':
                     atomPositions, occupations = self.extractBondingData(i)
+                    
+                    # sort to ensure correct compare behaviour
+                    atomPositions.sort()
 
                     # check if bond pair already exists
                     # if so, add together
                     # otherwise make new entry
-                    if atomPositions in atomBondPairs:
-                        bondPairIndex = atomBondPairs.index(atomPositions)
+                    if atomPositions in bondPairAtomPositions:
+                        bondPairIndex = bondPairAtomPositions.index(atomPositions)
                         bondPairOccupations[bondPairIndex] = list(map(add, bondPairOccupations[bondPairIndex], occupations))
                     else:
-                        atomBondPairs.append(atomPositions)
+                        bondPairAtomPositions.append(atomPositions)
                         bondPairOccupations.append(occupations)
+
+                # lone vacancy
+                # TODO
+                if lineSplit[2] == 'LV':
+                    atomPosition, occupations = self.extractLonePairData(i)
+
+                    # check if lone vacancy atom already exists
+                    # if so add together
+                    # otherwise make new entry (with count 1)
+                    if atomPosition in loneVacancyAtomPositions:
+                        loneVacancyIndex = loneVacancyAtomPositions.index(atomPosition)
+                        loneVacancyCounts[loneVacancyIndex] += 1
+                        loneVacancyOccupations[loneVacancyIndex] = list(map(add, loneVacancyOccupations[loneVacancyIndex], occupations))
+                    else:
+                        loneVacancyAtomPositions.append(atomPosition)
+                        loneVacancyCounts.append(1)
+                        loneVacancyOccupations.append(occupations)
+
 
             i += 1
 
         # normalise lone pair occupations to sum to 1
-        for i in range(len(lonePairData)):
+        for i in range(len(lonePairOccupations)):
             # only normalise when there is a significant difference that is not due to rounding errors
-            if sum(lonePairData[i][1]) > 1.1:
-                lonePairData[i][1] = [float(x)/sum(lonePairData[i][1]) for x in lonePairData[i][1]]
+            if sum(lonePairOccupations[i]) > 1.1:
+                lonePairOccupations[i] = [float(x)/sum(lonePairOccupations[i]) for x in lonePairOccupations[i]]
+
+        # build lone pair data
+        # check that atom position list, lone pair count list and occupation list have the same length
+        if not len(lonePairAtomPositions) == len(lonePairCounts) or \
+           not len(lonePairAtomPositions) == len(lonePairOccupations):
+            raise Exception('Length of extracted data arrays is not equal.')
+        else:
+            for i in range(len(lonePairAtomPositions)):
+                lonePairData.append([lonePairAtomPositions[i], lonePairCounts[i], lonePairOccupations[i]])
 
         # normalise bond pair occupations to sum to 1
         for i in range(len(bondPairOccupations)):
@@ -213,13 +266,28 @@ class DataParser:
 
         # build bond pair data
         # check that atom position list and occupation list have the same length
-        if not len(atomBondPairs) == len(bondPairOccupations):
+        if not len(bondPairAtomPositions) == len(bondPairOccupations):
             raise Exception('Length of extracted data arrays is not equal.')
         else:
-            for i in range(len(atomBondPairs)):
-                bondPairData.append([atomBondPairs[i], bondPairOccupations[i]])
+            for i in range(len(bondPairAtomPositions)):
+                bondPairData.append([bondPairAtomPositions[i], bondPairOccupations[i]])
 
-        print(bondPairData)
+        # normalise lone vacancy occupations to sum to 1
+        for i in range(len(loneVacancyOccupations)):
+            # only normalise when there is a significant difference that is not due to rounding errors
+            if sum(loneVacancyOccupations[i]) > 1.1:
+                loneVacancyOccupations[i] = [float(x)/sum(loneVacancyOccupations[i]) for x in loneVacancyOccupations[i]]
+
+        # build lone vacancy data
+        # check that atom position list, lone vacancy count list and occupation list have the same length
+        if not len(loneVacancyAtomPositions) == len(loneVacancyCounts) or \
+           not len(loneVacancyAtomPositions) == len(loneVacancyOccupations):
+            raise Exception('Length of extracted data arrays is not equal.')
+        else:
+            for i in range(len(loneVacancyAtomPositions)):
+                lonePairData.append([loneVacancyAtomPositions[i], loneVacancyCounts[i], loneVacancyOccupations[i]])
+
+        return lonePairData, loneVacancyData, bondPairData
 
     def extractLonePairData(self, startIndex):
 
