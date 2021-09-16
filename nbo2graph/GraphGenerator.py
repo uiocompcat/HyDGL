@@ -14,25 +14,21 @@ class GraphGenerator:
         self.qmData = qmData
 
         # TODO these are parameters that need to be adaptable
-        self.wibergBondThreshold = 0.1
+        self.wibergBondThreshold = 0.3
         self.hydrogenMode = HydrogenMode.Implicit
 
     def generateGraph(self):
 
-
-        edges = self.getEdges()
-
+        # get nodes and edges
         nodes = self.getNodes()
+        edges = self.getEdges()
 
         # check validity of nodes
         self.validateNodeList(nodes)
         # check validity of edges
-        self.validateEdgeList(edges)
-        #print(nodes)
+        self.validateEdgeList(edges, len(nodes))
 
-        print(edges)
-
-        return 0
+        return { 'nodes': nodes, 'edges': edges }
 
     def getEdges(self):
 
@@ -46,6 +42,7 @@ class GraphGenerator:
                 
                 # if larger than threshold --> add bond
                 if self.qmData.wibergIndexMatrix[i][j] > self.wibergBondThreshold:
+                   
                     # append the atom indeces (pos 0)
                     # and Wiberg bond index as a feature (pos 1)
 
@@ -59,6 +56,15 @@ class GraphGenerator:
                         else:
                             edges.append([[i, j], [self.qmData.wibergIndexMatrix[i][j]]])
 
+        # rescale node referenes in edges if explicit hydrogens were omitted
+        if self.hydrogenMode == HydrogenMode.Omit or self.hydrogenMode == HydrogenMode.Implicit:
+            # get list of indeces in use
+            bondAtomIndeces = list(set([item for sublist in [x[0] for x in edges] for item in sublist]))
+            bondAtomIndeces.sort()
+            # loop through edges an replace node references
+            for i in range(len(edges)):
+                edges[i][0][0] = bondAtomIndeces.index(edges[i][0][0])
+                edges[i][0][1] = bondAtomIndeces.index(edges[i][0][1])
 
         # add additional (NBO) features to edges
         for i in range(len(edges)):
@@ -85,17 +91,18 @@ class GraphGenerator:
         if self.hydrogenMode == HydrogenMode.Implicit:
             for i in range(self.qmData.nAtoms):
                 # skip hydrogens
-                if self.qmData.atomicNumber[i] == 1:
-                    continue
-                    
-                
+                if self.qmData.atomicNumbers[i] == 1:
+                    hydrogenCounts.append(0)
+                else:
+                    # determine hydrogen count
+                    hydrogenCounts.append(self.determineHydrogenCount(i))
 
         nodes = []
         for i in range(self.qmData.nAtoms):
 
-            # skip if hydrogen mode is note explicit
+            # skip if hydrogen mode is not explicit
             if self.hydrogenMode == HydrogenMode.Omit or self.hydrogenMode == HydrogenMode.Implicit:
-                if self.qmData.atomicNumber[i] == 1:
+                if self.qmData.atomicNumbers[i] == 1:
                     continue
 
             # set up features for node
@@ -123,8 +130,9 @@ class GraphGenerator:
             else:
                 node.extend([0,0,0,0,0])
 
+            # add implicit hydrogens
             if self.hydrogenMode == HydrogenMode.Implicit:
-                print(1)
+                node.append(hydrogenCounts[i])
 
             # append fully featurised node to nodes list
             nodes.append(node)
@@ -133,21 +141,39 @@ class GraphGenerator:
 
         return nodes
 
+    def determineHydrogenCount(self, atomIndex):
+
+        # checking NBO data for bonds to H of specified atom index
+        # TODO consider Wiberg index matrix?
+
+        hydrogenCount = 0
+        for i in range(len(self.qmData.bondPairData)):
+        
+            if atomIndex in self.qmData.bondPairData[i][0]:
+                
+                # get the index of the connected atom
+                connectedAtomIndex = self.qmData.bondPairData[i][0][(self.qmData.bondPairData[i][0].index(atomIndex) + 1) % 2]
+
+                # check if that atom is a hydrogen
+                if self.qmData.atomicNumbers[connectedAtomIndex]:
+                    hydrogenCount += 1
+
+        return hydrogenCount
+
     def validateNodeList(self, nodes):
         
-        # check that there are as many nodes as atoms in the system
-        assert len(nodes) == self.qmData.nAtoms
-
         # check that all node vectors have the same length
         for i in range(1, len(nodes), 1):
             assert len(nodes[i]) == len(nodes[0])
     
-    def validateEdgeList(self, edges):
+    def validateEdgeList(self, edges, nNodes):
 
-        # check that all edges are defined by two atom indeces
-        # check that all edges have feature vectors of the same length
         for i in range(1, len(edges), 1):
-
+            
+            # check that all edges are defined by two atom indeces
             assert len(edges[0][0]) == len(edges[i][0])
+            # check that all edges have feature vectors of the same length
             assert len(edges[0][1]) == len(edges[i][1])
-        
+            # check that the edge index identifier are within the range of the number of atoms
+            assert edges[i][0][0] < nNodes
+            assert edges[i][0][1] < nNodes

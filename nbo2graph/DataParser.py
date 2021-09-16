@@ -189,10 +189,6 @@ class DataParser:
                 # lone pairs
                 if lineSplit[2] == 'LP':
                     atomPosition, occupations = self.extractLonePairData(i)
-                    
-                    # deprecated
-                    #lonePairData[atomPosition][0] += 1
-                    #lonePairData[atomPosition][1] = list(map(add, lonePairData[atomPosition][1], occupations)) 
 
                     # check if lone pair atom already exists
                     # if so add together
