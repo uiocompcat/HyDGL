@@ -18,15 +18,41 @@ class ElementLookUpTable():
 
     @staticmethod
     def getElementIdentifier(atomicNumber):
+
+        """Returns the appropriate element identifier based on a given atomic number.
+
+        Args:
+            atomicNumber (int): The query atomic number.
+
+        Raises:
+            ValueError: If the atomic number does not exist.
+
+        Returns:
+            string: The element identifier.
+        """
+
         if atomicNumber <= len(ElementLookUpTable.elementIdentifiers) and atomicNumber > 0:
             return ElementLookUpTable.elementIdentifiers[atomicNumber - 1]
         else:
-            raise ValueError('Invalid atomic number, must be in range 1-118')
+            raise ValueError('Invalid atomic number, must be in range 1-118.')
     
     @staticmethod
     def getAtomicNumber(elementIdentifier):
+
+        """Returns the appropriate atomic number based on a given element identifier.
+
+        Args:
+            elementIdentifier (string): The query element identifier.
+
+        Raises:
+            ValueError: If the element identifier does not exist.
+
+        Returns:
+            int: The atomic number.
+        """
+
         if elementIdentifier.lower() in [x.lower() for x in ElementLookUpTable.elementIdentifiers]:
             elementIndex = [x.lower() for x in ElementLookUpTable.elementIdentifiers].index(elementIdentifier.lower())
             return elementIndex + 1
         else:
-            raise ValueError('Requested element identifier does not exist')
+            raise ValueError('Requested element identifier does not exist.')

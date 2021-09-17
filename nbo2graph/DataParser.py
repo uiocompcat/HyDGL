@@ -1,9 +1,10 @@
-from os import name
+import re
+from operator import add
+
 from FileHandler import FileHandler
 from QmData import QmData
 
-import re
-from operator import add
+
 
 class DataParser:
     
@@ -15,6 +16,7 @@ class DataParser:
         Args:
             filePath (string): Path to the QM Output file.
         """
+
         self.data = FileHandler.readFile(filePath)
         self.lines = self.data.split('\n')
         self.nAtoms = self.getNumberOfAtoms()
@@ -119,7 +121,7 @@ class DataParser:
 
     def extractWibergIndexMatrix(self, startIndex):
 
-        # setup nAtoms x nAtoms matrix for Wiberg indeces
+        # setup nAtoms x nAtoms matrix for Wiberg indices
         wibergIndexMatrix = [[0 for x in range(self.nAtoms)] for y in range(self.nAtoms)] 
 
         # counter for keeping track how many columns have been taken care of
@@ -134,7 +136,7 @@ class DataParser:
             for i in range(startIndex, startIndex + self.nAtoms, 1):
                 # split line at any white space
                 lineSplit = ' '.join(self.lines[i].split()).split(' ')
-                # drop first two columns so that only Wiberg indeces remain
+                # drop first two columns so that only Wiberg indices remain
                 lineSplit = lineSplit[2:]
             
                 # check that the number of columns is the same

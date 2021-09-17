@@ -2,10 +2,12 @@ from DataParser import DataParser
 from GraphGenerator import GraphGenerator
 from FileHandler import FileHandler
 
+from HydrogenMode import HydrogenMode
+
+from ElementLookUpTable import ElementLookUpTable
+
 import matplotlib.pyplot as plt
 import networkx as nx
-import torch
-from torch_geometric.data import Data
 from torch_geometric.utils.convert import to_networkx
 
 # parse data
@@ -13,20 +15,25 @@ dp = DataParser('/home/hkneiding/Desktop/full_Gaussian_file_AGOKEN.log')
 qmData = dp.parse()
 
 # build graph
-gg = GraphGenerator(qmData)
+gg = GraphGenerator(qmData, wibergBondThreshold=0.15, hydrogenMode=HydrogenMode.Implicit)
 graph = gg.generateGraph()
 
-# print(graph)
-# FileHandler.writeMolFile('/home/hkneiding/Desktop/test.mol', graph)
+graph.writeMolFile('/home/hkneiding/Desktop/test.mol')
 
-print(graph['nodes'])
+# pytorch
 
-edge_index = torch.tensor([[0, 1, 1, 2],
-                           [1, 0, 2, 1]], dtype=torch.long)
-x = torch.tensor([[-1], [0], [1]], dtype=torch.float)
+pytorchGraphData = graph.getPytorchDataObject()
+G = to_networkx(pytorchGraphData)
 
-data = Data(x=x, edge_index=edge_index)
-G = to_networkx(data)
+nodeLabelDict = {}
+for i in range(len(graph.nodes)):
+    # nodeLabelDict[i] = ElementLookUpTable.getElementIdentifier(graph.nodes[i][0])
+    nodeLabelDict[i] = graph.nodes[i][-1]
 
-nx.draw_networkx(G)
+
+nx.draw_networkx(G, labels=nodeLabelDict, with_labels=True)
 plt.show()
+
+
+
+
