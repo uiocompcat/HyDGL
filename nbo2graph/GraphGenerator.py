@@ -1,5 +1,7 @@
+from torch_geometric.data.data import Data
 from Graph import Graph
 from QmData import QmData
+from DataParser import DataParser
 from HydrogenMode import HydrogenMode
 
 class GraphGenerator:
@@ -26,16 +28,34 @@ class GraphGenerator:
         if wibergHydrogenCountThreshold == None:
             self.wibergHydrogenCountThreshold = self.wibergBondThreshold
 
+    @classmethod
+    def fromFile(cls, filePath: str, wibergBondThreshold=0.3, wibergHydrogenCountThreshold=None, hydrogenMode=HydrogenMode.Explicit):
+        
+        """Alternative constructor directly building from file
+
+        Args:
+            filePath (str): Filepath to the Gaussian output.
+            wibergBondThreshold (float): Threshold value defining the lower bound for considering bonds.
+            wibergHydrogenCountThreshold(float): Threshold value defining the lower bound for considering hydrogens as bound for implicit mode.
+            hydrogenMode (HydrogenMode): Operation mode defining the way to handle hydrogens.
+        """
+
+        dp = DataParser(filePath)
+        return cls(dp.parse(), wibergBondThreshold, wibergHydrogenCountThreshold, hydrogenMode)
+
     def generateGraph(self):
 
-        # get nodes and edges
+        # get edges
         nodes = self.getNodes()
-        edges = self.getEdges()
-
         # check validity of nodes
         self.validateNodeList(nodes)
+
+        # get edges
+        edges = self.getEdges()
         # check validity of edges
         self.validateEdgeList(edges, len(nodes))
+
+        # get attributes
 
         return Graph(nodes, edges)
 
@@ -181,6 +201,6 @@ class GraphGenerator:
             assert edges[i][0][0] != edges[i][0][1]
             # check that all edges have feature vectors of the same length
             assert len(edges[0][1]) == len(edges[i][1])
-            # check that the edge index identifier are within the range of the number of atoms
+            # check that the edge index identifiers are within the range of the number of atoms
             assert edges[i][0][0] < nNodes
             assert edges[i][0][1] < nNodes

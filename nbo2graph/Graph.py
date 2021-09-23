@@ -9,14 +9,16 @@ class Graph:
 
     """Class for reading relevant data from QM output files."""
 
-    def __init__(self, nodes, edges):
+    def __init__(self, nodes, edges, attributes=None):
+
         """Constructor
 
         Args:
-            nodes (list[floats]): List of node features.
+            nodes (list[list[floats]]): List of node features.
             edges (list[list[int], list[float]]): List with individual sublists for connected node indices as well as edge features.
         """
 
+        self.attributes = attributes
         self.nodes = nodes
         self.edges = edges
 
@@ -61,9 +63,16 @@ class Graph:
         for i in range(len(self.nodes)):
             data += '    0.0000    0.0000    0.0000 ' + ElementLookUpTable.getElementIdentifier(self.nodes[i][0]).ljust(5, ' ') + '0  0  0  0  0  0  0  0  0  0  0  0\n'
 
-        # TODO atm all edges are set to bond order 1
+        # bond order is read out from first position in edge feature vector
         for i in range(len(self.edges)):
-            data += str(self.edges[i][0][0] + 1).rjust(3, ' ') + str(self.edges[i][0][1] + 1).rjust(3, ' ') + '  1  0  0  0  0 \n'
+
+            bondOrder = 1
+            if self.edges[i][1][0] > 1.5:
+                bondOrder = 2
+            if self.edges[i][1][0] > 2.5:                
+                bondOrder = 3
+
+            data += str(self.edges[i][0][0] + 1).rjust(3, ' ') + str(self.edges[i][0][1] + 1).rjust(3, ' ') + str(bondOrder).rjust(3, ' ') + '  0  0  0  0 \n'
 
         data += 'M  END'
         FileHandler.writeFile(filePath, data)

@@ -1,31 +1,46 @@
 import re
 from operator import add
+from matplotlib.colors import LinearSegmentedColormap
+
+from networkx.generators import line
 
 from FileHandler import FileHandler
 from QmData import QmData
 
-
-
 class DataParser:
     
-    """Class for reading relevant data from QM output files."""
+    """Class for reading relevant data from Gaussian output files."""
 
     def __init__(self, filePath):
+
         """Constructor
 
         Args:
-            filePath (string): Path to the QM Output file.
+            filePath (string): Path to the Gaussian output file.
         """
 
+        self.filePath = filePath
         self.data = FileHandler.readFile(filePath)
         self.lines = self.data.split('\n')
         self.nAtoms = self.getNumberOfAtoms()
 
     def parse(self):
 
+        # output variable
         qmData = QmData()
         qmData.nAtoms = self.nAtoms
+
+        # get csd token from file name
+        qmData.csdIdentifier = ''.join(self.filePath.split('/')[-1].split('.')[0:-1])
+
+        # variable that shows if scan is currently in SVP or TZVP region of output file
+        regionState = ''
         for i in range(len(self.lines)):
+
+            if 'def2SVP' in self.lines[i]:
+                regionState = 'svp'
+            elif 'def2TZVP' in self.lines[i]:
+                regionState = 'tzvp'
 
             # search for keywords and if found call appropriate functions with start index
             # the start index addition offset is based on the Gaussian output format
@@ -45,7 +60,151 @@ class DataParser:
             if 'Bond orbital / Coefficients / Hybrids' in self.lines[i]:
                 qmData.lonePairData, qmData.loneVacancyData, qmData.bondPairData = self.extractNboData(i + 2)
         
+            if 'Charge = ' in self.lines[i]:
+                qmData.charge = self.extractCharge(i)
+
+            if 'Stoichiometry' in self.lines[i]:
+                qmData.stoichiometry = self.extractStoichiometry(i)
+
+            if 'Molecular mass' in self.lines[i]:
+                qmData.molecularMass = self.extractMolecularMass(i)
+
+            if 'Grimme-D3(BJ) Dispersion energy=' in self.lines[i]:
+                if regionState == 'svp':
+                    qmData.svpDispersionEnergy = self.extractDispersionEnergy(i)
+                elif regionState == 'tzvp':
+                    qmData.tzvpDispersionEnergy = self.extractDispersionEnergy(i)
+
+            if 'SCF Done' in self.lines[i]:
+                if regionState == 'svp':
+                    qmData.svpElectronicEnergy = self.extractElectronicEnergy(i)
+                elif regionState == 'tzvp':
+                    qmData.tzvpElectronicEnergy = self.extractElectronicEnergy(i)
+
+            if 'Dipole moment (field-independent basis, Debye)' in self.lines[i]:
+                if regionState == 'svp':
+                    qmData.svpDipoleMoment = self.extractDipoleMoment(i + 1)
+                elif regionState == 'tzvp':
+                    qmData.tzvpDipoleMoment = self.extractDipoleMoment(i + 1)
+            
+            if 'Isotropic polarizability' in self.lines[i]:
+                qmData.polarisability = self.extractPolarisability(i)
+
+            if 'Frequencies -- ' in self.lines[i]:
+                if qmData.frequencies == None:
+                    qmData.frequencies = self.extractFrequency(i)
+                else:
+                    qmData.frequencies.extend(self.extractFrequency(i))
+
+            if 'Zero-point correction=' in self.lines[i]:
+                qmData.zpeCorrection = self.extractZpeCorrection(i)
+
+            if 'Sum of electronic and thermal Enthalpies=' in self.lines[i]:
+                qmData.enthalpyEnergy = self.extractEnthalpyEnergy(i)
+
+            if 'Sum of electronic and thermal Free Energies=' in self.lines[i]:
+                qmData.gibbsEnergy = self.extractGibbsEnergy(i)
+                qmData.heatCapacity = self.extractHeatCapacity(i + 4)
+                qmData.entropy = self.extractEntropy(i + 4)
+
+            if 'Alpha  occ. eigenvalues' in self.lines[i]:
+                if regionState == 'svp':
+                    if qmData.svpOccupiedOrbitalEnergies == None:
+                        qmData.svpOccupiedOrbitalEnergies = self.extractOrbitalEnergies(i)
+                    else:
+                        qmData.svpOccupiedOrbitalEnergies.extend(self.extractOrbitalEnergies(i))
+                elif regionState == 'tzvp':
+                    if qmData.tzvpOccupiedOrbitalEnergies == None:
+                        qmData.tzvpOccupiedOrbitalEnergies = self.extractOrbitalEnergies(i)
+                    else:    
+                        qmData.tzvpOccupiedOrbitalEnergies.extend(self.extractOrbitalEnergies(i))
+
+            if 'Alpha virt. eigenvalues' in self.lines[i]:
+                if regionState == 'svp':
+                    if qmData.svpVirtualOrbitalEnergies == None:
+                        qmData.svpVirtualOrbitalEnergies = self.extractOrbitalEnergies(i)
+                    else:
+                        qmData.svpVirtualOrbitalEnergies.extend(self.extractOrbitalEnergies(i))
+                elif regionState == 'tzvp':
+                    if qmData.tzvpVirtualOrbitalEnergies == None:
+                        qmData.tzvpVirtualOrbitalEnergies = self.extractOrbitalEnergies(i)
+                    else:    
+                        qmData.tzvpVirtualOrbitalEnergies.extend(self.extractOrbitalEnergies(i))
+
+        # calculate extra properties such as delta values, HOMO, LUMU, etc.
+        qmData.calculateProperties()
+
         return qmData
+
+    def extractCharge(self, startIndex):
+
+        lineSplit = self.lines[startIndex].split()
+        return int(lineSplit[2])
+
+    def extractStoichiometry(self, startIndex):
+
+        lineSplit = self.lines[startIndex].split()
+        return lineSplit[1]
+
+    def extractMolecularMass(self, startIndex):
+
+        lineSplit = self.lines[startIndex].split()
+        return float(lineSplit[2])
+
+    def extractDispersionEnergy(self, startIndex):
+
+        lineSplit = self.lines[startIndex].split()
+        return float(lineSplit[4])
+
+    def extractElectronicEnergy(self, startIndex):
+
+        lineSplit = self.lines[startIndex].split()
+        return float(lineSplit[4])
+
+    def extractDipoleMoment(self, startIndex):
+
+        lineSplit = self.lines[startIndex].split()
+        return float(lineSplit[7])
+
+    def extractPolarisability(self, startIndex):
+
+        lineSplit = self.lines[startIndex].split()
+        return float(lineSplit[5])
+
+    def extractFrequency(self, startIndex):
+
+        lineSplit = self.lines[startIndex].split()
+        return list(map(float, lineSplit[2:]))
+
+    def extractOrbitalEnergies(self, startIndex):
+
+        lineSplit = self.lines[startIndex].split()
+        return list(map(float, lineSplit[4:]))
+
+    def extractEnthalpyEnergy(self, startIndex):
+
+        lineSplit = self.lines[startIndex].split()
+        return float(lineSplit[6])
+
+    def extractGibbsEnergy(self, startIndex):
+
+        lineSplit = self.lines[startIndex].split()
+        return float(lineSplit[7])
+
+    def extractZpeCorrection(self, startIndex):
+
+        lineSplit = self.lines[startIndex].split()
+        return float(lineSplit[2])
+
+    def extractHeatCapacity(self, startIndex):
+
+        lineSplit = self.lines[startIndex].split()
+        return float(lineSplit[2])
+
+    def extractEntropy(self, startIndex):
+
+        lineSplit = self.lines[startIndex].split()
+        return float(lineSplit[3])
 
     def extractAtomicNumbers(self, startIndex):
 
@@ -53,7 +212,7 @@ class DataParser:
 
         for i in range(startIndex, startIndex + self.nAtoms, 1):
             # split line at any white space
-            lineSplit = ' '.join(self.lines[i].split()).split(' ')
+            lineSplit = self.lines[i].split()
             # read out data (index number based on Gaussian output format)
             atomicNumbers.append(int(lineSplit[1]))
         
@@ -65,7 +224,7 @@ class DataParser:
 
         for i in range(startIndex, startIndex + self.nAtoms, 1):
             # split line at any white space
-            lineSplit = ' '.join(self.lines[i].split()).split(' ')
+            lineSplit = self.lines[i].split()
             # read out data (index number based on Gaussian output format)
             xyz = [float(lineSplit[3]), float(lineSplit[4]), float(lineSplit[5])]
             geometricData.append(xyz)
@@ -78,7 +237,7 @@ class DataParser:
 
         for i in range(startIndex, startIndex + self.nAtoms, 1):
             # split line at any white space
-            lineSplit = ' '.join(self.lines[i].split()).split(' ')
+            lineSplit = self.lines[i].split()
             # read out data (index number based on Gaussian output format)
             naturalAtomicCharges.append(float(lineSplit[2]))
         
@@ -94,7 +253,7 @@ class DataParser:
             electronConfiguration = [0, 0, 0, 0]
 
             # split line at any white space
-            lineSplit = ' '.join(self.lines[i].split()).split(' ')
+            lineSplit = self.lines[i].split()
             # remove first two columns of data, rejoin and remove '[core]'
             lineCleaned = ''.join(lineSplit[2:]).replace('[core]', '')
             # split at '(' and ')' so that orbital type and config can be extracted
@@ -135,7 +294,7 @@ class DataParser:
             nColumns = None
             for i in range(startIndex, startIndex + self.nAtoms, 1):
                 # split line at any white space
-                lineSplit = ' '.join(self.lines[i].split()).split(' ')
+                lineSplit = self.lines[i].split()
                 # drop first two columns so that only Wiberg indices remain
                 lineSplit = lineSplit[2:]
             
@@ -184,7 +343,7 @@ class DataParser:
         while not self.lines[i] == '':
 
             # split line at any white space
-            lineSplit = ' '.join(self.lines[i].split()).split(' ')
+            lineSplit = self.lines[i].split()
             
             if len(lineSplit) > 3:
 
@@ -344,7 +503,7 @@ class DataParser:
             if 'NAtoms=' in self.lines[i]:
 
                 # get position in line
-                lineSplit = ' '.join(self.lines[i].split()).split(' ')
+                lineSplit = self.lines[i].split()
                 nAtomsIndex = lineSplit.index('NAtoms=') + 1
 
                 # return
