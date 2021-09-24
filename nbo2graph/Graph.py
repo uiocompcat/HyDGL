@@ -9,18 +9,19 @@ class Graph:
 
     """Class for reading relevant data from QM output files."""
 
-    def __init__(self, nodes, edges, attributes=None):
+    def __init__(self, nodes, edges, attributes=[]):
 
         """Constructor
 
         Args:
             nodes (list[list[floats]]): List of node features.
             edges (list[list[int], list[float]]): List with individual sublists for connected node indices as well as edge features.
+            attributes (list): List of attributes/labels associated to graph (e.g. HOMO-LUMO gap).
         """
 
-        self.attributes = attributes
         self.nodes = nodes
         self.edges = edges
+        self.attributes = attributes
 
     def getPytorchDataObject(self):
 

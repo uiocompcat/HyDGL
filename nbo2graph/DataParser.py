@@ -1,6 +1,5 @@
 import re
 from operator import add
-from matplotlib.colors import LinearSegmentedColormap
 
 from networkx.generators import line
 
@@ -20,9 +19,23 @@ class DataParser:
         """
 
         self.filePath = filePath
-        self.data = FileHandler.readFile(filePath)
-        self.lines = self.data.split('\n')
-        self.nAtoms = self.getNumberOfAtoms()
+        self.lines = FileHandler.readFile(filePath).split('\n')
+        self.nAtoms = self._getNumberOfAtoms()
+
+    def _getNumberOfAtoms(self):
+
+        for i in range(len(self.lines)):
+            # find line that contain atom number
+            if 'NAtoms=' in self.lines[i]:
+
+                # get position in line
+                lineSplit = self.lines[i].split()
+                nAtomsIndex = lineSplit.index('NAtoms=') + 1
+
+                # return
+                return int(lineSplit[nAtomsIndex])
+        
+        raise Exception('Could not find number of atoms in file.')
 
     def parse(self):
 
@@ -45,168 +58,187 @@ class DataParser:
             # search for keywords and if found call appropriate functions with start index
             # the start index addition offset is based on the Gaussian output format
             if 'Standard orientation' in self.lines[i]:
-                qmData.atomicNumbers = self.extractAtomicNumbers(i + 5)
-                qmData.geometricData = self.extractGeometricData(i + 5)
+                qmData.atomicNumbers = self._extractAtomicNumbers(i + 5)
+                qmData.geometricData = self._extractGeometricData(i + 5)
 
             if 'Summary of Natural Population Analysis' in self.lines[i]:
-                qmData.naturalAtomicCharges = self.extractNaturalAtomicCharges(i + 6)
+                qmData.naturalAtomicCharges = self._extractNaturalAtomicCharges(i + 6)
 
             if 'Natural Electron Configuration' in self.lines[i]:
-                qmData.naturalElectronConfiguration = self.extractNaturalElectronConfiguration(i + 2)
+                qmData.naturalElectronConfiguration = self._extractNaturalElectronConfiguration(i + 2)
 
             if 'Wiberg bond index matrix' in self.lines[i]:
-                qmData.wibergIndexMatrix = self.extractWibergIndexMatrix(i + 4)
+                qmData.wibergIndexMatrix = self._extractWibergIndexMatrix(i + 4)
 
             if 'Bond orbital / Coefficients / Hybrids' in self.lines[i]:
-                qmData.lonePairData, qmData.loneVacancyData, qmData.bondPairData = self.extractNboData(i + 2)
+                qmData.lonePairData, qmData.loneVacancyData, qmData.bondPairData = self._extractNboData(i + 2)
         
             if 'Charge = ' in self.lines[i]:
-                qmData.charge = self.extractCharge(i)
+                qmData.charge = self._extractCharge(i)
 
             if 'Stoichiometry' in self.lines[i]:
-                qmData.stoichiometry = self.extractStoichiometry(i)
+                qmData.stoichiometry = self._extractStoichiometry(i)
 
             if 'Molecular mass' in self.lines[i]:
-                qmData.molecularMass = self.extractMolecularMass(i)
+                qmData.molecularMass = self._extractMolecularMass(i)
 
             if 'Grimme-D3(BJ) Dispersion energy=' in self.lines[i]:
                 if regionState == 'svp':
-                    qmData.svpDispersionEnergy = self.extractDispersionEnergy(i)
+                    qmData.svpDispersionEnergy = self._extractDispersionEnergy(i)
                 elif regionState == 'tzvp':
-                    qmData.tzvpDispersionEnergy = self.extractDispersionEnergy(i)
+                    qmData.tzvpDispersionEnergy = self._extractDispersionEnergy(i)
 
             if 'SCF Done' in self.lines[i]:
                 if regionState == 'svp':
-                    qmData.svpElectronicEnergy = self.extractElectronicEnergy(i)
+                    qmData.svpElectronicEnergy = self._extractElectronicEnergy(i)
                 elif regionState == 'tzvp':
-                    qmData.tzvpElectronicEnergy = self.extractElectronicEnergy(i)
+                    qmData.tzvpElectronicEnergy = self._extractElectronicEnergy(i)
 
             if 'Dipole moment (field-independent basis, Debye)' in self.lines[i]:
                 if regionState == 'svp':
-                    qmData.svpDipoleMoment = self.extractDipoleMoment(i + 1)
+                    qmData.svpDipoleMoment = self._extractDipoleMoment(i + 1)
                 elif regionState == 'tzvp':
-                    qmData.tzvpDipoleMoment = self.extractDipoleMoment(i + 1)
+                    qmData.tzvpDipoleMoment = self._extractDipoleMoment(i + 1)
             
             if 'Isotropic polarizability' in self.lines[i]:
-                qmData.polarisability = self.extractPolarisability(i)
+                qmData.polarisability = self._extractPolarisability(i)
 
             if 'Frequencies -- ' in self.lines[i]:
                 if qmData.frequencies == None:
-                    qmData.frequencies = self.extractFrequency(i)
+                    qmData.frequencies = self._extractFrequency(i)
                 else:
-                    qmData.frequencies.extend(self.extractFrequency(i))
+                    qmData.frequencies.extend(self._extractFrequency(i))
 
             if 'Zero-point correction=' in self.lines[i]:
-                qmData.zpeCorrection = self.extractZpeCorrection(i)
+                qmData.zpeCorrection = self._extractZpeCorrection(i)
 
             if 'Sum of electronic and thermal Enthalpies=' in self.lines[i]:
-                qmData.enthalpyEnergy = self.extractEnthalpyEnergy(i)
+                qmData.enthalpyEnergy = self._extractEnthalpyEnergy(i)
 
             if 'Sum of electronic and thermal Free Energies=' in self.lines[i]:
-                qmData.gibbsEnergy = self.extractGibbsEnergy(i)
-                qmData.heatCapacity = self.extractHeatCapacity(i + 4)
-                qmData.entropy = self.extractEntropy(i + 4)
+                qmData.gibbsEnergy = self._extractGibbsEnergy(i)
+                qmData.heatCapacity = self._extractHeatCapacity(i + 4)
+                qmData.entropy = self._extractEntropy(i + 4)
 
             if 'Alpha  occ. eigenvalues' in self.lines[i]:
                 if regionState == 'svp':
                     if qmData.svpOccupiedOrbitalEnergies == None:
-                        qmData.svpOccupiedOrbitalEnergies = self.extractOrbitalEnergies(i)
+                        qmData.svpOccupiedOrbitalEnergies = self._extractOrbitalEnergies(i)
                     else:
-                        qmData.svpOccupiedOrbitalEnergies.extend(self.extractOrbitalEnergies(i))
+                        qmData.svpOccupiedOrbitalEnergies.extend(self._extractOrbitalEnergies(i))
                 elif regionState == 'tzvp':
                     if qmData.tzvpOccupiedOrbitalEnergies == None:
-                        qmData.tzvpOccupiedOrbitalEnergies = self.extractOrbitalEnergies(i)
+                        qmData.tzvpOccupiedOrbitalEnergies = self._extractOrbitalEnergies(i)
                     else:    
-                        qmData.tzvpOccupiedOrbitalEnergies.extend(self.extractOrbitalEnergies(i))
+                        qmData.tzvpOccupiedOrbitalEnergies.extend(self._extractOrbitalEnergies(i))
 
             if 'Alpha virt. eigenvalues' in self.lines[i]:
                 if regionState == 'svp':
                     if qmData.svpVirtualOrbitalEnergies == None:
-                        qmData.svpVirtualOrbitalEnergies = self.extractOrbitalEnergies(i)
+                        qmData.svpVirtualOrbitalEnergies = self._extractOrbitalEnergies(i)
                     else:
-                        qmData.svpVirtualOrbitalEnergies.extend(self.extractOrbitalEnergies(i))
+                        qmData.svpVirtualOrbitalEnergies.extend(self._extractOrbitalEnergies(i))
                 elif regionState == 'tzvp':
                     if qmData.tzvpVirtualOrbitalEnergies == None:
-                        qmData.tzvpVirtualOrbitalEnergies = self.extractOrbitalEnergies(i)
+                        qmData.tzvpVirtualOrbitalEnergies = self._extractOrbitalEnergies(i)
                     else:    
-                        qmData.tzvpVirtualOrbitalEnergies.extend(self.extractOrbitalEnergies(i))
+                        qmData.tzvpVirtualOrbitalEnergies.extend(self._extractOrbitalEnergies(i))
 
         # calculate extra properties such as delta values, HOMO, LUMU, etc.
         qmData.calculateProperties()
 
         return qmData
 
-    def extractCharge(self, startIndex):
+    # - - - extraction functions - - - #
+
+    # Some of the following extraction functions are redundant in the sense that for some properties
+    # the extraction procedures are identical. The distinction between these functions is kept 
+    # nonetheless to ensure maintainability (e.g. when the Gaussian output format changes).
+
+    def _extractCharge(self, startIndex):
 
         lineSplit = self.lines[startIndex].split()
         return int(lineSplit[2])
 
-    def extractStoichiometry(self, startIndex):
+    def _extractStoichiometry(self, startIndex):
 
         lineSplit = self.lines[startIndex].split()
         return lineSplit[1]
 
-    def extractMolecularMass(self, startIndex):
+    def _extractMolecularMass(self, startIndex):
 
         lineSplit = self.lines[startIndex].split()
         return float(lineSplit[2])
 
-    def extractDispersionEnergy(self, startIndex):
+    def _extractDispersionEnergy(self, startIndex):
 
         lineSplit = self.lines[startIndex].split()
         return float(lineSplit[4])
 
-    def extractElectronicEnergy(self, startIndex):
+    def _extractElectronicEnergy(self, startIndex):
 
         lineSplit = self.lines[startIndex].split()
         return float(lineSplit[4])
 
-    def extractDipoleMoment(self, startIndex):
+    def _extractDipoleMoment(self, startIndex):
 
         lineSplit = self.lines[startIndex].split()
         return float(lineSplit[7])
 
-    def extractPolarisability(self, startIndex):
+    def _extractPolarisability(self, startIndex):
 
         lineSplit = self.lines[startIndex].split()
         return float(lineSplit[5])
 
-    def extractFrequency(self, startIndex):
+    def _extractFrequency(self, startIndex):
 
         lineSplit = self.lines[startIndex].split()
         return list(map(float, lineSplit[2:]))
 
-    def extractOrbitalEnergies(self, startIndex):
+    def _extractOrbitalEnergies(self, startIndex):
 
         lineSplit = self.lines[startIndex].split()
-        return list(map(float, lineSplit[4:]))
 
-    def extractEnthalpyEnergy(self, startIndex):
+        # build output list
+        orbitalEnergies = []
+        for i in range(len(lineSplit[4:])):
+            # check for entries that are not separated by white space
+            matchResult = re.search('([0-9]-[0-9])', lineSplit[4 + i])
+            if matchResult != None:
+                firstItemEndIndex = matchResult.span(0)[0]
+                orbitalEnergies.append(lineSplit[4 + i][:firstItemEndIndex + 1])
+                orbitalEnergies.append(lineSplit[4 + i][firstItemEndIndex + 1:])
+            else:
+                orbitalEnergies.append(lineSplit[4 + i])
+
+        return list(map(float, orbitalEnergies))
+
+    def _extractEnthalpyEnergy(self, startIndex):
 
         lineSplit = self.lines[startIndex].split()
         return float(lineSplit[6])
 
-    def extractGibbsEnergy(self, startIndex):
+    def _extractGibbsEnergy(self, startIndex):
 
         lineSplit = self.lines[startIndex].split()
         return float(lineSplit[7])
 
-    def extractZpeCorrection(self, startIndex):
+    def _extractZpeCorrection(self, startIndex):
 
         lineSplit = self.lines[startIndex].split()
         return float(lineSplit[2])
 
-    def extractHeatCapacity(self, startIndex):
+    def _extractHeatCapacity(self, startIndex):
 
         lineSplit = self.lines[startIndex].split()
         return float(lineSplit[2])
 
-    def extractEntropy(self, startIndex):
+    def _extractEntropy(self, startIndex):
 
         lineSplit = self.lines[startIndex].split()
         return float(lineSplit[3])
 
-    def extractAtomicNumbers(self, startIndex):
+    def _extractAtomicNumbers(self, startIndex):
 
         atomicNumbers = []
 
@@ -218,7 +250,7 @@ class DataParser:
         
         return atomicNumbers
 
-    def extractGeometricData(self, startIndex):
+    def _extractGeometricData(self, startIndex):
 
         geometricData = []
 
@@ -231,7 +263,7 @@ class DataParser:
 
         return geometricData
 
-    def extractNaturalAtomicCharges(self, startIndex):
+    def _extractNaturalAtomicCharges(self, startIndex):
         
         naturalAtomicCharges = []
 
@@ -243,14 +275,14 @@ class DataParser:
         
         return naturalAtomicCharges
 
-    def extractNaturalElectronConfiguration(self, startIndex):
+    def _extractNaturalElectronConfiguration(self, startIndex):
         
         naturalElectronConfiguration = []
 
         for i in range(startIndex, startIndex + self.nAtoms, 1):
             
             # single atom electron configuration ([s, p, d, f])
-            electronConfiguration = [0, 0, 0, 0]
+            electronConfiguration = [0.0, 0.0, 0.0, 0.0]
 
             # split line at any white space
             lineSplit = self.lines[i].split()
@@ -278,7 +310,7 @@ class DataParser:
 
         return naturalElectronConfiguration
 
-    def extractWibergIndexMatrix(self, startIndex):
+    def _extractWibergIndexMatrix(self, startIndex):
 
         # setup nAtoms x nAtoms matrix for Wiberg indices
         wibergIndexMatrix = [[0 for x in range(self.nAtoms)] for y in range(self.nAtoms)] 
@@ -316,7 +348,7 @@ class DataParser:
 
         return wibergIndexMatrix
 
-    def extractNboData(self, startIndex):
+    def _extractNboData(self, startIndex):
         
         # output variable for lone pairs
         lonePairAtomPositions = []
@@ -349,7 +381,7 @@ class DataParser:
 
                 # lone pairs
                 if lineSplit[2] == 'LP':
-                    atomPosition, occupations = self.extractLonePairData(i)
+                    atomPosition, occupations = self._extractLonePairData(i)
 
                     # check if lone pair atom already exists
                     # if so add together
@@ -365,7 +397,7 @@ class DataParser:
 
                 # bonds
                 if lineSplit[2] == 'BD':
-                    atomPositions, occupations = self.extractBondingData(i)
+                    atomPositions, occupations = self._extractBondingData(i)
                     
                     # sort to ensure correct compare behaviour
                     atomPositions.sort()
@@ -381,9 +413,9 @@ class DataParser:
                         bondPairOccupations.append(occupations)
 
                 # lone vacancy
-                # TODO
+                # TODO check
                 if lineSplit[2] == 'LV':
-                    atomPosition, occupations = self.extractLonePairData(i)
+                    atomPosition, occupations = self._extractLonePairData(i)
 
                     # check if lone vacancy atom already exists
                     # if so add together
@@ -442,11 +474,11 @@ class DataParser:
             raise Exception('Length of extracted data arrays is not equal.')
         else:
             for i in range(len(loneVacancyAtomPositions)):
-                lonePairData.append([loneVacancyAtomPositions[i], loneVacancyCounts[i], loneVacancyOccupations[i]])
+                loneVacancyData.append([loneVacancyAtomPositions[i], loneVacancyCounts[i], loneVacancyOccupations[i]])
 
         return lonePairData, loneVacancyData, bondPairData
 
-    def extractLonePairData(self, startIndex):
+    def _extractLonePairData(self, startIndex):
 
         # obtain atom position
         lineSplit = list(filter(None, re.split(r'\(|\)| ', self.lines[startIndex])))[5:]
@@ -454,14 +486,17 @@ class DataParser:
 
         # get occupation from both lines using regex (values in brackets)
         mergedLines = (self.lines[startIndex] + self.lines[startIndex + 1]).replace(' ', '')
-        result = re.findall('\((.{3,5})%\)', mergedLines)
+        result = re.findall('\((.{4,6})%\)', mergedLines)
         occupations = list(map(float, result))
+
+        # check that length of occupation list is correct
+        assert len(occupations) == 4
 
         # return atom position for assignment in list
         # divide occupations by 100 (get rid of %)
         return atomPosition, [x / 100 for x in occupations]
 
-    def extractBondingData(self, startIndex):
+    def _extractBondingData(self, startIndex):
 
         # obtain atom positions
         lineSplit = list(filter(None, re.split(r'\(|\)|-| ', self.lines[startIndex])))[4:]
@@ -491,22 +526,9 @@ class DataParser:
         # add contributions from both parts
         occupations = list(map(add, occupations1, occupations2))
 
+        # check that length of occupation list is correct
+        assert len(occupations) == 4
+
         # return atom position for assignment in list
         # divide occupations by 200 (average and get rid of %)
         return atomPositions, [x / 200 for x in occupations]
-
-
-    def getNumberOfAtoms(self):
-
-        for i in range(len(self.lines)):
-            # find line that contain atom number
-            if 'NAtoms=' in self.lines[i]:
-
-                # get position in line
-                lineSplit = self.lines[i].split()
-                nAtomsIndex = lineSplit.index('NAtoms=') + 1
-
-                # return
-                return int(lineSplit[nAtomsIndex])
-        
-        raise Exception('Could not find number of atoms in file.')

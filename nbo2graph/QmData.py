@@ -77,6 +77,8 @@ class QmData():
 
     def calculateProperties(self):
 
+        """Calculates composite properties such as HOMO-LUMO gap and delta values/corrections between SVP and TZVP."""
+
         # physical properties
 
         # calculate homo lumo svp

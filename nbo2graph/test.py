@@ -2,6 +2,8 @@ from DataParser import DataParser
 from GraphGenerator import GraphGenerator
 from FileHandler import FileHandler
 
+from QmAttribute import QmAttribute
+
 from HydrogenMode import HydrogenMode
 
 from ElementLookUpTable import ElementLookUpTable
@@ -10,36 +12,51 @@ import matplotlib.pyplot as plt
 import networkx as nx
 from torch_geometric.utils.convert import to_networkx
 
-gg = GraphGenerator.fromFile('/home/hkneiding/Desktop/full_Gaussian_file_AGOKEN.log',
-                             wibergBondThreshold=0.3,
-                             hydrogenMode=HydrogenMode.Implicit)
-graph = gg.generateGraph()
+import os 
+from os.path import isfile, join
 
-dp = DataParser('/home/hkneiding/Desktop/full_Gaussian_file_AGOKEN.log')
-qm = dp.parse()
+# setup target directory path
+path = '/home/hkneiding/Desktop/nbo data/'
+# setup file list
+files = []
+for file in os.listdir(path):
+    if file.endswith(".log"):
+        files.append(file)
 
-# print(qm)
+print(files)
 
-attrs = vars(qm)
+# generate vector for attributes to be extracted
+attributesToExtract = [QmAttribute.SvpHomoLumoGap]
 
-print('\n'.join("%s: %s" % item for item in attrs.items()))
+# set up graph generator with parameters
+gg = GraphGenerator(attributesToExtract=attributesToExtract, wibergBondThreshold=0.3, hydrogenMode=HydrogenMode.Implicit)
 
-exit()
+graphs = []
 
-# pytorch
+for i in range(len(files)):
+# for i in range(1):
 
-pytorchGraphData = graph.getPytorchDataObject()
-G = to_networkx(pytorchGraphData)
+    print(files[i])
+    qmData = DataParser('/home/hkneiding/Desktop/nbo data/' + files[i]).parse()
+    #print(qmData.wibergIndexMatrix)
+    # generate graph from qmData object
+    graphs.append(gg.generateGraph(qmData))
 
-nodeLabelDict = {}
-for i in range(len(graph.nodes)):
-    nodeLabelDict[i] = ElementLookUpTable.getElementIdentifier(graph.nodes[i][0])
-    #nodeLabelDict[i] = graph.nodes[i][-1]
+for graph in graphs:
 
+    # print(graph.attributes)
+    print(graph.nodes)
+    # pytorch
 
-nx.draw_networkx(G, labels=nodeLabelDict, with_labels=True)
-plt.show()
+    pytorchGraphData = graph.getPytorchDataObject()
+    G = to_networkx(pytorchGraphData)
 
+    nodeLabelDict = {}
+    for i in range(len(graph.nodes)):
+        nodeLabelDict[i] = ElementLookUpTable.getElementIdentifier(graph.nodes[i][0])
+        #nodeLabelDict[i] = graph.nodes[i][-1]
 
+    # print(nodeLabelDict)
 
-
+    #nx.draw_networkx(G, labels=nodeLabelDict, with_labels=True)
+    #plt.show()
