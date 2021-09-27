@@ -1,8 +1,6 @@
 import re
 from operator import add
 
-from networkx.generators import line
-
 from FileHandler import FileHandler
 from QmData import QmData
 

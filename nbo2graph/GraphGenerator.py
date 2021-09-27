@@ -13,7 +13,7 @@ class GraphGenerator:
         """Constructor
 
         Args:
-            attributesToExtract (list[QmAttribute]): List of attributes defining which should be extracted.
+            attributesToExtract (list[QmAttribute]): List of attributes defining which QM properties should be extracted as attributes.
             wibergBondThreshold (float): Threshold value defining the lower bound for considering bonds.
             wibergHydrogenCountThreshold(float): Threshold value defining the lower bound for considering hydrogens as bound for implicit mode.
             hydrogenMode (HydrogenMode): Operation mode defining the way to handle hydrogens.

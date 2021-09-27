@@ -116,3 +116,6 @@ class QmData():
 
         # calculate svp - tzvp homo lumo gap delta
         self.homoLumoGapDelta = self.svpHomoLumoGap - self.tzvpHomoLumoGap
+
+        for i in range(len(self.wibergIndexMatrix)):
+            print(sum(self.wibergIndexMatrix[i]))
