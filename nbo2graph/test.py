@@ -3,6 +3,7 @@ from GraphGenerator import GraphGenerator
 from FileHandler import FileHandler
 
 from QmAttribute import QmAttribute
+from BondDeterminationMode import BondDeterminationMode
 
 from HydrogenMode import HydrogenMode
 
@@ -27,18 +28,21 @@ for file in os.listdir(path):
 attributesToExtract = [QmAttribute.SvpHomoLumoGap]
 
 # set up graph generator with parameters
-gg = GraphGenerator(attributesToExtract=attributesToExtract, wibergBondThreshold=0.1, hydrogenMode=HydrogenMode.Implicit)
+wibergGG = GraphGenerator(bondDeterminationMode=BondDeterminationMode.Wiberg, bondThreshold=0.3, attributesToExtract=attributesToExtract, hydrogenMode=HydrogenMode.Implicit)
+nlmoGG = GraphGenerator(bondDeterminationMode=BondDeterminationMode.NLMO, bondThreshold=0.1, attributesToExtract=attributesToExtract, hydrogenMode=HydrogenMode.Implicit)
+
 
 graphs = []
 
-# for i in range(len(files)):
-for i in range(1):
+for i in range(len(files)):
+# for i in range(1):
 
     print(files[i])
     qmData = DataParser('/home/hkneiding/Desktop/nbo data/' + files[i]).parse()
     #print(qmData.wibergIndexMatrix)
     # generate graph from qmData object
-    graphs.append(gg.generateGraph(qmData))
+    graphs.append(wibergGG.generateGraph(qmData))
+    graphs.append(nlmoGG.generateGraph(qmData))
 
 for graph in graphs:
 
@@ -49,6 +53,9 @@ for graph in graphs:
     # graph.getAdjacentNodes(49)
     #print(graph.getDisjointSubGraphs())
     print(graph.isConnected())
+
+    print(graph.nodes)
+    print(graph.edges)
 
     pytorchGraphData = graph.getPytorchDataObject()
     G = to_networkx(pytorchGraphData)

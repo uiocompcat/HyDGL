@@ -63,11 +63,26 @@ class QmData():
 
     # bond data
     wibergIndexMatrix: list[list[float]] = None
-    
+    wibergAtomTotals: list[float] = None
+
+    # lmo bond data
+    lmoBondOrderMatrix: list[list[float]] = None
+
+    # nbo bond data
+    nboBondOrderMatrix: list[list[float]] = None
+    nboBondOrderTotals: list[float] = None
+
     # nbo data
     lonePairData = None
     loneVacancyData = None
     bondPairData = None
+    antibondPairData = None
+    nboEnergies: list[list] = None
+
+    lonePairDataFull = None
+    loneVacancyDataFull = None
+    bondPairDataFull = None
+    antibondPairDataFull = None
 
     # deltas
     dispersionEnergyDelta: float = None # Ha
@@ -117,5 +132,42 @@ class QmData():
         # calculate svp - tzvp homo lumo gap delta
         self.homoLumoGapDelta = self.svpHomoLumoGap - self.tzvpHomoLumoGap
 
+        # calculate Wiberg atom-wise totals
+        self.wibergAtomTotals = []
         for i in range(len(self.wibergIndexMatrix)):
-            print(sum(self.wibergIndexMatrix[i]))
+            self.wibergAtomTotals.append(sum(self.wibergIndexMatrix[i]))
+
+        # calculate nbo bond order atom-wise totals
+        self.nboBondOrderTotals = []
+        for i in range(len(self.nboBondOrderMatrix)):
+            self.nboBondOrderTotals.append(sum(self.nboBondOrderMatrix[i]))
+
+        # merge nbo data with corresponding energies        
+        self.lonePairDataFull = self._mergeNboData(self.lonePairData)
+        self.loneVacancyDataFull = self._mergeNboData(self.loneVacancyData)
+        self.bondPairDataFull = self._mergeNboData(self.bondPairData)
+        self.antibondPairDataFull = self._mergeNboData(self.antibondPairData)
+
+    def _mergeNboData(self, nboData):
+
+        mergedData = []
+        # readout IDs of energies to match energies to corresponding nbo entries
+        energyIds = [x[0] for x in self.nboEnergies]
+
+        for i in range(len(nboData)):
+
+            # get the index of the ID of the current nbo data point
+            nboEnergyIndex = energyIds.index(nboData[i][0])
+
+            # merge together and drop ID
+            # [ atomPosition, energy, occupation value, [occupations] ]
+            dataPoint = [nboData[i][1]]
+            dataPoint.append(self.nboEnergies[nboEnergyIndex][1])
+            dataPoint.append(nboData[i][2])
+            dataPoint.append(nboData[i][3])
+            
+            # append to output list
+            mergedData.append(dataPoint)
+        
+        return mergedData
+        
