@@ -1,33 +1,72 @@
 import unittest
+from parameterized import parameterized
 
 from nbo2graph.graph import Graph
 
 class TestGraph(unittest.TestCase):
 
-    # build test graphs
-    nodes = [[0], [0], [0], [0], [0]]
-    edges = [[[0,1], [0]], [[0,2], [0]], [[0,3], [0]], [[3,2], [0]], [[2,4], [0]]]
-    graph1 = Graph(nodes, edges)
+    @parameterized.expand([
 
-    nodes = [[0], [0], [0], [0], [0]]
-    edges = [[[0,1], [0]], [[0,2], [0]], [[0,3], [0]], [[3,2], [0]]]
-    graph2 = Graph(nodes, edges)
+        [Graph([[0], [0], [0], [0], [0]], [[[0,1], [0]], [[0,2], [0]], [[0,3], [0]], [[3,2], [0]], [[2,4], [0]]]),
+         True
+        ],
 
-    def isConnected(self):
+        [Graph([[0], [0], [0], [0], [0]], [[[0,1], [0]], [[0,2], [0]], [[0,3], [0]], [[3,2], [0]]]),
+         False
+        ],
 
-        self.assertEqual(self.graph1.isConnected(), True)
-        self.assertEqual(self.graph2.isConnected(), False)
+    ])
+    def test_is_connected(self, graph, expected):
 
-    def getDisjointSubGraphs(self):
+        self.assertEqual(graph.is_connected(), expected)
 
-        self.assertEqual(self.graph1.getDisjointSubGraphs, [[0,1,2,3,4]])
-        self.assertEqual(self.graph2.getDisjointSubGraphs, [[0,1,2,3], [4]])
+    @parameterized.expand([
 
-    def getAdjacentNodes(self):
+        [Graph([[0], [0], [0], [0], [0]], [[[0,1], [0]], [[0,2], [0]], [[0,3], [0]], [[3,2], [0]], [[2,4], [0]]]),
+         [[0,1,2,3,4]]
+        ],
 
-        self.assertEqual(self.graph1.getAdjacentNodes(0), [1,2,3])
-        self.assertEqual(self.graph1.getAdjacentNodes(4), [2])
-        self.assertEqual(self.graph1.getAdjacentNodes(4), [])
+        [Graph([[0], [0], [0], [0], [0]], [[[0,1], [0]], [[0,2], [0]], [[0,3], [0]], [[3,2], [0]]]),
+         [[0,1,2,3], [4]]
+        ],
 
-        self.assertRaises(ValueError, self.graph1.getAdjacentNodes(5))
-        self.assertRaises(ValueError, self.graph1.getAdjacentNodes(-1))
+    ])
+    def test_get_disjoint_sub_graphs(self, graph, expected):
+
+        self.assertEqual(graph.get_disjoint_sub_graphs(), expected)
+
+    @parameterized.expand([
+
+        [Graph([[0], [0], [0], [0], [0]], [[[0,1], [0]], [[0,2], [0]], [[0,3], [0]], [[3,2], [0]], [[2,4], [0]]]),
+         0, 
+         [1,2,3]
+        ],
+
+        [Graph([[0], [0], [0], [0], [0]], [[[0,1], [0]], [[0,2], [0]], [[0,3], [0]], [[3,2], [0]], [[2,4], [0]]]),
+         4, 
+         [2]
+        ],
+
+        [Graph([[0], [0], [0], [0], [0]], [[[0,1], [0]], [[0,2], [0]], [[0,3], [0]], [[3,2], [0]]]),
+         4, 
+         []
+        ],
+
+    ])
+    def test_get_adjacent_nodes_with_valid_input(self, graph, node, expected):
+
+        self.assertEqual(graph.get_adjacent_nodes(node), expected)
+
+    @parameterized.expand([
+
+        [Graph([[0], [0], [0], [0], [0]], [[[0,1], [0]], [[0,2], [0]], [[0,3], [0]], [[3,2], [0]], [[2,4], [0]]]),
+         -1
+        ],
+
+        [Graph([[0], [0], [0], [0], [0]], [[[0,1], [0]], [[0,2], [0]], [[0,3], [0]], [[3,2], [0]], [[2,4], [0]]]),
+         7
+        ]
+    ])
+    def test_get_adjacent_nodes_with_invalid_input(self, graph, node):
+
+        self.assertRaises(ValueError, graph.get_adjacent_nodes, node)

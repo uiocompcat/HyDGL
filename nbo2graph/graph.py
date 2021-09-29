@@ -120,11 +120,12 @@ class Graph:
                 # dequeue
                 current_sub_graph_indices.append(node_queue[0])
                 node_queue.pop(0)
-                # enqueue (only enque nodes that have not been visited before)
-                node_queue.extend(list(set(neighbours) - set(current_sub_graph_indices)))
+                # enqueue (only enque nodes that have not been visited before and are not already in queue)
+                node_queue.extend(list(set(neighbours) - set(current_sub_graph_indices) - set(node_queue)))
 
             # update list of not visited nodes
             not_visited_nodes = list(set(not_visited_nodes) - set(current_sub_graph_indices))
+
             # append subgraph to output list
             disjoint_sub_graphs.append(current_sub_graph_indices)
 
