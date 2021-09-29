@@ -13,21 +13,21 @@ class TestGraph(unittest.TestCase):
     edges = [[[0,1], [0]], [[0,2], [0]], [[0,3], [0]], [[3,2], [0]]]
     graph2 = Graph(nodes, edges)
 
-#     def isConnected(self):
+    def isConnected(self):
 
-#         self.assertEqual(self.graph1.isConnected(), True)
-#         self.assertEqual(self.graph2.isConnected(), False)
+        self.assertEqual(self.graph1.isConnected(), True)
+        self.assertEqual(self.graph2.isConnected(), False)
 
-#     def getDisjointSubGraphs(self):
+    def getDisjointSubGraphs(self):
 
-#         self.assertEqual(self.graph1.getDisjointSubGraphs, [[0,1,2,3,4]])
-#         self.assertEqual(self.graph2.getDisjointSubGraphs, [[0,1,2,3], [4]])
+        self.assertEqual(self.graph1.getDisjointSubGraphs, [[0,1,2,3,4]])
+        self.assertEqual(self.graph2.getDisjointSubGraphs, [[0,1,2,3], [4]])
 
-#     def getAdjacentNodes(self):
+    def getAdjacentNodes(self):
 
-#         self.assertEqual(self.graph1.getAdjacentNodes(0), [1,2,3])
-#         self.assertEqual(self.graph1.getAdjacentNodes(4), [2])
-#         self.assertEqual(self.graph1.getAdjacentNodes(4), [])
+        self.assertEqual(self.graph1.getAdjacentNodes(0), [1,2,3])
+        self.assertEqual(self.graph1.getAdjacentNodes(4), [2])
+        self.assertEqual(self.graph1.getAdjacentNodes(4), [])
 
-#         self.assertRaises(ValueError, self.graph1.getAdjacentNodes(5))
-#         self.assertRaises(ValueError, self.graph1.getAdjacentNodes(-1))
+        self.assertRaises(ValueError, self.graph1.getAdjacentNodes(5))
+        self.assertRaises(ValueError, self.graph1.getAdjacentNodes(-1))
