@@ -1,17 +1,17 @@
-# import unittest
+import unittest
 
-# from nbo2graph import Graph
+from nbo2graph.graph import Graph
 
-# class TestGraph(unittest.TestCase):
+class TestGraph(unittest.TestCase):
 
-#     # build test graphs
-#     nodes = [[0], [0], [0], [0], [0]]
-#     edges = [[[0,1], [0]], [[0,2], [0]], [[0,3], [0]], [[3,2], [0]], [[2,4], [0]]]
-#     graph1 = Graph(nodes, edges)
+    # build test graphs
+    nodes = [[0], [0], [0], [0], [0]]
+    edges = [[[0,1], [0]], [[0,2], [0]], [[0,3], [0]], [[3,2], [0]], [[2,4], [0]]]
+    graph1 = Graph(nodes, edges)
 
-#     nodes = [[0], [0], [0], [0], [0]]
-#     edges = [[[0,1], [0]], [[0,2], [0]], [[0,3], [0]], [[3,2], [0]]]
-#     graph2 = Graph(nodes, edges)
+    nodes = [[0], [0], [0], [0], [0]]
+    edges = [[[0,1], [0]], [[0,2], [0]], [[0,3], [0]], [[3,2], [0]]]
+    graph2 = Graph(nodes, edges)
 
 #     def isConnected(self):
 
