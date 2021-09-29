@@ -24,7 +24,7 @@ jobs:
             conda install -c conda-forge parameterized 
             conda install -qy conda-build anaconda-client pytest pytest-cov
 
-            conda install pytorch torchvision torchaudio cudatoolkit=10.2 -cy pytorch
+            conda install -y pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch
             # conda install -c conda-forge pytorch_geometric 
             conda install -y pyg -c pyg -c conda-forge
 
