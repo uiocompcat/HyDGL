@@ -3,11 +3,11 @@ class FileHandler:
     """Class for handling all IO/file handling tasks."""
 
     @staticmethod
-    def readFile(filePath):
+    def read_file(file_path):
         """Reads a specified file.
 
         Args:
-            filePath (string): The path to the input file.
+            file_path (string): The path to the input file.
 
         Raises:
             FileNotFoundError: If file not found.
@@ -18,7 +18,7 @@ class FileHandler:
         """
         
         try:
-            f = open(filePath, 'r')
+            f = open(file_path, 'r')
         except FileNotFoundError:
             raise FileNotFoundError('The specified file does not exist.')
         except IsADirectoryError:
@@ -31,14 +31,14 @@ class FileHandler:
             return data
 
     @staticmethod
-    def writeFile(filePath, data):
+    def write_file(file_path, data):
         """Writes the specified content into a file (overwrites).
 
         Args:
-            filePath (string): The path to the output file.
+            file_path (string): The path to the output file.
             data (string): The file content to write.
         """
 
-        f = open(filePath, 'w')
+        f = open(file_path, 'w')
         f.write(data)
         f.close()

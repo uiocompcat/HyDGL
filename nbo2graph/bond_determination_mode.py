@@ -3,6 +3,7 @@ from enum import Enum, auto
 class BondDeterminationMode(Enum):
 
     '''Enum class for the different modes of determining bonds in the molecule.'''
+    # TODO naming convention for enums??
 
     # Use the Wiberg index matrix to determine bonds
     Wiberg = auto()

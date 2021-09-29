@@ -2,7 +2,7 @@ class ElementLookUpTable():
 
     '''Class for looking up atomic numbers and element identifiers.'''
 
-    elementIdentifiers = ['H','He','Li','Be','B','C','N','O','F','Ne',
+    element_identifiers = ['H','He','Li','Be','B','C','N','O','F','Ne',
                           'Na','Mg','Al','Si','P','S','Cl','Ar','K',
                           'Ca','Sc','Ti','V','Cr','Mn','Fe','Co','Ni',
                           'Cu','Zn','Ga','Ge','As','Se','Br','Kr','Rb',
@@ -17,12 +17,12 @@ class ElementLookUpTable():
                           'Ds','Rg','Cn','Nh','Fl','Mc','Lv','Ts','Og']
 
     @staticmethod
-    def getElementIdentifier(atomicNumber):
+    def get_element_identifier(atomic_number):
 
         """Returns the appropriate element identifier based on a given atomic number.
 
         Args:
-            atomicNumber (int): The query atomic number.
+            atomic_number (int): The query atomic number.
 
         Raises:
             ValueError: If the atomic number does not exist.
@@ -31,18 +31,18 @@ class ElementLookUpTable():
             string: The element identifier.
         """
 
-        if atomicNumber <= len(ElementLookUpTable.elementIdentifiers) and atomicNumber > 0:
-            return ElementLookUpTable.elementIdentifiers[atomicNumber - 1]
+        if atomic_number <= len(ElementLookUpTable.element_identifiers) and atomic_number > 0:
+            return ElementLookUpTable.element_identifiers[atomic_number - 1]
         else:
             raise ValueError('Invalid atomic number, must be in range 1-118.')
     
     @staticmethod
-    def getAtomicNumber(elementIdentifier):
+    def get_atomic_number(element_identifier):
 
         """Returns the appropriate atomic number based on a given element identifier.
 
         Args:
-            elementIdentifier (string): The query element identifier.
+            element_identifier (string): The query element identifier.
 
         Raises:
             ValueError: If the element identifier does not exist.
@@ -51,8 +51,8 @@ class ElementLookUpTable():
             int: The atomic number.
         """
 
-        if elementIdentifier.lower() in [x.lower() for x in ElementLookUpTable.elementIdentifiers]:
-            elementIndex = [x.lower() for x in ElementLookUpTable.elementIdentifiers].index(elementIdentifier.lower())
-            return elementIndex + 1
+        if element_identifier.lower() in [x.lower() for x in ElementLookUpTable.element_identifiers]:
+            element_index = [x.lower() for x in ElementLookUpTable.element_identifiers].index(element_identifier.lower())
+            return element_index + 1
         else:
             raise ValueError('Requested element identifier does not exist.')

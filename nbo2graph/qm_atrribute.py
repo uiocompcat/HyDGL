@@ -3,7 +3,8 @@ from enum import Enum, auto
 class QmAttribute(Enum):
 
     '''Enum class for the different QM attributes to be used.'''
-
+    # TODO naming convention for enums??
+    
     # dispersion energy
     SvpDispersionEnergy = auto()
     TzvpDispersionEnergy = auto()
