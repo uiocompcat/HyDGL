@@ -24,7 +24,8 @@ jobs:
             conda install -qy conda-build anaconda-client pytest pytest-cov
 
             conda install pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch
-            conda install -c conda-forge pytorch_geometric 
+            # conda install -c conda-forge pytorch_geometric 
+            conda install pyg -c pyg -c conda-forge
 
             conda config --set auto_update_conda no
             conda info -a

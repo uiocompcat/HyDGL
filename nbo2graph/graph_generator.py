@@ -182,17 +182,6 @@ class GraphGenerator:
                             else:
                                 edges.append([[i, j], [qm_data.nbo_bond_order_matrix[i][j]]])
 
-        # rescale node referenes in edges if explicit hydrogens were omitted
-        if self.hydrogen_mode == HydrogenMode.Omit or self.hydrogen_mode == HydrogenMode.Implicit:
-            # get list of indices in use
-            bond_atom_indices = list(set([item for sublist in [x[0] for x in edges] for item in sublist]))
-            bond_atom_indices.sort()
-            # loop through edges and replace node references
-            for i in range(len(edges)):
-                edges[i][0][0] = edges[i][0][0] - self._determine_hydrogen_position_offset(edges[i][0][0], qm_data)
-                edges[i][0][1] = edges[i][0][1] - self._determine_hydrogen_position_offset(edges[i][0][1], qm_data)
-
-
         # add additional (NBO) features to edges
         for i in range(len(edges)):
             
@@ -229,12 +218,22 @@ class GraphGenerator:
 
                 # append data (total length = 7)
                 # number of antibond orbitals, energy, occupation, s occ., p occ., d occ., f occ.
-                edges[i][1].append(len(energies))
-                edges[i][1].append(qm_data.antibond_pair_data_full[selected_index][1])
+                edges[i][1].append(len(energies)) # TODO omit since number of antibonds same to number of bonds?
+                edges[i][1].append(qm_data.antibond_pair_data_full[selected_index][1])  
                 edges[i][1].append(qm_data.antibond_pair_data_full[selected_index][2])
-                edges[i][1].extend(qm_data.antibond_pair_data_full[selected_index][3])
+                edges[i][1].extend(qm_data.antibond_pair_data_full[selected_index][3]) # TODO omit since occ. are the same to bond occ.?
             else:
                 edges[i][1].extend([0,0,0,0,0,0,0])
+
+        # rescale node referenes in edges if explicit hydrogens were omitted
+        if self.hydrogen_mode == HydrogenMode.Omit or self.hydrogen_mode == HydrogenMode.Implicit:
+            # get list of indices in use
+            bond_atom_indices = list(set([item for sublist in [x[0] for x in edges] for item in sublist]))
+            bond_atom_indices.sort()
+            # loop through edges and replace node references
+            for i in range(len(edges)):
+                edges[i][0][0] = edges[i][0][0] - self._determine_hydrogen_position_offset(edges[i][0][0], qm_data)
+                edges[i][0][1] = edges[i][0][1] - self._determine_hydrogen_position_offset(edges[i][0][1], qm_data)
 
         return edges
 
