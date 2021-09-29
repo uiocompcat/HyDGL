@@ -30,7 +30,7 @@ jobs:
             conda config --set auto_update_conda no
             conda info -a
             conda build conda.recipe --no-test
-            conda install --use-local nbo2graph
+            conda install -y --use-local nbo2graph
 
       
       # - save_cache:
