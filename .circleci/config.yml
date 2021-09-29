@@ -21,7 +21,7 @@ jobs:
           command: |
             # conda env create -q || conda env update -q
             # source activate adj
-            conda install -y -c conda-forge parameterized 
+            conda install -c conda-forge parameterized 
             conda install -qy conda-build anaconda-client pytest pytest-cov
 
             conda install pytorch torchvision torchaudio cudatoolkit=10.2 -cy pytorch
