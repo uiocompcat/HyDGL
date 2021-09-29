@@ -123,68 +123,47 @@ class GraphGenerator:
         bond_pair_energies = [x[1] for x in qm_data.bond_pair_data_full]
         antibond_pair_energies = [x[1] for x in qm_data.antibond_pair_data_full]
 
+        # decide which index matrix to use
+        index_matrix = None
+        # Wiberg mode
+        if self.bond_determination_mode == BondDeterminationMode.Wiberg:
+            index_matrix = qm_data.wiberg_index_matrix
+        # LMO mode
+        elif self.bond_determination_mode == BondDeterminationMode.LMO:
+            index_matrix = qm_data.lmo_bond_order_matrix
+        # NLMO mode
+        elif self.bond_determination_mode == BondDeterminationMode.NLMO:
+            index_matrix = qm_data.nbo_bond_order_matrix
+        
         edges = []
         # iterate over half triangle matrix to determine bonds
-        for i in range(len(qm_data.wiberg_index_matrix) - 1):
-            for j in range(i + 1, len(qm_data.wiberg_index_matrix), 1):
+        for i in range(len(index_matrix) - 1):
+            for j in range(i + 1, len(index_matrix), 1):
                 
-                # Wiberg mode
-                if self.bond_determination_mode == BondDeterminationMode.Wiberg:
-                    # if larger than threshold --> add bond
-                    if (qm_data.wiberg_index_matrix[i][j]) > self.bond_threshold:
-                    
-                        # append the atom indices (pos 0)
-                        # and Wiberg bond index as a feature (pos 1)
 
-                        # add all hydrogens in explicit mode
-                        if self.hydrogen_mode == HydrogenMode.Explicit:
-                            edges.append([[i, j], [qm_data.wiberg_index_matrix[i][j]]])
-                        # ignore hydrogens in omit and implicit mode
-                        elif self.hydrogen_mode == HydrogenMode.Omit or self.hydrogen_mode == HydrogenMode.Implicit:
-                            if qm_data.atomic_numbers[i] == 1 or qm_data.atomic_numbers[j] == 1:
-                                continue
-                            else:
-                                edges.append([[i, j], [qm_data.wiberg_index_matrix[i][j]]])
+                # if larger than threshold --> add bond
+                if (index_matrix[i][j]) > self.bond_threshold:
                 
-                # LMO mode
-                elif self.bond_determination_mode == BondDeterminationMode.LMO:
-                    
-                    if (qm_data.lmo_bond_order_matrix[i][j]) > self.bond_threshold:
+                    # append the atom indices (pos 0)
+                    # and Wiberg bond index as a feature (pos 1)
 
-                        # append the atom indices (pos 0)
-                        # and Wiberg bond index as a feature (pos 1)
-
-                        # add all hydrogens in explicit mode
-                        if self.hydrogen_mode == HydrogenMode.Explicit:
-                            edges.append([[i, j], [qm_data.lmo_bond_order_matrix[i][j]]])
-                        # ignore hydrogens in omit and implicit mode
-                        elif self.hydrogen_mode == HydrogenMode.Omit or self.hydrogen_mode == HydrogenMode.Implicit:
-                            if qm_data.atomic_numbers[i] == 1 or qm_data.atomic_numbers[j] == 1:
-                                continue
-                            else:
-                                edges.append([[i, j], [qm_data.lmo_bond_order_matrix[i][j]]])
+                    # add all hydrogens in explicit mode
+                    if self.hydrogen_mode == HydrogenMode.Explicit:
+                        edges.append([[i, j], [index_matrix[i][j]]])
+                    # ignore hydrogens in omit and implicit mode
+                    elif self.hydrogen_mode == HydrogenMode.Omit or self.hydrogen_mode == HydrogenMode.Implicit:
+                        if qm_data.atomic_numbers[i] == 1 or qm_data.atomic_numbers[j] == 1:
+                            continue
+                        else:
+                            edges.append([[i, j], [index_matrix[i][j]]])
                 
-                # NLMO mode
-                elif self.bond_determination_mode == BondDeterminationMode.NLMO:
-                    
-                    if (qm_data.nbo_bond_order_matrix[i][j]) > self.bond_threshold:
-
-                        # append the atom indices (pos 0)
-                        # and Wiberg bond index as a feature (pos 1)
-
-                        # add all hydrogens in explicit mode
-                        if self.hydrogen_mode == HydrogenMode.Explicit:
-                            edges.append([[i, j], [qm_data.nbo_bond_order_matrix[i][j]]])
-                        # ignore hydrogens in omit and implicit mode
-                        elif self.hydrogen_mode == HydrogenMode.Omit or self.hydrogen_mode == HydrogenMode.Implicit:
-                            if qm_data.atomic_numbers[i] == 1 or qm_data.atomic_numbers[j] == 1:
-                                continue
-                            else:
-                                edges.append([[i, j], [qm_data.nbo_bond_order_matrix[i][j]]])
-
+                
         # add additional (NBO) features to edges
         for i in range(len(edges)):
             
+            # add bond distance as feature to edges
+            edges[i][1].append(qm_data.bond_distance_matrix[edges[i][0][0]][edges[i][0][1]])
+
             # check if NBO data for the respective bond is available
             # if so add to feature vector
             # otherwise add zeros to feature vector
@@ -196,14 +175,13 @@ class GraphGenerator:
                 # select index of the highest energy (for BD)
                 selected_index = bond_pair_energies.index(max(energies))
 
-                # append data (total length = 7)
-                # number of bond orbitals, energy, occupation, s occ., p occ., d occ., f occ.
+                # append data (total length = 6)
                 edges[i][1].append(len(energies))
                 edges[i][1].append(qm_data.bond_pair_data_full[selected_index][1])
                 edges[i][1].append(qm_data.bond_pair_data_full[selected_index][2])
-                edges[i][1].extend(qm_data.bond_pair_data_full[selected_index][3])
+                edges[i][1].extend(qm_data.bond_pair_data_full[selected_index][3][:3]) # only consider s, p and d orbitals
             else:
-                edges[i][1].extend([0,0,0,0,0,0,0])
+                edges[i][1].extend([0,0,0,0,0,0])
 
             # check if NBO data for the respective antibonds is available
             # if so add to feature vector
@@ -216,14 +194,13 @@ class GraphGenerator:
                 # select index of the lowest energy (for BD*)
                 selected_index = antibond_pair_energies.index(min(energies))
 
-                # append data (total length = 7)
-                # number of antibond orbitals, energy, occupation, s occ., p occ., d occ., f occ.
-                edges[i][1].append(len(energies)) # TODO omit since number of antibonds same to number of bonds?
+                # append data (total length = 5)
+                # edges[i][1].append(len(energies)) # omitted since number of antibonds same to number of bonds
                 edges[i][1].append(qm_data.antibond_pair_data_full[selected_index][1])  
                 edges[i][1].append(qm_data.antibond_pair_data_full[selected_index][2])
-                edges[i][1].extend(qm_data.antibond_pair_data_full[selected_index][3]) # TODO omit since occ. are the same to bond occ.?
+                edges[i][1].extend(qm_data.antibond_pair_data_full[selected_index][3][:3]) # only consider s, p and d orbitals
             else:
-                edges[i][1].extend([0,0,0,0,0,0,0])
+                edges[i][1].extend([0,0,0,0,0])
 
         # rescale node referenes in edges if explicit hydrogens were omitted
         if self.hydrogen_mode == HydrogenMode.Omit or self.hydrogen_mode == HydrogenMode.Implicit:
@@ -237,23 +214,6 @@ class GraphGenerator:
 
         return edges
 
-    def _determine_hydrogen_position_offset(self, atom_index: int, qm_data: QmData):
-        
-        """Counts how many hydrogen atoms are in front of (index-wise) the atom of specified index.
-
-        Returns:
-            int: The number of hydrogens in front of the atom.
-        """
-
-        hydrogen_offset_count = 0
-
-        # iterate through atomic numbers up to atom index
-        for i in range(0, atom_index, 1):
-            if qm_data.atomic_numbers[i] == 1:
-                hydrogen_offset_count += 1
-
-        return hydrogen_offset_count
-
     def _get_nodes(self, qm_data: QmData):
 
         """Gets a list of feature vectors for all nodes.
@@ -261,16 +221,6 @@ class GraphGenerator:
         Returns:
             list[list[floats]]: List of feature vectors of nodes.
         """
-
-        # pre read data for efficiency
-
-        # atom indices that have LP or LV
-        lone_pair_atom_indices = [x[0] for x in qm_data.lone_pair_data_full]
-        lone_vacancy_atom_indices = [x[0] for x in qm_data.lone_vacancy_data_full]
-
-        # corresponding energy values
-        lone_pair_energies = [x[1] for x in qm_data.lone_pair_data_full]
-        lone_vacancy_energies = [x[1] for x in qm_data.lone_vacancy_data_full]
 
         # get hydrogen counts for heavy atoms in implicit mode
         hydrogen_counts = []
@@ -291,49 +241,8 @@ class GraphGenerator:
                 if qm_data.atomic_numbers[i] == 1:
                     continue
 
-            # set up features for node
-            node = []
+            node = self._get_individual_node(qm_data, i)
             
-            node.append(qm_data.atomic_numbers[i])
-            node.append(qm_data.natural_atomic_charges[i])
-            node.extend(qm_data.natural_electron_configuration[i])
-
-            # add lone pair data if available
-            # otherwise set values to 0
-            if i in lone_pair_atom_indices:
-
-                # get list of all lone pair energies for this atom
-                energies = [x[1] for x in qm_data.lone_pair_data_full if x[0] == i]
-                # select index of the highest energy (for LP)
-                selected_index = lone_pair_energies.index(max(energies))
-
-                # append data (total length = 7)
-                # number of lone pairs, energy, occupation, s occ., p occ., d occ., f occ.
-                node.append(len(energies))
-                node.append(qm_data.lone_pair_data_full[selected_index][1])
-                node.append(qm_data.lone_pair_data_full[selected_index][2])
-                node.extend(qm_data.lone_pair_data_full[selected_index][3])
-            else:
-                node.extend([0,0,0,0,0,0,0])
-
-            # add lone vacancy data if available
-            # otherwise set values to 0
-            if i in lone_vacancy_atom_indices:
-
-                # get list of all lone pair energies for this atom
-                energies = [x[1] for x in qm_data.lone_vacancy_data_full if x[0] == i]
-                # select index of the lowest energy (for LV)
-                selected_index = lone_vacancy_energies.index(min(energies))
-
-                # append data (total length = 7)
-                # number of lone vacancies, energy, occupation, s occ., p occ., d occ., f occ.
-                node.append(len(energies))
-                node.append(qm_data.lone_vacancy_data_full[selected_index][1])
-                node.append(qm_data.lone_vacancy_data_full[selected_index][2])
-                node.extend(qm_data.lone_vacancy_data_full[selected_index][3])
-            else:
-                node.extend([0,0,0,0,0,0,0])
-
             # add implicit hydrogens
             if self.hydrogen_mode == HydrogenMode.Implicit:
                 node.append(hydrogen_counts[i])
@@ -345,7 +254,108 @@ class GraphGenerator:
 
         return nodes
 
+    def _get_individual_node(self, qm_data: QmData, atom_index: int):
+
+        # for brevity
+        i = atom_index
+
+        # pre read data for efficiency
+
+        # atom indices that have LP or LV
+        lone_pair_atom_indices = [x[0] for x in qm_data.lone_pair_data_full]
+        lone_vacancy_atom_indices = [x[0] for x in qm_data.lone_vacancy_data_full]
+
+        # corresponding energy values
+        lone_pair_energies = [x[1] for x in qm_data.lone_pair_data_full]
+        lone_vacancy_energies = [x[1] for x in qm_data.lone_vacancy_data_full]
+
+        # set up features for node
+        node = []
+        
+        node.append(qm_data.atomic_numbers[i])
+        node.append(qm_data.natural_atomic_charges[i])
+        node.extend(qm_data.natural_electron_configuration[i])
+
+        # add bond order totals per atom
+        # Wiberg mode
+        if self.bond_determination_mode == BondDeterminationMode.Wiberg:
+            node.append(qm_data.wiberg_atom_totals[i])
+        # LMO mode
+        elif self.bond_determination_mode == BondDeterminationMode.LMO:
+            node.append(qm_data.nbo_bond_order_totals[i])        
+        # NLMO mode
+        elif self.bond_determination_mode == BondDeterminationMode.NLMO:
+            node.append(qm_data.nbo_bond_order_totals[i])
+        else:
+            warnings.warn('Bond determination mode ' + str(self.bond_determination_mode) + ' not recognised. Skipping')
+
+        # add lone pair data if available
+        # otherwise set values to 0
+        if i in lone_pair_atom_indices:
+
+            # get list of all lone pair energies for this atom
+            energies = [x[1] for x in qm_data.lone_pair_data_full if x[0] == i]
+            # select index of the highest energy (for LP)
+            selected_index = lone_pair_energies.index(max(energies))
+
+            # append data (total length = 5)
+            node.append(len(energies))
+            node.append(qm_data.lone_pair_data_full[selected_index][1])
+            node.append(qm_data.lone_pair_data_full[selected_index][2])
+
+            # get only s and d symmetries
+            oribtal_symmetries = [qm_data.lone_pair_data_full[selected_index][3][k] for k in [0,2]]
+            node.extend(oribtal_symmetries)
+        else:
+            node.extend([0,0,0,0,0])
+
+        # add lone vacancy data if available
+        # otherwise set values to 0
+        if i in lone_vacancy_atom_indices:
+
+            # get list of all lone pair energies for this atom
+            energies = [x[1] for x in qm_data.lone_vacancy_data_full if x[0] == i]
+            # select index of the lowest energy (for LV)
+            selected_index = lone_vacancy_energies.index(min(energies))
+
+            # append data (total length = 5)
+            node.append(len(energies))
+            node.append(qm_data.lone_vacancy_data_full[selected_index][1])
+            node.append(qm_data.lone_vacancy_data_full[selected_index][2])
+
+            # get only s and d symmetries
+            oribtal_symmetries = [qm_data.lone_vacancy_data_full[selected_index][3][k] for k in [0,2]]
+            node.extend(oribtal_symmetries)
+        else:
+            node.extend([0,0,0,0,0])
+
+        return node
+
+
+    def _determine_hydrogen_position_offset(self, atom_index: int, qm_data: QmData):
+        
+        """Counts how many hydrogen atoms are in front of (index-wise) the atom of specified index.
+
+        Returns:
+            int: The number of hydrogens in front of the atom.
+        """
+
+        hydrogen_offset_count = 0
+
+        # iterate through atomic numbers up to atom index
+        for i in range(0, atom_index, 1):
+            if qm_data.atomic_numbers[i] == 1:
+                hydrogen_offset_count += 1
+
+        return hydrogen_offset_count
+
     def _determine_hydrogen_count(self, atom_index: int, qm_data: QmData):
+
+        """Determines how many hyrdogen atoms are bound to the atom with the specified index.
+
+        Returns:
+            int: The number of bound hydrogen atoms.
+        """
 
         # checking Wiberg bond index matrix for bound hydrogens
         hydrogen_count = 0

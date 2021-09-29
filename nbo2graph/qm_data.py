@@ -13,6 +13,7 @@ class QmData():
     n_atoms: float = None
     atomic_numbers: list[int] = None
     geometric_data: list[list[float]] = None
+    bond_distance_matrix: list[list[float]] = None
 
     charge: int = None # e
     molecular_mass: float = None # amu
@@ -94,6 +95,17 @@ class QmData():
 
         """Calculates composite properties such as HOMO-LUMO gap and delta values/corrections between SVP and TZVP."""
 
+        # geometric properties
+
+        # calculate distance matrix
+        distance_matrix = [[0 for x in range(self.n_atoms)] for y in range(self.n_atoms)]
+        for i in range(len(distance_matrix) - 1):
+            for j in range(i + 1, len(distance_matrix), 1):
+                distance = QmData._calculate_euclidean_distance(self.geometric_data[i], self.geometric_data[j])
+                distance_matrix[i][j] = distance
+                distance_matrix[j][i] = distance
+        self.bond_distance_matrix = distance_matrix
+
         # physical properties
 
         # calculate homo lumo svp
@@ -170,4 +182,15 @@ class QmData():
             merged_data.append(data_point)
         
         return merged_data
+    
+    @staticmethod
+    def _calculate_euclidean_distance(x, y):
         
+        # make sure both lists have the same length
+        assert len(x) == len(y)
+
+        # get dimension wise squared distances
+        squares = [(a - b) ** 2 for a, b in zip(x, y)]
+
+        # return sum of square root
+        return sum(squares) ** 0.5
