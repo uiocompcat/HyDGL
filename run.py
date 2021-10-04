@@ -6,8 +6,8 @@ from nbo2graph.graph_generator import GraphGenerator
 from nbo2graph.qm_atrribute import QmAttribute
 from nbo2graph.bond_determination_mode import BondDeterminationMode
 
-from nbo2graph.node_features import NodeFeatures
-from nbo2graph.edge_features import EdgeFeatures
+from nbo2graph.node_feature import NodeFeature
+from nbo2graph.edge_feature import EdgeFeature
 
 from nbo2graph.hydrogen_mode import HydrogenMode
 
@@ -25,8 +25,8 @@ for file in os.listdir(path):
     if file.endswith(".log"):
         files.append(file)
 
-node_features = [NodeFeatures.ATOMIC_NUMBERS]
-edge_features = [EdgeFeatures.BOND_ORDER]
+node_features = [NodeFeature.ATOMIC_NUMBERS]
+edge_features = [EdgeFeature.BOND_ORDER]
 
 # generate vector for attributes to be extracted
 attributes_to_extract = [QmAttribute.SVP_ELECTRONIC_ENERGY]
@@ -59,8 +59,8 @@ for graph in graphs:
     #print(graph.get_disjoint_sub_graphs())
     # print(graph.is_connected())
 
-    print(graph.nodes)
-    print(graph.edges)
+    # print(graph.nodes)
+    # print(graph.edges)
     print(graph.attributes)
 
     pytorch_graph_data = graph.get_pytorch_data_object()

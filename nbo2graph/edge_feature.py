@@ -1,6 +1,6 @@
 from enum import Enum, auto
 
-class EdgeFeatures(Enum):
+class EdgeFeature(Enum):
 
     '''Enum class for the different node features to be used.'''
     

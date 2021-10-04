@@ -1,12 +1,11 @@
 from torch._C import Node
-from nbo2graph.edge_features import EdgeFeatures
 import warnings
 
 from nbo2graph.graph import Graph
 from nbo2graph.qm_data import QmData
 from nbo2graph.qm_atrribute import QmAttribute
-from nbo2graph.edge_features import EdgeFeatures
-from nbo2graph.node_features import NodeFeatures
+from nbo2graph.edge_feature import EdgeFeature
+from nbo2graph.node_feature import NodeFeature
 from nbo2graph.hydrogen_mode import HydrogenMode
 from nbo2graph.bond_determination_mode import BondDeterminationMode
 
@@ -14,18 +13,18 @@ class GraphGenerator:
 
     """Class to generate appropriate graphs based on supplied QM data."""
 
-    def __init__(self, node_features: list[NodeFeatures],
-                       edge_feautres: list[EdgeFeatures],
-                       bond_determination_mode: BondDeterminationMode, 
-                       attributes_to_extract=[],
+    def __init__(self, node_features: list[NodeFeature] = [],
+                       edge_feautres: list[EdgeFeature] = [],
+                       attributes_to_extract: list[QmAttribute] =[],
+                       bond_determination_mode: BondDeterminationMode = BondDeterminationMode.WIBERG,
                        bond_threshold=0.3, 
                        hydrogen_count_threshold=0.5, 
                        hydrogen_mode=HydrogenMode.EXPLICIT):
         """Constructor
 
         Args:
-            node_features (list[NodeFeatures]): List of node features to extract.
-            edge_features (list[EdgeFeatures]): List of edge features to extract.
+            node_features (list[NodeFeature]): List of node features to extract.
+            edge_features (list[EdgeFeature]): List of edge features to extract.
             bond_determination_mode (BondDeterminationMode): Specifies the way bonds are determined when building the graph.
             attributes_to_extract (list[QmAttribute]): List of attributes defining which QM properties should be extracted as attributes.
             bond_threshold (float): Threshold value defining the lower bound for considering bonds.
@@ -170,18 +169,18 @@ class GraphGenerator:
                     edges.append([[i, j], []])
 
                     # append bond order as feature if requested
-                    if EdgeFeatures.BOND_ORDER in self.edge_features:
+                    if EdgeFeature.BOND_ORDER in self.edge_features:
                         edges[-1][1].append(index_matrix[i][j])
     
                 
         # add additional (NBO) features to edges
         for i in range(len(edges)):             
 
-            if EdgeFeatures.BOND_DISTANCE in self.edge_features:
+            if EdgeFeature.BOND_DISTANCE in self.edge_features:
                 # add bond distance as feature to edges
                 edges[i][1].append(qm_data.bond_distance_matrix[edges[i][0][0]][edges[i][0][1]])
 
-            if EdgeFeatures.BOND_ORBITAL_DATA in self.edge_features:
+            if EdgeFeature.BOND_ORBITAL_DATA in self.edge_features:
                 # check if NBO data for the respective bond is available
                 # if so add to feature vector
                 # otherwise add zeros to feature vector
@@ -201,7 +200,7 @@ class GraphGenerator:
                 else:
                     edges[i][1].extend([0,0,0,0,0,0])
 
-            if EdgeFeatures.ANTIBOND_ORBITAL_DATA in self.edge_features:
+            if EdgeFeature.ANTIBOND_ORBITAL_DATA in self.edge_features:
                 # check if NBO data for the respective antibonds is available
                 # if so add to feature vector
                 # otherwise add zeros to feature vector
@@ -291,16 +290,16 @@ class GraphGenerator:
         # set up features for node
         node = []
         
-        if NodeFeatures.ATOMIC_NUMBERS in self.node_features:
+        if NodeFeature.ATOMIC_NUMBERS in self.node_features:
             node.append(qm_data.atomic_numbers[i])
     
-        if NodeFeatures.NATURAL_ATOMIC_CHARGES in self.node_features:
+        if NodeFeature.NATURAL_ATOMIC_CHARGES in self.node_features:
             node.append(qm_data.natural_atomic_charges[i])
     
-        if NodeFeatures.NATURAL_ELECTRON_CONFIGURATION in self.node_features:
+        if NodeFeature.NATURAL_ELECTRON_CONFIGURATION in self.node_features:
             node.extend(qm_data.natural_electron_configuration[i])
 
-        if NodeFeatures.BOND_ORDER_TOTAL in self.node_features:
+        if NodeFeature.BOND_ORDER_TOTAL in self.node_features:
             # add bond order totals per atom
             # Wiberg mode
             if self.bond_determination_mode == BondDeterminationMode.WIBERG:
@@ -314,7 +313,7 @@ class GraphGenerator:
             else:
                 warnings.warn('Bond determination mode ' + str(self.bond_determination_mode) + ' not recognised. Skipping')
 
-        if NodeFeatures.LONE_PAIRS in self.node_features:
+        if NodeFeature.LONE_PAIRS in self.node_features:
             # add lone pair data if available
             # otherwise set values to 0
             if i in lone_pair_atom_indices:
@@ -336,7 +335,7 @@ class GraphGenerator:
                 node.extend([0,0,0,0,0])
 
 
-        if NodeFeatures.LONE_VACANCIES in self.node_features:
+        if NodeFeature.LONE_VACANCIES in self.node_features:
             # add lone vacancy data if available
             # otherwise set values to 0
             if i in lone_vacancy_atom_indices:

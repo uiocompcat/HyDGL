@@ -1,6 +1,6 @@
 from enum import Enum, auto
 
-class NodeFeatures(Enum):
+class NodeFeature(Enum):
 
     '''Enum class for the different node features to be used.'''
     
