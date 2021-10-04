@@ -6,7 +6,7 @@ class BondDeterminationMode(Enum):
     # TODO naming convention for enums??
 
     # Use the Wiberg index matrix to determine bonds
-    Wiberg = auto()
+    WIBERG = auto()
     # Use the Localised Molecular Orbitals (LMO) to determine bonds
     LMO = auto()
     # Use the Natural Localised Molecular Orbitals (NLMO) to determine bonds

@@ -3,45 +3,44 @@ from enum import Enum, auto
 class QmAttribute(Enum):
 
     '''Enum class for the different QM attributes to be used.'''
-    # TODO naming convention for enums??
     
     # dispersion energy
-    SvpDispersionEnergy = auto()
-    TzvpDispersionEnergy = auto()
-
+    SVP_DISPERSION_ENERGY = auto()
+    TZVP_DISPERSION_ENERGY = auto()
+    
     # electronic energy
-    SvpElectronicEnergy = auto()
-    TzvpElectronicEnergy = auto()
+    SVP_ELECTRONIC_ENERGY = auto()
+    TZVP_ELECTRONIC_ENERGY = auto()
 
     # dipole moment
-    SvpDipoleMoment = auto()
-    TzvpDipoleMoment = auto()
+    SVP_DIPOLE_MOMENT = auto()
+    TZVP_DIPOLE_MOMENT = auto()
 
     # orbitals
-    SvpHomoEnergy = auto()
-    SvpLumoEnergy = auto()
-    TzvpHomoEnergy = auto()
-    TzvpLumoEnergy = auto()
+    SVP_HOMO_ENERGY = auto()
+    SVP_LUMO_ENERGY = auto()
+    TZVP_HOMO_ENERGY = auto()
+    TZVP_LUMO_ENERGY = auto()
 
-    SvpHomoLumoGap = auto()
-    TzvpHomoLumoGap = auto()
+    SVP_HOMO_LUMO_GAP = auto()
+    TZVP_HOMO_LUMO_GAP = auto()
 
     # frequencies
-    LowestVibrationalFrequency = auto()
-    HighestVibrationalFrequency = auto()
+    LOWEST_VIBRATIONAL_FREQUENCY = auto()
+    HIGHEST_VIBRATIONAL_FREQUENCY = auto()
 
     # thermo chemistry
-    HeatCapacity = auto()
-    Entropy = auto()
+    HEAT_CAPACITY = auto()
+    ENTROPY = auto()
 
-    ZpeCorrection = auto()
-    EnthalpyEnergy = auto()
-    GibbsEnergy = auto()
-    CorrectedEnthalpyEnergy = auto()
-    CorrectedGibbsEnergy = auto()
+    ZPE_CORRECTION = auto()
+    ENTHALPY_ENERGY = auto()
+    GIBBS_ENERGY = auto()
+    CORRECTED_ENTHALPY_ENERGY = auto()
+    CORRECTED_GIBBS_ENERGY = auto()
 
     # delta values
-    DispersionEnergyDelta = auto()
-    ElectronicEnergyDelta = auto()
-    DipoleMomentDelta = auto()
-    HomoLumoGapDelta = auto()
+    DISPERSION_ENERGY_DELTA = auto()
+    ELECTRONIC_ENERGY_DELTA = auto()
+    DIPOLE_MOMENT_DELTA = auto()
+    HOMO_LUMO_GAP_DELTA = auto()

@@ -6,6 +6,9 @@ from nbo2graph.graph_generator import GraphGenerator
 from nbo2graph.qm_atrribute import QmAttribute
 from nbo2graph.bond_determination_mode import BondDeterminationMode
 
+from nbo2graph.node_features import NodeFeatures
+from nbo2graph.edge_features import EdgeFeatures
+
 from nbo2graph.hydrogen_mode import HydrogenMode
 
 from nbo2graph.element_look_up_table import ElementLookUpTable
@@ -22,12 +25,16 @@ for file in os.listdir(path):
     if file.endswith(".log"):
         files.append(file)
 
+node_features = [NodeFeatures.ATOMIC_NUMBERS]
+edge_features = [EdgeFeatures.BOND_ORDER]
+
 # generate vector for attributes to be extracted
-attributes_to_extract = [QmAttribute.SvpHomoLumoGap]
+attributes_to_extract = [QmAttribute.SVP_ELECTRONIC_ENERGY]
 
 # set up graph generator with parameters
-wiberg_g_g = GraphGenerator(bond_determination_mode=BondDeterminationMode.NLMO, bond_threshold=0.3, attributes_to_extract=attributes_to_extract, hydrogen_mode=HydrogenMode.Implicit)
-nlmo_g_g = GraphGenerator(bond_determination_mode=BondDeterminationMode.NLMO, bond_threshold=0.1, attributes_to_extract=attributes_to_extract, hydrogen_mode=HydrogenMode.Implicit)
+wiberg_g_g = GraphGenerator(node_features=node_features, edge_feautres=edge_features,
+                            bond_determination_mode=BondDeterminationMode.NLMO, bond_threshold=0.3, attributes_to_extract=attributes_to_extract, hydrogen_mode=HydrogenMode.IMPLICIT)
+#nlmo_g_g = GraphGenerator(bond_determination_mode=BondDeterminationMode.NLMO, bond_threshold=0.1, attributes_to_extract=attributes_to_extract, hydrogen_mode=HydrogenMode.IMPLICIT)
 
 
 graphs = []
@@ -54,6 +61,7 @@ for graph in graphs:
 
     print(graph.nodes)
     print(graph.edges)
+    print(graph.attributes)
 
     pytorch_graph_data = graph.get_pytorch_data_object()
     G = to_networkx(pytorch_graph_data)
