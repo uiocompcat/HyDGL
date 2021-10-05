@@ -10,6 +10,14 @@ class EdgeFeature(Enum):
     # euclidean distance between atoms
     BOND_DISTANCE = auto()
 
-    # NBO data
-    BOND_ORBITAL_DATA = auto()
-    ANTIBOND_ORBITAL_DATA = auto()
+    # NBO data bonding
+    BOND_ORBITAL_DATA_S = auto()
+    BOND_ORBITAL_DATA_P = auto()
+    BOND_ORBITAL_DATA_D = auto()
+    BOND_ORBITAL_DATA_F = auto()
+        
+    # NBO data antibonding
+    ANTIBOND_ORBITAL_DATA_S = auto()
+    ANTIBOND_ORBITAL_DATA_P = auto()
+    ANTIBOND_ORBITAL_DATA_D = auto()
+    ANTIBOND_ORBITAL_DATA_F = auto()

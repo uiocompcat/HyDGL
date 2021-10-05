@@ -25,7 +25,7 @@ for file in os.listdir(path):
     if file.endswith(".log"):
         files.append(file)
 
-node_features = [NodeFeature.ATOMIC_NUMBERS]
+node_features = [NodeFeature.LONE_PAIRS_S]
 edge_features = [EdgeFeature.BOND_ORDER]
 
 # generate vector for attributes to be extracted
@@ -52,7 +52,7 @@ for i in range(1):
 for graph in graphs:
 
     # print(graph.attributes)
-    #print(graph.nodes)
+    print(graph.nodes)
     # pytorch
 
     # graph.get_adjacent_nodes(49)
@@ -66,9 +66,9 @@ for graph in graphs:
     pytorch_graph_data = graph.get_pytorch_data_object()
     G = to_networkx(pytorch_graph_data)
 
-    node_label_dict = {}
-    for i in range(len(graph.nodes)):
-        node_label_dict[i] = ElementLookUpTable.get_element_identifier(graph.nodes[i][0])
+    # node_label_dict = {}
+    # for i in range(len(graph.nodes)):
+    #     node_label_dict[i] = ElementLookUpTable.get_element_identifier(graph.nodes[i][0])
         # node_label_dict[i] = graph.nodes[i][-1]
 
     # print(node_label_dict)

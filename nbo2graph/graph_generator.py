@@ -8,6 +8,7 @@ from nbo2graph.edge_feature import EdgeFeature
 from nbo2graph.node_feature import NodeFeature
 from nbo2graph.hydrogen_mode import HydrogenMode
 from nbo2graph.bond_determination_mode import BondDeterminationMode
+from nbo2graph.orbital_occupation_types import OrbitalOccupationTypes
 
 class GraphGenerator:
 
@@ -43,6 +44,12 @@ class GraphGenerator:
         self.hydrogen_mode = hydrogen_mode
         self.hydrogen_count_threshold = hydrogen_count_threshold
 
+        self.lone_pair_orbital_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationTypes.LONE_PAIR)
+        self.lone_vacancy_orbital_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationTypes.LONE_VACANCY)
+        self.natural_orbital_configuration_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationTypes.NATURAL_ELECTRON_CONFIGURATION)
+        self.bond_orbital_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationTypes.BOND_ORBITAL)
+        self.antibond_orbital_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationTypes.ANTIBOND_ORBITAL)
+
     def generate_graph(self, qm_data: QmData):
 
         # get edges
@@ -61,6 +68,12 @@ class GraphGenerator:
         return Graph(nodes, edges, attributes)
 
     def _get_attributes(self, qm_data: QmData):
+
+        """Helper function to resolve which attributes to use.
+
+        Returns:
+            list[float]: List of graph attributes.
+        """
 
         # return variable
         attribute_list = []
@@ -176,49 +189,59 @@ class GraphGenerator:
         # add additional (NBO) features to edges
         for i in range(len(edges)):             
 
+            # add bond distance as feature to edges
             if EdgeFeature.BOND_DISTANCE in self.edge_features:
-                # add bond distance as feature to edges
                 edges[i][1].append(qm_data.bond_distance_matrix[edges[i][0][0]][edges[i][0][1]])
 
-            if EdgeFeature.BOND_ORBITAL_DATA in self.edge_features:
+            # add number of bond/antibond orbitals if requested
+            if len(self.bond_orbital_indices) > 0 or len(self.antibond_orbital_indices) > 0:
+                if edges[i][0] in bond_pair_atom_indices:
+                    
+                    # get list of all bond energies for this atom
+                    energies = [x[1] for x in qm_data.bond_pair_data_full if x[0] == edges[i][0]]
+
+                    edges[i][1].append(len(energies))
+                else:
+                    edges[i][1].append(0)
+
+            if len(self.bond_orbital_indices) > 0:
                 # check if NBO data for the respective bond is available
                 # if so add to feature vector
                 # otherwise add zeros to feature vector
                 if edges[i][0] in bond_pair_atom_indices:
 
-                    # get list of all lone pair energies for this atom
+                    # get list of all bond pair energies for this atom
                     energies = [x[1] for x in qm_data.bond_pair_data_full if x[0] == edges[i][0]]
 
                     # select index of the highest energy (for BD)
                     selected_index = bond_pair_energies.index(max(energies))
 
-                    # append data (total length = 6)
-                    edges[i][1].append(len(energies))
+                    # append data (total length = 2 + number of orbital occupancies)
                     edges[i][1].append(qm_data.bond_pair_data_full[selected_index][1])
                     edges[i][1].append(qm_data.bond_pair_data_full[selected_index][2])
-                    edges[i][1].extend(qm_data.bond_pair_data_full[selected_index][3][:3]) # only consider s, p and d orbitals
-                else:
-                    edges[i][1].extend([0,0,0,0,0,0])
+                    edges[i][1].extend([qm_data.bond_pair_data_full[selected_index][3][k] for k in self.bond_orbital_indices])
 
-            if EdgeFeature.ANTIBOND_ORBITAL_DATA in self.edge_features:
+                else:
+                    edges[i][1].extend((2 + len(self.bond_orbital_indices)) * [0])
+
+            if len(self.antibond_orbital_indices) > 0:
                 # check if NBO data for the respective antibonds is available
                 # if so add to feature vector
                 # otherwise add zeros to feature vector
                 if edges[i][0] in antibond_pair_atom_indices:
 
-                    # get list of all lone pair energies for this atom
+                    # get list of all antibond pair energies for this atom
                     energies = [x[1] for x in qm_data.antibond_pair_data_full if x[0] == edges[i][0]]
 
                     # select index of the lowest energy (for BD*)
                     selected_index = antibond_pair_energies.index(min(energies))
 
-                    # append data (total length = 5)
-                    # edges[i][1].append(len(energies)) # omitted since number of antibonds same to number of bonds
+                    # append data (total length = 2 + number of orbital occupancies)
                     edges[i][1].append(qm_data.antibond_pair_data_full[selected_index][1])  
                     edges[i][1].append(qm_data.antibond_pair_data_full[selected_index][2])
-                    edges[i][1].extend(qm_data.antibond_pair_data_full[selected_index][3][:3]) # only consider s, p and d orbitals
+                    edges[i][1].extend([qm_data.bond_pair_data_full[selected_index][3][k] for k in self.antibond_orbital_indices])
                 else:
-                    edges[i][1].extend([0,0,0,0,0])
+                    edges[i][1].extend((2 + len(self.antibond_orbital_indices)) * [0])
 
         # rescale node referenes in edges if explicit hydrogens were omitted
         if self.hydrogen_mode == HydrogenMode.OMIT or self.hydrogen_mode == HydrogenMode.IMPLICIT:
@@ -295,9 +318,9 @@ class GraphGenerator:
     
         if NodeFeature.NATURAL_ATOMIC_CHARGES in self.node_features:
             node.append(qm_data.natural_atomic_charges[i])
-    
-        if NodeFeature.NATURAL_ELECTRON_CONFIGURATION in self.node_features:
-            node.extend(qm_data.natural_electron_configuration[i])
+
+        if len(self.natural_orbital_configuration_indices) > 0:
+            node.extend([qm_data.natural_electron_configuration[i][k] for k in self.natural_orbital_configuration_indices])
 
         if NodeFeature.BOND_ORDER_TOTAL in self.node_features:
             # add bond order totals per atom
@@ -313,7 +336,7 @@ class GraphGenerator:
             else:
                 warnings.warn('Bond determination mode ' + str(self.bond_determination_mode) + ' not recognised. Skipping')
 
-        if NodeFeature.LONE_PAIRS in self.node_features:
+        if len(self.lone_pair_orbital_indices) > 0:
             # add lone pair data if available
             # otherwise set values to 0
             if i in lone_pair_atom_indices:
@@ -328,14 +351,13 @@ class GraphGenerator:
                 node.append(qm_data.lone_pair_data_full[selected_index][1])
                 node.append(qm_data.lone_pair_data_full[selected_index][2])
 
-                # get only s and d symmetries
-                oribtal_symmetries = [qm_data.lone_pair_data_full[selected_index][3][k] for k in [0,2]]
+                # get orbital occupations
+                oribtal_symmetries = [qm_data.lone_pair_data_full[selected_index][3][k] for k in self.lone_pair_orbital_indices]
                 node.extend(oribtal_symmetries)
             else:
-                node.extend([0,0,0,0,0])
+                node.extend((3 + len(self.lone_pair_orbital_indices)) * [0])
 
-
-        if NodeFeature.LONE_VACANCIES in self.node_features:
+        if len(self.lone_vacancy_orbital_indices) > 0:
             # add lone vacancy data if available
             # otherwise set values to 0
             if i in lone_vacancy_atom_indices:
@@ -350,14 +372,71 @@ class GraphGenerator:
                 node.append(qm_data.lone_vacancy_data_full[selected_index][1])
                 node.append(qm_data.lone_vacancy_data_full[selected_index][2])
 
-                # get only s and d symmetries
-                oribtal_symmetries = [qm_data.lone_vacancy_data_full[selected_index][3][k] for k in [0,2]]
+                # get orbital occupations
+                oribtal_symmetries = [qm_data.lone_vacancy_data_full[selected_index][3][k] for k in self.lone_vacancy_orbital_indices]
                 node.extend(oribtal_symmetries)
             else:
-                node.extend([0,0,0,0,0])
+                node.extend((3 + len(self.lone_vacancy_orbital_indices)) * [0])
 
         return node
 
+    def _get_orbtials_to_extract_indices(self, mode):
+
+        """Helper function to parse information about which orbitals occupancies to use as node/edge features.
+
+        Returns:
+            list[int]: List specifying which orbital occupancies to consider (0 -> s, 1 -> p, 2 -> d, 3 -> f).
+        """
+
+        orbital_indices = []
+
+        if mode == OrbitalOccupationTypes.LONE_PAIR:
+            if NodeFeature.LONE_PAIRS_S in self.node_features:
+                orbital_indices.append(0)
+            if NodeFeature.LONE_PAIRS_P in self.node_features:
+                orbital_indices.append(1)
+            if NodeFeature.LONE_PAIRS_D in self.node_features:
+                orbital_indices.append(2)
+            if NodeFeature.LONE_PAIRS_F in self.node_features:
+                orbital_indices.append(3)
+        elif mode == OrbitalOccupationTypes.LONE_VACANCY:
+            if NodeFeature.LONE_VACANCIES_S in self.node_features:
+                orbital_indices.append(0)
+            if NodeFeature.LONE_VACANCIES_P in self.node_features:
+                orbital_indices.append(1)
+            if NodeFeature.LONE_VACANCIES_D in self.node_features:
+                orbital_indices.append(2)
+            if NodeFeature.LONE_VACANCIES_F in self.node_features:
+                orbital_indices.append(3)
+        elif mode == OrbitalOccupationTypes.NATURAL_ELECTRON_CONFIGURATION:
+            if NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S in self.node_features:
+                orbital_indices.append(0)
+            if NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P in self.node_features:
+                orbital_indices.append(1)
+            if NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D in self.node_features:
+                orbital_indices.append(2)
+            if NodeFeature.NATURAL_ELECTRON_CONFIGURATION_F in self.node_features:
+                orbital_indices.append(3)
+        elif mode == OrbitalOccupationTypes.BOND_ORBITAL:
+            if EdgeFeature.BOND_ORBITAL_DATA_S in self.edge_features:
+                orbital_indices.append(0)
+            if EdgeFeature.BOND_ORBITAL_DATA_P in self.edge_features:
+                orbital_indices.append(1)
+            if EdgeFeature.BOND_ORBITAL_DATA_D in self.edge_features: 
+                orbital_indices.append(2)
+            if EdgeFeature.BOND_ORBITAL_DATA_F in self.edge_features:      
+                orbital_indices.append(3)
+        elif mode == OrbitalOccupationTypes.ANTIBOND_ORBITAL:
+            if EdgeFeature.ANTIBOND_ORBITAL_DATA_S in self.edge_features:
+                orbital_indices.append(0)
+            if EdgeFeature.ANTIBOND_ORBITAL_DATA_P in self.edge_features:
+                orbital_indices.append(1)
+            if EdgeFeature.ANTIBOND_ORBITAL_DATA_D in self.edge_features: 
+                orbital_indices.append(2)
+            if EdgeFeature.ANTIBOND_ORBITAL_DATA_F in self.edge_features:      
+                orbital_indices.append(3)
+
+        return orbital_indices
 
     def _determine_hydrogen_position_offset(self, atom_index: int, qm_data: QmData):
         
