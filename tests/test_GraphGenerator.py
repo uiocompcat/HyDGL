@@ -205,5 +205,127 @@ class TestGraphGenerator(unittest.TestCase):
             self.assertEqual(len(result[i]), len(expected[i]))
             for j in range(len(result[i])):
                 # assert equality
-                self.assertAlmostEqual(result[i][j], expected[i][j], places=4)
+                self.assertAlmostEqual(result[i][j], expected[i][j], places=3)
 
+    @parameterized.expand([
+
+        [
+         0, 0.1, []
+        ],
+
+        [
+         11, 0.1, [10, 12, 41]
+        ],
+
+    ])
+
+    def test_get_bound_atom_indices(self, atom_index, threshold, expected):
+
+        # load data
+        qm_data = DataParser('./tests/test_file.out').parse()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator()
+
+        # get result
+        result = gg._get_bound_atom_indices(atom_index, qm_data, threshold)
+
+        self.assertEqual(result, expected)
+
+
+    @parameterized.expand([
+
+        [
+         -1, 0.1
+        ],
+
+        [
+         47, 0.1
+        ],
+
+    ])
+    def test_get_bound_atom_indices_with_invalid_input(self, atom_index, threshold):
+
+        # load data
+        qm_data = DataParser('./tests/test_file.out').parse()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator()
+
+        # get result
+        self.assertRaises(ValueError, gg._get_bound_atom_indices, atom_index, qm_data, threshold)
+
+
+    @parameterized.expand([
+
+        [
+         2, 0.1, []
+        ],
+
+        [
+         7, 0.1, [32, 45, 46]
+        ],
+
+    ])
+
+    def test_get_bound_h_indices(self, atom_index, threshold, expected):
+
+        # load data
+        qm_data = DataParser('./tests/test_file.out').parse()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator()
+
+        # get result
+        result = gg._get_bound_h_atom_indices(atom_index, qm_data, threshold)
+
+        self.assertEqual(result, expected)
+
+
+    @parameterized.expand([
+
+        [
+         -1, 0.1
+        ],
+
+        [
+         47, 0.1
+        ],
+
+    ])
+    def test_get_bound_h_indices_with_invalid_input(self, atom_index, threshold):
+
+        # load data
+        qm_data = DataParser('./tests/test_file.out').parse()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator()
+
+        # get result
+        self.assertRaises(ValueError, gg._get_bound_h_atom_indices, atom_index, qm_data, threshold)
+
+
+    @parameterized.expand([
+
+        [
+         15, 0
+        ],
+
+        [
+         18, 1
+        ],
+
+    ])
+
+    def test_determine_hydrogen_count(self, atom_index, expected):
+
+        # load data
+        qm_data = DataParser('./tests/test_file.out').parse()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator()
+
+        # get result
+        result = gg._determine_hydrogen_count(atom_index, qm_data)
+
+        self.assertEqual(result, expected)

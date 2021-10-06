@@ -44,6 +44,8 @@ class GraphGenerator:
         self.hydrogen_mode = hydrogen_mode
         self.hydrogen_count_threshold = hydrogen_count_threshold
 
+        # get orbital lists specifying which orbitals to consider 
+        # 0 -> s, 1 -> p, 2 -> d, 3 -> f
         self.lone_pair_orbital_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationTypes.LONE_PAIR)
         self.lone_vacancy_orbital_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationTypes.LONE_VACANCY)
         self.natural_orbital_configuration_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationTypes.NATURAL_ELECTRON_CONFIGURATION)
@@ -67,78 +69,13 @@ class GraphGenerator:
 
         return Graph(nodes, edges, attributes)
 
-    def _get_attributes(self, qm_data: QmData):
+    def _get_edges(self, qm_data: QmData):
 
-        """Helper function to resolve which attributes to use.
+        """Gets edges and their corresponding feature vectors.
 
         Returns:
-            list[float]: List of graph attributes.
+            list[list[int], float]: Adjacency list with corresponding feature vectors.
         """
-
-        # return variable
-        attribute_list = []
-
-        for i in range(len(self.attributes_to_extract)):
-
-            if type(self.attributes_to_extract[i]) is not QmAttribute:
-                warnings.warn('Element ' + str(i) + ' of list is not of type QmAttribute. Entry will be skipped.')
-
-            if self.attributes_to_extract[i] == QmAttribute.SVP_ELECTRONIC_ENERGY:
-                attribute_list.append(qm_data.svp_electronic_energy)
-            elif self.attributes_to_extract[i] == QmAttribute.TZVP_ELECTRONIC_ENERGY:
-                attribute_list.append(qm_data.tzvp_electronic_energy)
-            elif self.attributes_to_extract[i] == QmAttribute.SVP_DISPERSION_ENERGY:
-                attribute_list.append(qm_data.svp_dispersion_energy)
-            elif self.attributes_to_extract[i] == QmAttribute.TZVP_DISPERSION_ENERGY:
-                attribute_list.append(qm_data.tzvp_dispersion_energy)
-            elif self.attributes_to_extract[i] == QmAttribute.SVP_DIPOLE_MOMENT:
-                attribute_list.append(qm_data.svp_dipole_moment)
-            elif self.attributes_to_extract[i] == QmAttribute.TZVP_DIPOLE_MOMENT:
-                attribute_list.append(qm_data.tzvp_dipole_moment)
-            elif self.attributes_to_extract[i] == QmAttribute.SVP_HOMO_ENERGY:
-                attribute_list.append(qm_data.svp_homo_energy)
-            elif self.attributes_to_extract[i] == QmAttribute.TZVP_HOMO_ENERGY:
-                attribute_list.append(qm_data.tzvp_homo_energy)
-            elif self.attributes_to_extract[i] == QmAttribute.SVP_LUMO_ENERGY:
-                attribute_list.append(qm_data.svp_lumo_energy)
-            elif self.attributes_to_extract[i] == QmAttribute.TZVP_LUMO_ENERGY:
-                attribute_list.append(qm_data.tzvp_lumo_energy)
-            elif self.attributes_to_extract[i] == QmAttribute.SVP_HOMO_LUMO_GAP:
-                attribute_list.append(qm_data.svp_homo_lumo_gap)
-            elif self.attributes_to_extract[i] == QmAttribute.TZVP_HOMO_LUMO_GAP:
-                attribute_list.append(qm_data.tzvp_homo_lumo_gap)
-            elif self.attributes_to_extract[i] == QmAttribute.LOWEST_VIBRATIONAL_FREQUENCY:
-                attribute_list.append(qm_data.lowest_vibrational_frequency)
-            elif self.attributes_to_extract[i] == QmAttribute.HIGHEST_VIBRATIONAL_FREQUENCY:
-                attribute_list.append(qm_data.highest_vibrational_frequency)
-            elif self.attributes_to_extract[i] == QmAttribute.HEAT_CAPACITY:
-                attribute_list.append(qm_data.heat_capacity)
-            elif self.attributes_to_extract[i] == QmAttribute.ENTROPY:
-                attribute_list.append(qm_data.entropy)
-            elif self.attributes_to_extract[i] == QmAttribute.ZPE_CORRECTION:
-                attribute_list.append(qm_data.zpe_correction)
-            elif self.attributes_to_extract[i] == QmAttribute.ENTHALPY_ENERGY:
-                attribute_list.append(qm_data.enthalpy_energy)
-            elif self.attributes_to_extract[i] == QmAttribute.GIBBS_ENERGY:
-                attribute_list.append(qm_data.gibbs_energy)
-            elif self.attributes_to_extract[i] == QmAttribute.CORRECTED_ENTHALPY_ENERGY:
-                attribute_list.append(qm_data.corrected_enthalpy_energy)
-            elif self.attributes_to_extract[i] == QmAttribute.CORRECTED_GIBBS_ENERGY:
-                attribute_list.append(qm_data.corrected_gibbs_energy)
-            elif self.attributes_to_extract[i] == QmAttribute.ELECTRONIC_ENERGY_DELTA:
-                attribute_list.append(qm_data.electronic_energy_delta)
-            elif self.attributes_to_extract[i] == QmAttribute.DISPERSION_ENERGY_DELTA:
-                attribute_list.append(qm_data.dispersion_energy_delta)
-            elif self.attributes_to_extract[i] == QmAttribute.DIPOLE_MOMENT_DELTA:
-                attribute_list.append(qm_data.dipole_moment_delta)
-            elif self.attributes_to_extract[i] == QmAttribute.HOMO_LUMO_GAP_DELTA:
-                attribute_list.append(qm_data.homo_lumo_gap_delta)
-            else:
-                warnings.warn('Could not find attritubte' + str(self.attributes_to_extract[i]) + '.')
-
-        return attribute_list
-
-    def _get_edges(self, qm_data: QmData):
 
         # pre read data for efficiency
 
@@ -150,17 +87,8 @@ class GraphGenerator:
         bond_pair_energies = [x[1] for x in qm_data.bond_pair_data_full]
         antibond_pair_energies = [x[1] for x in qm_data.antibond_pair_data_full]
 
-        # decide which index matrix to use
-        index_matrix = None
-        # Wiberg mode
-        if self.bond_determination_mode == BondDeterminationMode.WIBERG:
-            index_matrix = qm_data.wiberg_index_matrix
-        # LMO mode
-        elif self.bond_determination_mode == BondDeterminationMode.LMO:
-            index_matrix = qm_data.lmo_bond_order_matrix
-        # NLMO mode
-        elif self.bond_determination_mode == BondDeterminationMode.NLMO:
-            index_matrix = qm_data.nbo_bond_order_matrix
+        # get appropriate index matrix
+        index_matrix = self._get_index_matrix(qm_data)
         
         edges = []
         # iterate over half triangle matrix to determine bonds
@@ -297,6 +225,12 @@ class GraphGenerator:
 
     def _get_individual_node(self, qm_data: QmData, atom_index: int):
 
+        """Gets the feature vector for one node.
+
+        Returns:
+            list[float]: The feature vector of the corresponding atom.
+        """
+
         # for brevity
         i = atom_index
 
@@ -380,6 +314,32 @@ class GraphGenerator:
 
         return node
 
+    def _get_index_matrix(self, qm_data: QmData):
+
+        """Helper function that returns the appropriate index matrix based on the GraphGenerator settings.
+
+        Raises:
+            ValueError: If a bond determination mode is selected that can not be resolved.
+
+        Returns:
+            list[list[float]]: The selected index matrix.
+        """
+
+        # decide which index matrix to return
+
+        # Wiberg mode
+        if self.bond_determination_mode == BondDeterminationMode.WIBERG:
+            return qm_data.wiberg_index_matrix
+        # LMO mode
+        elif self.bond_determination_mode == BondDeterminationMode.LMO:
+            return qm_data.lmo_bond_order_matrix
+        # NLMO mode
+        elif self.bond_determination_mode == BondDeterminationMode.NLMO:
+            return qm_data.nbo_bond_order_matrix
+        # raise exception otherwise
+        else:
+            raise ValueError('Bond determination mode not recognised.')
+
     def _get_orbtials_to_extract_indices(self, mode):
 
         """Helper function to parse information about which orbitals occupancies to use as node/edge features.
@@ -438,6 +398,77 @@ class GraphGenerator:
 
         return orbital_indices
 
+    def _get_attributes(self, qm_data: QmData):
+
+        """Helper function to resolve which attributes to use.
+
+        Returns:
+            list[float]: List of graph attributes.
+        """
+
+        # return variable
+        attribute_list = []
+
+        for i in range(len(self.attributes_to_extract)):
+
+            if type(self.attributes_to_extract[i]) is not QmAttribute:
+                warnings.warn('Element ' + str(i) + ' of list is not of type QmAttribute. Entry will be skipped.')
+
+            if self.attributes_to_extract[i] == QmAttribute.SVP_ELECTRONIC_ENERGY:
+                attribute_list.append(qm_data.svp_electronic_energy)
+            elif self.attributes_to_extract[i] == QmAttribute.TZVP_ELECTRONIC_ENERGY:
+                attribute_list.append(qm_data.tzvp_electronic_energy)
+            elif self.attributes_to_extract[i] == QmAttribute.SVP_DISPERSION_ENERGY:
+                attribute_list.append(qm_data.svp_dispersion_energy)
+            elif self.attributes_to_extract[i] == QmAttribute.TZVP_DISPERSION_ENERGY:
+                attribute_list.append(qm_data.tzvp_dispersion_energy)
+            elif self.attributes_to_extract[i] == QmAttribute.SVP_DIPOLE_MOMENT:
+                attribute_list.append(qm_data.svp_dipole_moment)
+            elif self.attributes_to_extract[i] == QmAttribute.TZVP_DIPOLE_MOMENT:
+                attribute_list.append(qm_data.tzvp_dipole_moment)
+            elif self.attributes_to_extract[i] == QmAttribute.SVP_HOMO_ENERGY:
+                attribute_list.append(qm_data.svp_homo_energy)
+            elif self.attributes_to_extract[i] == QmAttribute.TZVP_HOMO_ENERGY:
+                attribute_list.append(qm_data.tzvp_homo_energy)
+            elif self.attributes_to_extract[i] == QmAttribute.SVP_LUMO_ENERGY:
+                attribute_list.append(qm_data.svp_lumo_energy)
+            elif self.attributes_to_extract[i] == QmAttribute.TZVP_LUMO_ENERGY:
+                attribute_list.append(qm_data.tzvp_lumo_energy)
+            elif self.attributes_to_extract[i] == QmAttribute.SVP_HOMO_LUMO_GAP:
+                attribute_list.append(qm_data.svp_homo_lumo_gap)
+            elif self.attributes_to_extract[i] == QmAttribute.TZVP_HOMO_LUMO_GAP:
+                attribute_list.append(qm_data.tzvp_homo_lumo_gap)
+            elif self.attributes_to_extract[i] == QmAttribute.LOWEST_VIBRATIONAL_FREQUENCY:
+                attribute_list.append(qm_data.lowest_vibrational_frequency)
+            elif self.attributes_to_extract[i] == QmAttribute.HIGHEST_VIBRATIONAL_FREQUENCY:
+                attribute_list.append(qm_data.highest_vibrational_frequency)
+            elif self.attributes_to_extract[i] == QmAttribute.HEAT_CAPACITY:
+                attribute_list.append(qm_data.heat_capacity)
+            elif self.attributes_to_extract[i] == QmAttribute.ENTROPY:
+                attribute_list.append(qm_data.entropy)
+            elif self.attributes_to_extract[i] == QmAttribute.ZPE_CORRECTION:
+                attribute_list.append(qm_data.zpe_correction)
+            elif self.attributes_to_extract[i] == QmAttribute.ENTHALPY_ENERGY:
+                attribute_list.append(qm_data.enthalpy_energy)
+            elif self.attributes_to_extract[i] == QmAttribute.GIBBS_ENERGY:
+                attribute_list.append(qm_data.gibbs_energy)
+            elif self.attributes_to_extract[i] == QmAttribute.CORRECTED_ENTHALPY_ENERGY:
+                attribute_list.append(qm_data.corrected_enthalpy_energy)
+            elif self.attributes_to_extract[i] == QmAttribute.CORRECTED_GIBBS_ENERGY:
+                attribute_list.append(qm_data.corrected_gibbs_energy)
+            elif self.attributes_to_extract[i] == QmAttribute.ELECTRONIC_ENERGY_DELTA:
+                attribute_list.append(qm_data.electronic_energy_delta)
+            elif self.attributes_to_extract[i] == QmAttribute.DISPERSION_ENERGY_DELTA:
+                attribute_list.append(qm_data.dispersion_energy_delta)
+            elif self.attributes_to_extract[i] == QmAttribute.DIPOLE_MOMENT_DELTA:
+                attribute_list.append(qm_data.dipole_moment_delta)
+            elif self.attributes_to_extract[i] == QmAttribute.HOMO_LUMO_GAP_DELTA:
+                attribute_list.append(qm_data.homo_lumo_gap_delta)
+            else:
+                warnings.warn('Could not find attritubte' + str(self.attributes_to_extract[i]) + '.')
+
+        return attribute_list
+
     def _determine_hydrogen_position_offset(self, atom_index: int, qm_data: QmData):
         
         """Counts how many hydrogen atoms are in front of (index-wise) the atom of specified index.
@@ -455,6 +486,64 @@ class GraphGenerator:
 
         return hydrogen_offset_count
 
+    def _get_bound_atom_indices(self, atom_index: int, qm_data: QmData, threshold: float):
+
+        """Gets the indices of bound atoms of a given atom.
+
+        Returns:
+            list[int]: List of h atom indices.
+        """
+
+        # check if given atom index is valid
+        if atom_index < 0 or atom_index > qm_data.n_atoms - 1:
+            raise ValueError('The specified node index is out of range. Valid range: 0 - ' + 
+                             str(qm_data.n_atoms - 1) + '. Given: ' + str(atom_index) + '.')
+
+        # return variable
+        bound_atom_indices = []
+
+        # get appropriate index matrix
+        index_matrix = self._get_index_matrix(qm_data)
+
+        for i in range(len(index_matrix[atom_index])):
+
+            # skip self interaction
+            if i == atom_index:
+                continue
+
+            # check for bond index
+            if index_matrix[atom_index][i] > threshold:
+                bound_atom_indices.append(i)
+
+        return bound_atom_indices
+
+    def _get_bound_h_atom_indices(self, atom_index: int, qm_data: QmData, threshold: float = None):
+
+        """Gets the indices of bound h atoms of a given atom.
+
+        Returns:
+            list[int]: List of h atom indices.
+        """
+
+        # resolve threshold
+        if threshold == None:
+            threshold = self.hydrogen_count_threshold
+
+        # return variable
+        bound_h_indices = []
+
+        # get all bound atom indices
+        # use hydrogen threshold
+        bound_atom_indices = self._get_bound_atom_indices(atom_index, qm_data, threshold=threshold)
+
+        for i in range(len(bound_atom_indices)):
+
+            # append if hydrogen
+            if qm_data.atomic_numbers[bound_atom_indices[i]] == 1:
+                bound_h_indices.append(bound_atom_indices[i])
+        
+        return bound_h_indices
+
     def _determine_hydrogen_count(self, atom_index: int, qm_data: QmData):
 
         """Determines how many hyrdogen atoms are bound to the atom with the specified index.
@@ -463,18 +552,7 @@ class GraphGenerator:
             int: The number of bound hydrogen atoms.
         """
 
-        # checking Wiberg bond index matrix for bound hydrogens
-        hydrogen_count = 0
-        for i in range(len(qm_data.wiberg_index_matrix[atom_index])):
-
-            # look for hydrogens
-            if qm_data.atomic_numbers[i] == 1:
-
-                # check whether hydrogen has high enough bond index
-                if qm_data.wiberg_index_matrix[atom_index][i] > self.hydrogen_count_threshold:
-                    hydrogen_count += 1
-
-        return hydrogen_count
+        return len(self._get_bound_h_atom_indices(atom_index, qm_data))
 
     def _validate_node_list(self, nodes):
         

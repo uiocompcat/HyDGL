@@ -143,7 +143,7 @@ class Graph:
             list[int]: List of node indices denoting the adjacent nodes.
         """
 
-        if node_index < 0 or node_index > len(self.nodes):
+        if node_index < 0 or node_index > len(self.nodes) - 1:
             raise ValueError('The specified node index is out of range. Valid range: 0 - ' + str(len(self.nodes) - 1) + '. Given: ' + str(node_index) + '.')
 
         adjacent_nodes = []
