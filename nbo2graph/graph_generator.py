@@ -1,3 +1,5 @@
+from inspect import isgeneratorfunction
+from networkx.readwrite.json_graph import adjacency
 from torch._C import Node
 import warnings
 
@@ -7,6 +9,7 @@ from nbo2graph.qm_atrribute import QmAttribute
 from nbo2graph.edge_feature import EdgeFeature
 from nbo2graph.node_feature import NodeFeature
 from nbo2graph.hydrogen_mode import HydrogenMode
+from nbo2graph.element_look_up_table import ElementLookUpTable
 from nbo2graph.bond_determination_mode import BondDeterminationMode
 from nbo2graph.orbital_occupation_types import OrbitalOccupationTypes
 
@@ -56,11 +59,16 @@ class GraphGenerator:
 
         # get edges
         nodes = self._get_nodes(qm_data)
-        # check validity of nodes
-        self._validate_node_list(nodes)
-
         # get edges
         edges = self._get_edges(qm_data)
+
+        # check for hydride hydrogens
+        hydride_hydrogen_indices = self._get_hydride_hydrogen_indices(qm_data)
+        for i in range(len(hydride_hydrogen_indices)):
+            nodes.append(self._get_individual_node(qm_data, hydride_hydrogen_indices[i]))
+
+        # check validity of nodes
+        self._validate_node_list(nodes)
         # check validity of edges
         self._validate_edge_list(edges, len(nodes))
 
@@ -77,20 +85,32 @@ class GraphGenerator:
             list[list[int], float]: Adjacency list with corresponding feature vectors.
         """
 
-        # pre read data for efficiency
+        # get adjacency list
+        adjacency_list = self._get_adjacency_list(qm_data)
 
-        # bonds with BD and BD*
-        bond_pair_atom_indices = [x[0] for x in qm_data.bond_pair_data_full]
-        antibond_pair_atom_indices = [x[0] for x in qm_data.antibond_pair_data_full]
+        edges = []
+        # generate featurised edges
+        for i in range(len(adjacency_list)):             
+            edges.append(self._get_featurised_edge(adjacency_list[i], qm_data))
+            
+        # rescale node referenes in edges if explicit hydrogens were omitted
+        if self.hydrogen_mode == HydrogenMode.OMIT or self.hydrogen_mode == HydrogenMode.IMPLICIT:
+            # get list of indices in use
+            bond_atom_indices = list(set([item for sublist in [x[0] for x in edges] for item in sublist]))
+            bond_atom_indices.sort()
+            # loop through edges and replace node references
+            for i in range(len(edges)):
+                edges[i][0][0] = edges[i][0][0] - self._determine_hydrogen_position_offset(edges[i][0][0], qm_data)
+                edges[i][0][1] = edges[i][0][1] - self._determine_hydrogen_position_offset(edges[i][0][1], qm_data)
 
-        # corresponding energy values
-        bond_pair_energies = [x[1] for x in qm_data.bond_pair_data_full]
-        antibond_pair_energies = [x[1] for x in qm_data.antibond_pair_data_full]
+        return edges
 
+    def _get_adjacency_list(self, qm_data: QmData):
+        
         # get appropriate index matrix
         index_matrix = self._get_index_matrix(qm_data)
         
-        edges = []
+        adjacency_list = []
         # iterate over half triangle matrix to determine bonds
         for i in range(len(index_matrix) - 1):
             for j in range(i + 1, len(index_matrix), 1):
@@ -107,81 +127,87 @@ class GraphGenerator:
                             continue
                     
                     # append edge with empty feature vector
-                    edges.append([[i, j], []])
+                    adjacency_list.append([i, j])
 
-                    # append bond order as feature if requested
-                    if EdgeFeature.BOND_ORDER in self.edge_features:
-                        edges[-1][1].append(index_matrix[i][j])
-    
+        return adjacency_list
+
+    def _get_featurised_edge(self, bond_atom_indices: list[int], qm_data: QmData):
+        
+        # pre read data for efficiency
+
+        # bonds with BD and BD*
+        bond_pair_atom_indices = [x[0] for x in qm_data.bond_pair_data_full]
+        antibond_pair_atom_indices = [x[0] for x in qm_data.antibond_pair_data_full]
+
+        # corresponding energy values
+        bond_pair_energies = [x[1] for x in qm_data.bond_pair_data_full]
+        antibond_pair_energies = [x[1] for x in qm_data.antibond_pair_data_full]
+
+        # set up variable for edge; format: [ [i,j], [feature1, feature2, ...] ]
+        edge = [bond_atom_indices, []]
+
+        # get appropriate index matrix
+        index_matrix = self._get_index_matrix(qm_data)
+
+        # append bond order as feature if requested
+        if EdgeFeature.BOND_ORDER in self.edge_features:
+            edge[1].append(index_matrix[edge[0][0]][edge[0][1]])
+
+        # add bond distance as feature to edges
+        if EdgeFeature.BOND_DISTANCE in self.edge_features:
+            edge[1].append(qm_data.bond_distance_matrix[edge[0][0]][edge[0][1]])
+
+        # add number of bond/antibond orbitals if requested
+        if len(self.bond_orbital_indices) > 0 or len(self.antibond_orbital_indices) > 0:
+            if edge[0] in bond_pair_atom_indices:
                 
-        # add additional (NBO) features to edges
-        for i in range(len(edges)):             
+                # get list of all bond energies for this atom
+                energies = [x[1] for x in qm_data.bond_pair_data_full if x[0] == edge[0]]
 
-            # add bond distance as feature to edges
-            if EdgeFeature.BOND_DISTANCE in self.edge_features:
-                edges[i][1].append(qm_data.bond_distance_matrix[edges[i][0][0]][edges[i][0][1]])
+                edge[1].append(len(energies))
+            else:
+                edge[1].append(0)
 
-            # add number of bond/antibond orbitals if requested
-            if len(self.bond_orbital_indices) > 0 or len(self.antibond_orbital_indices) > 0:
-                if edges[i][0] in bond_pair_atom_indices:
-                    
-                    # get list of all bond energies for this atom
-                    energies = [x[1] for x in qm_data.bond_pair_data_full if x[0] == edges[i][0]]
+        if len(self.bond_orbital_indices) > 0:
+            # check if NBO data for the respective bond is available
+            # if so add to feature vector
+            # otherwise add zeros to feature vector
+            if edge[0] in bond_pair_atom_indices:
 
-                    edges[i][1].append(len(energies))
-                else:
-                    edges[i][1].append(0)
+                # get list of all bond pair energies for this atom
+                energies = [x[1] for x in qm_data.bond_pair_data_full if x[0] == edge[0]]
 
-            if len(self.bond_orbital_indices) > 0:
-                # check if NBO data for the respective bond is available
-                # if so add to feature vector
-                # otherwise add zeros to feature vector
-                if edges[i][0] in bond_pair_atom_indices:
+                # select index of the highest energy (for BD)
+                selected_index = bond_pair_energies.index(max(energies))
 
-                    # get list of all bond pair energies for this atom
-                    energies = [x[1] for x in qm_data.bond_pair_data_full if x[0] == edges[i][0]]
+                # append data (total length = 2 + number of orbital occupancies)
+                edge[1].append(qm_data.bond_pair_data_full[selected_index][1])
+                edge[1].append(qm_data.bond_pair_data_full[selected_index][2])
+                edge[1].extend([qm_data.bond_pair_data_full[selected_index][3][k] for k in self.bond_orbital_indices])
 
-                    # select index of the highest energy (for BD)
-                    selected_index = bond_pair_energies.index(max(energies))
+            else:
+                edge[1].extend((2 + len(self.bond_orbital_indices)) * [0])
 
-                    # append data (total length = 2 + number of orbital occupancies)
-                    edges[i][1].append(qm_data.bond_pair_data_full[selected_index][1])
-                    edges[i][1].append(qm_data.bond_pair_data_full[selected_index][2])
-                    edges[i][1].extend([qm_data.bond_pair_data_full[selected_index][3][k] for k in self.bond_orbital_indices])
+        if len(self.antibond_orbital_indices) > 0:
+            # check if NBO data for the respective antibonds is available
+            # if so add to feature vector
+            # otherwise add zeros to feature vector
+            if edge[0] in antibond_pair_atom_indices:
 
-                else:
-                    edges[i][1].extend((2 + len(self.bond_orbital_indices)) * [0])
+                # get list of all antibond pair energies for this atom
+                energies = [x[1] for x in qm_data.antibond_pair_data_full if x[0] == edge[0]]
 
-            if len(self.antibond_orbital_indices) > 0:
-                # check if NBO data for the respective antibonds is available
-                # if so add to feature vector
-                # otherwise add zeros to feature vector
-                if edges[i][0] in antibond_pair_atom_indices:
+                # select index of the lowest energy (for BD*)
+                selected_index = antibond_pair_energies.index(min(energies))
 
-                    # get list of all antibond pair energies for this atom
-                    energies = [x[1] for x in qm_data.antibond_pair_data_full if x[0] == edges[i][0]]
+                # append data (total length = 2 + number of orbital occupancies)
+                edge[1].append(qm_data.antibond_pair_data_full[selected_index][1])  
+                edge[1].append(qm_data.antibond_pair_data_full[selected_index][2])
+                edge[1].extend([qm_data.bond_pair_data_full[selected_index][3][k] for k in self.antibond_orbital_indices])
+            else:
+                edge[1].extend((2 + len(self.antibond_orbital_indices)) * [0])
 
-                    # select index of the lowest energy (for BD*)
-                    selected_index = antibond_pair_energies.index(min(energies))
-
-                    # append data (total length = 2 + number of orbital occupancies)
-                    edges[i][1].append(qm_data.antibond_pair_data_full[selected_index][1])  
-                    edges[i][1].append(qm_data.antibond_pair_data_full[selected_index][2])
-                    edges[i][1].extend([qm_data.bond_pair_data_full[selected_index][3][k] for k in self.antibond_orbital_indices])
-                else:
-                    edges[i][1].extend((2 + len(self.antibond_orbital_indices)) * [0])
-
-        # rescale node referenes in edges if explicit hydrogens were omitted
-        if self.hydrogen_mode == HydrogenMode.OMIT or self.hydrogen_mode == HydrogenMode.IMPLICIT:
-            # get list of indices in use
-            bond_atom_indices = list(set([item for sublist in [x[0] for x in edges] for item in sublist]))
-            bond_atom_indices.sort()
-            # loop through edges and replace node references
-            for i in range(len(edges)):
-                edges[i][0][0] = edges[i][0][0] - self._determine_hydrogen_position_offset(edges[i][0][0], qm_data)
-                edges[i][0][1] = edges[i][0][1] - self._determine_hydrogen_position_offset(edges[i][0][1], qm_data)
-
-        return edges
+        return edge
 
     def _get_nodes(self, qm_data: QmData):
 
@@ -191,17 +217,6 @@ class GraphGenerator:
             list[list[floats]]: List of feature vectors of nodes.
         """
 
-        # get hydrogen counts for heavy atoms in implicit mode
-        hydrogen_counts = []
-        if self.hydrogen_mode == HydrogenMode.IMPLICIT:
-            for i in range(qm_data.n_atoms):
-                # skip hydrogens
-                if qm_data.atomic_numbers[i] == 1:
-                    hydrogen_counts.append(0)
-                else:
-                    # determine hydrogen count
-                    hydrogen_counts.append(self._determine_hydrogen_count(i, qm_data))
-
         nodes = []
         for i in range(qm_data.n_atoms):
 
@@ -210,16 +225,11 @@ class GraphGenerator:
                 if qm_data.atomic_numbers[i] == 1:
                     continue
 
+            # get ith node
             node = self._get_individual_node(qm_data, i)
-            
-            # add implicit hydrogens
-            if self.hydrogen_mode == HydrogenMode.IMPLICIT:
-                node.append(hydrogen_counts[i])
 
             # append fully featurised node to nodes list
             nodes.append(node)
-        
-        # TODO normalization along features (?)
 
         return nodes
 
@@ -247,17 +257,20 @@ class GraphGenerator:
         # set up features for node
         node = []
         
+        # add atomic number
         if NodeFeature.ATOMIC_NUMBERS in self.node_features:
             node.append(qm_data.atomic_numbers[i])
-    
+
+        # add natural atomic charge
         if NodeFeature.NATURAL_ATOMIC_CHARGES in self.node_features:
             node.append(qm_data.natural_atomic_charges[i])
 
+        # add natural electron configuration (requested orbital occupancies)
         if len(self.natural_orbital_configuration_indices) > 0:
             node.extend([qm_data.natural_electron_configuration[i][k] for k in self.natural_orbital_configuration_indices])
 
+        # add bond order totals
         if NodeFeature.BOND_ORDER_TOTAL in self.node_features:
-            # add bond order totals per atom
             # Wiberg mode
             if self.bond_determination_mode == BondDeterminationMode.WIBERG:
                 node.append(qm_data.wiberg_atom_totals[i])
@@ -270,8 +283,8 @@ class GraphGenerator:
             else:
                 warnings.warn('Bond determination mode ' + str(self.bond_determination_mode) + ' not recognised. Skipping')
 
+        # add lone pair data if requested
         if len(self.lone_pair_orbital_indices) > 0:
-            # add lone pair data if available
             # otherwise set values to 0
             if i in lone_pair_atom_indices:
 
@@ -291,8 +304,8 @@ class GraphGenerator:
             else:
                 node.extend((3 + len(self.lone_pair_orbital_indices)) * [0])
 
+        # add lone vacancy data if requested
         if len(self.lone_vacancy_orbital_indices) > 0:
-            # add lone vacancy data if available
             # otherwise set values to 0
             if i in lone_vacancy_atom_indices:
 
@@ -312,7 +325,124 @@ class GraphGenerator:
             else:
                 node.extend((3 + len(self.lone_vacancy_orbital_indices)) * [0])
 
+        # add implicit hydrogens
+        if self.hydrogen_mode == HydrogenMode.IMPLICIT:
+            # get hydrogen count for heavy atoms in implicit mode
+            hydrogen_count = None
+            if self.hydrogen_mode == HydrogenMode.IMPLICIT:
+                # set hydrogen count of hydrogens to None (will not be used)
+                if qm_data.atomic_numbers[i] == 1:
+                    hydrogen_count = None
+                # set hydrogen count to 0 if transition metal (will be modelled explicitly)
+                elif qm_data.atomic_numbers[i] in ElementLookUpTable.transition_metal_atomic_numbers:
+                    hydrogen_count = 0
+                else:
+                # otherwise determine hydrogen count normally
+                    hydrogen_count = self._determine_hydrogen_count(i, qm_data)
+
+            node.append(hydrogen_count)
+
         return node
+
+    def _determine_hydrogen_position_offset(self, atom_index: int, qm_data: QmData):
+        
+        """Counts how many hydrogen atoms are in front of (index-wise) the atom of specified index.
+
+        Returns:
+            int: The number of hydrogens in front of the atom.
+        """
+
+        hydrogen_offset_count = 0
+
+        # iterate through atomic numbers up to atom index
+        for i in range(0, atom_index, 1):
+            if qm_data.atomic_numbers[i] == 1:
+                hydrogen_offset_count += 1
+
+        return hydrogen_offset_count
+
+    def _get_hydride_hydrogen_indices(self, qm_data: QmData):
+
+        # return variable
+        hydride_hydrogen_indices = []
+
+        for i in range(len(qm_data.atomic_numbers)):
+
+            # look for transition metals
+            if qm_data.atomic_numbers[i] in ElementLookUpTable.transition_metal_atomic_numbers:
+                # get bound atom indices and append to return variable
+                hydride_hydrogen_indices.extend(self._get_bound_h_atom_indices(i, qm_data, threshold=self.hydrogen_count_threshold))
+
+        return hydride_hydrogen_indices
+
+    def _get_bound_atom_indices(self, atom_index: int, qm_data: QmData, threshold: float):
+
+        """Gets the indices of bound atoms of a given atom.
+
+        Returns:
+            list[int]: List of h atom indices.
+        """
+
+        # check if given atom index is valid
+        if atom_index < 0 or atom_index > qm_data.n_atoms - 1:
+            raise ValueError('The specified node index is out of range. Valid range: 0 - ' + 
+                             str(qm_data.n_atoms - 1) + '. Given: ' + str(atom_index) + '.')
+
+        # return variable
+        bound_atom_indices = []
+
+        # get appropriate index matrix
+        index_matrix = self._get_index_matrix(qm_data)
+
+        for i in range(len(index_matrix[atom_index])):
+
+            # skip self interaction
+            if i == atom_index:
+                continue
+
+            # check for bond index
+            if index_matrix[atom_index][i] > threshold:
+                bound_atom_indices.append(i)
+
+        return bound_atom_indices
+
+    def _get_bound_h_atom_indices(self, atom_index: int, qm_data: QmData, threshold: float = None):
+
+        """Gets the indices of bound h atoms of a given atom.
+
+        Returns:
+            list[int]: List of h atom indices.
+        """
+
+        # resolve threshold
+        if threshold == None:
+            threshold = self.hydrogen_count_threshold
+
+        # return variable
+        bound_h_indices = []
+
+        # get all bound atom indices
+        # use hydrogen threshold
+        bound_atom_indices = self._get_bound_atom_indices(atom_index, qm_data, threshold=threshold)
+
+        for i in range(len(bound_atom_indices)):
+
+            # append if hydrogen
+            if qm_data.atomic_numbers[bound_atom_indices[i]] == 1:
+                bound_h_indices.append(bound_atom_indices[i])
+        
+        return bound_h_indices
+
+    def _determine_hydrogen_count(self, atom_index: int, qm_data: QmData):
+
+        """Determines how many hyrdogen atoms are bound to the atom with the specified index.
+
+        Returns:
+            int: The number of bound hydrogen atoms.
+        """
+
+        return len(self._get_bound_h_atom_indices(atom_index, qm_data))
+
 
     def _get_index_matrix(self, qm_data: QmData):
 
@@ -468,91 +598,6 @@ class GraphGenerator:
                 warnings.warn('Could not find attritubte' + str(self.attributes_to_extract[i]) + '.')
 
         return attribute_list
-
-    def _determine_hydrogen_position_offset(self, atom_index: int, qm_data: QmData):
-        
-        """Counts how many hydrogen atoms are in front of (index-wise) the atom of specified index.
-
-        Returns:
-            int: The number of hydrogens in front of the atom.
-        """
-
-        hydrogen_offset_count = 0
-
-        # iterate through atomic numbers up to atom index
-        for i in range(0, atom_index, 1):
-            if qm_data.atomic_numbers[i] == 1:
-                hydrogen_offset_count += 1
-
-        return hydrogen_offset_count
-
-    def _get_bound_atom_indices(self, atom_index: int, qm_data: QmData, threshold: float):
-
-        """Gets the indices of bound atoms of a given atom.
-
-        Returns:
-            list[int]: List of h atom indices.
-        """
-
-        # check if given atom index is valid
-        if atom_index < 0 or atom_index > qm_data.n_atoms - 1:
-            raise ValueError('The specified node index is out of range. Valid range: 0 - ' + 
-                             str(qm_data.n_atoms - 1) + '. Given: ' + str(atom_index) + '.')
-
-        # return variable
-        bound_atom_indices = []
-
-        # get appropriate index matrix
-        index_matrix = self._get_index_matrix(qm_data)
-
-        for i in range(len(index_matrix[atom_index])):
-
-            # skip self interaction
-            if i == atom_index:
-                continue
-
-            # check for bond index
-            if index_matrix[atom_index][i] > threshold:
-                bound_atom_indices.append(i)
-
-        return bound_atom_indices
-
-    def _get_bound_h_atom_indices(self, atom_index: int, qm_data: QmData, threshold: float = None):
-
-        """Gets the indices of bound h atoms of a given atom.
-
-        Returns:
-            list[int]: List of h atom indices.
-        """
-
-        # resolve threshold
-        if threshold == None:
-            threshold = self.hydrogen_count_threshold
-
-        # return variable
-        bound_h_indices = []
-
-        # get all bound atom indices
-        # use hydrogen threshold
-        bound_atom_indices = self._get_bound_atom_indices(atom_index, qm_data, threshold=threshold)
-
-        for i in range(len(bound_atom_indices)):
-
-            # append if hydrogen
-            if qm_data.atomic_numbers[bound_atom_indices[i]] == 1:
-                bound_h_indices.append(bound_atom_indices[i])
-        
-        return bound_h_indices
-
-    def _determine_hydrogen_count(self, atom_index: int, qm_data: QmData):
-
-        """Determines how many hyrdogen atoms are bound to the atom with the specified index.
-
-        Returns:
-            int: The number of bound hydrogen atoms.
-        """
-
-        return len(self._get_bound_h_atom_indices(atom_index, qm_data))
 
     def _validate_node_list(self, nodes):
         

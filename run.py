@@ -60,8 +60,8 @@ for graph in graphs:
     # print(graph.is_connected())
 
     # print(graph.nodes)
-    # print(graph.edges)
-    print(graph.attributes)
+    print(graph.edges)
+    # print(graph.attributes)
 
     pytorch_graph_data = graph.get_pytorch_data_object()
     G = to_networkx(pytorch_graph_data)
