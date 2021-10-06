@@ -33,14 +33,14 @@ attributes_to_extract = [QmAttribute.SVP_ELECTRONIC_ENERGY]
 
 # set up graph generator with parameters
 wiberg_g_g = GraphGenerator(node_features=node_features, edge_feautres=edge_features,
-                            bond_determination_mode=BondDeterminationMode.WIBERG, bond_threshold=0.3, attributes_to_extract=attributes_to_extract, hydrogen_mode=HydrogenMode.IMPLICIT)
+                            bond_determination_mode=BondDeterminationMode.WIBERG, bond_threshold=0.16, attributes_to_extract=attributes_to_extract, hydrogen_mode=HydrogenMode.IMPLICIT)
 #nlmo_g_g = GraphGenerator(bond_determination_mode=BondDeterminationMode.NLMO, bond_threshold=0.1, attributes_to_extract=attributes_to_extract, hydrogen_mode=HydrogenMode.IMPLICIT)
 
 
 graphs = []
 
 # for i in range(len(files)):
-for i in range(1):
+for i in range(2):
 
     print(files[i])
     qm_data = DataParser('/home/hkneiding/Desktop/nbo data/' + files[i]).parse()
@@ -60,7 +60,7 @@ for graph in graphs:
     # print(graph.is_connected())
 
     # print(graph.nodes)
-    print(graph.edges)
+    # print(graph.edges)
     # print(graph.attributes)
 
     pytorch_graph_data = graph.get_pytorch_data_object()

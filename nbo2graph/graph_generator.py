@@ -63,9 +63,20 @@ class GraphGenerator:
         edges = self._get_edges(qm_data)
 
         # check for hydride hydrogens
-        hydride_hydrogen_indices = self._get_hydride_hydrogen_indices(qm_data)
-        for i in range(len(hydride_hydrogen_indices)):
-            nodes.append(self._get_individual_node(qm_data, hydride_hydrogen_indices[i]))
+        hydride_bond_indices = self._get_hydride_bond_indices(qm_data)
+        for i in range(len(hydride_bond_indices)):
+
+            # get node            
+            node = self._get_individual_node(qm_data, hydride_bond_indices[i][0])
+            # insert at correct place in node list
+            nodes.insert(hydride_bond_indices[i][0], node)
+
+            # append appropriate edge to edge list
+            edges.append(self._get_featurised_edge(hydride_bond_indices[i], qm_data))
+
+        # rescale node referenes in edges if explicit hydrogens were omitted
+        if self.hydrogen_mode == HydrogenMode.OMIT or self.hydrogen_mode == HydrogenMode.IMPLICIT:
+            edges = self._adjust_node_references(edges, qm_data)
 
         # check validity of nodes
         self._validate_node_list(nodes)
@@ -90,18 +101,8 @@ class GraphGenerator:
 
         edges = []
         # generate featurised edges
-        for i in range(len(adjacency_list)):             
+        for i in range(len(adjacency_list)):  
             edges.append(self._get_featurised_edge(adjacency_list[i], qm_data))
-            
-        # rescale node referenes in edges if explicit hydrogens were omitted
-        if self.hydrogen_mode == HydrogenMode.OMIT or self.hydrogen_mode == HydrogenMode.IMPLICIT:
-            # get list of indices in use
-            bond_atom_indices = list(set([item for sublist in [x[0] for x in edges] for item in sublist]))
-            bond_atom_indices.sort()
-            # loop through edges and replace node references
-            for i in range(len(edges)):
-                edges[i][0][0] = edges[i][0][0] - self._determine_hydrogen_position_offset(edges[i][0][0], qm_data)
-                edges[i][0][1] = edges[i][0][1] - self._determine_hydrogen_position_offset(edges[i][0][1], qm_data)
 
         return edges
 
@@ -143,6 +144,8 @@ class GraphGenerator:
         bond_pair_energies = [x[1] for x in qm_data.bond_pair_data_full]
         antibond_pair_energies = [x[1] for x in qm_data.antibond_pair_data_full]
 
+        # sort indices for consitency
+        bond_atom_indices.sort()
         # set up variable for edge; format: [ [i,j], [feature1, feature2, ...] ]
         edge = [bond_atom_indices, []]
 
@@ -330,9 +333,9 @@ class GraphGenerator:
             # get hydrogen count for heavy atoms in implicit mode
             hydrogen_count = None
             if self.hydrogen_mode == HydrogenMode.IMPLICIT:
-                # set hydrogen count of hydrogens to None (will not be used)
+                # set hydrogen count of hydrogens to 0
                 if qm_data.atomic_numbers[i] == 1:
-                    hydrogen_count = None
+                    hydrogen_count = 0
                 # set hydrogen count to 0 if transition metal (will be modelled explicitly)
                 elif qm_data.atomic_numbers[i] in ElementLookUpTable.transition_metal_atomic_numbers:
                     hydrogen_count = 0
@@ -344,6 +347,24 @@ class GraphGenerator:
 
         return node
 
+    def _adjust_node_references(self, edges, qm_data: QmData):
+
+        """Rescales the node references for implicit/omit mode where hydrogens are not explicit nodes (except hydride hydrogens).
+
+        Returns:
+            list[list[int], list[float]]: Edges list with rescaled node references.
+        """
+
+        # get list of indices in use
+        bond_atom_indices = list(set([item for sublist in [x[0] for x in edges] for item in sublist]))
+        bond_atom_indices.sort()
+        # loop through edges and replace node references
+        for i in range(len(edges)):
+            edges[i][0][0] = edges[i][0][0] - self._determine_hydrogen_position_offset(edges[i][0][0], qm_data)
+            edges[i][0][1] = edges[i][0][1] - self._determine_hydrogen_position_offset(edges[i][0][1], qm_data)
+
+        return edges
+
     def _determine_hydrogen_position_offset(self, atom_index: int, qm_data: QmData):
         
         """Counts how many hydrogen atoms are in front of (index-wise) the atom of specified index.
@@ -352,16 +373,28 @@ class GraphGenerator:
             int: The number of hydrogens in front of the atom.
         """
 
+        # get list of hydride hydrogen indices
+        hydride_hydrogen_indices = self._get_hydride_hydrogen_indices(qm_data)
+
         hydrogen_offset_count = 0
 
         # iterate through atomic numbers up to atom index
         for i in range(0, atom_index, 1):
             if qm_data.atomic_numbers[i] == 1:
-                hydrogen_offset_count += 1
+                # check if hydrogen is a hydrite hydrogen
+                # only increment if hydrogen is not a hydride hydrogen
+                if i not in hydride_hydrogen_indices:
+                    hydrogen_offset_count += 1
 
         return hydrogen_offset_count
 
     def _get_hydride_hydrogen_indices(self, qm_data: QmData):
+
+        """Returns a list of hydride hydrogen indices.
+
+        Returns:
+            list[int]: List of hydride hydrogen indices
+        """
 
         # return variable
         hydride_hydrogen_indices = []
@@ -370,10 +403,33 @@ class GraphGenerator:
 
             # look for transition metals
             if qm_data.atomic_numbers[i] in ElementLookUpTable.transition_metal_atomic_numbers:
-                # get bound atom indices and append to return variable
+                # get bound h atom indices and append to return variable
                 hydride_hydrogen_indices.extend(self._get_bound_h_atom_indices(i, qm_data, threshold=self.hydrogen_count_threshold))
 
         return hydride_hydrogen_indices
+
+    def _get_hydride_bond_indices(self, qm_data: QmData):
+
+        """Returns a list of hydride bonds.
+
+        Returns:
+            list[int]: List of hydride bonds. [index of H, index of M]
+        """
+
+        # return variable
+        hydride_bond_indices = []
+
+        for i in range(len(qm_data.atomic_numbers)):
+
+            # look for transition metals
+            if qm_data.atomic_numbers[i] in ElementLookUpTable.transition_metal_atomic_numbers:
+                # get bound atom indices and append to return variable
+                hydride_hydrogen_indices = self._get_bound_h_atom_indices(i, qm_data, threshold=self.hydrogen_count_threshold)
+
+                for j in range(len(hydride_hydrogen_indices)):
+                    hydride_bond_indices.append([hydride_hydrogen_indices[j], i])
+
+        return hydride_bond_indices
 
     def _get_bound_atom_indices(self, atom_index: int, qm_data: QmData, threshold: float):
 
