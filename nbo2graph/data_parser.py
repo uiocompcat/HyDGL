@@ -469,7 +469,7 @@ class DataParser:
 
         # get occupation from both lines using regex (values in brackets)
         merged_lines = (self.lines[start_index] + self.lines[start_index + 1]).replace(' ', '')
-        result = re.findall('\((.{4,6})%\)', merged_lines)
+        result = re.findall(r'\((.{4,6})%\)', merged_lines)
         occupations = list(map(float, result))
 
         # check that length of occupation list is correct
@@ -494,7 +494,7 @@ class DataParser:
 
         # get occupation from both lines using regex (values in brackets)
         merged_lines = (self.lines[start_index + 1] + self.lines[start_index + 2]).replace(' ', '')
-        result = re.findall('\((.{3,5})%\)', merged_lines)
+        result = re.findall(r'\((.{3,5})%\)', merged_lines)
         occupations1 = list(map(float, result))[1:]
         # append zeros to account for atoms that do not have higher orbital types
         while len(occupations1) < 4:
@@ -507,7 +507,7 @@ class DataParser:
 
         # get occupation from both lines using regex (values in brackets)
         merged_lines = (self.lines[i] + self.lines[i + 1]).replace(' ', '')
-        result = re.findall('\((.{3,5})%\)', merged_lines)
+        result = re.findall(r'\((.{3,5})%\)', merged_lines)
         occupations2 = list(map(float, result))[1:]
         # append zeros to account for atoms that do not have higher orbital types
         while len(occupations2) < 4:
