@@ -1,5 +1,7 @@
 import os
 
+from nbo2graph.graph_generator_settings import GraphGeneratorSettings
+
 from nbo2graph.data_parser import DataParser
 from nbo2graph.graph_generator import GraphGenerator
 
@@ -17,6 +19,8 @@ import matplotlib.pyplot as plt
 import networkx as nx
 from torch_geometric.utils.convert import to_networkx
 
+
+
 # setup target directory path
 path = '/home/hkneiding/Desktop/nbo data/'
 # setup file list
@@ -25,17 +29,12 @@ for file in os.listdir(path):
     if file.endswith(".log"):
         files.append(file)
 
-node_features = [NodeFeature.ATOMIC_NUMBERS, NodeFeature.LONE_PAIRS_S]
-edge_features = [EdgeFeature.BOND_ORDER]
 
-# generate vector for attributes to be extracted
-attributes_to_extract = [QmAttribute.SVP_ELECTRONIC_ENERGY]
+settings = GraphGeneratorSettings.from_file('./run.config')
+
 
 # set up graph generator with parameters
-wiberg_g_g = GraphGenerator(node_features=node_features, edge_feautres=edge_features,
-                            bond_determination_mode=BondDeterminationMode.WIBERG, bond_threshold=0.16, attributes_to_extract=attributes_to_extract, hydrogen_mode=HydrogenMode.IMPLICIT)
-#nlmo_g_g = GraphGenerator(bond_determination_mode=BondDeterminationMode.NLMO, bond_threshold=0.1, attributes_to_extract=attributes_to_extract, hydrogen_mode=HydrogenMode.IMPLICIT)
-
+wiberg_g_g = GraphGenerator(settings)
 
 graphs = []
 

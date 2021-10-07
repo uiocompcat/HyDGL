@@ -1,12 +1,12 @@
 import unittest
 from parameterized import parameterized
 
-from nbo2graph.bond_determination_mode import BondDeterminationMode
-from nbo2graph.hydrogen_mode import HydrogenMode
-
 from nbo2graph.data_parser import DataParser
 from nbo2graph.node_feature import NodeFeature
+from nbo2graph.hydrogen_mode import HydrogenMode
 from nbo2graph.graph_generator import GraphGenerator
+from nbo2graph.bond_determination_mode import BondDeterminationMode
+from nbo2graph.graph_generator_settings import GraphGeneratorSettings
 
 class TestGraphGenerator(unittest.TestCase):
 
@@ -190,8 +190,11 @@ class TestGraphGenerator(unittest.TestCase):
         # load data
         qm_data = DataParser('./tests/test_file.out').parse()
 
+        # set up graph generator settings
+        ggs = GraphGeneratorSettings(node_features=node_features, edge_feautres=[], hydrogen_mode=hydrogen_mode, bond_determination_mode=bond_determination_mode)
+
         # set up graph generator with variable node feature list
-        gg = GraphGenerator(node_features=node_features, hydrogen_mode=hydrogen_mode, bond_determination_mode=bond_determination_mode)
+        gg = GraphGenerator(ggs)
 
         # get nodes
         result = gg._get_nodes(qm_data)
@@ -225,7 +228,7 @@ class TestGraphGenerator(unittest.TestCase):
         qm_data = DataParser('./tests/test_file.out').parse()
 
         # set up graph generator (default values)
-        gg = GraphGenerator()
+        gg = GraphGenerator(GraphGeneratorSettings.default())
 
         # get result
         result = gg._get_bound_atom_indices(atom_index, qm_data, threshold)
@@ -250,7 +253,7 @@ class TestGraphGenerator(unittest.TestCase):
         qm_data = DataParser('./tests/test_file.out').parse()
 
         # set up graph generator (default values)
-        gg = GraphGenerator()
+        gg = GraphGenerator(GraphGeneratorSettings.default())
 
         # get result
         self.assertRaises(ValueError, gg._get_bound_atom_indices, atom_index, qm_data, threshold)
@@ -274,7 +277,7 @@ class TestGraphGenerator(unittest.TestCase):
         qm_data = DataParser('./tests/test_file.out').parse()
 
         # set up graph generator (default values)
-        gg = GraphGenerator()
+        gg = GraphGenerator(GraphGeneratorSettings.default())
 
         # get result
         result = gg._get_bound_h_atom_indices(atom_index, qm_data, threshold)
@@ -299,7 +302,7 @@ class TestGraphGenerator(unittest.TestCase):
         qm_data = DataParser('./tests/test_file.out').parse()
 
         # set up graph generator (default values)
-        gg = GraphGenerator()
+        gg = GraphGenerator(GraphGeneratorSettings.default())
 
         # get result
         self.assertRaises(ValueError, gg._get_bound_h_atom_indices, atom_index, qm_data, threshold)
@@ -323,7 +326,7 @@ class TestGraphGenerator(unittest.TestCase):
         qm_data = DataParser('./tests/test_file.out').parse()
 
         # set up graph generator (default values)
-        gg = GraphGenerator()
+        gg = GraphGenerator(GraphGeneratorSettings.default())
 
         # get result
         result = gg._determine_hydrogen_count(atom_index, qm_data)
