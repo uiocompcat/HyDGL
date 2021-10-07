@@ -9,7 +9,7 @@ nbo2graph
    :target: https://codecov.io/gh/hkneiding/nbo2graph
 
 
-nbo2graph is a Python parser to generate descriptive graphs from Natural Bond Orbital data ready for the use in Graph Neural Networks. In particular it provides the following features:
+nbo2graph is a Python parser to generate descriptive graphs from Natural Bond Orbital data ready for use in Graph Neural Networks. In particular it provides the following features:
 
  - parsing of Gaussian data files
  - adaptable generation of graph representations (features and labels can be adapted to ones needs)
@@ -17,6 +17,16 @@ nbo2graph is a Python parser to generate descriptive graphs from Natural Bond Or
  - easy-to-use interface
 
 The package can be used for any types of molecules but is aimed at transition metal complexes, more precisely for the tmQM data set.
+
+How to use
+-----------
+
+Requirements
+-----------
+
+- Python 3.7 or higher
+- pytorch 1.9
+- pytorch_geometric (pyg) 2.0
 
 What is under the hood?
 -----------
