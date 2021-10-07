@@ -25,5 +25,3 @@ There are There main parts in the nbo2graph package. The first is the DataParser
 This general structure is displayed by the following UML diagram.
 
 .. image:: ./doc/uml.png
-   :width: 600px
-   :align: center
