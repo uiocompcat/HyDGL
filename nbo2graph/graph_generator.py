@@ -1,6 +1,3 @@
-from inspect import isgeneratorfunction
-from networkx.readwrite.json_graph import adjacency
-from torch._C import Node
 import warnings
 
 from nbo2graph.graph_generator_settings import GraphGeneratorSettings
@@ -13,7 +10,6 @@ from nbo2graph.node_feature import NodeFeature
 from nbo2graph.hydrogen_mode import HydrogenMode
 from nbo2graph.element_look_up_table import ElementLookUpTable
 from nbo2graph.bond_determination_mode import BondDeterminationMode
-from nbo2graph.orbital_occupation_types import OrbitalOccupationTypes
 
 class GraphGenerator:
 
