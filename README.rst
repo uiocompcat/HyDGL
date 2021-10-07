@@ -29,4 +29,9 @@ This general structure is displayed by the following UML diagram.
   <img src="./doc/uml.png" width="900"/>
 </p>
 
+
+<p align="center">
+  <img src="https://i.imgur.com/HInt9o3.png" width="900"/>
+</p>
+
 ![](./doc/uml.png)
