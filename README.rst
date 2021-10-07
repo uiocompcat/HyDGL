@@ -24,6 +24,7 @@ What is under the hood?
 There are There main parts in the nbo2graph package. The first is the DataParser class which extracts relevant QM data from Gaussian files. The second one is the GraphGenerator class that generates graphs based to specified parameters. Finally there is the Graph class which represents a full graph in terms of nodes, edges, their respective features, graph-level features and attributes/labels. Furthemore, it includes functionality to produce object in a format ready to use with the pytorch_geometric package. The remaining classes are mainly miscellaneous helper classes and enums.
 This general structure is displayed by the following UML diagram.
 
+.. image:: ./doc/uml.png
 
 <p align="center">
   <img src="./doc/uml.png" width="900"/>
