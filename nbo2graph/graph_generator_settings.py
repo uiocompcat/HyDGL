@@ -1,7 +1,8 @@
 from nbo2graph.file_handler import FileHandler
 from nbo2graph.qm_atrribute import QmAttribute
-from nbo2graph.edge_feature import EdgeFeature
 from nbo2graph.node_feature import NodeFeature
+from nbo2graph.edge_feature import EdgeFeature
+from nbo2graph.graph_feature import GraphFeature
 from nbo2graph.hydrogen_mode import HydrogenMode
 from nbo2graph.bond_determination_mode import BondDeterminationMode
 from nbo2graph.orbital_occupation_types import OrbitalOccupationTypes
@@ -17,7 +18,8 @@ class GraphGeneratorSettings:
     """Class for storing graph generator settings."""
 
     def __init__(self, node_features: list[NodeFeature] = [],
-                       edge_feautres: list[EdgeFeature] = [],
+                       edge_features: list[EdgeFeature] = [],
+                       graph_features: list[GraphFeature] = [],
                        attributes: list[QmAttribute] = [],
                        bond_determination_mode: BondDeterminationMode = DEFAULT_BOND_DETERMINATION_MODE,
                        bond_threshold=DEFAULT_BOND_THRESHOLD, 
@@ -38,7 +40,8 @@ class GraphGeneratorSettings:
 
         # features
         self.node_features = node_features
-        self.edge_features = edge_feautres
+        self.edge_features = edge_features
+        self.graph_features = graph_features
 
         # attributes
         self.attributes = attributes
@@ -119,6 +122,7 @@ class GraphGeneratorSettings:
         # settings to extract
         node_features = []
         edge_features = []
+        graph_features = []
         attributes = []
 
         bond_determination_mode = None
@@ -197,9 +201,12 @@ class GraphGeneratorSettings:
                 if key == edge_feature.name:
                     edge_features.append(edge_feature)
 
-            # TODO look for graph features
+            # look for graph features
+            for graph_feature in GraphFeature:
+                if key == graph_feature.name:
+                    graph_features.append(graph_feature)
 
-            # look for edge features
+            # look for qm attribute
             for qm_attribute in QmAttribute:
                 if key == qm_attribute.name:
                     attributes.append(qm_attribute)
@@ -226,13 +233,14 @@ class GraphGeneratorSettings:
         # # print statements for debugging
         # print(node_features)
         # print(edge_features)
+        # print(graph_features)
         # print(attributes)
         # print(bond_threshold)
         # print(hydrogen_count_threshold)
         # print(hydrogen_mode)
         # print(bond_determination_mode)
 
-        return cls(node_features=node_features, edge_feautres=edge_features, attributes=attributes, 
+        return cls(node_features=node_features, edge_features=edge_features, graph_features=graph_features, attributes=attributes, 
                    bond_determination_mode=bond_determination_mode, 
                    bond_threshold=bond_threshold, 
                    hydrogen_mode=hydrogen_mode,

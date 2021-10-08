@@ -52,6 +52,7 @@ for graph in graphs:
 
     # print(graph.attributes)
     # print(graph.nodes)
+    print(graph.graph_features)
     # pytorch
 
     # graph.get_adjacent_nodes(49)

@@ -1,5 +1,8 @@
 import warnings
 
+from networkx.algorithms.dag import lexicographical_topological_sort
+from nbo2graph.graph_feature import GraphFeature
+
 from nbo2graph.graph_generator_settings import GraphGeneratorSettings
 
 from nbo2graph.graph import Graph
@@ -25,6 +28,12 @@ class GraphGenerator:
         self.settings = settings
 
     def generate_graph(self, qm_data: QmData):
+
+        """Generates a graph according to the specified settings.
+
+        Returns:
+            Graph: The graph representation of the graph.
+        """
 
         # get edges
         nodes = self._get_nodes(qm_data)
@@ -52,10 +61,13 @@ class GraphGenerator:
         # check validity of edges
         self._validate_edge_list(edges, len(nodes))
 
+        # get graph features
+        graph_features = self._get_graph_features(qm_data)
+
         # get attributes
         attributes = self._get_attributes(qm_data)
 
-        return Graph(nodes, edges, attributes)
+        return Graph(nodes, edges, attributes=attributes, graph_features=graph_features)
 
     def _get_edges(self, qm_data: QmData):
 
@@ -494,6 +506,30 @@ class GraphGenerator:
         # raise exception otherwise
         else:
             raise ValueError('Bond determination mode not recognised.')
+
+    def _get_graph_features(self, qm_data: QmData) -> list:
+
+        # return variable
+        graph_feature_list = []
+
+        for i in range(len(self.settings.graph_features)):
+
+            if self.settings.graph_features[i] == GraphFeature.N_ATOMS:
+                graph_feature_list.append(qm_data.n_atoms)
+            elif self.settings.graph_features[i] == GraphFeature.MOLECULAR_MASS:
+                graph_feature_list.append(qm_data.molecular_mass)
+            elif self.settings.graph_features[i] == GraphFeature.POLARISABILITY:
+                graph_feature_list.append(qm_data.polarisability)
+            elif self.settings.graph_features[i] == GraphFeature.CHARGE:
+                graph_feature_list.append(qm_data.charge)
+            elif self.settings.graph_features[i] == GraphFeature.CSD_CODE:
+                graph_feature_list.append(qm_data.csd_code)
+            elif self.settings.graph_features[i] == GraphFeature.STOICHIOMETRY:
+                graph_feature_list.append(qm_data.stoichiometry)
+            else:
+                warnings.warn('Could not find attritubte' + str(self.settings.graph_features[i]) + '.')
+
+        return graph_feature_list
 
     def _get_attributes(self, qm_data: QmData):
 
