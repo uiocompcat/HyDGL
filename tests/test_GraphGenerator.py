@@ -191,7 +191,7 @@ class TestGraphGenerator(unittest.TestCase):
         qm_data = DataParser('./tests/test_file.out').parse()
 
         # set up graph generator settings
-        ggs = GraphGeneratorSettings(node_features=node_features, edge_feautres=[], hydrogen_mode=hydrogen_mode, bond_determination_mode=bond_determination_mode)
+        ggs = GraphGeneratorSettings(node_features=node_features, edge_features=[], hydrogen_mode=hydrogen_mode, bond_determination_mode=bond_determination_mode)
 
         # set up graph generator with variable node feature list
         gg = GraphGenerator(ggs)
