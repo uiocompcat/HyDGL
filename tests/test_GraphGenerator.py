@@ -4,11 +4,15 @@ from parameterized import parameterized
 from nbo2graph.data_parser import DataParser
 from nbo2graph.edge_feature import EdgeFeature
 from nbo2graph.node_feature import NodeFeature
+from nbo2graph.graph_feature import GraphFeature
 from nbo2graph.hydrogen_mode import HydrogenMode
 from nbo2graph.graph_generator import GraphGenerator
 from nbo2graph.bond_determination_mode import BondDeterminationMode
 from nbo2graph.graph_generator_settings import GraphGeneratorSettings
 from tests.test_functions import TestFunctions
+
+# constants pointing to test files
+TEST_FILE_LALMER = './tests/files/LALMER.out'
 
 
 class TestGraphGenerator(unittest.TestCase):
@@ -68,9 +72,9 @@ class TestGraphGenerator(unittest.TestCase):
             [NodeFeature.BOND_ORDER_TOTAL],
             [
                 [0.5744], [1.022], [2.2828], [3.3946], [1.9874], [3.3227], [3.5845], [3.1819],
-                [2.2794], [3.5223], [3.5658], [3.7724], [3.5903], [3.7262], [2.2683], [3.5313],
+                [2.2794], [3.5223], [3.5658], [3.7724], [3.5903], [3.7262], [2.2683], [3.532],
                 [3.5804], [3.7722], [3.5926], [3.7325], [2.27], [3.3969], [1.993], [3.3239],
-                [3.5949], [3.1929], [4.1104], [0.7012], [0.7221], [0.7784], [0.8416], [0.4988],
+                [3.5949], [3.1929], [4.1104], [0.7012], [0.7221], [0.7784], [0.8416], [0.498],
                 [0.7029], [0.4975], [0.755], [0.7378], [0.744], [0.7555], [0.7705], [0.7003],
                 [0.7588], [0.7436], [0.7536], [0.7619], [0.735], [0.7559], [0.7702]
             ]
@@ -191,7 +195,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_nodes(self, hydrogen_mode, bond_determination_mode, node_features, expected):
 
         # load data
-        qm_data = DataParser('./tests/files/test_file.out').parse()
+        qm_data = DataParser(TEST_FILE_LALMER).parse()
 
         # set up graph generator settings
         ggs = GraphGeneratorSettings(node_features=node_features,
@@ -264,7 +268,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_edges(self, hydrogen_mode, bond_determination_mode, edge_features, bond_threshold, expected):
 
         # load data
-        qm_data = DataParser('./tests/files/test_file.out').parse()
+        qm_data = DataParser(TEST_FILE_LALMER).parse()
 
         # set up graph generator settings
         ggs = GraphGeneratorSettings(node_features=[],
@@ -295,7 +299,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_bound_atom_indices(self, atom_index, threshold, expected):
 
         # load data
-        qm_data = DataParser('./tests/files/test_file.out').parse()
+        qm_data = DataParser(TEST_FILE_LALMER).parse()
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -315,7 +319,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_bound_atom_indices_with_invalid_input(self, atom_index, threshold):
 
         # load data
-        qm_data = DataParser('./tests/files/test_file.out').parse()
+        qm_data = DataParser(TEST_FILE_LALMER).parse()
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -333,7 +337,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_bound_h_indices(self, atom_index, threshold, expected):
 
         # load data
-        qm_data = DataParser('./tests/files/test_file.out').parse()
+        qm_data = DataParser(TEST_FILE_LALMER).parse()
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -353,7 +357,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_bound_h_indices_with_invalid_input(self, atom_index, threshold):
 
         # load data
-        qm_data = DataParser('./tests/files/test_file.out').parse()
+        qm_data = DataParser(TEST_FILE_LALMER).parse()
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -371,12 +375,60 @@ class TestGraphGenerator(unittest.TestCase):
     def test_determine_hydrogen_count(self, atom_index, expected):
 
         # load data
-        qm_data = DataParser('./tests/files/test_file.out').parse()
+        qm_data = DataParser(TEST_FILE_LALMER).parse()
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
 
         # get result
         result = gg._determine_hydrogen_count(atom_index, qm_data)
+
+        self.assertEqual(result, expected)
+
+    @parameterized.expand([
+
+        [
+            [GraphFeature.CSD_CODE],
+            ['LALMER']
+        ],
+
+        [
+            [GraphFeature.STOICHIOMETRY],
+            ['C18H16CdClN4O5S2(1+)']
+        ],
+
+        [
+            [GraphFeature.MOLECULAR_MASS],
+            [580.92867]
+        ],
+
+        [
+            [GraphFeature.POLARISABILITY],
+            [334.01]
+        ],
+
+        [
+            [GraphFeature.N_ATOMS],
+            [47]
+        ],
+
+        [
+            [GraphFeature.CHARGE],
+            [1]
+        ],
+    ])
+    def test_get_graph_features(self, graph_features, expected):
+
+        # load data
+        qm_data = DataParser(TEST_FILE_LALMER).parse()
+
+        # set up graph generator settings
+        ggs = GraphGeneratorSettings(graph_features=graph_features)
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(ggs)
+
+        # get result
+        result = gg._get_graph_features(qm_data)
 
         self.assertEqual(result, expected)
