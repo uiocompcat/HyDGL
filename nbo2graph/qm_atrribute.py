@@ -1,13 +1,14 @@
 from enum import Enum, auto
 
+
 class QmAttribute(Enum):
 
     '''Enum class for the different QM attributes to be used.'''
-    
+
     # dispersion energy
     SVP_DISPERSION_ENERGY = auto()
     TZVP_DISPERSION_ENERGY = auto()
-    
+
     # electronic energy
     SVP_ELECTRONIC_ENERGY = auto()
     TZVP_ELECTRONIC_ENERGY = auto()

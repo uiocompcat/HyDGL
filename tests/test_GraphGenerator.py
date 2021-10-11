@@ -8,6 +8,7 @@ from nbo2graph.graph_generator import GraphGenerator
 from nbo2graph.bond_determination_mode import BondDeterminationMode
 from nbo2graph.graph_generator_settings import GraphGeneratorSettings
 
+
 class TestGraphGenerator(unittest.TestCase):
 
     @parameterized.expand([

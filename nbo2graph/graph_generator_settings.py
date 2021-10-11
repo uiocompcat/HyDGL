@@ -13,18 +13,20 @@ DEFAULT_HYDROGEN_MODE = HydrogenMode.EXPLICIT
 DEFAULT_BOND_THRESHOLD = 0.3
 DEFAULT_HYDROGEN_COUNT_THRESHOLD = 0.5
 
+
 class GraphGeneratorSettings:
 
     """Class for storing graph generator settings."""
 
-    def __init__(self, node_features: list[NodeFeature] = [],
-                       edge_features: list[EdgeFeature] = [],
-                       graph_features: list[GraphFeature] = [],
-                       attributes: list[QmAttribute] = [],
-                       bond_determination_mode: BondDeterminationMode = DEFAULT_BOND_DETERMINATION_MODE,
-                       bond_threshold=DEFAULT_BOND_THRESHOLD, 
-                       hydrogen_mode=DEFAULT_HYDROGEN_MODE,
-                       hydrogen_count_threshold=DEFAULT_HYDROGEN_COUNT_THRESHOLD):
+    def __init__(self,
+                 node_features: list[NodeFeature] = [],
+                 edge_features: list[EdgeFeature] = [],
+                 graph_features: list[GraphFeature] = [],
+                 attributes: list[QmAttribute] = [],
+                 bond_determination_mode: BondDeterminationMode = DEFAULT_BOND_DETERMINATION_MODE,
+                 bond_threshold=DEFAULT_BOND_THRESHOLD,
+                 hydrogen_mode=DEFAULT_HYDROGEN_MODE,
+                 hydrogen_count_threshold=DEFAULT_HYDROGEN_COUNT_THRESHOLD):
 
         """Constructor
 
@@ -54,7 +56,7 @@ class GraphGeneratorSettings:
         self.hydrogen_mode = hydrogen_mode
         self.hydrogen_count_threshold = hydrogen_count_threshold
 
-        # get orbital lists specifying which orbitals to consider 
+        # get orbital lists specifying which orbitals to consider
         # 0 -> s, 1 -> p, 2 -> d, 3 -> f
         self.lone_pair_orbital_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationTypes.LONE_PAIR)
         self.lone_vacancy_orbital_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationTypes.LONE_VACANCY)
@@ -153,7 +155,7 @@ class GraphGeneratorSettings:
 
             # look for bond determination mode
             if key == 'BOND_DETERMINATION_MODE':
-                if bond_determination_mode == None:
+                if bond_determination_mode is None:
 
                     # warn user if hydrogen mode not recognised
                     if settings_dict[key].upper() not in [x.name for x in BondDeterminationMode]:
@@ -166,7 +168,7 @@ class GraphGeneratorSettings:
 
             # look for hydrogen mode
             if key == 'HYDROGEN_MODE':
-                if hydrogen_mode == None:
+                if hydrogen_mode is None:
 
                     # warn user if hydrogen mode not recognised
                     if settings_dict[key].upper() not in [x.name for x in HydrogenMode]:
@@ -214,22 +216,22 @@ class GraphGeneratorSettings:
             # print('The key:\n\n\t' + key + '\n\nCould not be found. Skipping this key.')
 
         # check if values are set, otherwise use default values and warn user.
-        if bond_threshold == None:
+        if bond_threshold is None:
             print('No setting for BOND_THRESHOLD found. Defaulting to ' + str(DEFAULT_BOND_THRESHOLD))
             bond_threshold = DEFAULT_BOND_THRESHOLD
-        
-        if hydrogen_count_threshold == None:
+
+        if hydrogen_count_threshold is None:
             print('No setting for HYDROGEN_COUNT_THRESHOLD found. Defaulting to ' + str(DEFAULT_HYDROGEN_COUNT_THRESHOLD))
             hydrogen_count_threshold = DEFAULT_HYDROGEN_COUNT_THRESHOLD
-        
-        if bond_determination_mode == None:
+
+        if bond_determination_mode is None:
             print('No setting for BOND_DETERMINATION_MODE found. Defaulting to ' + str(DEFAULT_BOND_DETERMINATION_MODE))
             bond_determination_mode = DEFAULT_BOND_DETERMINATION_MODE
 
-        if hydrogen_mode == None:
+        if hydrogen_mode is None:
             print('No setting for HYDROGEN_MODE found. Defaulting to ' + str(DEFAULT_HYDROGEN_MODE))
             hydrogen_mode = DEFAULT_HYDROGEN_MODE
-        
+
         # # print statements for debugging
         # print(node_features)
         # print(edge_features)
@@ -240,12 +242,15 @@ class GraphGeneratorSettings:
         # print(hydrogen_mode)
         # print(bond_determination_mode)
 
-        return cls(node_features=node_features, edge_features=edge_features, graph_features=graph_features, attributes=attributes, 
-                   bond_determination_mode=bond_determination_mode, 
-                   bond_threshold=bond_threshold, 
+        return cls(node_features=node_features,
+                   edge_features=edge_features,
+                   graph_features=graph_features,
+                   attributes=attributes,
+                   bond_determination_mode=bond_determination_mode,
+                   bond_threshold=bond_threshold,
                    hydrogen_mode=hydrogen_mode,
                    hydrogen_count_threshold=hydrogen_count_threshold
-        )
+                   )
 
     def _get_orbtials_to_extract_indices(self, mode: OrbitalOccupationTypes):
 

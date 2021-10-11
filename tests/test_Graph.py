@@ -3,6 +3,7 @@ from parameterized import parameterized
 
 from nbo2graph.graph import Graph
 
+
 class TestGraph(unittest.TestCase):
 
     @parameterized.expand([

@@ -1,9 +1,10 @@
 from enum import Enum, auto
 
+
 class NodeFeature(Enum):
 
     '''Enum class for the different node features to be used.'''
-    
+
     # basic
     ATOMIC_NUMBERS = auto()
     NATURAL_ATOMIC_CHARGES = auto()

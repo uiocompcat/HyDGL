@@ -14,6 +14,7 @@ from nbo2graph.hydrogen_mode import HydrogenMode
 from nbo2graph.element_look_up_table import ElementLookUpTable
 from nbo2graph.bond_determination_mode import BondDeterminationMode
 
+
 class GraphGenerator:
 
     """Class to generate appropriate graphs based on supplied QM data."""
@@ -44,7 +45,7 @@ class GraphGenerator:
         hydride_bond_indices = self._get_hydride_bond_indices(qm_data)
         for i in range(len(hydride_bond_indices)):
 
-            # get node            
+            # get node
             node = self._get_individual_node(qm_data, hydride_bond_indices[i][0])
             # insert at correct place in node list
             nodes.insert(hydride_bond_indices[i][0], node)
@@ -82,7 +83,7 @@ class GraphGenerator:
 
         edges = []
         # generate featurised edges
-        for i in range(len(adjacency_list)):  
+        for i in range(len(adjacency_list)):
             edges.append(self._get_featurised_edge(adjacency_list[i], qm_data))
 
         return edges
@@ -260,7 +261,7 @@ class GraphGenerator:
                 node.append(qm_data.wiberg_atom_totals[i])
             # LMO mode
             elif self.settings.bond_determination_mode == BondDeterminationMode.LMO:
-                node.append(qm_data.nbo_bond_order_totals[i])        
+                node.append(qm_data.nbo_bond_order_totals[i])
             # NLMO mode
             elif self.settings.bond_determination_mode == BondDeterminationMode.NLMO:
                 node.append(qm_data.nbo_bond_order_totals[i])
@@ -422,7 +423,7 @@ class GraphGenerator:
 
         # check if given atom index is valid
         if atom_index < 0 or atom_index > qm_data.n_atoms - 1:
-            raise ValueError('The specified node index is out of range. Valid range: 0 - ' + 
+            raise ValueError('The specified node index is out of range. Valid range: 0 - ' +
                              str(qm_data.n_atoms - 1) + '. Given: ' + str(atom_index) + '.')
 
         # return variable
@@ -479,7 +480,6 @@ class GraphGenerator:
         """
 
         return len(self._get_bound_h_atom_indices(atom_index, qm_data))
-
 
     def _get_index_matrix(self, qm_data: QmData):
 

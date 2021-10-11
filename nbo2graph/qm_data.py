@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+
 @dataclass
 class QmData():
 
@@ -15,19 +16,19 @@ class QmData():
     geometric_data: list[list[float]] = None
     bond_distance_matrix: list[list[float]] = None
 
-    charge: int = None # e
-    molecular_mass: float = None # amu
-    polarisability: float = None # Bohr ^ 3
+    charge: int = None  # e
+    molecular_mass: float = None  # amu
+    polarisability: float = None  # Bohr ^ 3
 
     # energies
-    svp_dispersion_energy: float = None # Ha
-    tzvp_dispersion_energy: float = None # Ha
+    svp_dispersion_energy: float = None  # Ha
+    tzvp_dispersion_energy: float = None  # Ha
 
-    svp_electronic_energy: float = None # Ha
-    tzvp_electronic_energy: float = None # Ha
+    svp_electronic_energy: float = None  # Ha
+    tzvp_electronic_energy: float = None  # Ha
 
-    svp_dipole_moment: float = None # D
-    tzvp_dipole_moment: float = None # D
+    svp_dipole_moment: float = None  # D
+    tzvp_dipole_moment: float = None  # D
 
     # orbital data
     svp_occupied_orbital_energies: list[float] = None
@@ -35,28 +36,28 @@ class QmData():
     svp_virtual_orbital_energies: list[float] = None
     tzvp_virtual_orbital_energies: list[float] = None
 
-    svp_homo_energy: float = None # Ha
-    svp_lumo_energy: float = None # Ha
-    tzvp_homo_energy: float = None # Ha
-    tzvp_lumo_energy: float = None # Ha
+    svp_homo_energy: float = None  # Ha
+    svp_lumo_energy: float = None  # Ha
+    tzvp_homo_energy: float = None  # Ha
+    tzvp_lumo_energy: float = None  # Ha
 
-    svp_homo_lumo_gap: float = None # Ha
-    tzvp_homo_lumo_gap: float = None # Ha
+    svp_homo_lumo_gap: float = None  # Ha
+    tzvp_homo_lumo_gap: float = None  # Ha
 
     # vibrational frequencies
-    frequencies: list[float] = None # cm ^ -1
-    lowest_vibrational_frequency: float = None # cm ^ -1
-    highest_vibrational_frequency: float = None # cm ^ -1
+    frequencies: list[float] = None  # cm ^ -1
+    lowest_vibrational_frequency: float = None  # cm ^ -1
+    highest_vibrational_frequency: float = None  # cm ^ -1
 
     # thermo chemistry
-    heat_capacity: float = None # Cal/Mol-Kelvin
-    entropy: float = None # Cal/Mol-Kelvin
+    heat_capacity: float = None  # Cal/Mol-Kelvin
+    entropy: float = None  # Cal/Mol-Kelvin
 
-    zpe_correction: float = None # Ha
-    enthalpy_energy: float = None # Ha
-    gibbs_energy: float = None # Ha
-    corrected_enthalpy_energy: float = None # Ha
-    corrected_gibbs_energy: float = None # Ha
+    zpe_correction: float = None  # Ha
+    enthalpy_energy: float = None  # Ha
+    gibbs_energy: float = None  # Ha
+    corrected_enthalpy_energy: float = None  # Ha
+    corrected_gibbs_energy: float = None  # Ha
 
     # electronic data
     natural_atomic_charges: list[float] = None
@@ -86,10 +87,10 @@ class QmData():
     antibond_pair_data_full = None
 
     # deltas
-    dispersion_energy_delta: float = None # Ha
-    electronic_energy_delta: float = None # Ha
-    dipole_moment_delta: float = None # D
-    homo_lumo_gap_delta: float = None # Ha
+    dispersion_energy_delta: float = None  # Ha
+    electronic_energy_delta: float = None  # Ha
+    dipole_moment_delta: float = None  # D
+    homo_lumo_gap_delta: float = None  # Ha
 
     def calculate_properties(self):
 
@@ -128,16 +129,16 @@ class QmData():
         self.corrected_enthalpy_energy = self.enthalpy_energy - self.svp_electronic_energy
 
         # calculate ZPE, thermal, internal, and entropy energy corrections
-        self.corrected_gibbs_energy =  self.gibbs_energy - self.svp_electronic_energy
+        self.corrected_gibbs_energy = self.gibbs_energy - self.svp_electronic_energy
 
         # SVP - TZVP deltas
 
         # calculate svp - tzvp dispersion energy delta
         self.dispersion_energy_delta = self.svp_dispersion_energy - self.tzvp_dispersion_energy
-        
+
         # calculate svp - tzvp electronic energy delta
         self.electronic_energy_delta = self.svp_electronic_energy - self.tzvp_electronic_energy
-       
+
         # calculate svp - tzvp dipole moment delta
         self.dipole_moment_delta = self.svp_dipole_moment - self.tzvp_dipole_moment
 
@@ -154,7 +155,7 @@ class QmData():
         for i in range(len(self.nbo_bond_order_matrix)):
             self.nbo_bond_order_totals.append(sum(self.nbo_bond_order_matrix[i]))
 
-        # merge nbo data with corresponding energies        
+        # merge nbo data with corresponding energies
         self.lone_pair_data_full = self._merge_nbo_data(self.lone_pair_data)
         self.lone_vacancy_data_full = self._merge_nbo_data(self.lone_vacancy_data)
         self.bond_pair_data_full = self._merge_nbo_data(self.bond_pair_data)
@@ -177,15 +178,15 @@ class QmData():
             data_point.append(self.nbo_energies[nbo_energy_index][1])
             data_point.append(nbo_data[i][2])
             data_point.append(nbo_data[i][3])
-            
+
             # append to output list
             merged_data.append(data_point)
-        
+
         return merged_data
-    
+
     @staticmethod
     def _calculate_euclidean_distance(x, y):
-        
+
         # make sure both lists have the same length
         assert len(x) == len(y)
 

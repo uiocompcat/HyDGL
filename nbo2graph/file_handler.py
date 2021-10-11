@@ -16,14 +16,14 @@ class FileHandler:
         Returns:
             string: The file content.
         """
-        
+
         try:
             f = open(file_path, 'r')
         except FileNotFoundError:
             raise FileNotFoundError('The specified file does not exist.')
         except IsADirectoryError:
             raise IsADirectoryError('Cannot open directory.')
-        
+
         with f:
             data = f.read()
             f.close()

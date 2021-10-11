@@ -4,6 +4,7 @@ from operator import add
 from nbo2graph.qm_data import QmData
 from nbo2graph.file_handler import FileHandler
 
+
 class DataParser:
     
     """Class for reading relevant data from Gaussian output files."""
@@ -159,7 +160,7 @@ class DataParser:
     # - - - extraction functions - - - #
 
     # Some of the following extraction functions are redundant in the sense that for some properties
-    # the extraction procedures are identical. The distinction between these functions is kept 
+    # the extraction procedures are identical. The distinction between these functions is kept
     # nonetheless to ensure maintainability (e.g. when the Gaussian output format changes).
 
     def _extract_charge(self, start_index):
@@ -320,7 +321,7 @@ class DataParser:
     def _extract_index_matrix(self, start_index):
 
         # setup n_atoms x n_atoms matrix for Wiberg indices
-        wiberg_index_matrix = [[0 for x in range(self.n_atoms)] for y in range(self.n_atoms)] 
+        wiberg_index_matrix = [[0 for x in range(self.n_atoms)] for y in range(self.n_atoms)]
 
         # counter for keeping track how many columns have been taken care of
         # this is necessary because the Gaussian output file prints the Wiberg
@@ -346,7 +347,7 @@ class DataParser:
                 # read out data (index number based on Gaussian output format)
                 for j in range(len(line_split)):
                     # write matrix element
-                    wiberg_index_matrix[i-start_index][j + n_columns_processed] = float(line_split[j])
+                    wiberg_index_matrix[i - start_index][j + n_columns_processed] = float(line_split[j])
 
             n_columns_processed += n_columns
 
@@ -412,7 +413,7 @@ class DataParser:
     def _extract_nbo_data(self, start_index):
         
         # final output variables
-        lone_pair_data = [] 
+        lone_pair_data = []
         antibond_pair_data = []
         bond_pair_data = []
         lone_vacancy_data = []
@@ -423,7 +424,7 @@ class DataParser:
         while not self.lines[i] == '':
 
             # split line at any white space
-            line_split = self.lines[i].replace('(','').split()
+            line_split = self.lines[i].replace('(', '').split()
             if len(line_split) > 3:
 
                 # lone pairs
@@ -502,7 +503,7 @@ class DataParser:
 
         # find line with second data
         i = start_index + 3
-        while not '(' in self.lines[i]:
+        while '(' not in self.lines[i]:
             i += 1
 
         # get occupation from both lines using regex (values in brackets)

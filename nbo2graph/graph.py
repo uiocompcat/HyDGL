@@ -5,6 +5,7 @@ from torch_geometric.data import Data
 from nbo2graph.file_handler import FileHandler
 from nbo2graph.element_look_up_table import ElementLookUpTable
 
+
 class Graph:
 
     """Class for reading relevant data from QM output files."""
@@ -107,7 +108,7 @@ class Graph:
         disjoint_sub_graphs = []
         # contains all node indices
         not_visited_nodes = list(range(len(self.nodes)))
-        
+
         while len(not_visited_nodes) > 0:
 
             # list to store the nodes part of the current (disjoint) sub graph

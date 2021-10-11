@@ -2,19 +2,19 @@ class ElementLookUpTable():
 
     '''Class for looking up atomic numbers and element identifiers.'''
 
-    element_identifiers = ['H','He','Li','Be','B','C','N','O','F','Ne',
-                          'Na','Mg','Al','Si','P','S','Cl','Ar','K',
-                          'Ca','Sc','Ti','V','Cr','Mn','Fe','Co','Ni',
-                          'Cu','Zn','Ga','Ge','As','Se','Br','Kr','Rb',
-                          'Sr','Y','Zr','Nb','Mo','Tc','Ru','Rh','Pd',
-                          'Ag','Cd','In','Sn','Sb','Te','I','Xe','Cs',
-                          'Ba','La','Ce','Pr','Nd','Pm','Sm','Eu','Gd',
-                          'Tb','Dy','Ho','Er','Tm','Yb','Lu','Hf','Ta',
-                          'W','Re','Os','Ir','Pt','Au','Hg','Tl','Pb',
-                          'Bi','Po','At','Rn','Fr','Ra','Ac','Th','Pa',
-                          'U','Np','Pu','Am','Cm','Bk','Cf','Es','Fm',
-                          'Md','No','Lr','Rf','Db','Sg','Bh','Hs','Mt',
-                          'Ds','Rg','Cn','Nh','Fl','Mc','Lv','Ts','Og']
+    element_identifiers = ['H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 'Ne',
+                           'Na', 'Mg', 'Al', 'Si', 'P', 'S', 'Cl', 'Ar', 'K',
+                           'Ca', 'Sc', 'Ti', 'V', 'Cr', 'Mn', 'Fe', 'Co', 'Ni',
+                           'Cu', 'Zn', 'Ga', 'Ge', 'As', 'Se', 'Br', 'Kr', 'Rb',
+                           'Sr', 'Y', 'Zr', 'Nb', 'Mo', 'Tc', 'Ru', 'Rh', 'Pd',
+                           'Ag', 'Cd', 'In', 'Sn', 'Sb', 'Te', 'I', 'Xe', 'Cs',
+                           'Ba', 'La', 'Ce', 'Pr', 'Nd', 'Pm', 'Sm', 'Eu', 'Gd',
+                           'Tb', 'Dy', 'Ho', 'Er', 'Tm', 'Yb', 'Lu', 'Hf', 'Ta',
+                           'W', 'Re', 'Os', 'Ir', 'Pt', 'Au', 'Hg', 'Tl', 'Pb',
+                           'Bi', 'Po', 'At', 'Rn', 'Fr', 'Ra', 'Ac', 'Th', 'Pa',
+                           'U', 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es', 'Fm',
+                           'Md', 'No', 'Lr', 'Rf', 'Db', 'Sg', 'Bh', 'Hs', 'Mt',
+                           'Ds', 'Rg', 'Cn', 'Nh', 'Fl', 'Mc', 'Lv', 'Ts', 'Og']
 
     transition_metal_atomic_numbers = [21, 22, 23, 24, 25, 26, 27, 28, 29, 30,                          # first block
                                        39, 49, 41, 42, 43, 44, 45, 46, 47, 48,                          # second block

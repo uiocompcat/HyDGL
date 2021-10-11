@@ -1,5 +1,6 @@
 from enum import Enum, auto
 
+
 class GraphFeature(Enum):
 
     '''Enum class for the different graph features to be used.'''
@@ -8,7 +9,7 @@ class GraphFeature(Enum):
     N_ATOMS = auto()
     # molecular mass
     MOLECULAR_MASS = auto()
-    # charge 
+    # charge
     CHARGE = auto()
     # POLARISABILITY
     POLARISABILITY = auto()
