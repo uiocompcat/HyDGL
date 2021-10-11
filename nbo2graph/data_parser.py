@@ -6,7 +6,7 @@ from nbo2graph.file_handler import FileHandler
 
 
 class DataParser:
-    
+
     """Class for reading relevant data from Gaussian output files."""
 
     def __init__(self, file_path):
@@ -33,7 +33,7 @@ class DataParser:
 
                 # return
                 return int(line_split[n_atomsIndex])
-        
+
         raise Exception('Could not find number of atoms in file.')
 
     def parse(self):
@@ -74,7 +74,7 @@ class DataParser:
 
             if 'Bond orbital / Coefficients / Hybrids' in self.lines[i]:
                 qm_data.lone_pair_data, qm_data.lone_vacancy_data, qm_data.bond_pair_data, qm_data.antibond_pair_data = self._extract_nbo_data(i + 2)
-        
+
             if 'NATURAL BOND ORBITALS' in self.lines[i]:
                 qm_data.nbo_energies = self._extract_nbo_energies(i + 7)
 
@@ -107,12 +107,12 @@ class DataParser:
                     qm_data.svp_dipole_moment = self._extract_dipole_moment(i + 1)
                 elif region_state == 'tzvp':
                     qm_data.tzvp_dipole_moment = self._extract_dipole_moment(i + 1)
-            
+
             if 'Isotropic polarizability' in self.lines[i]:
                 qm_data.polarisability = self._extract_polarisability(i)
 
             if 'Frequencies -- ' in self.lines[i]:
-                if qm_data.frequencies == None:
+                if qm_data.frequencies is None:
                     qm_data.frequencies = self._extract_frequency(i)
                 else:
                     qm_data.frequencies.extend(self._extract_frequency(i))
@@ -130,26 +130,26 @@ class DataParser:
 
             if 'Alpha  occ. eigenvalues' in self.lines[i]:
                 if region_state == 'svp':
-                    if qm_data.svp_occupied_orbital_energies == None:
+                    if qm_data.svp_occupied_orbital_energies is None:
                         qm_data.svp_occupied_orbital_energies = self._extract_orbital_energies(i)
                     else:
                         qm_data.svp_occupied_orbital_energies.extend(self._extract_orbital_energies(i))
                 elif region_state == 'tzvp':
-                    if qm_data.tzvp_occupied_orbital_energies == None:
+                    if qm_data.tzvp_occupied_orbital_energies is None:
                         qm_data.tzvp_occupied_orbital_energies = self._extract_orbital_energies(i)
-                    else:    
+                    else:
                         qm_data.tzvp_occupied_orbital_energies.extend(self._extract_orbital_energies(i))
 
             if 'Alpha virt. eigenvalues' in self.lines[i]:
                 if region_state == 'svp':
-                    if qm_data.svp_virtual_orbital_energies == None:
+                    if qm_data.svp_virtual_orbital_energies is None:
                         qm_data.svp_virtual_orbital_energies = self._extract_orbital_energies(i)
                     else:
                         qm_data.svp_virtual_orbital_energies.extend(self._extract_orbital_energies(i))
                 elif region_state == 'tzvp':
-                    if qm_data.tzvp_virtual_orbital_energies == None:
+                    if qm_data.tzvp_virtual_orbital_energies is None:
                         qm_data.tzvp_virtual_orbital_energies = self._extract_orbital_energies(i)
-                    else:    
+                    else:
                         qm_data.tzvp_virtual_orbital_energies.extend(self._extract_orbital_energies(i))
 
         # calculate extra properties such as delta values, HOMO, LUMU, etc.
@@ -212,7 +212,7 @@ class DataParser:
         for i in range(len(line_split[4:])):
             # check for entries that are not separated by white space
             match_result = re.search('([0-9]-[0-9])', line_split[4 + i])
-            if match_result != None:
+            if match_result is not None:
                 first_item_end_index = match_result.span(0)[0]
                 orbital_energies.append(line_split[4 + i][:first_item_end_index + 1])
                 orbital_energies.append(line_split[4 + i][first_item_end_index + 1:])
@@ -255,7 +255,7 @@ class DataParser:
             line_split = self.lines[i].split()
             # read out data (index number based on Gaussian output format)
             atomic_numbers.append(int(line_split[1]))
-        
+
         return atomic_numbers
 
     def _extract_geometric_data(self, start_index):
@@ -272,7 +272,7 @@ class DataParser:
         return geometric_data
 
     def _extract_natural_atomic_charges(self, start_index):
-        
+
         natural_atomic_charges = []
 
         for i in range(start_index, start_index + self.n_atoms, 1):
@@ -280,15 +280,15 @@ class DataParser:
             line_split = self.lines[i].split()
             # read out data (index number based on Gaussian output format)
             natural_atomic_charges.append(float(line_split[2]))
-        
+
         return natural_atomic_charges
 
     def _extract_natural_electron_configuration(self, start_index):
-        
+
         natural_electron_configuration = []
 
         for i in range(start_index, start_index + self.n_atoms, 1):
-            
+
             # single atom electron configuration ([s, p, d, f])
             electron_configuration = [0.0, 0.0, 0.0, 0.0]
 
@@ -337,9 +337,9 @@ class DataParser:
                 line_split = self.lines[i].split()
                 # drop first two columns so that only Wiberg indices remain
                 line_split = line_split[2:]
-            
+
                 # check that the number of columns is the same
-                if n_columns == None:
+                if n_columns is None:
                     n_columns = len(line_split)
                 else:
                     assert n_columns == len(line_split)
@@ -365,7 +365,7 @@ class DataParser:
         i = start_index
 
         while(self.lines[i] != ''):
-            
+
             line_split = self.lines[i].split()
 
             # get atom indices and the corresponding LMO bond order
@@ -411,7 +411,7 @@ class DataParser:
         return data
 
     def _extract_nbo_data(self, start_index):
-        
+
         # final output variables
         lone_pair_data = []
         antibond_pair_data = []
@@ -435,13 +435,13 @@ class DataParser:
 
                 # bonds
                 if line_split[2] == 'BD':
-                    
+
                     bond = self._extract_bonding_data(i)
                     bond_pair_data.append(bond)
 
                 # anti bonds
                 if line_split[2] == 'BD*':
-                    
+
                     antibond = self._extract_bonding_data(i)
                     antibond_pair_data.append(antibond)
 

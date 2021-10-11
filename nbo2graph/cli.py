@@ -1,6 +1,7 @@
 from argparse import ArgumentParser
 from nbo2graph import __version__
 
+
 def cli(args=None):
     p = ArgumentParser(
         description="Python parser to generate descriptive graphs from Natural Bond Orbitals (NBO).",

@@ -70,16 +70,16 @@ class GraphGeneratorSettings:
 
     @classmethod
     def from_file(cls, file_path: str):
-        
+
         "Initialize MyData from a file"
-        
+
         data = FileHandler.read_file(file_path)
         lines = data.split('\n')
 
         # set up a dictionary for all sepified settings
         settings_dict = {}
         for i in range(len(lines)):
-            
+
             # skip empty lines
             if lines[i].replace(' ', '') == '':
                 continue
@@ -93,7 +93,7 @@ class GraphGeneratorSettings:
             line_split = lines[i].split(':')
 
             if len(line_split) == 2:
-                
+
                 # check for orbital settings
                 if line_split[0].strip().upper() == 'LONE_PAIRS' or \
                    line_split[0].strip().upper() == 'LONE_VACANCIES' or \
@@ -109,7 +109,7 @@ class GraphGeneratorSettings:
 
                     # convert to bool representations
                     for orbital_type in orbital_types:
-                    
+
                         if orbital_type in orbitals:
                             settings_dict[line_split[0].strip().upper() + '_' + orbital_type.upper()] = 'true'
                         else:
@@ -120,7 +120,7 @@ class GraphGeneratorSettings:
                     settings_dict[line_split[0].strip().upper()] = line_split[1].strip().lower()
             else:
                 print('The line "' + lines[i] + '" cannot be parsed. Skipping this line.')
-        
+
         # settings to extract
         node_features = []
         edge_features = []
@@ -138,7 +138,7 @@ class GraphGeneratorSettings:
             # # skip if set value to false
             # if settings_dict[key].lower() == 'false':
             #     continue
-                
+
             if settings_dict[key].lower() != 'true' and not GraphGeneratorSettings._is_float(settings_dict[key].lower()):
                 # if it is not a recognised key that takes non boolean arguments
                 if not key == 'BOND_DETERMINATION_MODE' and \
@@ -294,25 +294,25 @@ class GraphGeneratorSettings:
                 orbital_indices.append(0)
             if EdgeFeature.BOND_ORBITAL_DATA_P in self.edge_features:
                 orbital_indices.append(1)
-            if EdgeFeature.BOND_ORBITAL_DATA_D in self.edge_features: 
+            if EdgeFeature.BOND_ORBITAL_DATA_D in self.edge_features:
                 orbital_indices.append(2)
-            if EdgeFeature.BOND_ORBITAL_DATA_F in self.edge_features:      
+            if EdgeFeature.BOND_ORBITAL_DATA_F in self.edge_features:
                 orbital_indices.append(3)
         elif mode == OrbitalOccupationTypes.ANTIBOND_ORBITAL:
             if EdgeFeature.ANTIBOND_ORBITAL_DATA_S in self.edge_features:
                 orbital_indices.append(0)
             if EdgeFeature.ANTIBOND_ORBITAL_DATA_P in self.edge_features:
                 orbital_indices.append(1)
-            if EdgeFeature.ANTIBOND_ORBITAL_DATA_D in self.edge_features: 
+            if EdgeFeature.ANTIBOND_ORBITAL_DATA_D in self.edge_features:
                 orbital_indices.append(2)
-            if EdgeFeature.ANTIBOND_ORBITAL_DATA_F in self.edge_features:      
+            if EdgeFeature.ANTIBOND_ORBITAL_DATA_F in self.edge_features:
                 orbital_indices.append(3)
 
         return orbital_indices
 
     @staticmethod
     def _is_float(value):
-        
+
         try:
             float(value)
             return True

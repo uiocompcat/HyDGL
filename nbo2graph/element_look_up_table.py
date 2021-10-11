@@ -42,7 +42,7 @@ class ElementLookUpTable():
             return ElementLookUpTable.element_identifiers[atomic_number - 1]
         else:
             raise ValueError('Invalid atomic number, must be in range 1-118.')
-    
+
     @staticmethod
     def get_atomic_number(element_identifier):
 
