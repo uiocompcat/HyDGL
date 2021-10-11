@@ -1,11 +1,11 @@
 from nbo2graph.file_handler import FileHandler
-from nbo2graph.qm_atrribute import QmAttribute
-from nbo2graph.node_feature import NodeFeature
-from nbo2graph.edge_feature import EdgeFeature
-from nbo2graph.graph_feature import GraphFeature
-from nbo2graph.hydrogen_mode import HydrogenMode
-from nbo2graph.bond_determination_mode import BondDeterminationMode
-from nbo2graph.orbital_occupation_types import OrbitalOccupationTypes
+from nbo2graph.enums.qm_atrribute import QmAttribute
+from nbo2graph.enums.node_feature import NodeFeature
+from nbo2graph.enums.edge_feature import EdgeFeature
+from nbo2graph.enums.graph_feature import GraphFeature
+from nbo2graph.enums.hydrogen_mode import HydrogenMode
+from nbo2graph.enums.bond_determination_mode import BondDeterminationMode
+from nbo2graph.enums.orbital_occupation_types import OrbitalOccupationTypes
 
 # constants
 DEFAULT_BOND_DETERMINATION_MODE = BondDeterminationMode.WIBERG

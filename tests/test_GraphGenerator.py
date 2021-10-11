@@ -2,12 +2,12 @@ import unittest
 from parameterized import parameterized
 
 from nbo2graph.data_parser import DataParser
-from nbo2graph.edge_feature import EdgeFeature
-from nbo2graph.node_feature import NodeFeature
-from nbo2graph.graph_feature import GraphFeature
-from nbo2graph.hydrogen_mode import HydrogenMode
+from nbo2graph.enums.edge_feature import EdgeFeature
+from nbo2graph.enums.node_feature import NodeFeature
+from nbo2graph.enums.graph_feature import GraphFeature
+from nbo2graph.enums.hydrogen_mode import HydrogenMode
 from nbo2graph.graph_generator import GraphGenerator
-from nbo2graph.bond_determination_mode import BondDeterminationMode
+from nbo2graph.enums.bond_determination_mode import BondDeterminationMode
 from nbo2graph.graph_generator_settings import GraphGeneratorSettings
 from tests.test_functions import TestFunctions
 
