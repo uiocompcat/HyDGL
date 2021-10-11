@@ -38,20 +38,22 @@ class GraphGenerator:
         # get edges
         edges = self._get_edges(qm_data)
 
-        # check for hydride hydrogens
-        hydride_bond_indices = self._get_hydride_bond_indices(qm_data)
-        for i in range(len(hydride_bond_indices)):
-
-            # get node
-            node = self._get_individual_node(qm_data, hydride_bond_indices[i][0])
-            # insert at correct place in node list
-            nodes.insert(hydride_bond_indices[i][0], node)
-
-            # append appropriate edge to edge list
-            edges.append(self._get_featurised_edge(hydride_bond_indices[i], qm_data))
-
-        # rescale node referenes in edges if explicit hydrogens were omitted
+        # operations only relevant when not modelling hydrogens explicitly
         if self.settings.hydrogen_mode == HydrogenMode.OMIT or self.settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+
+            # check for hydride hydrogens to add explicitly
+            hydride_bond_indices = self._get_hydride_bond_indices(qm_data)
+            for i in range(len(hydride_bond_indices)):
+
+                # get node
+                node = self._get_individual_node(qm_data, hydride_bond_indices[i][0])
+                # insert at correct place in node list
+                nodes.insert(hydride_bond_indices[i][0], node)
+
+                # append appropriate edge to edge list
+                edges.append(self._get_featurised_edge(hydride_bond_indices[i], qm_data))
+
+            # rescale node referenes in edges if explicit hydrogens were omitted
             edges = self._adjust_node_references(edges, qm_data)
 
         # check validity of nodes

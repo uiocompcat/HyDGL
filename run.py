@@ -20,11 +20,11 @@ def main():
         if file.endswith(".log"):
             files.append(file)
 
-    # settings = GraphGeneratorSettings.from_file('./run.config')
+    settings = GraphGeneratorSettings.from_file('./run.config')
 
     # set up graph generator with parameters
-    # wiberg_g_g = GraphGenerator(settings)
-    default_gg = GraphGenerator(GraphGeneratorSettings.default())
+    gg = GraphGenerator(settings)
+    # default_gg = GraphGenerator(GraphGeneratorSettings.default())
 
     graphs = []
 
@@ -35,13 +35,13 @@ def main():
         qm_data = DataParser('/home/hkneiding/Desktop/nbo data/' + files[i]).parse()
         # print(qm_data.wiberg_index_matrix)
         # generate graph from qm_data object
-        graphs.append(default_gg.generate_graph(qm_data))
+        graphs.append(gg.generate_graph(qm_data))
         # graphs.append(nlmo_g_g.generate_graph(qm_data))
 
     for graph in graphs:
 
         # print(graph.attributes)
-        # print(graph.nodes)
+        print(graph.nodes)
         print(graph.graph_features)
         # pytorch
 
