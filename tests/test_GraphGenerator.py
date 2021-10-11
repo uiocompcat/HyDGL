@@ -191,7 +191,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_nodes(self, hydrogen_mode, bond_determination_mode, node_features, expected):
 
         # load data
-        qm_data = DataParser('./tests/test_file.out').parse()
+        qm_data = DataParser('./tests/files/test_file.out').parse()
 
         # set up graph generator settings
         ggs = GraphGeneratorSettings(node_features=node_features,
@@ -243,11 +243,28 @@ class TestGraphGenerator(unittest.TestCase):
                 [[26, 29], [1.482748]], [[26, 30], [1.471084]]
             ]
         ],
+
+        [
+            HydrogenMode.EXPLICIT,
+            BondDeterminationMode.WIBERG,
+            [EdgeFeature.BOND_ORBITAL_DATA_D],
+            1,
+            [
+                [[2, 3], [2, -0.47335, 1.86181, 0.00125]], [[2, 6], [1, -0.83628, 1.98204, 0.0024]], [[3, 4], [1, -0.71751, 1.97740, 0.0048]], [[3, 9], [1, -0.75230, 1.97911, 0.00075]],
+                [[4, 5], [1, -0.70950, 1.97628, 0.0055]], [[5, 6], [2, -0.40546, 1.80326, 0.0011]], [[6, 7], [1, -0.68826, 1.98282, 0.0011]], [[8, 9], [2, -0.46423, 1.73906, 0.00115]],
+                [[8, 13], [1, -0.87779, 1.98407, 0.0021]], [[9, 10], [1, -0.75976, 1.98302, 0.0011]], [[10, 11], [2, -0.39926, 1.61498, 0.00055]], [[11, 12], [1, -0.75330, 1.98387, 0.00135]],
+                [[12, 13], [2, -0.40128, 1.58771, 0.0003]], [[13, 19], [1, -0.72173, 1.97437, 0.0007]], [[14, 15], [2, -0.45893, 1.73616, 0.00115]], [[14, 19], [1, -0.87405, 1.98390, 0.0021]],
+                [[15, 16], [1, -0.75425, 1.98305, 0.00105]], [[15, 21], [1, -0.74646, 1.97899, 0.00075]], [[16, 17], [2, -0.39528, 1.61781, 0.00055]], [[17, 18], [1, -0.74945, 1.98371, 0.00135]],
+                [[18, 19], [2, -0.39886, 1.59508, 0.0003]], [[20, 21], [2, -0.46620, 1.86014, 0.00085]], [[20, 24], [1, -0.82945, 1.98174, 0.0024]], [[21, 22], [1, -0.71051, 1.97741, 0.0048]],
+                [[22, 23], [1, -0.70280, 1.97615, 0.00545]], [[23, 24], [2, -0.39736, 1.79809, 0.0011]], [[24, 25], [1, -0.68261, 1.98279, 0.00105]], [[26, 28], [1, -0.92396, 1.98066, 0.01155]],
+                [[26, 29], [1, -0.97513, 1.98174, 0.0112]], [[26, 30], [1, -0.98492, 1.98216, 0.011]]
+            ]
+        ],
     ])
     def test_get_edges(self, hydrogen_mode, bond_determination_mode, edge_features, bond_threshold, expected):
 
         # load data
-        qm_data = DataParser('./tests/test_file.out').parse()
+        qm_data = DataParser('./tests/files/test_file.out').parse()
 
         # set up graph generator settings
         ggs = GraphGeneratorSettings(node_features=[],
@@ -264,6 +281,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         # compare to expected
         print(result)
+        print()
         print(expected)
         TestFunctions.assert_are_almost_equal(result, expected, places=3)
 
@@ -277,7 +295,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_bound_atom_indices(self, atom_index, threshold, expected):
 
         # load data
-        qm_data = DataParser('./tests/test_file.out').parse()
+        qm_data = DataParser('./tests/files/test_file.out').parse()
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -297,7 +315,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_bound_atom_indices_with_invalid_input(self, atom_index, threshold):
 
         # load data
-        qm_data = DataParser('./tests/test_file.out').parse()
+        qm_data = DataParser('./tests/files/test_file.out').parse()
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -315,7 +333,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_bound_h_indices(self, atom_index, threshold, expected):
 
         # load data
-        qm_data = DataParser('./tests/test_file.out').parse()
+        qm_data = DataParser('./tests/files/test_file.out').parse()
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -335,7 +353,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_bound_h_indices_with_invalid_input(self, atom_index, threshold):
 
         # load data
-        qm_data = DataParser('./tests/test_file.out').parse()
+        qm_data = DataParser('./tests/files/test_file.out').parse()
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -353,7 +371,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_determine_hydrogen_count(self, atom_index, expected):
 
         # load data
-        qm_data = DataParser('./tests/test_file.out').parse()
+        qm_data = DataParser('./tests/files/test_file.out').parse()
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
