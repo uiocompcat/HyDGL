@@ -541,3 +541,78 @@ class TestGraphGenerator(unittest.TestCase):
         result = gg._get_hydride_bond_indices(qm_data)
 
         self.assertEqual(result, expected)
+
+    @parameterized.expand([
+
+        [
+            [[1, 2, 3], [1, 2, 3], [1, 2]],
+            AssertionError
+        ],
+
+    ])
+    def test_validate_node_list_with_faulty_nodes(self, nodes, expected_error):
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings.default())
+
+        self.assertRaises(expected_error, gg._validate_node_list, nodes)
+
+    @parameterized.expand([
+
+        [
+            [
+                [[1, 2, 3], [1]],
+                [[2, 3], [1]],
+                [[3, 4], [1]]
+            ],
+            5,
+            AssertionError
+        ],
+
+        [
+            [
+                [[1, 2], [1]],
+                [[2, 3], [1, 3]],
+                [[3, 4], [1]]
+            ],
+            5,
+            AssertionError
+        ],
+
+        [
+            [
+                [[1, 1], [1]],
+                [[2, 3], [1]],
+                [[3, 4], [1]]
+            ],
+            5,
+            AssertionError
+        ],
+
+        [
+            [
+                [[1, 2], [1]],
+                [[2, 3], [1]],
+                [[3, 4], [1]]
+            ],
+            4,
+            AssertionError
+        ],
+
+        [
+            [
+                [[1, 2], [1]],
+                [[2, 3], [1]],
+                [[4, 3], [1]]
+            ],
+            4,
+            AssertionError
+        ],
+
+    ])
+    def test_validate_edge_list_with_faulty_input(self, edges, n_nodes, expected_error):
+        
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings.default())
+
+        self.assertRaises(expected_error, gg._validate_edge_list, edges, n_nodes)
