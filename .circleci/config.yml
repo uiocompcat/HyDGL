@@ -30,10 +30,9 @@ jobs:
           name: run tests
           command: |
             # source activate adj
-            CODECOV_TOKEN='eacef7a6-3ec3-47f5-b294-9fb90e474591'
             pytest --color=yes -v --cov=nbo2graph tests
             conda install -c conda-forge codecov
-            codecov
+            codecov -t eacef7a6-3ec3-47f5-b294-9fb90e474591
 
       - store_artifacts:
           path: test-reports
