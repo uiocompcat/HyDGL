@@ -63,3 +63,6 @@ target/
 
 # unit test output
 junit.xml
+
+# vs code
+.vscode
