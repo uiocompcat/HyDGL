@@ -5,8 +5,8 @@ nbo2graph
 
 .. image:: https://circleci.com/gh/hkneiding/nbo2graph.svg?style=svg&circle-token=dcb019393b2ff6c2e7afef3f326541f79366f256
     :target: https://circleci.com/gh/hkneiding/nbo2graph
-.. image:: https://codecov.io/gh/hkneiding/nbo2graph/branch/master/graph/badge.svg
-   :target: https://codecov.io/gh/hkneiding/nbo2graph
+.. image:: https://codecov.io/gh/hkneiding/nbo2graph/branch/main/graph/badge.svg?token=UB88TKUCY7
+    :target: https://codecov.io/gh/hkneiding/nbo2graph
 
 
 nbo2graph is a Python parser to generate descriptive graphs from Natural Bond Orbital data ready for use in Graph Neural Networks. In particular it provides the following features:
