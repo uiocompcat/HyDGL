@@ -394,7 +394,7 @@ class GraphGenerator:
         """Returns a list of hydride bonds.
 
         Returns:
-            list[int]: List of hydride bonds. [index of H, index of M]
+            list[list[int]]: List of hydride bonds. [index of H, index of M]
         """
 
         # return variable

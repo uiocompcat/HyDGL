@@ -13,6 +13,7 @@ from tests.utils import Utils
 
 # constants pointing to test files
 TEST_FILE_LALMER = './tests/files/LALMER.out'
+TEST_FILE_OREDIA = './tests/files/OREDIA.out'
 
 
 class TestGraphGenerator(unittest.TestCase):
@@ -430,5 +431,113 @@ class TestGraphGenerator(unittest.TestCase):
 
         # get result
         result = gg._get_graph_features(qm_data)
+
+        self.assertEqual(result, expected)
+
+    @parameterized.expand([
+
+        [
+            BondDeterminationMode.WIBERG,
+            1,
+            [
+                [2, 3], [2, 6], [3, 4], [3, 9], [4, 5], [5, 6], [6, 7],
+                [8, 9], [8, 13], [9, 10], [10, 11], [11, 12], [12, 13],
+                [13, 19], [14, 15], [14, 19], [15, 16], [15, 21], [16, 17],
+                [17, 18], [18, 19], [20, 21], [20, 24], [21, 22], [22, 23],
+                [23, 24], [24, 25], [26, 28], [26, 29], [26, 30]
+            ]
+        ],
+
+    ])
+    def test_get_adjacency_list(self, bond_determination_mode, bond_threshold, expected):
+
+        # load data
+        qm_data = DataParser(TEST_FILE_LALMER).parse()
+
+        # set up graph generator settings
+        ggs = GraphGeneratorSettings(bond_determination_mode=bond_determination_mode, bond_threshold=bond_threshold)
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(ggs)
+
+        # get result
+        result = gg._get_adjacency_list(qm_data)
+
+        self.assertEqual(result, expected)
+
+    @parameterized.expand([
+
+        [
+            [15, 21],
+            [EdgeFeature.BOND_DISTANCE, EdgeFeature.BOND_ORBITAL_DATA_S],
+            [[15, 21], [1.468893, 1, -0.74646, 1.97899, 0.34105]]
+        ],
+
+    ])
+    def test_get_featurised_edge(self, bond_indices, edge_features, expected):
+
+        # load data
+        qm_data = DataParser(TEST_FILE_LALMER).parse()
+
+        # set up graph generator settings
+        ggs = GraphGeneratorSettings(edge_features=edge_features)
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(ggs)
+
+        # get result
+        result = gg._get_featurised_edge(bond_indices, qm_data)
+
+        Utils.assert_are_almost_equal(result, expected, places=5)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_LALMER,
+            []
+        ],
+
+        [
+            TEST_FILE_OREDIA,
+            [1]
+        ],
+
+    ])
+    def test_get_hydride_hydrogen_indices(self, file_path, expected):
+
+        # load data
+        qm_data = DataParser(file_path).parse()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings.default())
+
+        # get result
+        result = gg._get_hydride_hydrogen_indices(qm_data)
+
+        self.assertEqual(result, expected)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_LALMER,
+            []
+        ],
+
+        [
+            TEST_FILE_OREDIA,
+            [[1, 0]]
+        ],
+
+    ])
+    def test_get_hydride_bonds_indices(self, file_path, expected):
+
+        # load data
+        qm_data = DataParser(file_path).parse()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings.default())
+
+        # get result
+        result = gg._get_hydride_bond_indices(qm_data)
 
         self.assertEqual(result, expected)
