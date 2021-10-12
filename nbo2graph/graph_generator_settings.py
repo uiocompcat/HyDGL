@@ -64,14 +64,30 @@ class GraphGeneratorSettings:
         self.bond_orbital_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationTypes.BOND_ORBITAL)
         self.antibond_orbital_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationTypes.ANTIBOND_ORBITAL)
 
+    def __eq__(self, other):
+
+        """Equality interface that allows comparsion between objects for unit testing"""
+
+        return self.node_features == other.node_features and \
+            self.edge_features == other.edge_features and \
+            self.graph_features == other.graph_features and \
+            self.attributes == other.attributes and \
+            self.bond_determination_mode == other.bond_determination_mode and \
+            self.bond_threshold == other.bond_threshold and \
+            self.hydrogen_mode == other.hydrogen_mode and \
+            self.hydrogen_count_threshold == other.hydrogen_count_threshold and \
+            self.lone_pair_orbital_indices == other.lone_pair_orbital_indices and \
+            self.lone_vacancy_orbital_indices == other.lone_vacancy_orbital_indices and \
+            self.natural_orbital_configuration_indices == other.natural_orbital_configuration_indices and \
+            self.bond_orbital_indices == other.bond_orbital_indices and \
+            self.antibond_orbital_indices == other.antibond_orbital_indices
+
     @classmethod
     def default(cls):
         return cls()
 
     @classmethod
     def from_file(cls, file_path: str):
-
-        "Initialize MyData from a file"
 
         data = FileHandler.read_file(file_path)
         lines = data.split('\n')
