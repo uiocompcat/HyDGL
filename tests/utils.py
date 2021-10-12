@@ -1,7 +1,7 @@
 import unittest
 
 
-class TestFunctions():
+class Utils():
 
     """Class for testing functions."""
 
@@ -14,13 +14,13 @@ class TestFunctions():
 
         # check if not list
         if type(a) != list:
-            TestFunctions.tc.assertAlmostEqual(a, b, places=places)
+            Utils.tc.assertAlmostEqual(a, b, places=places)
             # return a == b
         else:
 
             # check length
-            TestFunctions.tc.assertEqual(len(a), len(b))
+            Utils.tc.assertEqual(len(a), len(b))
 
             # recursively call
             for a_, b_ in zip(a, b):
-                TestFunctions.assert_are_almost_equal(a_, b_, places=places)
+                Utils.assert_are_almost_equal(a_, b_, places=places)

@@ -9,7 +9,7 @@ from nbo2graph.enums.hydrogen_mode import HydrogenMode
 from nbo2graph.graph_generator import GraphGenerator
 from nbo2graph.enums.bond_determination_mode import BondDeterminationMode
 from nbo2graph.graph_generator_settings import GraphGeneratorSettings
-from tests.test_functions import TestFunctions
+from tests.utils import Utils
 
 # constants pointing to test files
 TEST_FILE_LALMER = './tests/files/LALMER.out'
@@ -210,7 +210,7 @@ class TestGraphGenerator(unittest.TestCase):
         result = gg._get_nodes(qm_data)
 
         # test
-        TestFunctions.assert_are_almost_equal(result, expected, places=3)
+        Utils.assert_are_almost_equal(result, expected, places=3)
 
     @parameterized.expand([
 
@@ -287,7 +287,7 @@ class TestGraphGenerator(unittest.TestCase):
         print(result)
         print()
         print(expected)
-        TestFunctions.assert_are_almost_equal(result, expected, places=3)
+        Utils.assert_are_almost_equal(result, expected, places=3)
 
     @parameterized.expand([
 
