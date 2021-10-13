@@ -237,6 +237,55 @@ class TestGraphGenerator(unittest.TestCase):
     @parameterized.expand([
 
         [
+            TEST_FILE_LALMER,
+            HydrogenMode.OMIT,
+            BondDeterminationMode.NLMO,
+            [NodeFeature.ATOMIC_NUMBERS, NodeFeature.BOND_ORDER_TOTAL],
+            4,
+            [16, 1.9874]
+        ],
+
+        [
+            TEST_FILE_OREDIA,
+            HydrogenMode.IMPLICIT,
+            BondDeterminationMode.NLMO,
+            [],
+            0,
+            [0]
+        ],
+
+        [
+            TEST_FILE_OREDIA,
+            HydrogenMode.OMIT,
+            BondDeterminationMode.NLMO,
+            [NodeFeature.NATURAL_ATOMIC_CHARGES],
+            1,
+            [-0.05261]
+        ],
+
+    ])
+    def test_get_individual_node(self, file_path, hydrogen_mode, bond_determination_mode, node_features, atom_index, expected):
+
+        # load data
+        qm_data = DataParser(file_path).parse()
+
+        # set up graph generator settings
+        ggs = GraphGeneratorSettings(node_features=node_features,
+                                     edge_features=[],
+                                     hydrogen_mode=hydrogen_mode,
+                                     bond_determination_mode=bond_determination_mode)
+
+        # set up graph generator with variable node feature list
+        gg = GraphGenerator(ggs)
+
+        # get nodes
+        result = gg._get_individual_node(qm_data, atom_index)
+
+        Utils.assert_are_almost_equal(result, expected, places=3)
+
+    @parameterized.expand([
+
+        [
             HydrogenMode.EXPLICIT,
             BondDeterminationMode.WIBERG,
             [EdgeFeature.BOND_ORDER],
@@ -705,7 +754,7 @@ class TestGraphGenerator(unittest.TestCase):
         ],
 
     ])
-    def test_get_index_matrix(self, file_path, ):
+    def test_get_index_matrix(self, file_path):
 
         # load data
         qm_data = DataParser(file_path).parse()
