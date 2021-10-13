@@ -697,3 +697,23 @@ class TestGraphGenerator(unittest.TestCase):
         result = gg._determine_hydrogen_position_offset(atom_index, qm_data)
 
         self.assertEqual(result, expected)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_LALMER
+        ],
+
+    ])
+    def test_get_index_matrix(self, file_path, ):
+
+        # load data
+        qm_data = DataParser(file_path).parse()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings(bond_determination_mode=BondDeterminationMode.WIBERG))
+
+        # get result
+        result = gg._get_index_matrix(qm_data)
+
+        self.assertEqual(result, qm_data.wiberg_index_matrix)
