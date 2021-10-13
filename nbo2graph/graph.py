@@ -44,8 +44,11 @@ class Graph:
         # set up pytorch object for nodes
         node_features = torch.tensor(self.nodes, dtype=torch.float)
 
+        # set up pytorch object for graph level attributes / labels
+        graph_attributes = torch.tensor(self.attributes, dtype=torch.float)
+
         # set up full pytorch data object
-        data = Data(x=node_features, edge_index=edge_indices.t().contiguous(), edge_attr=edge_features)
+        data = Data(x=node_features, edge_index=edge_indices.t().contiguous(), edge_attr=edge_features, y=graph_attributes)
 
         return data
 

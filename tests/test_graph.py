@@ -86,12 +86,17 @@ class TestGraph(unittest.TestCase):
     @parameterized.expand([
 
         [
-            Graph([[0], [1], [3], [-2], [0]], [[[0, 1], [-2]], [[0, 2], [3]], [[0, 3], [4]], [[2, 3], [1]], [[2, 4], [10]]]),
+            Graph(
+                [[0], [1], [3], [-2], [0]],
+                [[[0, 1], [-2]], [[0, 2], [3]], [[0, 3], [4]], [[2, 3], [1]], [[2, 4], [10]]],
+                attributes=[12.34]
+            ),
             Data(
                 x=torch.tensor([[0], [1], [3], [-2], [0]], dtype=torch.float),
                 edge_index=torch.tensor([[0, 0, 0, 2, 2, 1, 2, 3, 3, 4],
                                          [1, 2, 3, 3, 4, 0, 0, 0, 2, 2]], dtype=torch.long),
-                edge_attr=torch.tensor([[-2], [3], [4], [1], [10], [-2], [3], [4], [1], [10]], dtype=torch.float)
+                edge_attr=torch.tensor([[-2], [3], [4], [1], [10], [-2], [3], [4], [1], [10]], dtype=torch.float),
+                y=torch.tensor([12.34], dtype=torch.float)
             )
         ],
     ])
@@ -99,6 +104,10 @@ class TestGraph(unittest.TestCase):
 
         result = graph.get_pytorch_data_object()
 
-        self.assertTrue(torch.equal(result.x, expected.x))
-        self.assertTrue(torch.equal(result.edge_index, expected.edge_index))
-        self.assertTrue(torch.equal(result.edge_attr, expected.edge_attr))
+        self.assertEqual(len(result.keys), len(expected.keys))
+        for key in result.keys:
+            self.assertTrue(torch.equal(result[key], expected[key]))
+
+        # self.assertTrue(torch.equal(result.x, expected.x))
+        # self.assertTrue(torch.equal(result.edge_index, expected.edge_index))
+        # self.assertTrue(torch.equal(result.edge_attr, expected.edge_attr))
