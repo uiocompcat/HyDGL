@@ -13,8 +13,3 @@ class GraphFeature(Enum):
     CHARGE = auto()
     # POLARISABILITY
     POLARISABILITY = auto()
-
-    # csd code
-    CSD_CODE = auto()
-    # STOICHIOMETRY
-    STOICHIOMETRY = auto()

@@ -6,8 +6,8 @@ class QmData():
 
     """Class for storing relevant QM data."""
 
-    # attributes
-    csd_code: str = None
+    # misc
+    id: str = None
     stoichiometry: str = None
 
     # basic information

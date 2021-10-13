@@ -42,8 +42,8 @@ class DataParser:
         qm_data = QmData()
         qm_data.n_atoms = self.n_atoms
 
-        # get csd token from file name
-        qm_data.csd_code = ''.join(self.file_path.split('/')[-1].split('.')[0:-1])
+        # get id token from file name
+        qm_data.id = ''.join(self.file_path.split('/')[-1].split('.')[0:-1])
 
         # variable that shows if scan is currently in SVP or TZVP region of output file
         region_state = ''

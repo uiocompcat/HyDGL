@@ -1,7 +1,7 @@
 import unittest
 from parameterized import parameterized
-from torch_geometric.data import Data
 import torch
+from torch_geometric.data import Data
 
 from nbo2graph.graph import Graph
 

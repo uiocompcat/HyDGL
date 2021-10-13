@@ -30,7 +30,7 @@ class TestGraphGeneratorSettings(unittest.TestCase):
             GraphGeneratorSettings.from_file('./tests/files/test.config'),
             GraphGeneratorSettings(node_features=[NodeFeature.ATOMIC_NUMBERS, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_F, NodeFeature.LONE_PAIRS_S, NodeFeature.LONE_VACANCIES_S],
                                    edge_features=[EdgeFeature.BOND_ORDER, EdgeFeature.BOND_ORBITAL_DATA_F],
-                                   graph_features=[GraphFeature.CHARGE, GraphFeature.POLARISABILITY, GraphFeature.CSD_CODE, GraphFeature.STOICHIOMETRY],
+                                   graph_features=[GraphFeature.CHARGE, GraphFeature.POLARISABILITY],
                                    attributes=[QmAttribute.LOWEST_VIBRATIONAL_FREQUENCY],
                                    bond_determination_mode=BondDeterminationMode.NLMO,
                                    bond_threshold=0.123,

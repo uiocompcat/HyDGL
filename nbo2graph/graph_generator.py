@@ -67,7 +67,12 @@ class GraphGenerator:
         # get attributes
         attributes = self._get_attributes(qm_data)
 
-        return Graph(nodes, edges, attributes=attributes, graph_features=graph_features)
+        return Graph(nodes,
+                     edges,
+                     id=qm_data.id,
+                     stoichiometry=qm_data.stoichiometry,
+                     attributes=attributes,
+                     graph_features=graph_features)
 
     def _get_edges(self, qm_data: QmData):
 
@@ -521,8 +526,6 @@ class GraphGenerator:
                 graph_feature_list.append(qm_data.polarisability)
             elif self.settings.graph_features[i] == GraphFeature.CHARGE:
                 graph_feature_list.append(qm_data.charge)
-            elif self.settings.graph_features[i] == GraphFeature.CSD_CODE:
-                graph_feature_list.append(qm_data.csd_code)
             elif self.settings.graph_features[i] == GraphFeature.STOICHIOMETRY:
                 graph_feature_list.append(qm_data.stoichiometry)
             else:

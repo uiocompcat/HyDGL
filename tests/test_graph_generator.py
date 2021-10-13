@@ -390,16 +390,6 @@ class TestGraphGenerator(unittest.TestCase):
     @parameterized.expand([
 
         [
-            [GraphFeature.CSD_CODE],
-            ['LALMER']
-        ],
-
-        [
-            [GraphFeature.STOICHIOMETRY],
-            ['C18H16CdClN4O5S2(1+)']
-        ],
-
-        [
             [GraphFeature.MOLECULAR_MASS],
             [580.92867]
         ],
