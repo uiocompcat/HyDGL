@@ -22,6 +22,7 @@ class TestGraphGenerator(unittest.TestCase):
     @parameterized.expand([
 
         [
+            TEST_FILE_LALMER,
             HydrogenMode.EXPLICIT,
             BondDeterminationMode.WIBERG,
             [NodeFeature.ATOMIC_NUMBERS],
@@ -33,6 +34,7 @@ class TestGraphGenerator(unittest.TestCase):
         ],
 
         [
+            TEST_FILE_LALMER,
             HydrogenMode.OMIT,
             BondDeterminationMode.WIBERG,
             [NodeFeature.ATOMIC_NUMBERS],
@@ -43,6 +45,7 @@ class TestGraphGenerator(unittest.TestCase):
         ],
 
         [
+            TEST_FILE_LALMER,
             HydrogenMode.IMPLICIT,
             BondDeterminationMode.WIBERG,
             [NodeFeature.ATOMIC_NUMBERS],
@@ -55,6 +58,18 @@ class TestGraphGenerator(unittest.TestCase):
         ],
 
         [
+            TEST_FILE_OREDIA,
+            HydrogenMode.OMIT,
+            BondDeterminationMode.WIBERG,
+            [NodeFeature.ATOMIC_NUMBERS],
+            [
+                [77], [1], [7], [6], [6], [7], [6], [6], [6], [6], [6], [6], [6], [6], [6], [6],
+                [6], [6], [8], [6], [6], [6], [8], [6], [6], [8], [6], [6], [6], [8], [6], [6]
+            ]
+        ],
+
+        [
+            TEST_FILE_LALMER,
             HydrogenMode.EXPLICIT,
             BondDeterminationMode.WIBERG,
             [NodeFeature.BOND_ORDER_TOTAL],
@@ -69,6 +84,7 @@ class TestGraphGenerator(unittest.TestCase):
         ],
 
         [
+            TEST_FILE_LALMER,
             HydrogenMode.EXPLICIT,
             BondDeterminationMode.NLMO,
             [NodeFeature.BOND_ORDER_TOTAL],
@@ -83,6 +99,7 @@ class TestGraphGenerator(unittest.TestCase):
         ],
 
         [
+            TEST_FILE_LALMER,
             HydrogenMode.EXPLICIT,
             BondDeterminationMode.WIBERG,
             [NodeFeature.NATURAL_ATOMIC_CHARGES],
@@ -98,6 +115,7 @@ class TestGraphGenerator(unittest.TestCase):
         ],
 
         [
+            TEST_FILE_LALMER,
             HydrogenMode.EXPLICIT,
             BondDeterminationMode.WIBERG,
             [NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_F],
@@ -117,6 +135,7 @@ class TestGraphGenerator(unittest.TestCase):
         ],
 
         [
+            TEST_FILE_LALMER,
             HydrogenMode.OMIT,
             BondDeterminationMode.WIBERG,
             [NodeFeature.LONE_PAIRS_S, NodeFeature.LONE_PAIRS_P, NodeFeature.LONE_PAIRS_D, NodeFeature.LONE_PAIRS_F],
@@ -156,6 +175,7 @@ class TestGraphGenerator(unittest.TestCase):
         ],
 
         [
+            TEST_FILE_LALMER,
             HydrogenMode.OMIT,
             BondDeterminationMode.WIBERG,
             [NodeFeature.LONE_VACANCIES_S, NodeFeature.LONE_VACANCIES_P, NodeFeature.LONE_VACANCIES_D, NodeFeature.LONE_VACANCIES_F],
@@ -194,10 +214,10 @@ class TestGraphGenerator(unittest.TestCase):
             ]
         ],
     ])
-    def test_get_nodes(self, hydrogen_mode, bond_determination_mode, node_features, expected):
+    def test_get_nodes(self, file_path, hydrogen_mode, bond_determination_mode, node_features, expected):
 
         # load data
-        qm_data = DataParser(TEST_FILE_LALMER).parse()
+        qm_data = DataParser(file_path).parse()
 
         # set up graph generator settings
         ggs = GraphGeneratorSettings(node_features=node_features,

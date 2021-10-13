@@ -38,22 +38,8 @@ class GraphGenerator:
         # get edges
         edges = self._get_edges(qm_data)
 
-        # operations only relevant when not modelling hydrogens explicitly
+        # rescale node referenes in edges if explicit hydrogens were omitted
         if self.settings.hydrogen_mode == HydrogenMode.OMIT or self.settings.hydrogen_mode == HydrogenMode.IMPLICIT:
-
-            # check for hydride hydrogens to add explicitly
-            hydride_bond_indices = self._get_hydride_bond_indices(qm_data)
-            for i in range(len(hydride_bond_indices)):
-
-                # get node
-                node = self._get_individual_node(qm_data, hydride_bond_indices[i][0])
-                # insert at correct place in node list
-                nodes.insert(hydride_bond_indices[i][0], node)
-
-                # append appropriate edge to edge list
-                edges.append(self._get_featurised_edge(hydride_bond_indices[i], qm_data))
-
-            # rescale node referenes in edges if explicit hydrogens were omitted
             edges = self._adjust_node_references(edges, qm_data)
 
         # check validity of nodes
@@ -89,6 +75,14 @@ class GraphGenerator:
         # generate featurised edges
         for i in range(len(adjacency_list)):
             edges.append(self._get_featurised_edge(adjacency_list[i], qm_data))
+
+        # operations only relevant when not modelling hydrogens explicitly
+        if self.settings.hydrogen_mode == HydrogenMode.OMIT or self.settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+
+            # check for hydride hydrogens to add explicitly
+            hydride_bond_indices = self._get_hydride_bond_indices(qm_data)
+            for i in range(len(hydride_bond_indices)):
+                edges.append(self._get_featurised_edge(hydride_bond_indices[i], qm_data))
 
         return edges
 
@@ -219,6 +213,17 @@ class GraphGenerator:
 
             # append fully featurised node to nodes list
             nodes.append(node)
+
+        # operations only relevant when not modelling hydrogens explicitly
+        if self.settings.hydrogen_mode == HydrogenMode.OMIT or self.settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+
+            # check for hydride hydrogens to add explicitly
+            hydride_bond_indices = self._get_hydride_bond_indices(qm_data)
+            for i in range(len(hydride_bond_indices)):
+                # get node
+                node = self._get_individual_node(qm_data, hydride_bond_indices[i][0])
+                # insert at correct place in node list
+                nodes.insert(hydride_bond_indices[i][0], node)
 
         return nodes
 
@@ -526,8 +531,6 @@ class GraphGenerator:
                 graph_feature_list.append(qm_data.polarisability)
             elif self.settings.graph_features[i] == GraphFeature.CHARGE:
                 graph_feature_list.append(qm_data.charge)
-            elif self.settings.graph_features[i] == GraphFeature.STOICHIOMETRY:
-                graph_feature_list.append(qm_data.stoichiometry)
             else:
                 warnings.warn('Could not find attritubte' + str(self.settings.graph_features[i]) + '.')
 
