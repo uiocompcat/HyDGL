@@ -1,9 +1,9 @@
 import torch
-from datetime import datetime
+# from datetime import datetime
 from torch_geometric.data import Data
 
-from nbo2graph.file_handler import FileHandler
-from nbo2graph.element_look_up_table import ElementLookUpTable
+# from nbo2graph.file_handler import FileHandler
+# from nbo2graph.element_look_up_table import ElementLookUpTable
 
 
 class Graph:
@@ -49,37 +49,38 @@ class Graph:
 
         return data
 
-    def write_mol_file(self, file_path: str):
+    # deprecated. Since the node resolve relied on the fact that the first element of each feature string contains the atomic number.
+    # def write_mol_file(self, file_path: str):
 
-        """Writes the graph in mol format to file.
+    #     """Writes the graph in mol format to file.
 
-        Args:
-            filepath (string): The path to the output file.
-        """
+    #     Args:
+    #         filepath (string): The path to the output file.
+    #     """
 
-        # data to write
-        data = 'Molecule\n_generated ' + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + '\n\n'
+    #     # data to write
+    #     data = 'Molecule\n_generated ' + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + '\n\n'
 
-        # set up summary data line
-        data += str(len(self.nodes)).rjust(3, ' ') + str(len(self.edges)).rjust(3, ' ') + '  0  0  0  0  0  0  0  0999 V2000\n'
+    #     # set up summary data line
+    #     data += str(len(self.nodes)).rjust(3, ' ') + str(len(self.edges)).rjust(3, ' ') + '  0  0  0  0  0  0  0  0999 V2000\n'
 
-        # TODO node resolve relies on the fact the the first element of each feature string contains the atomic number
-        for i in range(len(self.nodes)):
-            data += '    0.0000    0.0000    0.0000 ' + ElementLookUpTable.get_element_identifier(self.nodes[i][0]).ljust(5, ' ') + '0  0  0  0  0  0  0  0  0  0  0  0\n'
+    #     # TODO node resolve relies on the fact that the first element of each feature string contains the atomic number
+    #     for i in range(len(self.nodes)):
+    #         data += '    0.0000    0.0000    0.0000 ' + ElementLookUpTable.get_element_identifier(self.nodes[i][0]).ljust(5, ' ') + '0  0  0  0  0  0  0  0  0  0  0  0\n'
 
-        # bond order is read out from first position in edge feature vector
-        for i in range(len(self.edges)):
+    #     # bond order is read out from first position in edge feature vector
+    #     for i in range(len(self.edges)):
 
-            bond_order = 1
-            if self.edges[i][1][0] > 1.5:
-                bond_order = 2
-            if self.edges[i][1][0] > 2.5:
-                bond_order = 3
+    #         bond_order = 1
+    #         if self.edges[i][1][0] > 1.5:
+    #             bond_order = 2
+    #         if self.edges[i][1][0] > 2.5:
+    #             bond_order = 3
 
-            data += str(self.edges[i][0][0] + 1).rjust(3, ' ') + str(self.edges[i][0][1] + 1).rjust(3, ' ') + str(bond_order).rjust(3, ' ') + '  0  0  0  0 \n'
+    #         data += str(self.edges[i][0][0] + 1).rjust(3, ' ') + str(self.edges[i][0][1] + 1).rjust(3, ' ') + str(bond_order).rjust(3, ' ') + '  0  0  0  0 \n'
 
-        data += 'M  END'
-        FileHandler.write_file(file_path, data)
+    #     data += 'M  END'
+    #     FileHandler.write_file(file_path, data)
 
     def is_connected(self) -> bool:
 
