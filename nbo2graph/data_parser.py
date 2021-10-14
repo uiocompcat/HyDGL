@@ -205,19 +205,20 @@ class DataParser:
 
     def _extract_orbital_energies(self, start_index):
 
-        line_split = self.lines[start_index].split()
+        # line_split = self.lines[start_index].split()
+        line_split = re.findall('-{0,1}[0-9]{1,}.[0-9]{1,}', self.lines[start_index])
 
         # build output list
         orbital_energies = []
-        for i in range(len(line_split[4:])):
+        for i in range(len(line_split)):
             # check for entries that are not separated by white space
-            match_result = re.search('([0-9]-[0-9])', line_split[4 + i])
-            if match_result is not None:
-                first_item_end_index = match_result.span(0)[0]
-                orbital_energies.append(line_split[4 + i][:first_item_end_index + 1])
-                orbital_energies.append(line_split[4 + i][first_item_end_index + 1:])
-            else:
-                orbital_energies.append(line_split[4 + i])
+            # match_result = re.search('([0-9]-[0-9])', line_split[i])
+            # if match_result is not None:
+            #     first_item_end_index = match_result.span(0)[0]
+            #     orbital_energies.append(line_split[i][:first_item_end_index + 1])
+            #     orbital_energies.append(line_split[i][first_item_end_index + 1:])
+            # else:
+            orbital_energies.append(line_split[i])
 
         return list(map(float, orbital_energies))
 
@@ -474,7 +475,9 @@ class DataParser:
         occupations = list(map(float, result))
 
         # check that length of occupation list is correct
-        assert len(occupations) == 4
+        # append zeros if needed
+        if len(occupations) < 4:
+            occupations.extend([0.0] * (4 - len(occupations)))
 
         # return id, atom position, occupation and percent occupations
         # divide occupations by 100 (get rid of %)

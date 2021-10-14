@@ -1,4 +1,5 @@
 import os
+import time
 
 # from nbo2graph.element_look_up_table import ElementLookUpTable
 
@@ -14,27 +15,31 @@ from torch_geometric.utils.convert import to_networkx
 
 def main():
 
+    start = time.time()
+
     # setup target directory path
-    path = '/home/hkneiding/Desktop/nbo data/'
+    # path = '/home/hkneiding/Desktop/nbo data/'
+    path = '/home/hkneiding/Desktop/nbo data/the_random_500/'
     # setup file list
     files = [file for file in os.listdir(path) if file.endswith(".log")]
-    print(files)
 
+    # get settings
     settings = GraphGeneratorSettings.from_file('./run.config')
 
     # set up graph generator with parameters
     gg = GraphGenerator(settings)
 
     graphs = []
-    # for i in range(len(files)):
-    for i in range(1, 2, 1):
-
-        print(files[i])
-        qm_data = DataParser('/home/hkneiding/Desktop/nbo data/' + files[i]).parse()
+    for i in range(len(files)):
+        print(files[i] + ' -- ' + str(i + 1))
+        qm_data = DataParser(path + files[i]).parse()
         # generate graph from qm_data object
         graphs.append(gg.generate_graph(qm_data))
 
-    print()
+    end = time.time()
+    print('Elapsed time: ' + str(end - start))
+    exit()
+
     for graph in graphs:
 
         # print(graph.attributes)
