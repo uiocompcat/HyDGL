@@ -1644,7 +1644,7 @@
 											"top": 228,
 											"width": 247,
 											"height": 13,
-											"text": "+attributes",
+											"text": "+targets",
 											"horizontalAlignment": 0
 										}
 									],
@@ -2749,7 +2749,7 @@
 											"top": 500,
 											"width": 175,
 											"height": 13,
-											"text": "QmAttribute"
+											"text": "QmTarget"
 										},
 										{
 											"_type": "LabelView",
@@ -4108,7 +4108,8 @@
 									"_parent": {
 										"$ref": "AAAAAAF8boLoyrC9h/U="
 									},
-									"name": "QmData qm_data"
+									"name": "QmData qm_data",
+									"type": ""
 								}
 							]
 						},
@@ -4127,7 +4128,8 @@
 									"_parent": {
 										"$ref": "AAAAAAF8boN057DJaO4="
 									},
-									"name": "QmData qm_data"
+									"name": "QmData qm_data",
+									"type": ""
 								}
 							]
 						}
@@ -4580,8 +4582,7 @@
 							"_parent": {
 								"$ref": "AAAAAAF8WxZJaVFq+zM="
 							},
-							"name": "attributes",
-							"type": ""
+							"name": "targets"
 						}
 					],
 					"operations": [
@@ -4663,7 +4664,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "QmAttribute",
+					"name": "QmTarget",
 					"stereotype": "enumeration"
 				},
 				{
