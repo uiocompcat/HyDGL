@@ -1,6 +1,6 @@
 import os
 
-from nbo2graph.element_look_up_table import ElementLookUpTable
+# from nbo2graph.element_look_up_table import ElementLookUpTable
 
 from nbo2graph.graph_generator_settings import GraphGeneratorSettings
 
