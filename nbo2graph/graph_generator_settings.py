@@ -1,5 +1,5 @@
 from nbo2graph.file_handler import FileHandler
-from nbo2graph.enums.qm_atrribute import QmAttribute
+from nbo2graph.enums.qm_target import QmTarget
 from nbo2graph.enums.node_feature import NodeFeature
 from nbo2graph.enums.edge_feature import EdgeFeature
 from nbo2graph.enums.graph_feature import GraphFeature
@@ -22,7 +22,7 @@ class GraphGeneratorSettings:
                  node_features: list[NodeFeature] = [],
                  edge_features: list[EdgeFeature] = [],
                  graph_features: list[GraphFeature] = [],
-                 attributes: list[QmAttribute] = [],
+                 targets: list[QmTarget] = [],
                  bond_determination_mode: BondDeterminationMode = DEFAULT_BOND_DETERMINATION_MODE,
                  bond_threshold=DEFAULT_BOND_THRESHOLD,
                  hydrogen_mode=DEFAULT_HYDROGEN_MODE,
@@ -34,7 +34,7 @@ class GraphGeneratorSettings:
             node_features (list[NodeFeature]): List of node features to extract.
             edge_features (list[EdgeFeature]): List of edge features to extract.
             bond_determination_mode (BondDeterminationMode): Specifies the way bonds are determined when building the graph.
-            attributes_to_extract (list[QmAttribute]): List of attributes defining which QM properties should be extracted as attributes.
+            targets_to_extract (list[QmTarget]): List of targets defining which QM properties should be extracted as targets.
             bond_threshold (float): Threshold value defining the lower bound for considering bonds.
             hydrogen_count_threshold(float): Threshold value defining the lower bound for considering hydrogens as bound for implicit mode.
             hydrogen_mode (HydrogenMode): Operation mode defining the way to handle hydrogens.
@@ -45,8 +45,8 @@ class GraphGeneratorSettings:
         self.edge_features = edge_features
         self.graph_features = graph_features
 
-        # attributes
-        self.attributes = attributes
+        # targets
+        self.targets = targets
 
         # bond mode
         self.bond_determination_mode = bond_determination_mode
@@ -71,7 +71,7 @@ class GraphGeneratorSettings:
         return self.node_features == other.node_features and \
             self.edge_features == other.edge_features and \
             self.graph_features == other.graph_features and \
-            self.attributes == other.attributes and \
+            self.targets == other.targets and \
             self.bond_determination_mode == other.bond_determination_mode and \
             self.bond_threshold == other.bond_threshold and \
             self.hydrogen_mode == other.hydrogen_mode and \
@@ -141,7 +141,7 @@ class GraphGeneratorSettings:
         node_features = []
         edge_features = []
         graph_features = []
-        attributes = []
+        targets = []
 
         bond_determination_mode = None
         bond_threshold = None
@@ -224,10 +224,10 @@ class GraphGeneratorSettings:
                 if key == graph_feature.name:
                     graph_features.append(graph_feature)
 
-            # look for qm attribute
-            for qm_attribute in QmAttribute:
-                if key == qm_attribute.name:
-                    attributes.append(qm_attribute)
+            # look for qm target
+            for qm_target in QmTarget:
+                if key == qm_target.name:
+                    targets.append(qm_target)
 
             # print('The key:\n\n\t' + key + '\n\nCould not be found. Skipping this key.')
 
@@ -252,7 +252,7 @@ class GraphGeneratorSettings:
         # print(node_features)
         # print(edge_features)
         # print(graph_features)
-        # print(attributes)
+        # print(targets)
         # print(bond_threshold)
         # print(hydrogen_count_threshold)
         # print(hydrogen_mode)
@@ -261,7 +261,7 @@ class GraphGeneratorSettings:
         return cls(node_features=node_features,
                    edge_features=edge_features,
                    graph_features=graph_features,
-                   attributes=attributes,
+                   targets=targets,
                    bond_determination_mode=bond_determination_mode,
                    bond_threshold=bond_threshold,
                    hydrogen_mode=hydrogen_mode,

@@ -4,7 +4,7 @@ from parameterized import parameterized
 from nbo2graph.enums.node_feature import NodeFeature
 from nbo2graph.enums.edge_feature import EdgeFeature
 from nbo2graph.enums.graph_feature import GraphFeature
-from nbo2graph.enums.qm_atrribute import QmAttribute
+from nbo2graph.enums.qm_target import QmTarget
 from nbo2graph.enums.hydrogen_mode import HydrogenMode
 from nbo2graph.enums.bond_determination_mode import BondDeterminationMode
 from nbo2graph.graph_generator_settings import GraphGeneratorSettings
@@ -19,7 +19,7 @@ class TestGraphGeneratorSettings(unittest.TestCase):
             GraphGeneratorSettings(node_features=[],
                                    edge_features=[],
                                    graph_features=[],
-                                   attributes=[],
+                                   targets=[],
                                    bond_determination_mode=BondDeterminationMode.WIBERG,
                                    bond_threshold=0.3,
                                    hydrogen_mode=HydrogenMode.EXPLICIT,
@@ -31,7 +31,7 @@ class TestGraphGeneratorSettings(unittest.TestCase):
             GraphGeneratorSettings(node_features=[NodeFeature.ATOMIC_NUMBERS, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_F, NodeFeature.LONE_PAIRS_S, NodeFeature.LONE_VACANCIES_S],
                                    edge_features=[EdgeFeature.BOND_ORDER, EdgeFeature.BOND_ORBITAL_DATA_F],
                                    graph_features=[GraphFeature.CHARGE, GraphFeature.POLARISABILITY],
-                                   attributes=[QmAttribute.LOWEST_VIBRATIONAL_FREQUENCY],
+                                   targets=[QmTarget.LOWEST_VIBRATIONAL_FREQUENCY],
                                    bond_determination_mode=BondDeterminationMode.NLMO,
                                    bond_threshold=0.123,
                                    hydrogen_mode=HydrogenMode.OMIT,

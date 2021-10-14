@@ -7,8 +7,8 @@ from nbo2graph.graph_generator_settings import GraphGeneratorSettings
 from nbo2graph.data_parser import DataParser
 from nbo2graph.graph_generator import GraphGenerator
 
-import matplotlib.pyplot as plt
 import networkx as nx
+import matplotlib.pyplot as plt
 from torch_geometric.utils.convert import to_networkx
 
 
@@ -17,10 +17,8 @@ def main():
     # setup target directory path
     path = '/home/hkneiding/Desktop/nbo data/'
     # setup file list
-    files = []
-    for file in os.listdir(path):
-        if file.endswith(".log"):
-            files.append(file)
+    files = [file for file in os.listdir(path) if file.endswith(".log")]
+    print(files)
 
     settings = GraphGeneratorSettings.from_file('./run.config')
 

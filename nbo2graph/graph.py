@@ -10,7 +10,7 @@ class Graph:
 
     """Class for reading relevant data from QM output files."""
 
-    def __init__(self, nodes, edges, id=None, stoichiometry=None, attributes=[], graph_features=[]):
+    def __init__(self, nodes, edges, id=None, stoichiometry=None, targets=[], graph_features=[]):
 
         """Constructor
 
@@ -19,7 +19,7 @@ class Graph:
             stoichiometry (string): Stoichiometry of the molecule.
             nodes (list[list[floats]]): List of node feature vectors.
             edges (list[list[int], list[float]]): List with individual sublists for connected node indices as well as edge features.
-            attributes (list[float]): List of attributes/labels associated to graph (e.g. HOMO-LUMO gap).
+            targets (list[float]): List of targets/labels associated to graph (e.g. HOMO-LUMO gap).
             graph_features (list): List of graph level features.
         """
 
@@ -27,7 +27,7 @@ class Graph:
         self.stoichiometry = stoichiometry
         self.nodes = nodes
         self.edges = edges
-        self.attributes = attributes
+        self.targets = targets
         self.graph_features = graph_features
 
     def get_pytorch_data_object(self) -> Data:
@@ -42,17 +42,17 @@ class Graph:
         # include reverse edges (to account for both directions)
         edge_indices = torch.tensor([x[0] for x in self.edges] + [list(reversed(x[0])) for x in self.edges], dtype=torch.long)
         # set up pytorch object for edge features
-        # duplicated list to account for the attributes of the additional reverse edges
+        # duplicated list to account for the targets of the additional reverse edges
         edge_features = torch.tensor([x[1] for x in self.edges * 2], dtype=torch.float)
 
         # set up pytorch object for nodes
         node_features = torch.tensor(self.nodes, dtype=torch.float)
 
-        # set up pytorch object for graph level attributes / labels
-        graph_attributes = torch.tensor(self.attributes, dtype=torch.float)
+        # set up pytorch object for graph level targets / labels
+        targets = torch.tensor(self.targets, dtype=torch.float)
 
         # set up full pytorch data object
-        data = Data(x=node_features, edge_index=edge_indices.t().contiguous(), edge_attr=edge_features, y=graph_attributes)
+        data = Data(x=node_features, edge_index=edge_indices.t().contiguous(), edge_attr=edge_features, y=targets)
 
         return data
 

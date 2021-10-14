@@ -89,7 +89,7 @@ class TestGraph(unittest.TestCase):
             Graph(
                 [[0], [1], [3], [-2], [0]],
                 [[[0, 1], [-2]], [[0, 2], [3]], [[0, 3], [4]], [[2, 3], [1]], [[2, 4], [10]]],
-                attributes=[12.34]
+                targets=[12.34]
             ),
             Data(
                 x=torch.tensor([[0], [1], [3], [-2], [0]], dtype=torch.float),

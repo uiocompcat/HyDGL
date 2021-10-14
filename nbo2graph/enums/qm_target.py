@@ -1,7 +1,7 @@
 from enum import Enum, auto
 
 
-class QmAttribute(Enum):
+class QmTarget(Enum):
 
     '''Enum class for the different QM attributes to be used.'''
 

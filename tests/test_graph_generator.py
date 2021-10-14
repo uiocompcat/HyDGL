@@ -6,7 +6,7 @@ from nbo2graph.enums.edge_feature import EdgeFeature
 from nbo2graph.enums.node_feature import NodeFeature
 from nbo2graph.enums.graph_feature import GraphFeature
 from nbo2graph.enums.hydrogen_mode import HydrogenMode
-from nbo2graph.enums.qm_atrribute import QmAttribute
+from nbo2graph.enums.qm_target import QmTarget
 from nbo2graph.graph_generator import GraphGenerator
 from nbo2graph.enums.bond_determination_mode import BondDeterminationMode
 from nbo2graph.graph_generator_settings import GraphGeneratorSettings
@@ -498,41 +498,41 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             TEST_FILE_LALMER,
-            [QmAttribute.SVP_DISPERSION_ENERGY],
+            [QmTarget.SVP_DISPERSION_ENERGY],
             [-0.0815876275]
         ],
 
         [
             TEST_FILE_LALMER,
-            [QmAttribute.TZVP_DISPERSION_ENERGY],
+            [QmTarget.TZVP_DISPERSION_ENERGY],
             [-0.0751559981]
         ],
 
         [
             TEST_FILE_LALMER,
-            [QmAttribute.LOWEST_VIBRATIONAL_FREQUENCY],
+            [QmTarget.LOWEST_VIBRATIONAL_FREQUENCY],
             [19.9016]
         ],
 
         [
             TEST_FILE_LALMER,
-            [QmAttribute.HIGHEST_VIBRATIONAL_FREQUENCY],
+            [QmTarget.HIGHEST_VIBRATIONAL_FREQUENCY],
             [3786.4682]
         ],
     ])
-    def test_get_attributes(self, file_path, attributes, expected):
+    def test_get_targets(self, file_path, targets, expected):
 
         # load data
         qm_data = DataParser(file_path).parse()
 
         # set up graph generator settings
-        ggs = GraphGeneratorSettings(attributes=attributes)
+        ggs = GraphGeneratorSettings(targets=targets)
 
         # set up graph generator (default values)
         gg = GraphGenerator(ggs)
 
         # get result
-        result = gg._get_attributes(qm_data)
+        result = gg._get_targets(qm_data)
 
         self.assertEqual(result, expected)
 
