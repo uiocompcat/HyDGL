@@ -60,13 +60,13 @@ def main():
         pytorch_graph_data = graph.get_pytorch_data_object()
         G = to_networkx(pytorch_graph_data)
 
-        node_label_dict = {}
-        for i in range(len(graph.nodes)):
-            node_label_dict[i] = ElementLookUpTable.get_element_identifier(graph.nodes[i][0])
-            # node_label_dict[i] = graph.nodes[i][-1]
+        # node_label_dict = {}
+        # for i in range(len(graph.nodes)):
+        #     node_label_dict[i] = ElementLookUpTable.get_element_identifier(graph.nodes[i][0])
+        #     # node_label_dict[i] = graph.nodes[i][-1]
 
-        nx.draw_networkx(G, labels=node_label_dict, with_labels=True)
-        # nx.draw_networkx(G, with_labels=True)
+        # nx.draw_networkx(G, labels=node_label_dict, with_labels=True)
+        nx.draw_networkx(G, with_labels=True)
         plt.show()
 
 
