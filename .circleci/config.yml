@@ -23,7 +23,6 @@ jobs:
 
             conda config --set auto_update_conda no
             conda info -a
-            conda install -y --use-local nbo2graph
 
       - run:
           name: run tests
