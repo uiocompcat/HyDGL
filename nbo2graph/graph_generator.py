@@ -532,7 +532,7 @@ class GraphGenerator:
             elif self.settings.graph_features[i] == GraphFeature.CHARGE:
                 graph_feature_list.append(qm_data.charge)
             else:
-                warnings.warn('Could not find attritubte' + str(self.settings.graph_features[i]) + '.')
+                warnings.warn('Could not find target' + str(self.settings.graph_features[i]) + '.')
 
         return graph_feature_list
 
@@ -545,7 +545,7 @@ class GraphGenerator:
         """
 
         # return variable
-        attribute_list = []
+        target_list = []
 
         for i in range(len(self.settings.targets)):
 
@@ -553,59 +553,59 @@ class GraphGenerator:
                 warnings.warn('Element ' + str(i) + ' of list is not of type QmTarget. Entry will be skipped.')
 
             if self.settings.targets[i] == QmTarget.SVP_ELECTRONIC_ENERGY:
-                attribute_list.append(qm_data.svp_electronic_energy)
+                target_list.append(qm_data.svp_electronic_energy)
             elif self.settings.targets[i] == QmTarget.TZVP_ELECTRONIC_ENERGY:
-                attribute_list.append(qm_data.tzvp_electronic_energy)
+                target_list.append(qm_data.tzvp_electronic_energy)
             elif self.settings.targets[i] == QmTarget.SVP_DISPERSION_ENERGY:
-                attribute_list.append(qm_data.svp_dispersion_energy)
+                target_list.append(qm_data.svp_dispersion_energy)
             elif self.settings.targets[i] == QmTarget.TZVP_DISPERSION_ENERGY:
-                attribute_list.append(qm_data.tzvp_dispersion_energy)
+                target_list.append(qm_data.tzvp_dispersion_energy)
             elif self.settings.targets[i] == QmTarget.SVP_DIPOLE_MOMENT:
-                attribute_list.append(qm_data.svp_dipole_moment)
+                target_list.append(qm_data.svp_dipole_moment)
             elif self.settings.targets[i] == QmTarget.TZVP_DIPOLE_MOMENT:
-                attribute_list.append(qm_data.tzvp_dipole_moment)
+                target_list.append(qm_data.tzvp_dipole_moment)
             elif self.settings.targets[i] == QmTarget.SVP_HOMO_ENERGY:
-                attribute_list.append(qm_data.svp_homo_energy)
+                target_list.append(qm_data.svp_homo_energy)
             elif self.settings.targets[i] == QmTarget.TZVP_HOMO_ENERGY:
-                attribute_list.append(qm_data.tzvp_homo_energy)
+                target_list.append(qm_data.tzvp_homo_energy)
             elif self.settings.targets[i] == QmTarget.SVP_LUMO_ENERGY:
-                attribute_list.append(qm_data.svp_lumo_energy)
+                target_list.append(qm_data.svp_lumo_energy)
             elif self.settings.targets[i] == QmTarget.TZVP_LUMO_ENERGY:
-                attribute_list.append(qm_data.tzvp_lumo_energy)
+                target_list.append(qm_data.tzvp_lumo_energy)
             elif self.settings.targets[i] == QmTarget.SVP_HOMO_LUMO_GAP:
-                attribute_list.append(qm_data.svp_homo_lumo_gap)
+                target_list.append(qm_data.svp_homo_lumo_gap)
             elif self.settings.targets[i] == QmTarget.TZVP_HOMO_LUMO_GAP:
-                attribute_list.append(qm_data.tzvp_homo_lumo_gap)
+                target_list.append(qm_data.tzvp_homo_lumo_gap)
             elif self.settings.targets[i] == QmTarget.LOWEST_VIBRATIONAL_FREQUENCY:
-                attribute_list.append(qm_data.lowest_vibrational_frequency)
+                target_list.append(qm_data.lowest_vibrational_frequency)
             elif self.settings.targets[i] == QmTarget.HIGHEST_VIBRATIONAL_FREQUENCY:
-                attribute_list.append(qm_data.highest_vibrational_frequency)
+                target_list.append(qm_data.highest_vibrational_frequency)
             elif self.settings.targets[i] == QmTarget.HEAT_CAPACITY:
-                attribute_list.append(qm_data.heat_capacity)
+                target_list.append(qm_data.heat_capacity)
             elif self.settings.targets[i] == QmTarget.ENTROPY:
-                attribute_list.append(qm_data.entropy)
+                target_list.append(qm_data.entropy)
             elif self.settings.targets[i] == QmTarget.ZPE_CORRECTION:
-                attribute_list.append(qm_data.zpe_correction)
+                target_list.append(qm_data.zpe_correction)
             elif self.settings.targets[i] == QmTarget.ENTHALPY_ENERGY:
-                attribute_list.append(qm_data.enthalpy_energy)
+                target_list.append(qm_data.enthalpy_energy)
             elif self.settings.targets[i] == QmTarget.GIBBS_ENERGY:
-                attribute_list.append(qm_data.gibbs_energy)
+                target_list.append(qm_data.gibbs_energy)
             elif self.settings.targets[i] == QmTarget.CORRECTED_ENTHALPY_ENERGY:
-                attribute_list.append(qm_data.corrected_enthalpy_energy)
+                target_list.append(qm_data.corrected_enthalpy_energy)
             elif self.settings.targets[i] == QmTarget.CORRECTED_GIBBS_ENERGY:
-                attribute_list.append(qm_data.corrected_gibbs_energy)
+                target_list.append(qm_data.corrected_gibbs_energy)
             elif self.settings.targets[i] == QmTarget.ELECTRONIC_ENERGY_DELTA:
-                attribute_list.append(qm_data.electronic_energy_delta)
+                target_list.append(qm_data.electronic_energy_delta)
             elif self.settings.targets[i] == QmTarget.DISPERSION_ENERGY_DELTA:
-                attribute_list.append(qm_data.dispersion_energy_delta)
+                target_list.append(qm_data.dispersion_energy_delta)
             elif self.settings.targets[i] == QmTarget.DIPOLE_MOMENT_DELTA:
-                attribute_list.append(qm_data.dipole_moment_delta)
+                target_list.append(qm_data.dipole_moment_delta)
             elif self.settings.targets[i] == QmTarget.HOMO_LUMO_GAP_DELTA:
-                attribute_list.append(qm_data.homo_lumo_gap_delta)
+                target_list.append(qm_data.homo_lumo_gap_delta)
             else:
-                warnings.warn('Could not find attritubte' + str(self.settings.targets[i]) + '.')
+                warnings.warn('Could not find target' + str(self.settings.targets[i]) + '.')
 
-        return attribute_list
+        return target_list
 
     def _validate_node_list(self, nodes):
 
