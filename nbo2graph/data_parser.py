@@ -58,28 +58,29 @@ class DataParser:
             # the start index addition offset is based on the Gaussian output format
             if 'Standard orientation' in self.lines[i]:
                 qm_data.atomic_numbers = self._extract_atomic_numbers(i + 5)
-                qm_data.geometric_data = self._extract_geometric_data(i + 5)
+                qm_data.geometric_data, i = self._extract_geometric_data(i + 5)
 
             if 'Summary of Natural Population Analysis' in self.lines[i]:
-                qm_data.natural_atomic_charges = self._extract_natural_atomic_charges(i + 6)
+                qm_data.natural_atomic_charges, i = self._extract_natural_atomic_charges(i + 6)
 
             if 'Natural Electron Configuration' in self.lines[i]:
-                qm_data.natural_electron_configuration = self._extract_natural_electron_configuration(i + 2)
+                qm_data.natural_electron_configuration, i = self._extract_natural_electron_configuration(i + 2)
 
             if 'Wiberg bond index matrix' in self.lines[i]:
-                qm_data.wiberg_index_matrix = self._extract_index_matrix(i + 4)
+                qm_data.wiberg_index_matrix, i = self._extract_index_matrix(i + 4)
 
             if 'Atom-Atom Net Linear NLMO/NPA' in self.lines[i]:
-                qm_data.nbo_bond_order_matrix = self._extract_index_matrix(i + 4)
+                qm_data.nbo_bond_order_matrix, i = self._extract_index_matrix(i + 4)
 
             if 'Bond orbital / Coefficients / Hybrids' in self.lines[i]:
-                qm_data.lone_pair_data, qm_data.lone_vacancy_data, qm_data.bond_pair_data, qm_data.antibond_pair_data = self._extract_nbo_data(i + 2)
+                result, i = self._extract_nbo_data(i + 2)
+                qm_data.lone_pair_data, qm_data.lone_vacancy_data, qm_data.bond_pair_data, qm_data.antibond_pair_data = result[0], result[1], result[2], result[3]
 
             if 'NATURAL BOND ORBITALS' in self.lines[i]:
-                qm_data.nbo_energies = self._extract_nbo_energies(i + 7)
+                qm_data.nbo_energies, i = self._extract_nbo_energies(i + 7)
 
             if 'Atom I' in self.lines[i]:
-                qm_data.lmo_bond_order_matrix = self._extract_lmo_bond_data(i + 1)
+                qm_data.lmo_bond_order_matrix, i = self._extract_lmo_bond_data(i + 1)
 
             if 'Charge = ' in self.lines[i]:
                 qm_data.charge = self._extract_charge(i)
@@ -209,18 +210,7 @@ class DataParser:
         line_split = re.findall('-{0,1}[0-9]{1,}.[0-9]{1,}', self.lines[start_index])
 
         # build output list
-        orbital_energies = []
-        for i in range(len(line_split)):
-            # check for entries that are not separated by white space
-            # match_result = re.search('([0-9]-[0-9])', line_split[i])
-            # if match_result is not None:
-            #     first_item_end_index = match_result.span(0)[0]
-            #     orbital_energies.append(line_split[i][:first_item_end_index + 1])
-            #     orbital_energies.append(line_split[i][first_item_end_index + 1:])
-            # else:
-            orbital_energies.append(line_split[i])
-
-        return list(map(float, orbital_energies))
+        return [float(entry) for entry in line_split]
 
     def _extract_enthalpy_energy(self, start_index):
 
@@ -249,13 +239,7 @@ class DataParser:
 
     def _extract_atomic_numbers(self, start_index):
 
-        atomic_numbers = []
-
-        for i in range(start_index, start_index + self.n_atoms, 1):
-            # split line at any white space
-            line_split = self.lines[i].split()
-            # read out data (index number based on Gaussian output format)
-            atomic_numbers.append(int(line_split[1]))
+        atomic_numbers = [int(self.lines[i].split()[1]) for i in range(start_index, start_index + self.n_atoms, 1)]
 
         return atomic_numbers
 
@@ -270,19 +254,15 @@ class DataParser:
             xyz = [float(line_split[3]), float(line_split[4]), float(line_split[5])]
             geometric_data.append(xyz)
 
-        return geometric_data
+        # also return index i to jump ahead in the file
+        return geometric_data, i
 
     def _extract_natural_atomic_charges(self, start_index):
 
-        natural_atomic_charges = []
+        natural_atomic_charges = [float(self.lines[i].split()[2]) for i in range(start_index, start_index + self.n_atoms, 1)]
 
-        for i in range(start_index, start_index + self.n_atoms, 1):
-            # split line at any white space
-            line_split = self.lines[i].split()
-            # read out data (index number based on Gaussian output format)
-            natural_atomic_charges.append(float(line_split[2]))
-
-        return natural_atomic_charges
+        # also return index i to jump ahead in the file
+        return natural_atomic_charges, start_index + self.n_atoms
 
     def _extract_natural_electron_configuration(self, start_index):
 
@@ -317,7 +297,8 @@ class DataParser:
             # append to full list
             natural_electron_configuration.append(electron_configuration)
 
-        return natural_electron_configuration
+        # also return index i to jump ahead in the file
+        return natural_electron_configuration, i
 
     def _extract_index_matrix(self, start_index):
 
@@ -355,7 +336,8 @@ class DataParser:
             # set start_index to the next block
             start_index += self.n_atoms + 3
 
-        return wiberg_index_matrix
+        # also return index i to jump ahead in the file
+        return wiberg_index_matrix, i
 
     def _extract_lmo_bond_data(self, start_index):
 
@@ -379,7 +361,7 @@ class DataParser:
 
             i += 1
 
-        return lmo_bond_data_matrix
+        return lmo_bond_data_matrix, i
 
     def _extract_nbo_energies(self, start_index):
 
@@ -409,7 +391,8 @@ class DataParser:
 
             i += 1
 
-        return data
+        # also return index i to jump ahead in the file
+        return data, i
 
     def _extract_nbo_data(self, start_index):
 
@@ -454,7 +437,10 @@ class DataParser:
 
             i += 1
 
-        return lone_pair_data, lone_vacancy_data, bond_pair_data, antibond_pair_data
+        data = [lone_pair_data, lone_vacancy_data, bond_pair_data, antibond_pair_data]
+
+        # also return index i to jump ahead in the file
+        return data, i
 
     def _extract_lone_pair_data(self, start_index):
 

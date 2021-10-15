@@ -146,14 +146,10 @@ class QmData():
         self.homo_lumo_gap_delta = self.svp_homo_lumo_gap - self.tzvp_homo_lumo_gap
 
         # calculate Wiberg atom-wise totals
-        self.wiberg_atom_totals = []
-        for i in range(len(self.wiberg_index_matrix)):
-            self.wiberg_atom_totals.append(sum(self.wiberg_index_matrix[i]))
+        self.wiberg_atom_totals = [sum(bond_orders) for bond_orders in self.wiberg_index_matrix]
 
         # calculate nbo bond order atom-wise totals
-        self.nbo_bond_order_totals = []
-        for i in range(len(self.nbo_bond_order_matrix)):
-            self.nbo_bond_order_totals.append(sum(self.nbo_bond_order_matrix[i]))
+        self.nbo_bond_order_totals = [sum(bond_orders) for bond_orders in self.nbo_bond_order_matrix]
 
         # merge nbo data with corresponding energies
         self.lone_pair_data_full = self._merge_nbo_data(self.lone_pair_data)
