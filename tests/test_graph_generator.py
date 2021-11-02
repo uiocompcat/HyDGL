@@ -487,7 +487,7 @@ class TestGraphGenerator(unittest.TestCase):
         [
             HydrogenMode.EXPLICIT,
             BondDeterminationMode.WIBERG,
-            [EdgeFeature.BOND_ORBITAL_DATA_D],
+            [EdgeFeature.BOND_ORBITAL_MAX, EdgeFeature.BOND_ORBITAL_DATA_D],
             1,
             [
                 [[2, 3], [2, -0.47335, 1.86181, 0.00125]], [[2, 6], [1, -0.83628, 1.98204, 0.0024]], [[3, 4], [1, -0.71751, 1.97740, 0.0048]], [[3, 9], [1, -0.75230, 1.97911, 0.00075]],
@@ -736,8 +736,50 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             [15, 21],
-            [EdgeFeature.BOND_DISTANCE, EdgeFeature.BOND_ORBITAL_DATA_S],
+            [EdgeFeature.BOND_ORBITAL_MAX, EdgeFeature.BOND_DISTANCE, EdgeFeature.BOND_ORBITAL_DATA_S],
             [[15, 21], [1.468893, 1, -0.74646, 1.97899, 0.34105]]
+        ],
+
+        [
+            [15, 21],
+            [EdgeFeature.BOND_ORBITAL_AVERAGE, EdgeFeature.BOND_DISTANCE, EdgeFeature.BOND_ORBITAL_DATA_S],
+            [[15, 21], [1.468893, 1, -0.74646, 1.97899, 0.34105]]
+        ],
+
+        [
+            [2, 3],
+            [EdgeFeature.BOND_ORBITAL_MAX, EdgeFeature.BOND_ORBITAL_DATA_S, EdgeFeature.BOND_ORBITAL_DATA_P, EdgeFeature.BOND_ORBITAL_DATA_D, EdgeFeature.  BOND_ORBITAL_DATA_F],
+            [[2, 3], [2, -0.47335, 1.86181, 0, 0.9983, 0.00125, 0.0004]]
+        ],
+
+        [
+            [2, 3],
+            [EdgeFeature.BOND_ORBITAL_AVERAGE, EdgeFeature.BOND_ORBITAL_DATA_S, EdgeFeature.BOND_ORBITAL_DATA_P, EdgeFeature.BOND_ORBITAL_DATA_D, EdgeFeature.  BOND_ORBITAL_DATA_F],
+            [[2, 3], [2, -0.68039, 1.924115, 0.174625, 0.823025, 0.00195, 0.00035]]
+        ],
+
+        [
+            [2, 3],
+            [EdgeFeature.ANTIBOND_ORBITAL_MIN, EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_P, EdgeFeature.ANTIBOND_ORBITAL_DATA_D, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
+            [[2, 3], [2, -0.15285, 0.47234, 0, 0.9983, 0.00125, 0.0004]]
+        ],
+
+        [
+            [2, 3],
+            [EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_P, EdgeFeature.ANTIBOND_ORBITAL_DATA_D, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
+            [[2, 3], [2, 0.110375, 0.247345, 0.174625, 0.823025, 0.00195, 0.00035]]
+        ],
+
+        [
+            [2, 3],
+            [EdgeFeature.ANTIBOND_ORBITAL_MIN, EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_P, EdgeFeature.ANTIBOND_ORBITAL_DATA_D, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
+            [[2, 3], [2, -0.15285, 0.47234, 0, 0.9983, 0.00125, 0.0004, 0.110375, 0.247345, 0.174625, 0.823025, 0.00195, 0.00035]]
+        ],
+
+        [
+            [0, 5],
+            [EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_P, EdgeFeature.ANTIBOND_ORBITAL_DATA_D, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
+            [[0, 5], [0, 0, 0, 0, 0, 0, 0]]
         ],
 
     ])
@@ -754,6 +796,8 @@ class TestGraphGenerator(unittest.TestCase):
 
         # get result
         result = gg._get_featurised_edge(bond_indices, qm_data)
+
+        print(result)
 
         Utils.assert_are_almost_equal(result, expected, places=5)
 

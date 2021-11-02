@@ -142,7 +142,11 @@ class GraphGenerator:
             edge[1].append(qm_data.bond_distance_matrix[edge[0][0]][edge[0][1]])
 
         # add number of bond/antibond orbitals if requested
-        if len(self.settings.bond_orbital_indices) > 0 or len(self.settings.antibond_orbital_indices) > 0:
+        if EdgeFeature.BOND_ORBITAL_MAX in self.settings.edge_features or \
+                EdgeFeature.BOND_ORBITAL_AVERAGE in self.settings.edge_features or \
+                EdgeFeature.ANTIBOND_ORBITAL_MIN in self.settings.edge_features or \
+                EdgeFeature.ANTIBOND_ORBITAL_AVERAGE in self.settings.edge_features:
+
             if edge[0] in bond_pair_atom_indices:
 
                 # get list of all bond energies for this atom
@@ -152,7 +156,8 @@ class GraphGenerator:
             else:
                 edge[1].append(0)
 
-        if len(self.settings.bond_orbital_indices) > 0:
+        if EdgeFeature.BOND_ORBITAL_MAX in self.settings.edge_features and len(self.settings.bond_orbital_indices) > 0:
+
             # check if NBO data for the respective bond is available
             # if so add to feature vector
             # otherwise add zeros to feature vector
@@ -172,7 +177,30 @@ class GraphGenerator:
             else:
                 edge[1].extend((2 + len(self.settings.bond_orbital_indices)) * [0])
 
-        if len(self.settings.antibond_orbital_indices) > 0:
+        if EdgeFeature.BOND_ORBITAL_AVERAGE in self.settings.edge_features and len(self.settings.bond_orbital_indices) > 0:
+            # check if NBO data for the respective bonds is available
+            # if so add to feature vector
+            # otherwise add zeros to feature vector
+            if edge[0] in bond_pair_atom_indices:
+
+                # get list of all antibond pair energies for this atom
+                energies = [x[1] for x in qm_data.bond_pair_data_full if x[0] == edge[0]]
+                # get list of all occupation values for this atom
+                occupations = [x[2] for x in qm_data.bond_pair_data_full if x[0] == edge[0]]
+                # get list of symmetry values of different lone pairs for this atom
+                symmetries = [x[3] for x in qm_data.bond_pair_data_full if x[0] == edge[0]]
+
+                # append average values for energies and occupations
+                edge[1].append(mean(energies))
+                edge[1].append(mean(occupations))
+
+                # get average values for orbital symmetries
+                oribtal_symmetries = [mean(x) for x in [[y[k] for y in symmetries] for k in self.settings.bond_orbital_indices]]
+                edge[1].extend(oribtal_symmetries)
+            else:
+                edge[1].extend((2 + len(self.settings.bond_orbital_indices)) * [0])
+
+        if EdgeFeature.ANTIBOND_ORBITAL_MIN in self.settings.edge_features and len(self.settings.antibond_orbital_indices) > 0:
             # check if NBO data for the respective antibonds is available
             # if so add to feature vector
             # otherwise add zeros to feature vector
@@ -188,6 +216,29 @@ class GraphGenerator:
                 edge[1].append(qm_data.antibond_pair_data_full[selected_index][1])
                 edge[1].append(qm_data.antibond_pair_data_full[selected_index][2])
                 edge[1].extend([qm_data.bond_pair_data_full[selected_index][3][k] for k in self.settings.antibond_orbital_indices])
+            else:
+                edge[1].extend((2 + len(self.settings.antibond_orbital_indices)) * [0])
+
+        if EdgeFeature.ANTIBOND_ORBITAL_AVERAGE in self.settings.edge_features and len(self.settings.antibond_orbital_indices) > 0:
+            # check if NBO data for the respective antibonds is available
+            # if so add to feature vector
+            # otherwise add zeros to feature vector
+            if edge[0] in antibond_pair_atom_indices:
+
+                # get list of all antibond pair energies for this atom
+                energies = [x[1] for x in qm_data.antibond_pair_data_full if x[0] == edge[0]]
+                # get list of all occupation values for this atom
+                occupations = [x[2] for x in qm_data.antibond_pair_data_full if x[0] == edge[0]]
+                # get list of symmetry values of different lone pairs for this atom
+                symmetries = [x[3] for x in qm_data.antibond_pair_data_full if x[0] == edge[0]]
+
+                # append average values for energies and occupations
+                edge[1].append(mean(energies))
+                edge[1].append(mean(occupations))
+
+                # get average values for orbital symmetries
+                oribtal_symmetries = [mean(x) for x in [[y[k] for y in symmetries] for k in self.settings.antibond_orbital_indices]]
+                edge[1].extend(oribtal_symmetries)
             else:
                 edge[1].extend((2 + len(self.settings.antibond_orbital_indices)) * [0])
 
