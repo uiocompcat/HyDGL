@@ -134,16 +134,16 @@ class QmData():
         # SVP - TZVP deltas
 
         # calculate svp - tzvp dispersion energy delta
-        self.dispersion_energy_delta = self.svp_dispersion_energy - self.tzvp_dispersion_energy
+        self.dispersion_energy_delta = abs(self.svp_dispersion_energy - self.tzvp_dispersion_energy)
 
         # calculate svp - tzvp electronic energy delta
-        self.electronic_energy_delta = self.svp_electronic_energy - self.tzvp_electronic_energy
+        self.electronic_energy_delta = abs(self.svp_electronic_energy - self.tzvp_electronic_energy)
 
         # calculate svp - tzvp dipole moment delta
-        self.dipole_moment_delta = self.svp_dipole_moment - self.tzvp_dipole_moment
+        self.dipole_moment_delta = abs(self.svp_dipole_moment - self.tzvp_dipole_moment)
 
         # calculate svp - tzvp homo lumo gap delta
-        self.homo_lumo_gap_delta = self.svp_homo_lumo_gap - self.tzvp_homo_lumo_gap
+        self.homo_lumo_gap_delta = abs(self.svp_homo_lumo_gap - self.tzvp_homo_lumo_gap)
 
         # calculate Wiberg atom-wise totals
         self.wiberg_atom_totals = [sum(bond_orders) for bond_orders in self.wiberg_index_matrix]

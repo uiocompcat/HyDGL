@@ -684,6 +684,73 @@ class TestGraphGenerator(unittest.TestCase):
             [QmTarget.HIGHEST_VIBRATIONAL_FREQUENCY],
             [3786.4682]
         ],
+
+        [
+            TEST_FILE_LALMER,
+            [QmTarget.HEAT_CAPACITY],
+            [116.184]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [QmTarget.ENTROPY],
+            [205.610]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [QmTarget.ZPE_CORRECTION],
+            [0.318790]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [QmTarget.ENTHALPY_ENERGY],
+            [-2710.959666]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [QmTarget.GIBBS_ENERGY],
+            [-2711.057358]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [QmTarget.SVP_HOMO_LUMO_GAP],
+            [0.08806]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [QmTarget.TZVP_HOMO_LUMO_GAP],
+            [0.14942]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [QmTarget.HOMO_LUMO_GAP_DELTA],
+            [0.06136]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [QmTarget.SVP_DIPOLE_MOMENT],
+            [11.3194]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [QmTarget.TZVP_DIPOLE_MOMENT],
+            [11.8657]
+        ],	
+
+        [
+            TEST_FILE_LALMER,
+            [QmTarget.DIPOLE_MOMENT_DELTA],
+            [0.5463]
+        ],
+
     ])
     def test_get_targets(self, file_path, targets, expected):
 
@@ -699,7 +766,7 @@ class TestGraphGenerator(unittest.TestCase):
         # get result
         result = gg._get_targets(qm_data)
 
-        self.assertEqual(result, expected)
+        Utils.assert_are_almost_equal(result, expected, places=5)
 
     @parameterized.expand([
 
