@@ -12,12 +12,18 @@ class EdgeFeature(Enum):
     BOND_DISTANCE = auto()
 
     # NBO data bonding
+    BOND_ORBITAL_MAX = auto()
+    BOND_ORBITAL_AVERAGE = auto()
+
     BOND_ORBITAL_DATA_S = auto()
     BOND_ORBITAL_DATA_P = auto()
     BOND_ORBITAL_DATA_D = auto()
     BOND_ORBITAL_DATA_F = auto()
 
     # NBO data antibonding
+    ANTIBOND_ORBITAL_MIN = auto()
+    ANTIBOND_ORBITAL_AVERAGE = auto()
+
     ANTIBOND_ORBITAL_DATA_S = auto()
     ANTIBOND_ORBITAL_DATA_P = auto()
     ANTIBOND_ORBITAL_DATA_D = auto()

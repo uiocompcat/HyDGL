@@ -209,25 +209,10 @@ class GraphGeneratorSettings:
                 else:
                     print('Cannot parse value for hydrogen count threshold to float.')
 
-            # look for node features
-            for node_feature in NodeFeature:
-                if key == node_feature.name:
-                    node_features.append(node_feature)
-
-            # look for edge features
-            for edge_feature in EdgeFeature:
-                if key == edge_feature.name:
-                    edge_features.append(edge_feature)
-
-            # look for graph features
-            for graph_feature in GraphFeature:
-                if key == graph_feature.name:
-                    graph_features.append(graph_feature)
-
-            # look for qm target
-            for qm_target in QmTarget:
-                if key == qm_target.name:
-                    targets.append(qm_target)
+            node_features.extend(GraphGeneratorSettings._get_features(NodeFeature, key))
+            edge_features.extend(GraphGeneratorSettings._get_features(EdgeFeature, key))
+            graph_features.extend(GraphGeneratorSettings._get_features(GraphFeature, key))
+            targets.extend(GraphGeneratorSettings._get_features(QmTarget, key))
 
             # print('The key:\n\n\t' + key + '\n\nCould not be found. Skipping this key.')
 
@@ -325,6 +310,17 @@ class GraphGeneratorSettings:
                 orbital_indices.append(3)
 
         return orbital_indices
+
+    @staticmethod
+    def _get_features(enum_class, key):
+
+        features = []
+
+        for feature in enum_class:
+            if key == feature.name:
+                features.append(feature)
+
+        return features
 
     @staticmethod
     def _is_float(value):
