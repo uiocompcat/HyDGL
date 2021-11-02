@@ -743,7 +743,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             [QmTarget.TZVP_DIPOLE_MOMENT],
             [11.8657]
-        ],	
+        ],
 
         [
             TEST_FILE_LALMER,

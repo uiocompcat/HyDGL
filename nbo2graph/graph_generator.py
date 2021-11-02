@@ -523,8 +523,7 @@ class GraphGenerator:
 
         # check if given atom index is valid
         if atom_index < 0 or atom_index > qm_data.n_atoms - 1:
-            raise ValueError('The specified node index is out of range. Valid range: 0 - ' +
-                             str(qm_data.n_atoms - 1) + '. Given: ' + str(atom_index) + '.')
+            raise ValueError('The specified node index is out of range. Valid range: 0 - ' + str(qm_data.n_atoms - 1) + '. Given: ' + str(atom_index) + '.')
 
         # return variable
         bound_atom_indices = []
