@@ -138,7 +138,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             HydrogenMode.OMIT,
             BondDeterminationMode.WIBERG,
-            [NodeFeature.LONE_PAIRS_S, NodeFeature.LONE_PAIRS_P, NodeFeature.LONE_PAIRS_D, NodeFeature.LONE_PAIRS_F],
+            [NodeFeature.LONE_PAIR_MAX, NodeFeature.LONE_PAIRS_S, NodeFeature.LONE_PAIRS_P, NodeFeature.LONE_PAIRS_D, NodeFeature.LONE_PAIRS_F],
             [
                 [5, -0.62573, 1.99593, 0.0001, 0.0, 0.9998, 0.0],
                 [2, -0.56001, 1.99619, 0.1619, 0.8369, 0.0011, 0.0],
@@ -178,7 +178,47 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             HydrogenMode.OMIT,
             BondDeterminationMode.WIBERG,
-            [NodeFeature.LONE_VACANCIES_S, NodeFeature.LONE_VACANCIES_P, NodeFeature.LONE_VACANCIES_D, NodeFeature.LONE_VACANCIES_F],
+            [NodeFeature.LONE_PAIR_AVERAGE, NodeFeature.LONE_PAIRS_S, NodeFeature.LONE_PAIRS_P, NodeFeature.LONE_PAIRS_D, NodeFeature.LONE_PAIRS_F],
+            [
+                [5, -0.627936, 1.996892, 0.00014, 0, 0.99984, 0],
+                [2, -0.61476, 1.9834, 0.26065, 0.73855, 0.00075, 0],
+                [1, -0.50043, 1.86184, 0.3127, 0.6867, 0.0005, 0.0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [2, -0.51211, 1.76919, 0.32825, 0.6705, 0.0012, 0.00005],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [1, -0.48921, 1.87884, 0.2791, 0.7203, 0.0005, 0.0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [1, -0.48483, 1.87975, 0.2796, 0.7198, 0.0006, 0.0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [1, -0.49310, 1.86490, 0.3133, 0.6860, 0.0006, 0.0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [2, -0.504135, 1.766285, 0.32715, 0.6716, 0.0012, 0.00005],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [3, -0.5798866, 1.91078, 0.2991, 0.6994333, 0.0014, 0.0000333],
+                [3, -0.5712033, 1.89843666666667, 0.2962666, 0.7019, 0.0017666, 0.0000666],
+                [3, -0.55052, 1.863, 0.2877333, 0.70986666, 0.002333, 0.00006666],
+                [3, -0.5467866, 1.85364, 0.2865666, 0.7108333, 0.0025333, 0.0000666]
+            ]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            HydrogenMode.OMIT,
+            BondDeterminationMode.WIBERG,
+            [NodeFeature.LONE_VACANCY_MIN, NodeFeature.LONE_VACANCIES_S, NodeFeature.LONE_VACANCIES_P, NodeFeature.LONE_VACANCIES_D, NodeFeature.LONE_VACANCIES_F],
             [
                 [1, -0.04626, 0.30391, 0.9988, 0.0002, 0.001, 0.0],
                 [0, 0, 0, 0, 0, 0, 0],
@@ -213,6 +253,129 @@ class TestGraphGenerator(unittest.TestCase):
                 [0, 0, 0, 0, 0, 0, 0]
             ]
         ],
+
+        [
+            TEST_FILE_LALMER,
+            HydrogenMode.OMIT,
+            BondDeterminationMode.WIBERG,
+            [NodeFeature.LONE_VACANCY_AVERAGE, NodeFeature.LONE_VACANCIES_S, NodeFeature.LONE_VACANCIES_P, NodeFeature.LONE_VACANCIES_D, NodeFeature.LONE_VACANCIES_F],
+            [
+                [1, -0.04626, 0.30391, 0.9988, 0.0002, 0.001, 0.0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0]
+            ]
+        ],
+
+        [
+            TEST_FILE_OREDIA,
+            HydrogenMode.OMIT,
+            BondDeterminationMode.WIBERG,
+            [NodeFeature.LONE_VACANCY_MIN, NodeFeature.LONE_VACANCIES_S, NodeFeature.LONE_VACANCIES_P, NodeFeature.LONE_VACANCIES_D, NodeFeature.LONE_VACANCIES_F],
+            [
+                [2, -0.16639, 0.76906, 0.0015, 0.0001, 0.9984, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [1, -0.12926, 0.9643, 0, 00.9995, 0, 0.0005],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0]
+            ]
+        ],
+
+        [
+            TEST_FILE_OREDIA,
+            HydrogenMode.OMIT,
+            BondDeterminationMode.WIBERG,
+            [NodeFeature.LONE_VACANCY_AVERAGE, NodeFeature.LONE_VACANCIES_S, NodeFeature.LONE_VACANCIES_P, NodeFeature.LONE_VACANCIES_D, NodeFeature.LONE_VACANCIES_F],
+            [
+                [2, 0.4279, 0.570795, 0.43415, 0.0003, 0.5655, 0.00005],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [1, -0.12926, 0.9643, 0, 00.9995, 0, 0.0005],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0]
+            ]
+        ],
+
     ])
     def test_get_nodes(self, file_path, hydrogen_mode, bond_determination_mode, node_features, expected):
 
@@ -230,6 +393,8 @@ class TestGraphGenerator(unittest.TestCase):
 
         # get nodes
         result = gg._get_nodes(qm_data)
+
+        print(result)
 
         # test
         Utils.assert_are_almost_equal(result, expected, places=3)

@@ -1,4 +1,5 @@
 import warnings
+from statistics import mean
 
 from nbo2graph.graph import Graph
 from nbo2graph.qm_data import QmData
@@ -278,46 +279,89 @@ class GraphGenerator:
                 warnings.warn('Bond determination mode ' + str(self.settings.bond_determination_mode) + ' not recognised. Skipping')
 
         # add lone pair data if requested
-        if len(self.settings.lone_pair_orbital_indices) > 0:
-            # otherwise set values to 0
-            if i in lone_pair_atom_indices:
+        if (NodeFeature.LONE_PAIR_MAX in self.settings.node_features or NodeFeature.LONE_PAIR_AVERAGE in self.settings.node_features) \
+                and len(self.settings.lone_pair_orbital_indices) > 0:
 
-                # get list of all lone pair energies for this atom
-                energies = [x[1] for x in qm_data.lone_pair_data_full if x[0] == i]
-                # select index of the highest energy (for LP)
-                selected_index = lone_pair_energies.index(max(energies))
+            # get list of all lone pair energies for this atom
+            energies = [x[1] for x in qm_data.lone_pair_data_full if x[0] == i]
+            # append number of lone pair as feature
+            node.append(len(energies))
 
-                # append data (total length = 5)
-                node.append(len(energies))
-                node.append(qm_data.lone_pair_data_full[selected_index][1])
-                node.append(qm_data.lone_pair_data_full[selected_index][2])
+            if NodeFeature.LONE_PAIR_MAX in self.settings.node_features:
+                if i in lone_pair_atom_indices:
 
-                # get orbital occupations
-                oribtal_symmetries = [qm_data.lone_pair_data_full[selected_index][3][k] for k in self.settings.lone_pair_orbital_indices]
-                node.extend(oribtal_symmetries)
-            else:
-                node.extend((3 + len(self.settings.lone_pair_orbital_indices)) * [0])
+                    # select index of the highest energy (for LP)
+                    selected_index = lone_pair_energies.index(max(energies))
+
+                    # append data (total length = 4)
+                    node.append(qm_data.lone_pair_data_full[selected_index][1])
+                    node.append(qm_data.lone_pair_data_full[selected_index][2])
+
+                    # get orbital occupations
+                    oribtal_symmetries = [qm_data.lone_pair_data_full[selected_index][3][k] for k in self.settings.lone_pair_orbital_indices]
+                    node.extend(oribtal_symmetries)
+                else:
+                    node.extend((2 + len(self.settings.lone_pair_orbital_indices)) * [0])
+
+            if NodeFeature.LONE_PAIR_AVERAGE in self.settings.node_features:
+                if i in lone_pair_atom_indices:
+
+                    # get list of all lone pair occupations for this atom
+                    occupations = [x[2] for x in qm_data.lone_pair_data_full if x[0] == i]
+                    # get list of symmetry values of different lone pairs for this atom
+                    symmetries = [x[3] for x in qm_data.lone_pair_data_full if x[0] == i]
+
+                    # append average values for energies and occupations
+                    node.append(mean(energies))
+                    node.append(mean(occupations))
+
+                    # get average values for orbital symmetries
+                    oribtal_symmetries = [mean(x) for x in [[y[k] for y in symmetries] for k in self.settings.lone_pair_orbital_indices]]
+                    node.extend(oribtal_symmetries)
+                else:
+                    node.extend((2 + len(self.settings.lone_pair_orbital_indices)) * [0])
 
         # add lone vacancy data if requested
-        if len(self.settings.lone_vacancy_orbital_indices) > 0:
-            # otherwise set values to 0
-            if i in lone_vacancy_atom_indices:
+        if (NodeFeature.LONE_VACANCY_MIN in self.settings.node_features or NodeFeature.LONE_VACANCY_AVERAGE in self.settings.node_features) \
+                and len(self.settings.lone_vacancy_orbital_indices) > 0:
 
-                # get list of all lone pair energies for this atom
-                energies = [x[1] for x in qm_data.lone_vacancy_data_full if x[0] == i]
-                # select index of the lowest energy (for LV)
-                selected_index = lone_vacancy_energies.index(min(energies))
+            # get list of all lone pair energies for this atom
+            energies = [x[1] for x in qm_data.lone_vacancy_data_full if x[0] == i]
+            node.append(len(energies))
 
-                # append data (total length = 5)
-                node.append(len(energies))
-                node.append(qm_data.lone_vacancy_data_full[selected_index][1])
-                node.append(qm_data.lone_vacancy_data_full[selected_index][2])
+            if NodeFeature.LONE_VACANCY_MIN in self.settings.node_features:
+                if i in lone_vacancy_atom_indices:
 
-                # get orbital occupations
-                oribtal_symmetries = [qm_data.lone_vacancy_data_full[selected_index][3][k] for k in self.settings.lone_vacancy_orbital_indices]
-                node.extend(oribtal_symmetries)
-            else:
-                node.extend((3 + len(self.settings.lone_vacancy_orbital_indices)) * [0])
+                    # select index of the lowest energy (for LV)
+                    selected_index = lone_vacancy_energies.index(min(energies))
+
+                    # append data (total length = 4)
+                    node.append(qm_data.lone_vacancy_data_full[selected_index][1])
+                    node.append(qm_data.lone_vacancy_data_full[selected_index][2])
+
+                    # get orbital occupations
+                    oribtal_symmetries = [qm_data.lone_vacancy_data_full[selected_index][3][k] for k in self.settings.lone_vacancy_orbital_indices]
+                    node.extend(oribtal_symmetries)
+                else:
+                    node.extend((2 + len(self.settings.lone_vacancy_orbital_indices)) * [0])
+
+            if NodeFeature.LONE_VACANCY_AVERAGE in self.settings.node_features:
+                if i in lone_vacancy_atom_indices:
+
+                    # get list of all lone pair occupations for this atom
+                    occupations = [x[2] for x in qm_data.lone_vacancy_data_full if x[0] == i]
+                    # get list of symmetry values of different lone pairs for this atom
+                    symmetries = [x[3] for x in qm_data.lone_vacancy_data_full if x[0] == i]
+
+                    # append average values for energies and occupations
+                    node.append(mean(energies))
+                    node.append(mean(occupations))
+
+                    # get average values for orbital symmetries
+                    oribtal_symmetries = [mean(x) for x in [[y[k] for y in symmetries] for k in self.settings.lone_vacancy_orbital_indices]]
+                    node.extend(oribtal_symmetries)
+                else:
+                    node.extend((2 + len(self.settings.lone_vacancy_orbital_indices)) * [0])
 
         # add implicit hydrogens
         if self.settings.hydrogen_mode == HydrogenMode.IMPLICIT:
