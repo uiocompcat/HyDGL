@@ -12,6 +12,8 @@ class EdgeFeature(Enum):
     BOND_DISTANCE = auto()
 
     # NBO data bonding
+    BOND_ENERGY_MIN_MAX_DIFFERENCE = auto()
+
     BOND_ORBITAL_MAX = auto()
     BOND_ORBITAL_AVERAGE = auto()
 
@@ -21,6 +23,8 @@ class EdgeFeature(Enum):
     BOND_ORBITAL_DATA_F = auto()
 
     # NBO data antibonding
+    ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE = auto()
+
     ANTIBOND_ORBITAL_MIN = auto()
     ANTIBOND_ORBITAL_AVERAGE = auto()
 

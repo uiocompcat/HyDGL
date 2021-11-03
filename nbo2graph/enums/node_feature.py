@@ -18,6 +18,8 @@ class NodeFeature(Enum):
     NATURAL_ELECTRON_CONFIGURATION_F = auto()
 
     # lone pairs
+    LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE = auto()
+
     LONE_PAIR_MAX = auto()
     LONE_PAIR_AVERAGE = auto()
 
@@ -27,6 +29,8 @@ class NodeFeature(Enum):
     LONE_PAIRS_F = auto()
 
     # lone vacancies
+    LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE = auto()
+
     LONE_VACANCY_MIN = auto()
     LONE_VACANCY_AVERAGE = auto()
 
