@@ -145,11 +145,23 @@ class GraphGenerator:
         if EdgeFeature.BOND_ORBITAL_MAX in self.settings.edge_features or \
                 EdgeFeature.BOND_ORBITAL_AVERAGE in self.settings.edge_features or \
                 EdgeFeature.ANTIBOND_ORBITAL_MIN in self.settings.edge_features or \
-                EdgeFeature.ANTIBOND_ORBITAL_AVERAGE in self.settings.edge_features:
+                EdgeFeature.ANTIBOND_ORBITAL_AVERAGE in self.settings.edge_features or \
+                EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE in self.settings.edge_features or \
+                EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE in self.settings.edge_features:
 
             if edge[0] in bond_pair_atom_indices:
                 # length of bond pair list for this edge
                 edge[1].append(len([x[1] for x in qm_data.bond_pair_data_full if x[0] == edge[0]]))
+            else:
+                edge[1].append(0)
+
+        if EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE in self.settings.edge_features:
+            energies = [x[1] for x in qm_data.bond_pair_data_full if x[0] == edge[0]]
+
+            # append difference if there are 2 entries or more
+            if len(energies) >= 2:
+                edge[1].append(abs(min(energies) - max(energies)))
+            # append 0 otherwise
             else:
                 edge[1].append(0)
 
@@ -196,6 +208,16 @@ class GraphGenerator:
                 edge[1].extend(oribtal_symmetries)
             else:
                 edge[1].extend((2 + len(self.settings.bond_orbital_indices)) * [0])
+
+        if EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE in self.settings.edge_features:
+            energies = [x[1] for x in qm_data.antibond_pair_data_full if x[0] == edge[0]]
+
+            # append difference if there are 2 entries or more
+            if len(energies) >= 2:
+                edge[1].append(abs(min(energies) - max(energies)))
+            # append 0 otherwise
+            else:
+                edge[1].append(0)
 
         if EdgeFeature.ANTIBOND_ORBITAL_MIN in self.settings.edge_features and len(self.settings.antibond_orbital_indices) > 0:
             # check if NBO data for the respective antibonds is available
@@ -327,8 +349,21 @@ class GraphGenerator:
                 warnings.warn('Bond determination mode ' + str(self.settings.bond_determination_mode) + ' not recognised. Skipping')
 
         # add number of lone pairs if requested
-        if NodeFeature.LONE_PAIR_MAX in self.settings.node_features or NodeFeature.LONE_PAIR_AVERAGE in self.settings.node_features:
+        if NodeFeature.LONE_PAIR_MAX in self.settings.node_features or \
+                NodeFeature.LONE_PAIR_AVERAGE in self.settings.node_features or \
+                NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE in self.settings.node_features:
+
             node.append(len([x[1] for x in qm_data.lone_pair_data_full if x[0] == i]))
+
+        if NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE in self.settings.node_features:
+            energies = [x[1] for x in qm_data.lone_pair_data_full if x[0] == i]
+
+            # append difference if there are 2 entries or more
+            if len(energies) >= 2:
+                node.append(abs(min(energies) - max(energies)))
+            # append 0 otherwise
+            else:
+                node.append(0)
 
         if NodeFeature.LONE_PAIR_MAX in self.settings.node_features and len(self.settings.lone_pair_orbital_indices) > 0:
             if i in lone_pair_atom_indices:
@@ -369,8 +404,21 @@ class GraphGenerator:
                 node.extend((2 + len(self.settings.lone_pair_orbital_indices)) * [0])
 
         # add number of lone vacancies if requested
-        if NodeFeature.LONE_VACANCY_MIN in self.settings.node_features or NodeFeature.LONE_VACANCY_AVERAGE in self.settings.node_features:
+        if NodeFeature.LONE_VACANCY_MIN in self.settings.node_features or \
+                NodeFeature.LONE_VACANCY_AVERAGE in self.settings.node_features or \
+                NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE in self.settings.node_features:
+
             node.append(len([x[1] for x in qm_data.lone_vacancy_data_full if x[0] == i]))
+
+        if NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE in self.settings.node_features:
+            energies = [x[1] for x in qm_data.lone_vacancy_data_full if x[0] == i]
+
+            # append difference if there are 2 entries or more
+            if len(energies) >= 2:
+                node.append(abs(min(energies) - max(energies)))
+            # append 0 otherwise
+            else:
+                node.append(0)
 
         if NodeFeature.LONE_VACANCY_MIN in self.settings.node_features and len(self.settings.lone_vacancy_orbital_indices) > 0:
             if i in lone_vacancy_atom_indices:

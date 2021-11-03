@@ -428,6 +428,69 @@ class TestGraphGenerator(unittest.TestCase):
             [-0.05261]
         ],
 
+        [
+            TEST_FILE_OREDIA,
+            HydrogenMode.OMIT,
+            BondDeterminationMode.NLMO,
+            [NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE],
+            0,
+            [3, 0.00634]
+        ],
+
+        [
+            TEST_FILE_OREDIA,
+            HydrogenMode.OMIT,
+            BondDeterminationMode.NLMO,
+            [NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE],
+            2,
+            [1, 0]
+        ],
+
+        [
+            TEST_FILE_OREDIA,
+            HydrogenMode.OMIT,
+            BondDeterminationMode.NLMO,
+            [NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE],
+            1,
+            [0, 0]
+        ],
+
+        [
+            TEST_FILE_OREDIA,
+            HydrogenMode.OMIT,
+            BondDeterminationMode.NLMO,
+            [NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE],
+            0,
+            [2, 1.18858]
+        ],
+
+        [
+            TEST_FILE_OREDIA,
+            HydrogenMode.OMIT,
+            BondDeterminationMode.NLMO,
+            [NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE],
+            7,
+            [1, 0]
+        ],
+
+        [
+            TEST_FILE_OREDIA,
+            HydrogenMode.OMIT,
+            BondDeterminationMode.NLMO,
+            [NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE],
+            1,
+            [0, 0]
+        ],
+
+        [
+            TEST_FILE_OREDIA,
+            HydrogenMode.OMIT,
+            BondDeterminationMode.NLMO,
+            [NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE, NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE],
+            0,
+            [3, 0.00634, 2, 1.18858]
+        ],
+
     ])
     def test_get_individual_node(self, file_path, hydrogen_mode, bond_determination_mode, node_features, atom_index, expected):
 
@@ -847,6 +910,42 @@ class TestGraphGenerator(unittest.TestCase):
             [0, 5],
             [EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_P, EdgeFeature.ANTIBOND_ORBITAL_DATA_D, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
             [[0, 5], [0, 0, 0, 0, 0, 0, 0]]
+        ],
+
+        [
+            [2, 3],
+            [EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE],
+            [[2, 3], [2, 0.41408]]
+        ],
+
+        [
+            [2, 3],
+            [EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE],
+            [[2, 3], [2, 0.52645]]
+        ],
+
+        [
+            [0, 5],
+            [EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE],
+            [[0, 5], [0, 0]]
+        ],
+
+        [
+            [0, 5],
+            [EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE],
+            [[0, 5], [0, 0]]
+        ],
+
+        [
+            [2, 3],
+            [EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE, EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE],
+            [[2, 3], [2, 0.41408, 0.52645]]
+        ],
+
+        [
+            [2, 6],
+            [EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE],
+            [[2, 6], [1, 0]]
         ],
 
     ])
