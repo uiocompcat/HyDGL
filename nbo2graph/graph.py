@@ -10,13 +10,15 @@ class Graph:
 
     """Class for reading relevant data from QM output files."""
 
-    def __init__(self, nodes, edges, id=None, stoichiometry=None, targets=[], graph_features=[]):
+    def __init__(self, nodes, edges, targets=[], graph_features=[], labels=[], positions=[], id=None, stoichiometry=None):
 
         """Constructor
 
         Args:
             id (string): Identifier inferred from the file name.
             stoichiometry (string): Stoichiometry of the molecule.
+            labels (list[string]): List of labels for visualisation.
+            positions (list[list[float]]): List of 3d lists of float xyz positions for visualisation.
             nodes (list[list[floats]]): List of node feature vectors.
             edges (list[list[int], list[float]]): List with individual sublists for connected node indices as well as edge features.
             targets (list[float]): List of targets/labels associated to graph (e.g. HOMO-LUMO gap).
@@ -25,6 +27,9 @@ class Graph:
 
         self.id = id
         self.stoichiometry = stoichiometry
+        self.labels = labels
+        self.positions = positions
+
         self.nodes = nodes
         self.edges = edges
         self.targets = targets

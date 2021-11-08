@@ -22,7 +22,7 @@ def main():
     path = '/home/hkneiding/Desktop/nbo data/the_random_500/'
     # setup file list
     files = [file for file in os.listdir(path) if file.endswith(".log")]
-    # files = files[0:100]
+    files = files[0:1]
 
     # get settings
     settings = GraphGeneratorSettings.from_file('./run.config')
@@ -49,7 +49,6 @@ def main():
 
     end = time.time()
     print('Elapsed time: ' + str(end - start))
-    exit()
 
     for graph in graphs:
 

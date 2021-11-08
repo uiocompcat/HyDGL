@@ -54,12 +54,42 @@ class GraphGenerator:
         # get targets
         targets = self._get_targets(qm_data)
 
+        # get labels
+        labels = self._get_node_labels(qm_data)
+        # get positions
+        positions = self._get_node_positions(qm_data)
+
         return Graph(nodes,
                      edges,
+                     targets=targets,
+                     graph_features=graph_features,
                      id=qm_data.id,
                      stoichiometry=qm_data.stoichiometry,
-                     targets=targets,
-                     graph_features=graph_features)
+                     labels=labels,
+                     positions=positions
+                     )
+
+    def _get_node_labels(self, qm_data: QmData):
+
+        """Gets the labels for the nodes in terms of the element identifiers.
+
+        Returns:
+            list[string]: List of element identifiers.
+        """
+
+        node_indices = self._get_nodes_to_extract_indices(qm_data)
+        return [ElementLookUpTable.get_element_identifier(qm_data.atomic_numbers[node_index]) for node_index in node_indices]
+
+    def _get_node_positions(self, qm_data: QmData):
+
+        """Gets the 3d positions for the nodes in terms of the element identifiers.
+
+        Returns:
+            list[list[float]]: List of 3d positions.
+        """
+
+        node_indices = self._get_nodes_to_extract_indices(qm_data)
+        return [(qm_data.geometric_data[node_index]) for node_index in node_indices]
 
     def _get_edges(self, qm_data: QmData):
 
@@ -271,7 +301,24 @@ class GraphGenerator:
             list[list[floats]]: List of feature vectors of nodes.
         """
 
+        node_indices = self._get_nodes_to_extract_indices(qm_data)
+
         nodes = []
+        for i in range(len(node_indices)):
+
+            nodes.append(self._get_individual_node(qm_data, node_indices[i]))
+
+        return nodes
+
+    def _get_nodes_to_extract_indices(self, qm_data: QmData):
+
+        """Gets the list of node indices to be extracted depending on the used hydrogen mode.
+
+        Returns:
+            list[int]: List of node indices to extract.
+        """
+
+        node_indices = []
         for i in range(qm_data.n_atoms):
 
             # skip if hydrogen mode is not explicit
@@ -279,11 +326,7 @@ class GraphGenerator:
                 if qm_data.atomic_numbers[i] == 1:
                     continue
 
-            # get ith node
-            node = self._get_individual_node(qm_data, i)
-
-            # append fully featurised node to nodes list
-            nodes.append(node)
+            node_indices.append(i)
 
         # operations only relevant when not modelling hydrogens explicitly
         if self.settings.hydrogen_mode == HydrogenMode.OMIT or self.settings.hydrogen_mode == HydrogenMode.IMPLICIT:
@@ -291,12 +334,10 @@ class GraphGenerator:
             # check for hydride hydrogens to add explicitly
             hydride_bond_indices = self._get_hydride_bond_indices(qm_data)
             for i in range(len(hydride_bond_indices)):
-                # get node
-                node = self._get_individual_node(qm_data, hydride_bond_indices[i][0])
-                # insert at correct place in node list
-                nodes.insert(hydride_bond_indices[i][0], node)
+                node_indices.append(hydride_bond_indices[i][0])
 
-        return nodes
+        # sort list before returning so that the order is correct
+        return sorted(node_indices)
 
     def _get_individual_node(self, qm_data: QmData, atom_index: int):
 
