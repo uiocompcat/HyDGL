@@ -239,8 +239,8 @@ class Graph:
             z=z_nodes,
             mode='markers',
             marker=dict(symbol='circle',
-                        size=[ElementLookUpTable.atom_format_dict[element]['size'] for element in node_labels],
-                        color=[ElementLookUpTable.atom_format_dict[element]['color'] for element in node_labels]),
+                        size=[ElementLookUpTable.get_element_format_size(element) for element in node_labels],
+                        color=[ElementLookUpTable.get_element_format_colour(element) for element in node_labels]),
             text=text,
             hoverinfo='text'
         )
