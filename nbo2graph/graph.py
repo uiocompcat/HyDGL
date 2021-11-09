@@ -40,7 +40,12 @@ class Graph:
 
         out = 'Graph Info:\n\n'
         out += f'ID: {self.id}\nStoichiometry: {self.stoichiometry}\n\n'
-        out += f'Number of nodes: {len(self.nodes)}\nNumber of edges: {len(self.edges)}\nNumber of graph features: {len(self.graph_features)}\n'
+        out += f'Number of nodes: {len(self.nodes)}\n'
+        out += f'Number of edges: {len(self.edges)}\n\n'
+
+        out += f'Number of node features: {len(self.nodes[0])}\n'
+        out += f'Number of edge features: {len(self.edges[0][1])}\n'
+        out += f'Number of graph features: {len(self.graph_features)}\n'
         out += f'Number of targets: {len(self.targets)}\nIs connected: {self.is_connected()}\n\n'
 
         out += f'Nodes:\n{self.nodes}\n\n'
