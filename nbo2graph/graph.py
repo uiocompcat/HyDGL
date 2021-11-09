@@ -1,9 +1,10 @@
 import torch
 # from datetime import datetime
+import plotly.graph_objects as go
 from torch_geometric.data import Data
 
 # from nbo2graph.file_handler import FileHandler
-# from nbo2graph.element_look_up_table import ElementLookUpTable
+from nbo2graph.element_look_up_table import ElementLookUpTable
 
 
 class Graph:
@@ -173,3 +174,107 @@ class Graph:
                 adjacent_nodes.append(adjacent_node_index)
 
         return adjacent_nodes
+
+    def get_node_label_dict(self):
+
+        node_label_dict = {}
+        for i in range(len(self.labels)):
+            node_label_dict[i] = self.labels[i]
+        return node_label_dict
+
+    def get_node_position_dict(self):
+
+        node_position_dict = {}
+        for i in range(len(self.positions)):
+            node_position_dict[i] = self.positions[i]
+        return node_position_dict
+
+    def visualise(self):
+
+        # set up node label and feature lists
+        node_features = self.nodes
+        node_labels = self.labels
+
+        # set up edge index and feature lists
+        edge_indices = [x[0] for x in self.edges] + [list(reversed(x[0])) for x in self.edges]
+        edge_features = [x[1] for x in self.edges * 2]
+
+        # get 3d positions
+        position_dict = self.get_node_position_dict()
+
+        # seperate the x, y, z coordinates for Plotly
+        x_nodes = [position_dict[key][0] for key in position_dict.keys()]
+        y_nodes = [position_dict[key][1] for key in position_dict.keys()]
+        z_nodes = [position_dict[key][2] for key in position_dict.keys()]
+
+        # we need to create lists that contain the starting and ending coordinates of each edge.
+        x_edges, y_edges, z_edges = [], [], []
+
+        # create lists holding midpoints that we will use to anchor text
+        xtp, ytp, ztp = [], [], []
+
+        # need to fill these with all of the coordinates
+        for edge in edge_indices:
+
+            # format: [beginning, ending, None]
+            x_coords = [position_dict[edge[0]][0], position_dict[edge[1]][0], None]
+            x_edges += x_coords
+            xtp.append(0.5 * (position_dict[edge[0]][0] + position_dict[edge[1]][0]))
+
+            y_coords = [position_dict[edge[0]][1], position_dict[edge[1]][1], None]
+            y_edges += y_coords
+            ytp.append(0.5 * (position_dict[edge[0]][1] + position_dict[edge[1]][1]))
+
+            z_coords = [position_dict[edge[0]][2], position_dict[edge[1]][2], None]
+            z_edges += z_coords
+            ztp.append(0.5 * (position_dict[edge[0]][2] + position_dict[edge[1]][2]))
+
+        # get desc text for nodes
+        text = [f'{x[0]} | {x[1]}' for x in zip(node_labels, node_features)]
+        # create a trace for the nodes
+        trace_nodes = go.Scatter3d(
+            name='Nodes',
+            x=x_nodes,
+            y=y_nodes,
+            z=z_nodes,
+            mode='markers',
+            marker=dict(symbol='circle',
+                        size=[ElementLookUpTable.atom_format_dict[element]['size'] for element in node_labels],
+                        color=[ElementLookUpTable.atom_format_dict[element]['color'] for element in node_labels]),
+            text=text,
+            hoverinfo='text'
+        )
+
+        # get desc text for edges
+        text = [f'{x[0]} | {x[1]}' for x in zip(edge_indices, edge_features)]
+        # create edge text
+        trace_weights = go.Scatter3d(x=xtp, y=ytp, z=ztp,
+                                     mode='markers',
+                                     marker=dict(color='rgb(180,180,180)', size=2),
+                                     text=text, hoverinfo='text')
+
+        # create a trace for the edges
+        trace_edges = go.Scatter3d(
+            name='Edges',
+            x=x_edges,
+            y=y_edges,
+            z=z_edges,
+            mode='lines',
+            line=dict(color='black', width=3.5),
+            hoverinfo='none'
+        )
+
+        # Include the traces we want to plot and create a figure
+        data = [trace_nodes, trace_edges, trace_weights]
+        fig = go.Figure(data=data)
+
+        # get highest and lowest coordinate value to scale graph correctly
+        low_coord = min(x_nodes + y_nodes + z_nodes)
+        high_coord = max(x_nodes + y_nodes + z_nodes)
+
+        # remove grid and adjust all axes to same range, no legend
+        fig.update_layout(showlegend=False,
+                          scene=dict(xaxis=dict(showbackground=False, visible=False, range=[low_coord, high_coord]),
+                                     yaxis=dict(showbackground=False, visible=False, range=[low_coord, high_coord]),
+                                     zaxis=dict(showbackground=False, visible=False, range=[low_coord, high_coord])))
+        fig.show()
