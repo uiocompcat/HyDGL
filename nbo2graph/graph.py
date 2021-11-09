@@ -9,7 +9,7 @@ from nbo2graph.element_look_up_table import ElementLookUpTable
 
 class Graph:
 
-    """Class for reading relevant data from QM output files."""
+    """Class for representing chemical graphs with all necessary information."""
 
     def __init__(self, nodes, edges, targets=[], graph_features=[], labels=[], positions=[], id=None, stoichiometry=None):
 
@@ -35,6 +35,20 @@ class Graph:
         self.edges = edges
         self.targets = targets
         self.graph_features = graph_features
+
+    def __str__(self):
+
+        out = 'Graph Info:\n\n'
+        out += f'ID: {self.id}\nStoichiometry: {self.stoichiometry}\n\n'
+        out += f'Number of nodes: {len(self.nodes)}\nNumber of edges: {len(self.edges)}\nNumber of graph features: {len(self.graph_features)}\n'
+        out += f'Number of targets: {len(self.targets)}\nIs connected: {self.is_connected()}\n\n'
+
+        out += f'Nodes:\n{self.nodes}\n\n'
+        out += f'Edges:\n{self.edges}\n\n'
+        out += f'Graph features:\n{self.graph_features}\n\n'
+        out += f'Graph targets:\n{self.targets}\n\n'
+
+        return out
 
     def get_pytorch_data_object(self) -> Data:
 
@@ -175,13 +189,6 @@ class Graph:
 
         return adjacent_nodes
 
-    def get_node_label_dict(self):
-
-        node_label_dict = {}
-        for i in range(len(self.labels)):
-            node_label_dict[i] = self.labels[i]
-        return node_label_dict
-
     def get_node_position_dict(self):
 
         node_position_dict = {}
@@ -190,6 +197,8 @@ class Graph:
         return node_position_dict
 
     def visualise(self):
+
+        """Plots the graph with appropriate nodes and edges using plotly."""
 
         # set up node label and feature lists
         node_features = self.nodes

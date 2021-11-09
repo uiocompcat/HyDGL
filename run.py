@@ -54,7 +54,7 @@ def main():
     for graph in graphs:
 
         print(graph)
-        graph.visualise()
+        # graph.visualise()
 
 
 # entry point
