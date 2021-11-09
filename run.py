@@ -1,4 +1,5 @@
 import os
+from statistics import mean
 import time
 
 # import plotly.graph_objects as go
@@ -22,8 +23,8 @@ def main():
     path = '/home/hkneiding/Desktop/nbo data/the_random_500/'
     # setup file list
     files = [file for file in os.listdir(path) if file.endswith(".log")]
-    files = files[11:12]
-    print(files)
+    # files = files[11:12]
+    # print(files)
 
     # get settings
     settings = GraphGeneratorSettings.from_file('./run.config')
@@ -31,29 +32,35 @@ def main():
     # set up graph generator with parameters
     gg = GraphGenerator(settings)
 
-    graphs = [gg.generate_graph(DataParser(path + file).parse()) for file in files]
+    # graphs = [gg.generate_graph(DataParser(path + file).parse()) for file in files]
 
-    # graphs = []
-    # for i in range(len(files)):
-    #     print(files[i] + ' -- ' + str(i + 1))
-    #     start1 = time.time()
-    #     qm_data = DataParser(path + files[i]).parse()
-    #     end1 = time.time()
+    time_a = []
+    time_b = []
 
-    #     # generate graph from qm_data object
-    #     start2 = time.time()
-    #     graphs.append(gg.generate_graph(qm_data))
-    #     end2 = time.time()
+    graphs = []
+    for i in range(len(files)):
+        print(files[i] + ' -- ' + str(i + 1))
+        start1 = time.time()
+        qm_data = DataParser(path + files[i]).parse()
+        end1 = time.time()
 
-    #     print(end1 - start1)
-    #     print(end2 - start2)
+        # generate graph from qm_data object
+        start2 = time.time()
+        graphs.append(gg.generate_graph(qm_data))
+        end2 = time.time()
+
+        time_a.append(end1 - start1)
+        time_b.append(end2 - start2)
 
     end = time.time()
     print('Elapsed time: ' + str(end - start))
 
-    for graph in graphs:
+    print(mean(time_a))
+    print(mean(time_b))
 
-        print(graph)
+    # for graph in graphs:
+
+        # print(graph)
         # graph.visualise()
 
 
