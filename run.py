@@ -1,11 +1,9 @@
 import os
-import sys
-from statistics import mean
-import time
 
-from pympler import asizeof
-
-# import plotly.graph_objects as go
+import pickle
+import numpy as np
+from nbo2graph.enums.bond_determination_mode import BondDeterminationMode
+from nbo2graph.graph import Graph
 
 from nbo2graph.graph_generator_settings import GraphGeneratorSettings
 
@@ -19,50 +17,34 @@ from nbo2graph.graph_generator import GraphGenerator
 
 def main():
 
-    start = time.time()
+    # # setup target directory path
+    # path = '/home/hkneiding/Desktop/nbo data/the_random_500/'
+    # files = [file for file in os.listdir(path) if file.endswith(".log")]
+    # qm_data_list = [DataParser(path + file).parse() for file in files]
 
-    # setup target directory path
-    # path = '/home/hkneiding/Desktop/nbo data/'
-    path = '/home/hkneiding/Desktop/nbo data/the_random_500/'
-    # setup file list
-    files = [file for file in os.listdir(path) if file.endswith(".log")]
-    files = files[0:1]
-    # print(files)
+    # # write to file
+    # with open('/home/hkneiding/Desktop/r500-qmdata.pickle', 'wb') as handle:
+    #     pickle.dump(qm_data_list, handle)
 
-    # get settings
-    settings = GraphGeneratorSettings.from_file('./run.config')
+    # # load from file
+    # file_to_read = open("/home/hkneiding/Desktop/nbo data/the_random_500/r500-qmdata.pickle", "rb")
+    # qm_data_list = pickle.load(file_to_read)
+    # file_to_read.close()
 
-    # set up graph generator with parameters
-    gg = GraphGenerator(settings)
+    # # get settings
+    # settings = GraphGeneratorSettings.from_file('./run.config')
 
-    graphs = [gg.generate_graph(DataParser(path + file).parse()) for file in files]
+    # # set up graph generator with parameters
+    # gg = GraphGenerator(settings)
 
-    # time_a = []
-    # time_b = []
+    # graphs = [gg.generate_graph(qm_data) for qm_data in qm_data_list]
 
-    # graphs = []
-    # for i in range(len(files)):
-    #     print(files[i] + ' -- ' + str(i + 1))
-    #     start1 = time.time()
-    #     qm_data = DataParser(path + files[i]).parse()
-    #     end1 = time.time()
+    ggs = GraphGeneratorSettings.default()
+    gg = GraphGenerator(settings=ggs)
+    graph = gg.generate_graph(DataParser('/home/hkneiding/Desktop/nbo data/OREDIA.log').parse())
 
-    #     # generate graph from qm_data object
-    #     start2 = time.time()
-    #     graphs.append(gg.generate_graph(qm_data))
-    #     end2 = time.time()
-
-    #     time_a.append(end1 - start1)
-    #     time_b.append(end2 - start2)
-
-    end = time.time()
-    print('Elapsed time: ' + str(end - start))
-
-    print(graphs[0])
-
-    # print(mean(time_a))
-    # print(mean(time_b))
-    # print(asizeof.asizeof(graphs))
+    print(graph)
+    graph.visualise()
 
     # for graph in graphs:
 
