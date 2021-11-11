@@ -27,6 +27,7 @@ Requirements
 - Python 3.7 or higher
 - pytorch 1.9
 - pytorch_geometric (pyg) 2.0
+- plotly 5.0.0 or higher
 
 What is under the hood?
 -----------
