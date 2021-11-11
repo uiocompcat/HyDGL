@@ -72,7 +72,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             HydrogenMode.EXPLICIT,
             BondDeterminationMode.WIBERG,
-            [NodeFeature.BOND_ORDER_TOTAL],
+            [NodeFeature.WIBERG_BOND_ORDER_TOTAL],
             [
                 [0.5922], [1.5640], [3.1352], [4.0037], [2.7551], [3.9207], [3.9888], [3.8371],
                 [3.1270], [3.9977], [3.9509], [3.9440], [3.9536], [3.9935], [3.1278], [3.9975],
@@ -87,7 +87,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             HydrogenMode.EXPLICIT,
             BondDeterminationMode.NLMO,
-            [NodeFeature.BOND_ORDER_TOTAL],
+            [NodeFeature.NLMO_BOND_ORDER_TOTAL],
             [
                 [0.5744], [1.022], [2.2828], [3.3946], [1.9874], [3.3227], [3.5845], [3.1819],
                 [2.2794], [3.5223], [3.5658], [3.7724], [3.5903], [3.7262], [2.2683], [3.532],
@@ -405,7 +405,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             HydrogenMode.OMIT,
             BondDeterminationMode.NLMO,
-            [NodeFeature.ATOMIC_NUMBERS, NodeFeature.BOND_ORDER_TOTAL],
+            [NodeFeature.ATOMIC_NUMBERS, NodeFeature.NLMO_BOND_ORDER_TOTAL],
             4,
             [16, 1.9874]
         ],
@@ -516,7 +516,7 @@ class TestGraphGenerator(unittest.TestCase):
         [
             HydrogenMode.EXPLICIT,
             BondDeterminationMode.WIBERG,
-            [EdgeFeature.BOND_ORDER],
+            [EdgeFeature.WIBERG_BOND_ORDER],
             1,
             [
                 [[2, 3], [1.4785]], [[2, 6], [1.2435]], [[3, 4], [1.2259]], [[3, 9], [1.0752]],
@@ -1141,7 +1141,7 @@ class TestGraphGenerator(unittest.TestCase):
         # get result
         result = gg._get_index_matrix(qm_data)
 
-        self.assertEqual(result, qm_data.wiberg_index_matrix)
+        self.assertEqual(result, qm_data.wiberg_bond_order_matrix)
 
     @parameterized.expand([
 

@@ -64,15 +64,16 @@ class QmData():
     natural_electron_configuration: list[list[float]] = None
 
     # bond data
-    wiberg_index_matrix: list[list[float]] = None
-    wiberg_atom_totals: list[float] = None
+    wiberg_bond_order_matrix: list[list[float]] = None
+    wiberg_bond_order_totals: list[float] = None
 
     # lmo bond data
     lmo_bond_order_matrix: list[list[float]] = None
+    lmo_bond_order_totals: list[float] = None
 
     # nbo bond data
-    nbo_bond_order_matrix: list[list[float]] = None
-    nbo_bond_order_totals: list[float] = None
+    nlmo_bond_order_matrix: list[list[float]] = None
+    nlmo_bond_order_totals: list[float] = None
 
     # nbo data
     lone_pair_data = None
@@ -146,10 +147,13 @@ class QmData():
         self.homo_lumo_gap_delta = abs(self.svp_homo_lumo_gap - self.tzvp_homo_lumo_gap)
 
         # calculate Wiberg atom-wise totals
-        self.wiberg_atom_totals = [sum(bond_orders) for bond_orders in self.wiberg_index_matrix]
+        self.wiberg_bond_order_totals = [sum(bond_orders) for bond_orders in self.wiberg_bond_order_matrix]
 
         # calculate nbo bond order atom-wise totals
-        self.nbo_bond_order_totals = [sum(bond_orders) for bond_orders in self.nbo_bond_order_matrix]
+        self.lmo_bond_order_totals = [sum(bond_orders) for bond_orders in self.lmo_bond_order_matrix]
+
+        # calculate nbo bond order atom-wise totals
+        self.nlmo_bond_order_totals = [sum(bond_orders) for bond_orders in self.nlmo_bond_order_matrix]
 
         # merge nbo data with corresponding energies
         self.lone_pair_data_full = self._merge_nbo_data(self.lone_pair_data)

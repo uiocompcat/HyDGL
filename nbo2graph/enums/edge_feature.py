@@ -5,8 +5,10 @@ class EdgeFeature(Enum):
 
     '''Enum class for the different node features to be used.'''
 
-    # will use the bond order of specified mode (Wiberg, NLMO)
-    BOND_ORDER = auto()
+    # bond orders
+    WIBERG_BOND_ORDER = auto()
+    LMO_BOND_ORDER = auto()
+    NLMO_BOND_ORDER = auto()
 
     # euclidean distance between atoms
     BOND_DISTANCE = auto()

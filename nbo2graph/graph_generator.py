@@ -160,12 +160,13 @@ class GraphGenerator:
         # set up variable for edge; format: [ [i,j], [feature1, feature2, ...] ]
         edge = [bond_atom_indices, []]
 
-        # get appropriate index matrix
-        index_matrix = self._get_index_matrix(qm_data)
-
-        # append bond order as feature if requested
-        if EdgeFeature.BOND_ORDER in self.settings.edge_features:
-            edge[1].append(index_matrix[edge[0][0]][edge[0][1]])
+        # append requested bond orders
+        if EdgeFeature.WIBERG_BOND_ORDER in self.settings.edge_features:
+            edge[1].append(qm_data.wiberg_bond_order_matrix[edge[0][0]][edge[0][1]])
+        if EdgeFeature.LMO_BOND_ORDER in self.settings.edge_features:
+            edge[1].append(qm_data.lmo_bond_order_matrix[edge[0][0]][edge[0][1]])
+        if EdgeFeature.NLMO_BOND_ORDER in self.settings.edge_features:
+            edge[1].append(qm_data.nlmo_bond_order_matrix[edge[0][0]][edge[0][1]])
 
         # add bond distance as feature to edges
         if EdgeFeature.BOND_DISTANCE in self.settings.edge_features:
@@ -376,18 +377,16 @@ class GraphGenerator:
             node.extend([qm_data.natural_electron_configuration[i][k] for k in self.settings.natural_orbital_configuration_indices])
 
         # add bond order totals
-        if NodeFeature.BOND_ORDER_TOTAL in self.settings.node_features:
-            # Wiberg mode
-            if self.settings.bond_determination_mode == BondDeterminationMode.WIBERG:
-                node.append(qm_data.wiberg_atom_totals[i])
-            # LMO mode
-            elif self.settings.bond_determination_mode == BondDeterminationMode.LMO:
-                node.append(qm_data.nbo_bond_order_totals[i])
-            # NLMO mode
-            elif self.settings.bond_determination_mode == BondDeterminationMode.NLMO:
-                node.append(qm_data.nbo_bond_order_totals[i])
-            else:
-                warnings.warn('Bond determination mode ' + str(self.settings.bond_determination_mode) + ' not recognised. Skipping')
+
+        # Wiberg mode
+        if NodeFeature.WIBERG_BOND_ORDER_TOTAL in self.settings.node_features:
+            node.append(qm_data.wiberg_bond_order_totals[i])
+        # LMO mode
+        if NodeFeature.LMO_BOND_ORDER_TOTAL in self.settings.node_features:
+            node.append(qm_data.lmo_bond_order_matrix[i])
+        # NLMO mode
+        if NodeFeature.NLMO_BOND_ORDER_TOTAL in self.settings.node_features:
+            node.append(qm_data.nlmo_bond_order_totals[i])
 
         # add number of lone pairs if requested
         if NodeFeature.LONE_PAIR_MAX in self.settings.node_features or \
@@ -684,13 +683,13 @@ class GraphGenerator:
 
         # Wiberg mode
         if self.settings.bond_determination_mode == BondDeterminationMode.WIBERG:
-            return qm_data.wiberg_index_matrix
+            return qm_data.wiberg_bond_order_matrix
         # LMO mode
         elif self.settings.bond_determination_mode == BondDeterminationMode.LMO:
             return qm_data.lmo_bond_order_matrix
         # NLMO mode
         elif self.settings.bond_determination_mode == BondDeterminationMode.NLMO:
-            return qm_data.nbo_bond_order_matrix
+            return qm_data.nlmo_bond_order_matrix
         # raise exception otherwise
         else:
             raise ValueError('Bond determination mode not recognised.')

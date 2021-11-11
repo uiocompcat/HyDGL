@@ -9,7 +9,9 @@ class NodeFeature(Enum):
     ATOMIC_NUMBERS = auto()
     NATURAL_ATOMIC_CHARGES = auto()
 
-    BOND_ORDER_TOTAL = auto()
+    WIBERG_BOND_ORDER_TOTAL = auto()
+    LMO_BOND_ORDER_TOTAL = auto()
+    NLMO_BOND_ORDER_TOTAL = auto()
 
     # electron configuration
     NATURAL_ELECTRON_CONFIGURATION_S = auto()

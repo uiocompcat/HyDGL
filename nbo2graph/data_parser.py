@@ -67,10 +67,10 @@ class DataParser:
                 qm_data.natural_electron_configuration, i = self._extract_natural_electron_configuration(i + 2)
 
             if 'Wiberg bond index matrix' in self.lines[i]:
-                qm_data.wiberg_index_matrix, i = self._extract_index_matrix(i + 4)
+                qm_data.wiberg_bond_order_matrix, i = self._extract_index_matrix(i + 4)
 
             if 'Atom-Atom Net Linear NLMO/NPA' in self.lines[i]:
-                qm_data.nbo_bond_order_matrix, i = self._extract_index_matrix(i + 4)
+                qm_data.nlmo_bond_order_matrix, i = self._extract_index_matrix(i + 4)
 
             if 'Bond orbital / Coefficients / Hybrids' in self.lines[i]:
                 result, i = self._extract_nbo_data(i + 2)
