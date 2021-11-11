@@ -5,6 +5,9 @@ class QmTarget(Enum):
 
     '''Enum class for the different QM attributes to be used.'''
 
+    # POLARISABILITY
+    POLARISABILITY = auto()
+
     # dispersion energy
     SVP_DISPERSION_ENERGY = auto()
     TZVP_DISPERSION_ENERGY = auto()

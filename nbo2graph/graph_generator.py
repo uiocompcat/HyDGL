@@ -706,8 +706,6 @@ class GraphGenerator:
                 graph_feature_list.append(qm_data.n_atoms)
             elif self.settings.graph_features[i] == GraphFeature.MOLECULAR_MASS:
                 graph_feature_list.append(qm_data.molecular_mass)
-            elif self.settings.graph_features[i] == GraphFeature.POLARISABILITY:
-                graph_feature_list.append(qm_data.polarisability)
             elif self.settings.graph_features[i] == GraphFeature.CHARGE:
                 graph_feature_list.append(qm_data.charge)
             else:
@@ -781,6 +779,8 @@ class GraphGenerator:
                 target_list.append(qm_data.dipole_moment_delta)
             elif self.settings.targets[i] == QmTarget.HOMO_LUMO_GAP_DELTA:
                 target_list.append(qm_data.homo_lumo_gap_delta)
+            elif self.settings.targets[i] == QmTarget.POLARISABILITY:
+                target_list.append(qm_data.polarisability)
             else:
                 warnings.warn('Could not find target' + str(self.settings.targets[i]) + '.')
 

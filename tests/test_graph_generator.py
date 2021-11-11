@@ -692,11 +692,6 @@ class TestGraphGenerator(unittest.TestCase):
         ],
 
         [
-            [GraphFeature.POLARISABILITY],
-            [334.01]
-        ],
-
-        [
             [GraphFeature.N_ATOMS],
             [47]
         ],
@@ -723,6 +718,12 @@ class TestGraphGenerator(unittest.TestCase):
         self.assertEqual(result, expected)
 
     @parameterized.expand([
+
+        [
+            TEST_FILE_LALMER,
+            [QmTarget.POLARISABILITY],
+            [334.01]
+        ],
 
         [
             TEST_FILE_LALMER,

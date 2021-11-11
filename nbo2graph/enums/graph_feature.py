@@ -11,5 +11,3 @@ class GraphFeature(Enum):
     MOLECULAR_MASS = auto()
     # charge
     CHARGE = auto()
-    # POLARISABILITY
-    POLARISABILITY = auto()
