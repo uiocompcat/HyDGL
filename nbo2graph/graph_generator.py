@@ -119,29 +119,43 @@ class GraphGenerator:
 
     def _get_adjacency_list(self, qm_data: QmData):
 
-        # get appropriate index matrix
-        index_matrix = self._get_index_matrix(qm_data)
-
         adjacency_list = []
-        # iterate over half triangle matrix to determine bonds
-        for i in range(len(index_matrix) - 1):
-            for j in range(i + 1, len(index_matrix), 1):
 
-                # if larger than threshold --> add bond
-                if (index_matrix[i][j]) > self.settings.bond_threshold:
+        if self.settings.bond_determination_mode == BondDeterminationMode.NBO_BONDING_ORBITALS:
 
-                    # append the atom indices (pos 0)
-                    # and Wiberg bond index as a feature (pos 1)
+            for i in range(len(qm_data.bond_pair_data_full)):
+                # ignore hydrogens in omit and implicit mode
+                if self.settings.hydrogen_mode == HydrogenMode.OMIT or self.settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+                    if qm_data.atomic_numbers[qm_data.bond_pair_data_full[i][0][0]] == 1 or qm_data.atomic_numbers[qm_data.bond_pair_data_full[i][0][1]] == 1:
+                        continue
 
-                    # ignore hydrogens in omit and implicit mode
-                    if self.settings.hydrogen_mode == HydrogenMode.OMIT or self.settings.hydrogen_mode == HydrogenMode.IMPLICIT:
-                        if qm_data.atomic_numbers[i] == 1 or qm_data.atomic_numbers[j] == 1:
-                            continue
+                if not qm_data.bond_pair_data_full[i][0] in adjacency_list:
+                    adjacency_list.append(qm_data.bond_pair_data_full[i][0])
 
-                    # append edge with empty feature vector
-                    adjacency_list.append([i, j])
+            return sorted(adjacency_list)
+        else:
+            # get appropriate index matrix
+            index_matrix = self._get_index_matrix(qm_data)
 
-        return adjacency_list
+            # iterate over half triangle matrix to determine bonds
+            for i in range(len(index_matrix) - 1):
+                for j in range(i + 1, len(index_matrix), 1):
+
+                    # if larger than threshold --> add bond
+                    if (index_matrix[i][j]) > self.settings.bond_threshold:
+
+                        # append the atom indices (pos 0)
+                        # and Wiberg bond index as a feature (pos 1)
+
+                        # ignore hydrogens in omit and implicit mode
+                        if self.settings.hydrogen_mode == HydrogenMode.OMIT or self.settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+                            if qm_data.atomic_numbers[i] == 1 or qm_data.atomic_numbers[j] == 1:
+                                continue
+
+                        # append edge with empty feature vector
+                        adjacency_list.append([i, j])
+
+            return adjacency_list
 
     def _get_featurised_edge(self, bond_atom_indices: list[int], qm_data: QmData):
 

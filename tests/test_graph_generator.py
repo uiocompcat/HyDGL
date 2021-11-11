@@ -835,6 +835,7 @@ class TestGraphGenerator(unittest.TestCase):
     @parameterized.expand([
 
         [
+            TEST_FILE_LALMER,
             BondDeterminationMode.WIBERG,
             1,
             [
@@ -846,11 +847,51 @@ class TestGraphGenerator(unittest.TestCase):
             ]
         ],
 
+        [
+            TEST_FILE_LALMER,
+            BondDeterminationMode.LMO,
+            1,
+            [
+                [2, 3], [3, 4], [3, 9], [4, 5], [5, 6], [8, 9], [8, 13],
+                [9, 10], [10, 11], [11, 12], [12, 13], [13, 19], [14, 15],
+                [14, 19], [15, 16], [15, 21], [16, 17], [17, 18], [18, 19],
+                [20, 21], [21, 22], [22, 23], [23, 24], [26, 29], [26, 30]
+            ]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            BondDeterminationMode.NLMO,
+            1,
+            [
+                [2, 3], [3, 4], [3, 9], [4, 5], [5, 6], [8, 9], [8, 13],
+                [9, 10], [10, 11], [11, 12], [12, 13], [13, 19], [14, 15],
+                [14, 19], [15, 16], [15, 21], [16, 17], [17, 18], [18, 19],
+                [20, 21], [21, 22], [22, 23], [23, 24], [26, 29], [26, 30]
+            ]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            BondDeterminationMode.NBO_BONDING_ORBITALS,
+            1,
+            [
+                [1, 31], [1, 33], [2, 3], [2, 6], [3, 4], [3, 9], [4, 5],
+                [5, 6], [5, 44], [6, 7], [7, 32], [7, 45], [7, 46], [8, 9],
+                [8, 13], [9, 10], [10, 11], [10, 42], [11, 12], [11, 41],
+                [12, 13], [12, 37], [13, 19], [14, 15], [14, 19], [15, 16],
+                [15, 21], [16, 17], [16, 34], [17, 18], [17, 36], [18, 19],
+                [18, 40], [20, 21], [20, 24], [21, 22], [22, 23], [23, 24],
+                [23, 35], [24, 25], [25, 38], [25, 39], [25, 43], [26, 27],
+                [26, 28], [26, 29], [26, 30]
+            ]
+        ],
+
     ])
-    def test_get_adjacency_list(self, bond_determination_mode, bond_threshold, expected):
+    def test_get_adjacency_list(self, file, bond_determination_mode, bond_threshold, expected):
 
         # load data
-        qm_data = DataParser(TEST_FILE_LALMER).parse()
+        qm_data = DataParser(file).parse()
 
         # set up graph generator settings
         ggs = GraphGeneratorSettings(bond_determination_mode=bond_determination_mode, bond_threshold=bond_threshold)
@@ -860,7 +901,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         # get result
         result = gg._get_adjacency_list(qm_data)
-
+        print(result)
         self.assertEqual(result, expected)
 
     @parameterized.expand([

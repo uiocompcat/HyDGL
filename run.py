@@ -34,9 +34,8 @@ def main():
     # qm_data_list = pickle.load(file_to_read)
     # file_to_read.close()
 
-
-    ggs = GraphGeneratorSettings(node_features=[NodeFeature.ATOMIC_NUMBERS, NodeFeature.LONE_PAIR_MAX, NodeFeature.LONE_PAIRS_S],
-                                 edge_features=[EdgeFeature.BOND_DISTANCE], bond_threshold=0.1)
+    ggs = GraphGeneratorSettings(bond_determination_mode=BondDeterminationMode.WIBERG,
+                                 edge_features=[EdgeFeature.BOND_ORBITAL_MAX, EdgeFeature.BOND_ORBITAL_DATA_S])
     gg = GraphGenerator(settings=ggs)
     graph = gg.generate_graph(DataParser('/home/hkneiding/Desktop/nbo data/OREDIA.log').parse())
     # graph = gg.generate_graph(DataParser('/home/hkneiding/Desktop/nbo data/the_random_500/LEZYOG.log').parse())

@@ -4,7 +4,6 @@ from enum import Enum, auto
 class BondDeterminationMode(Enum):
 
     '''Enum class for the different modes of determining bonds in the molecule.'''
-    # TODO naming convention for enums??
 
     # Use the Wiberg index matrix to determine bonds
     WIBERG = auto()
@@ -12,3 +11,6 @@ class BondDeterminationMode(Enum):
     LMO = auto()
     # Use the Natural Localised Molecular Orbitals (NLMO) to determine bonds
     NLMO = auto()
+
+    # use bonds as calculated from nbo analysis
+    NBO_BONDING_ORBITALS = auto()
