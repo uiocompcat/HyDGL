@@ -287,7 +287,9 @@ class Graph:
         high_coord = max(x_nodes + y_nodes + z_nodes)
 
         # remove grid and adjust all axes to same range, no legend
-        fig.update_layout(paper_bgcolor='#040466',
+        fig.update_layout(title='ID: ' + self.id,
+                          title_font_color='teal',
+                          paper_bgcolor='#040466',
                           showlegend=False,
                           scene=dict(aspectmode='manual', aspectratio=dict(x=1, y=1, z=1),
                                      xaxis=dict(showbackground=False, visible=False, range=[low_coord, high_coord]),
