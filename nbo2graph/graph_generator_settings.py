@@ -25,6 +25,7 @@ class GraphGeneratorSettings:
                  targets: list[QmTarget] = [],
                  bond_determination_mode: BondDeterminationMode = DEFAULT_BOND_DETERMINATION_MODE,
                  bond_threshold=DEFAULT_BOND_THRESHOLD,
+                 bond_threshold_metal=None,
                  hydrogen_mode=DEFAULT_HYDROGEN_MODE,
                  hydrogen_count_threshold=DEFAULT_HYDROGEN_COUNT_THRESHOLD):
 
@@ -52,6 +53,11 @@ class GraphGeneratorSettings:
         self.bond_determination_mode = bond_determination_mode
         self.bond_threshold = bond_threshold
 
+        if bond_threshold_metal is None:
+            self.bond_threshold_metal = self.bond_threshold
+        else:
+            self.bond_threshold_metal = bond_threshold_metal
+
         # hydrogen mode
         self.hydrogen_mode = hydrogen_mode
         self.hydrogen_count_threshold = hydrogen_count_threshold
@@ -74,6 +80,7 @@ class GraphGeneratorSettings:
             self.targets == other.targets and \
             self.bond_determination_mode == other.bond_determination_mode and \
             self.bond_threshold == other.bond_threshold and \
+            self.bond_threshold_metal == other.bond_threshold_metal and \
             self.hydrogen_mode == other.hydrogen_mode and \
             self.hydrogen_count_threshold == other.hydrogen_count_threshold and \
             self.lone_pair_orbital_indices == other.lone_pair_orbital_indices and \

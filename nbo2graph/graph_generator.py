@@ -139,10 +139,17 @@ class GraphGenerator:
 
             # iterate over half triangle matrix to determine bonds
             for i in range(len(index_matrix) - 1):
+
                 for j in range(i + 1, len(index_matrix), 1):
 
+                    # decide which threshold to use
+                    if qm_data.atomic_numbers[i] in ElementLookUpTable.transition_metal_atomic_numbers or qm_data.atomic_numbers[j] in ElementLookUpTable.transition_metal_atomic_numbers:
+                        threshold = self.settings.bond_threshold_metal
+                    else:
+                        threshold = self.settings.bond_threshold
+
                     # if larger than threshold --> add bond
-                    if (index_matrix[i][j]) > self.settings.bond_threshold:
+                    if (index_matrix[i][j]) > threshold:
 
                         # append the atom indices (pos 0)
                         # and Wiberg bond index as a feature (pos 1)
