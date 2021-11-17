@@ -17,7 +17,7 @@ class ElementLookUpTable():
                            'Ds', 'Rg', 'Cn', 'Nh', 'Fl', 'Mc', 'Lv', 'Ts', 'Og']
 
     transition_metal_atomic_numbers = [21, 22, 23, 24, 25, 26, 27, 28, 29, 30,                          # first block
-                                       39, 49, 41, 42, 43, 44, 45, 46, 47, 48,                          # second block
+                                       39, 40, 41, 42, 43, 44, 45, 46, 47, 48,                          # second block
                                        57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71,      # lanthanides
                                        72, 73, 74, 75, 76, 77, 78, 79, 80,                              # third block
                                        89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103,  # actinides
