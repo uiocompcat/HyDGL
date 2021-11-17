@@ -34,16 +34,15 @@ def main():
     qm_data_list = pickle.load(file_to_read)
     file_to_read.close()
 
-    ggs = GraphGeneratorSettings(bond_determination_mode=BondDeterminationMode.WIBERG)
+    ggs = GraphGeneratorSettings(bond_determination_mode=BondDeterminationMode.WIBERG, bond_threshold=0.3, bond_threshold_metal=0.05)
     gg = GraphGenerator(settings=ggs)
-    for i in range(len(qm_data_list)):
 
+    for i in range(len(qm_data_list)):
         graph = gg.generate_graph(qm_data_list[i])
         if not graph.is_connected():
-            graph.visualise()
-            break
-
-
+            # graph.visualise()
+            # break
+            print(i)
     # ggs = GraphGeneratorSettings(bond_determination_mode=BondDeterminationMode.WIBERG,
     #                              edge_features=[EdgeFeature.BOND_ORBITAL_MAX, EdgeFeature.BOND_ORBITAL_DATA_S])
     # gg = GraphGenerator(settings=ggs)
