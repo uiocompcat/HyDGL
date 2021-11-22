@@ -838,6 +838,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             BondDeterminationMode.WIBERG,
             1,
+            1,
             [
                 [2, 3], [2, 6], [3, 4], [3, 9], [4, 5], [5, 6], [6, 7],
                 [8, 9], [8, 13], [9, 10], [10, 11], [11, 12], [12, 13],
@@ -851,6 +852,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             BondDeterminationMode.LMO,
             1,
+            1,
             [
                 [2, 3], [3, 4], [3, 9], [4, 5], [5, 6], [8, 9], [8, 13],
                 [9, 10], [10, 11], [11, 12], [12, 13], [13, 19], [14, 15],
@@ -862,6 +864,7 @@ class TestGraphGenerator(unittest.TestCase):
         [
             TEST_FILE_LALMER,
             BondDeterminationMode.NLMO,
+            1,
             1,
             [
                 [2, 3], [3, 4], [3, 9], [4, 5], [5, 6], [8, 9], [8, 13],
@@ -875,6 +878,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             BondDeterminationMode.NBO_BONDING_ORBITALS,
             1,
+            1,
             [
                 [1, 31], [1, 33], [2, 3], [2, 6], [3, 4], [3, 9], [4, 5],
                 [5, 6], [5, 44], [6, 7], [7, 32], [7, 45], [7, 46], [8, 9],
@@ -887,14 +891,43 @@ class TestGraphGenerator(unittest.TestCase):
             ]
         ],
 
+        [
+            TEST_FILE_LALMER,
+            BondDeterminationMode.WIBERG,
+            1,
+            0.07,
+            [
+                [0, 2], [0, 8], [0, 14], [0, 20], [0, 27],
+                [2, 3], [2, 6], [3, 4], [3, 9], [4, 5], [5, 6], [6, 7],
+                [8, 9], [8, 13], [9, 10], [10, 11], [11, 12], [12, 13],
+                [13, 19], [14, 15], [14, 19], [15, 16], [15, 21], [16, 17],
+                [17, 18], [18, 19], [20, 21], [20, 24], [21, 22], [22, 23],
+                [23, 24], [24, 25], [26, 28], [26, 29], [26, 30]
+            ]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            BondDeterminationMode.NLMO,
+            1,
+            0.05,
+            [
+                [0, 2], [0, 20],
+                [2, 3], [3, 4], [3, 9], [4, 5], [5, 6], [8, 9], [8, 13],
+                [9, 10], [10, 11], [11, 12], [12, 13], [13, 19], [14, 15],
+                [14, 19], [15, 16], [15, 21], [16, 17], [17, 18], [18, 19],
+                [20, 21], [21, 22], [22, 23], [23, 24], [26, 29], [26, 30]
+            ]
+        ],
+
     ])
-    def test_get_adjacency_list(self, file, bond_determination_mode, bond_threshold, expected):
+    def test_get_adjacency_list(self, file, bond_determination_mode, bond_threshold, bond_threshold_metal, expected):
 
         # load data
         qm_data = DataParser(file).parse()
 
         # set up graph generator settings
-        ggs = GraphGeneratorSettings(bond_determination_mode=bond_determination_mode, bond_threshold=bond_threshold)
+        ggs = GraphGeneratorSettings(bond_determination_mode=bond_determination_mode, bond_threshold=bond_threshold, bond_threshold_metal=bond_threshold_metal)
 
         # set up graph generator (default values)
         gg = GraphGenerator(ggs)
