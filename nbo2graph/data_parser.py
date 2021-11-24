@@ -79,6 +79,9 @@ class DataParser:
             if 'NATURAL BOND ORBITALS' in self.lines[i]:
                 qm_data.nbo_energies, i = self._extract_nbo_energies(i + 7)
 
+            if 'SECOND ORDER PERTURBATION THEORY ANALYSIS' in self.lines[i]:
+                x, i = self._extract_sopa_data(i + 9)
+
             if 'Atom I' in self.lines[i]:
                 qm_data.lmo_bond_order_matrix, i = self._extract_lmo_bond_data(i + 1)
 
@@ -513,3 +516,21 @@ class DataParser:
         # divide occupations by 100 (get rid of %)
         return [id, atom_positions, full_occupation, [x / 200 for x in occupations]]
         # return atom_positions, [x / 200 for x in occupations]
+
+    def _extract_sopa_data(self, start_index):
+
+        # rename index for brevity
+        i = start_index
+
+        while 'NATURAL BOND ORBITALS' not in self.lines[i]:
+
+            # line_split = self.lines[i]
+            line_split = self.lines[i].split()
+            if len(line_split) > 6:
+
+                nbo_ids = list(map(int, re.findall(r'([0-9]{1,5})\. [A-Z]{2}', self.lines[i])))
+                energies = list(map(float, line_split[-3:]))
+
+            i += 1
+
+        return None, i
