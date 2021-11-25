@@ -1382,7 +1382,7 @@ class TestGraphGenerator(unittest.TestCase):
     @parameterized.expand([
 
         [
-            [[1, 2, 3], [1, 2, 3], [1, 2]],
+            [Node(features=[1, 2, 3]), Node(features=[1, 2, 3]), Node(features=[1, 2])],
             AssertionError
         ],
 
@@ -1398,9 +1398,9 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             [
-                [[1, 2, 3], [1]],
-                [[2, 3], [1]],
-                [[3, 4], [1]]
+                Edge([1, 2, 3], features=[1]),
+                Edge([2, 3], features=[1]),
+                Edge([3, 4], features=[1])
             ],
             5,
             AssertionError
@@ -1408,9 +1408,9 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             [
-                [[1, 2], [1]],
-                [[2, 3], [1, 3]],
-                [[3, 4], [1]]
+                Edge([1, 2], features=[1]),
+                Edge([2, 3], features=[1, 3]),
+                Edge([3, 4], features=[1])
             ],
             5,
             AssertionError
@@ -1418,9 +1418,9 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             [
-                [[1, 1], [1]],
-                [[2, 3], [1]],
-                [[3, 4], [1]]
+                Edge([1, 1], features=[1]),
+                Edge([2, 3], features=[1]),
+                Edge([3, 4], features=[1])
             ],
             5,
             AssertionError
@@ -1428,9 +1428,9 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             [
-                [[1, 2], [1]],
-                [[2, 3], [1]],
-                [[3, 4], [1]]
+                Edge([1, 2], features=[1]),
+                Edge([2, 3], features=[1]),
+                Edge([3, 4], features=[1])
             ],
             4,
             AssertionError
@@ -1438,9 +1438,9 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             [
-                [[1, 2], [1]],
-                [[2, 3], [1]],
-                [[4, 3], [1]]
+                Edge([1, 2], features=[1]),
+                Edge([2, 3], features=[1]),
+                Edge([4, 3], features=[1])
             ],
             4,
             AssertionError
