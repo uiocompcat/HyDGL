@@ -547,12 +547,12 @@ class GraphGenerator:
         """
 
         # get list of indices in use
-        bond_atom_indices = list(set([item for sublist in [x[0] for x in edges] for item in sublist]))
+        bond_atom_indices = list(set([item for sublist in [x.node_indices for x in edges] for item in sublist]))
         bond_atom_indices.sort()
         # loop through edges and replace node references
         for i in range(len(edges)):
-            edges[i][0][0] = edges[i][0][0] - self._determine_hydrogen_position_offset(edges[i][0][0], qm_data)
-            edges[i][0][1] = edges[i][0][1] - self._determine_hydrogen_position_offset(edges[i][0][1], qm_data)
+            edges[i].node_indices[0] = edges[i].node_indices[0] - self._determine_hydrogen_position_offset(edges[i].node_indices[0], qm_data)
+            edges[i].node_indices[1] = edges[i].node_indices[1] - self._determine_hydrogen_position_offset(edges[i].node_indices[1], qm_data)
 
         return edges
 
