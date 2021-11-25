@@ -59,33 +59,53 @@ class Graph:
 
     @property
     def id(self):
-        """Getter for id"""
+        """Getter for id."""
         return self._id
 
     @property
     def stoichiometry(self):
-        """Getter for stoichiometry"""
+        """Getter for stoichiometry."""
         return self._stoichiometry
 
     @property
     def nodes(self):
-        """Getter for nodes"""
+        """Getter for nodes."""
         return self._nodes
 
     @property
     def edges(self):
-        """Getter for edges"""
+        """Getter for edges."""
         return self._edges
 
     @property
     def targets(self):
-        """Getter for targets"""
+        """Getter for targets."""
         return self._targets
 
     @property
     def graph_features(self):
-        """Getter for graph_features"""
+        """Getter for graph_features."""
         return self._graph_features
+
+    @property
+    def nodes_features_list(self):
+        """Getter for a list of node features."""
+        return [x.features for x in self._nodes]
+
+    @property
+    def nodes_labels_list(self):
+        """Getter for a list of node labels."""
+        return [x.label for x in self._nodes]
+
+    @property
+    def edges_indices_list(self):
+        """Getter for a list of edge indices."""
+        return [x.node_indices for x in self._edges]
+
+    @property
+    def edges_features_list(self):
+        """Getter for a list of edge features."""
+        return [x.features for x in self._edges]
 
     def get_pytorch_data_object(self) -> Data:
 
@@ -97,13 +117,13 @@ class Graph:
 
         # set up pytorch object for edges
         # include reverse edges (to account for both directions)
-        edge_indices = torch.tensor([x[0] for x in self.edges] + [list(reversed(x[0])) for x in self.edges], dtype=torch.long)
+        edge_indices = torch.tensor(self.edges_indices_list + [list(reversed(x)) for x in self.edges_indices_list], dtype=torch.long)
         # set up pytorch object for edge features
         # duplicated list to account for the targets of the additional reverse edges
-        edge_features = torch.tensor([x[1] for x in self.edges * 2], dtype=torch.float)
+        edge_features = torch.tensor(self.edges_features_list * 2, dtype=torch.float)
 
         # set up pytorch object for nodes
-        node_features = torch.tensor(self.nodes, dtype=torch.float)
+        node_features = torch.tensor(self.nodes_features_list, dtype=torch.float)
 
         # set up pytorch object for graph level targets / labels
         targets = torch.tensor(self.targets, dtype=torch.float)
@@ -216,11 +236,11 @@ class Graph:
 
         adjacent_nodes = []
         for i in range(len(self._edges)):
-            if node_index in self._edges[i][0]:
+            if node_index in self._edges[i].node_indices:
                 # get the index of the other node in the edge node list
-                other_edge_index = (self._edges[i][0].index(node_index) + 1) % 2
+                other_edge_index = (self._edges[i].node_indices.index(node_index) + 1) % 2
                 # get the appropriate node index
-                adjacent_node_index = self._edges[i][0][other_edge_index]
+                adjacent_node_index = self._edges[i].node_indices[other_edge_index]
                 # append to output list
                 adjacent_nodes.append(adjacent_node_index)
 
@@ -238,12 +258,12 @@ class Graph:
         """Plots the graph with appropriate nodes and edges using plotly."""
 
         # set up node label and feature lists
-        node_features = self._nodes
-        node_labels = self._labels
+        node_features = self.nodes_features_list
+        node_labels = self.nodes_labels_list
 
         # set up edge index and feature lists
-        edge_indices = [x[0] for x in self._edges] + [list(reversed(x[0])) for x in self._edges]
-        edge_features = [x[1] for x in self._edges * 2]
+        edge_indices = self.edges_indices_list + [list(reversed(x)) for x in self.edges_indices_list]
+        edge_features = self.edges_features_list * 2
 
         # get 3d positions
         position_dict = self.get_node_position_dict()

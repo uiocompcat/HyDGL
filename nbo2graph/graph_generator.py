@@ -812,22 +812,22 @@ class GraphGenerator:
 
         return target_list
 
-    def _validate_node_list(self, nodes):
+    def _validate_node_list(self, nodes: list[Node]):
 
         # check that all node vectors have the same length
         for i in range(1, len(nodes), 1):
-            assert len(nodes[i]) == len(nodes[0])
+            assert len(nodes[i].features) == len(nodes[0].features)
 
-    def _validate_edge_list(self, edges, n_nodes):
+    def _validate_edge_list(self, edges: list[Edge], n_nodes: int):
 
         for i in range(0, len(edges), 1):
 
             # check that all edges are defined by two atom indices
-            assert len(edges[i][0]) == 2
+            assert len(edges[i].node_indices) == 2
             # check that the edge defining atom indices are different
-            assert edges[i][0][0] != edges[i][0][1]
+            assert edges[i].node_indices[0] != edges[i].node_indices[1]
             # check that all edges have feature vectors of the same length
-            assert len(edges[0][1]) == len(edges[i][1])
+            assert len(edges[0].features) == len(edges[i].features)
             # check that the edge index identifiers are within the range of the number of atoms
-            assert edges[i][0][0] < n_nodes
-            assert edges[i][0][1] < n_nodes
+            assert edges[i].node_indices[0] < n_nodes
+            assert edges[i].node_indices[1] < n_nodes

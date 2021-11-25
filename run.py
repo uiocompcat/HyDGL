@@ -29,28 +29,30 @@ def main():
     # with open('/home/hkneiding/Desktop/r500-qmdata.pickle', 'wb') as handle:
     #     pickle.dump(qm_data_list, handle)
 
-    # load from file
-    file_to_read = open("/home/hkneiding/Desktop/nbo data/the_random_500/r500-qmdata.pickle", "rb")
-    qm_data_list = pickle.load(file_to_read)
-    file_to_read.close()
+    # # load from file
+    # file_to_read = open("/home/hkneiding/Desktop/nbo data/the_random_500/r500-qmdata.pickle", "rb")
+    # qm_data_list = pickle.load(file_to_read)
+    # file_to_read.close()
 
-    ggs = GraphGeneratorSettings(bond_determination_mode=BondDeterminationMode.WIBERG, bond_threshold=0.3, bond_threshold_metal=0.05)
-    gg = GraphGenerator(settings=ggs)
-
-    for i in range(len(qm_data_list)):
-        graph = gg.generate_graph(qm_data_list[i])
-        if not graph.is_connected():
-            # graph.visualise()
-            # break
-            print(i)
-    # ggs = GraphGeneratorSettings(bond_determination_mode=BondDeterminationMode.WIBERG,
-    #                              edge_features=[EdgeFeature.BOND_ORBITAL_MAX, EdgeFeature.BOND_ORBITAL_DATA_S])
+    # ggs = GraphGeneratorSettings(bond_determination_mode=BondDeterminationMode.WIBERG, bond_threshold=0.3, bond_threshold_metal=0.05)
     # gg = GraphGenerator(settings=ggs)
-    # graph = gg.generate_graph(DataParser('/home/hkneiding/Desktop/nbo data/OREDIA.log').parse())
+
+    # for i in range(len(qm_data_list)):
+    #     graph = gg.generate_graph(qm_data_list[i])
+    #     if not graph.is_connected():
+    #         # graph.visualise()
+    #         # break
+    #         print(i)
+
+
+    ggs = GraphGeneratorSettings(bond_determination_mode=BondDeterminationMode.WIBERG,
+                                 edge_features=[EdgeFeature.BOND_ORBITAL_MAX, EdgeFeature.BOND_ORBITAL_DATA_S])
+    gg = GraphGenerator(settings=ggs)
+    graph = gg.generate_graph(DataParser('/home/hkneiding/Desktop/nbo data/OREDIA.log').parse())
     # graph = gg.generate_graph(DataParser('/home/hkneiding/Desktop/nbo data/the_random_500/LEZYOG.log').parse())
 
     # print(graph)
-    # graph.visualise()
+    graph.visualise()
 
     # for graph in graphs:
 
