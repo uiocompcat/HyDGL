@@ -1485,6 +1485,61 @@ class TestGraphGenerator(unittest.TestCase):
     @parameterized.expand([
 
         [
+            TEST_FILE_OREDIA,
+            [
+                Edge([2, 3], features=[]),
+                Edge([2, 11], features=[]),
+                Edge([3, 4], features=[]),
+                Edge([4, 5], features=[]),
+                Edge([4, 12], features=[]),
+                Edge([5, 6], features=[]),
+                Edge([6, 7], features=[]),
+                Edge([6, 11], features=[]),
+                Edge([7, 8], features=[]),
+                Edge([8, 9], features=[]),
+                Edge([9, 10], features=[]),
+                Edge([10, 11], features=[]),
+                Edge([12, 13], features=[]),
+                Edge([12, 17], features=[]),
+                Edge([13, 14], features=[]),
+                Edge([14, 15], features=[]),
+                Edge([15, 16], features=[]),
+                Edge([16, 17], features=[]),
+                Edge([18, 19], features=[]),
+                Edge([19, 20], features=[]),
+                Edge([19, 23], features=[]),
+                Edge([20, 21], features=[]),
+                Edge([21, 22], features=[]),
+                Edge([21, 24], features=[]),
+                Edge([25, 26], features=[]),
+                Edge([26, 27], features=[]),
+                Edge([26, 30], features=[]),
+                Edge([27, 28], features=[]),
+                Edge([28, 29], features=[]),
+                Edge([28, 31], features=[]),
+                Edge([1, 0], features=[])
+            ]
+        ],
+
+    ])
+    def test_adjust_node_references(self, file_path, expected):
+
+        # load data
+        qm_data = DataParser(file_path).parse()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings(hydrogen_mode=HydrogenMode.OMIT,
+                                                   bond_determination_mode=BondDeterminationMode.NBO_BONDING_ORBITALS))
+
+        # get result
+        edges = gg._get_edges(qm_data)
+        result = gg._adjust_node_references(edges, qm_data)
+
+        Utils.assert_are_almost_equal(result, expected)
+
+    @parameterized.expand([
+
+        [
             TEST_FILE_LALMER
         ],
 

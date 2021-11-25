@@ -538,7 +538,7 @@ class GraphGenerator:
             return Node(features=node_features, position=node_position, label=node_label)
         return Node(features=node_features)
 
-    def _adjust_node_references(self, edges, qm_data: QmData):
+    def _adjust_node_references(self, edges: list[Edge], qm_data: QmData):
 
         """Rescales the node references for implicit/omit mode where hydrogens are not explicit nodes (except hydride hydrogens).
 
@@ -713,7 +713,8 @@ class GraphGenerator:
             return qm_data.nlmo_bond_order_matrix
         # raise exception otherwise
         else:
-            raise ValueError('Bond determination mode not recognised.')
+            print('Bond determination mode not recognised. Defaulting to Wiberg')
+            return qm_data.wiberg_bond_order_matrix
 
     def _get_graph_features(self, qm_data: QmData) -> list:
 
