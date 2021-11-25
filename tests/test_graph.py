@@ -3,6 +3,8 @@ from parameterized import parameterized
 import torch
 from torch_geometric.data import Data
 
+from nbo2graph.node import Node
+from nbo2graph.edge import Edge
 from nbo2graph.graph import Graph
 
 
@@ -87,8 +89,8 @@ class TestGraph(unittest.TestCase):
 
         [
             Graph(
-                [[0], [1], [3], [-2], [0]],
-                [[[0, 1], [-2]], [[0, 2], [3]], [[0, 3], [4]], [[2, 3], [1]], [[2, 4], [10]]],
+                [Node(features=[0]), Node(features=[1]), Node(features=[3]), Node(features=[-2]), Node(features=[0])],
+                [Edge([0, 1], features=[-2]), Edge([0, 2], features=[3]), Edge([0, 3], features=[4]), Edge([2, 3], features=[1]), Edge([2, 4], features=[10])],
                 targets=[12.34]
             ),
             Data(
