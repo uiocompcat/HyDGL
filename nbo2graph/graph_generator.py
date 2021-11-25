@@ -28,7 +28,7 @@ class GraphGenerator:
 
         self._settings = settings
 
-    def generate_graph(self, qm_data: QmData):
+    def generate_graph(self, qm_data: QmData) -> Graph:
 
         """Generates a graph according to the specified settings.
 
@@ -64,7 +64,7 @@ class GraphGenerator:
                      stoichiometry=qm_data.stoichiometry)
 
     # deprecated
-    def _get_node_labels(self, qm_data: QmData):
+    def _get_node_labels(self, qm_data: QmData) -> list[str]:
 
         """Gets the labels for the nodes in terms of the element identifiers.
 
@@ -76,7 +76,7 @@ class GraphGenerator:
         return [ElementLookUpTable.get_element_identifier(qm_data.atomic_numbers[node_index]) for node_index in node_indices]
 
     # deprecated
-    def _get_node_positions(self, qm_data: QmData):
+    def _get_node_positions(self, qm_data: QmData) -> list[list[float]]:
 
         """Gets the 3d positions for the nodes in terms of the element identifiers.
 
@@ -87,7 +87,7 @@ class GraphGenerator:
         node_indices = self._get_nodes_to_extract_indices(qm_data)
         return [(qm_data.geometric_data[node_index]) for node_index in node_indices]
 
-    def _get_edges(self, qm_data: QmData):
+    def _get_edges(self, qm_data: QmData) -> list[Edge]:
 
         """Gets edges and their corresponding feature vectors.
 
@@ -113,7 +113,7 @@ class GraphGenerator:
 
         return edges
 
-    def _get_adjacency_list(self, qm_data: QmData):
+    def _get_adjacency_list(self, qm_data: QmData) -> list[list[int]]:
 
         adjacency_list = []
 
@@ -160,7 +160,7 @@ class GraphGenerator:
 
             return adjacency_list
 
-    def _get_featurised_edge(self, bond_atom_indices: list[int], qm_data: QmData):
+    def _get_featurised_edge(self, bond_atom_indices: list[int], qm_data: QmData) -> Edge:
 
         # pre read data for efficiency
 
@@ -309,7 +309,7 @@ class GraphGenerator:
 
         return Edge(bond_atom_indices, features=edge_features)
 
-    def _get_nodes(self, qm_data: QmData, include_misc_data: bool = True):
+    def _get_nodes(self, qm_data: QmData, include_misc_data: bool = True) -> list[Node]:
 
         """Gets a list of feature vectors for all nodes.
 
@@ -326,7 +326,7 @@ class GraphGenerator:
 
         return nodes
 
-    def _get_nodes_to_extract_indices(self, qm_data: QmData):
+    def _get_nodes_to_extract_indices(self, qm_data: QmData) -> list[int]:
 
         """Gets the list of node indices to be extracted depending on the used hydrogen mode.
 
@@ -355,7 +355,7 @@ class GraphGenerator:
         # sort list before returning so that the order is correct
         return sorted(node_indices)
 
-    def _get_individual_node(self, qm_data: QmData, atom_index: int, include_misc_data: bool = True):
+    def _get_individual_node(self, qm_data: QmData, atom_index: int, include_misc_data: bool = True) -> Node:
 
         """Gets the feature vector for one node.
 
@@ -556,7 +556,7 @@ class GraphGenerator:
 
         return edges
 
-    def _determine_hydrogen_position_offset(self, atom_index: int, qm_data: QmData):
+    def _determine_hydrogen_position_offset(self, atom_index: int, qm_data: QmData) -> int:
 
         """Counts how many hydrogen atoms are in front of (index-wise) the atom of specified index.
 
@@ -579,7 +579,7 @@ class GraphGenerator:
 
         return hydrogen_offset_count
 
-    def _get_hydride_hydrogen_indices(self, qm_data: QmData):
+    def _get_hydride_hydrogen_indices(self, qm_data: QmData) -> list[int]:
 
         """Returns a list of hydride hydrogen indices.
 
@@ -599,7 +599,7 @@ class GraphGenerator:
 
         return hydride_hydrogen_indices
 
-    def _get_hydride_bond_indices(self, qm_data: QmData):
+    def _get_hydride_bond_indices(self, qm_data: QmData) -> list[list[int]]:
 
         """Returns a list of hydride bonds.
 
@@ -622,7 +622,7 @@ class GraphGenerator:
 
         return hydride_bond_indices
 
-    def _get_bound_atom_indices(self, atom_index: int, qm_data: QmData, threshold: float):
+    def _get_bound_atom_indices(self, atom_index: int, qm_data: QmData, threshold: float) -> list[int]:
 
         """Gets the indices of bound atoms of a given atom.
 
@@ -652,7 +652,7 @@ class GraphGenerator:
 
         return bound_atom_indices
 
-    def _get_bound_h_atom_indices(self, atom_index: int, qm_data: QmData, threshold: float = None):
+    def _get_bound_h_atom_indices(self, atom_index: int, qm_data: QmData, threshold: float = None) -> list[int]:
 
         """Gets the indices of bound h atoms of a given atom.
 
@@ -679,7 +679,7 @@ class GraphGenerator:
 
         return bound_h_indices
 
-    def _determine_hydrogen_count(self, atom_index: int, qm_data: QmData):
+    def _determine_hydrogen_count(self, atom_index: int, qm_data: QmData) -> int:
 
         """Determines how many hyrdogen atoms are bound to the atom with the specified index.
 
@@ -689,7 +689,7 @@ class GraphGenerator:
 
         return len(self._get_bound_h_atom_indices(atom_index, qm_data))
 
-    def _get_index_matrix(self, qm_data: QmData):
+    def _get_index_matrix(self, qm_data: QmData) -> list[list[float]]:
 
         """Helper function that returns the appropriate index matrix based on the GraphGenerator settings.
 
@@ -733,7 +733,7 @@ class GraphGenerator:
 
         return graph_feature_list
 
-    def _get_targets(self, qm_data: QmData):
+    def _get_targets(self, qm_data: QmData) -> list[float]:
 
         """Helper function to resolve which targets to use.
 
