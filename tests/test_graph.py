@@ -13,12 +13,14 @@ class TestGraph(unittest.TestCase):
     @parameterized.expand([
 
         [
-            Graph([[0], [0], [0], [0], [0]], [[[0, 1], [0]], [[0, 2], [0]], [[0, 3], [0]], [[3, 2], [0]], [[2, 4], [0]]]),
+            Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
+                  [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0]), Edge([2, 4], features=[0])]),
             True
         ],
 
         [
-            Graph([[0], [0], [0], [0], [0]], [[[0, 1], [0]], [[0, 2], [0]], [[0, 3], [0]], [[3, 2], [0]]]),
+            Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
+                  [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0])]),
             False
         ],
 
@@ -30,13 +32,13 @@ class TestGraph(unittest.TestCase):
     @parameterized.expand([
 
         [
-            Graph([[0], [0], [0], [0], [0]], [[[0, 1], [0]], [[0, 2], [0]], [[0, 3], [0]], [[3, 2], [0]], [[2, 4], [0]]]),
-            [[0, 1, 2, 3, 4]]
+            Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
+                  [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0]), Edge([2, 4], features=[0])])
         ],
 
         [
-            Graph([[0], [0], [0], [0], [0]], [[[0, 1], [0]], [[0, 2], [0]], [[0, 3], [0]], [[3, 2], [0]]]),
-            [[0, 1, 2, 3], [4]]
+            Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
+                  [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0])])
         ],
 
     ])
@@ -47,19 +49,22 @@ class TestGraph(unittest.TestCase):
     @parameterized.expand([
 
         [
-            Graph([[0], [0], [0], [0], [0]], [[[0, 1], [0]], [[0, 2], [0]], [[0, 3], [0]], [[3, 2], [0]], [[2, 4], [0]]]),
+            Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
+                  [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0]), Edge([2, 4], features=[0])]),
             0,
             [1, 2, 3]
         ],
 
         [
-            Graph([[0], [0], [0], [0], [0]], [[[0, 1], [0]], [[0, 2], [0]], [[0, 3], [0]], [[3, 2], [0]], [[2, 4], [0]]]),
+            Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
+                  [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0]), Edge([2, 4], features=[0])]),
             4,
             [2]
         ],
 
         [
-            Graph([[0], [0], [0], [0], [0]], [[[0, 1], [0]], [[0, 2], [0]], [[0, 3], [0]], [[3, 2], [0]]]),
+            Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
+                  [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0])]),
             4,
             []
         ],
