@@ -383,48 +383,48 @@ class GraphGenerator:
         lone_vacancy_energies = [x[1] for x in qm_data.lone_vacancy_data_full]
 
         # set up features for node
-        node = []
+        node_features = []
 
         # add atomic number
         if NodeFeature.ATOMIC_NUMBERS in self.settings.node_features:
-            node.append(qm_data.atomic_numbers[i])
+            node_features.append(qm_data.atomic_numbers[i])
 
         # add natural atomic charge
         if NodeFeature.NATURAL_ATOMIC_CHARGES in self.settings.node_features:
-            node.append(qm_data.natural_atomic_charges[i])
+            node_features.append(qm_data.natural_atomic_charges[i])
 
         # add natural electron configuration (requested orbital occupancies)
         if len(self.settings.natural_orbital_configuration_indices) > 0:
-            node.extend([qm_data.natural_electron_configuration[i][k] for k in self.settings.natural_orbital_configuration_indices])
+            node_features.extend([qm_data.natural_electron_configuration[i][k] for k in self.settings.natural_orbital_configuration_indices])
 
         # add bond order totals
 
         # Wiberg mode
         if NodeFeature.WIBERG_BOND_ORDER_TOTAL in self.settings.node_features:
-            node.append(qm_data.wiberg_bond_order_totals[i])
+            node_features.append(qm_data.wiberg_bond_order_totals[i])
         # LMO mode
         if NodeFeature.LMO_BOND_ORDER_TOTAL in self.settings.node_features:
-            node.append(qm_data.lmo_bond_order_matrix[i])
+            node_features.append(qm_data.lmo_bond_order_matrix[i])
         # NLMO mode
         if NodeFeature.NLMO_BOND_ORDER_TOTAL in self.settings.node_features:
-            node.append(qm_data.nlmo_bond_order_totals[i])
+            node_features.append(qm_data.nlmo_bond_order_totals[i])
 
         # add number of lone pairs if requested
         if NodeFeature.LONE_PAIR_MAX in self.settings.node_features or \
                 NodeFeature.LONE_PAIR_AVERAGE in self.settings.node_features or \
                 NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE in self.settings.node_features:
 
-            node.append(len([x[1] for x in qm_data.lone_pair_data_full if x[0] == i]))
+            node_features.append(len([x[1] for x in qm_data.lone_pair_data_full if x[0] == i]))
 
         if NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE in self.settings.node_features:
             energies = [x[1] for x in qm_data.lone_pair_data_full if x[0] == i]
 
             # append difference if there are 2 entries or more
             if len(energies) >= 2:
-                node.append(abs(min(energies) - max(energies)))
+                node_features.append(abs(min(energies) - max(energies)))
             # append 0 otherwise
             else:
-                node.append(0.0)
+                node_features.append(0.0)
 
         if NodeFeature.LONE_PAIR_MAX in self.settings.node_features and len(self.settings.lone_pair_orbital_indices) > 0:
             if i in lone_pair_atom_indices:
@@ -435,14 +435,14 @@ class GraphGenerator:
                 selected_index = lone_pair_energies.index(max(energies))
 
                 # append data (total length = 4)
-                node.append(qm_data.lone_pair_data_full[selected_index][1])
-                node.append(qm_data.lone_pair_data_full[selected_index][2])
+                node_features.append(qm_data.lone_pair_data_full[selected_index][1])
+                node_features.append(qm_data.lone_pair_data_full[selected_index][2])
 
                 # get orbital occupations
                 oribtal_symmetries = [qm_data.lone_pair_data_full[selected_index][3][k] for k in self.settings.lone_pair_orbital_indices]
-                node.extend(oribtal_symmetries)
+                node_features.extend(oribtal_symmetries)
             else:
-                node.extend((2 + len(self.settings.lone_pair_orbital_indices)) * [0.0])
+                node_features.extend((2 + len(self.settings.lone_pair_orbital_indices)) * [0.0])
 
         if NodeFeature.LONE_PAIR_AVERAGE in self.settings.node_features and len(self.settings.lone_pair_orbital_indices) > 0:
             if i in lone_pair_atom_indices:
@@ -455,31 +455,31 @@ class GraphGenerator:
                 symmetries = [x[3] for x in qm_data.lone_pair_data_full if x[0] == i]
 
                 # append average values for energies and occupations
-                node.append(mean(energies))
-                node.append(mean(occupations))
+                node_features.append(mean(energies))
+                node_features.append(mean(occupations))
 
                 # get average values for orbital symmetries
                 oribtal_symmetries = [mean(x) for x in [[y[k] for y in symmetries] for k in self.settings.lone_pair_orbital_indices]]
-                node.extend(oribtal_symmetries)
+                node_features.extend(oribtal_symmetries)
             else:
-                node.extend((2 + len(self.settings.lone_pair_orbital_indices)) * [0.0])
+                node_features.extend((2 + len(self.settings.lone_pair_orbital_indices)) * [0.0])
 
         # add number of lone vacancies if requested
         if NodeFeature.LONE_VACANCY_MIN in self.settings.node_features or \
                 NodeFeature.LONE_VACANCY_AVERAGE in self.settings.node_features or \
                 NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE in self.settings.node_features:
 
-            node.append(len([x[1] for x in qm_data.lone_vacancy_data_full if x[0] == i]))
+            node_features.append(len([x[1] for x in qm_data.lone_vacancy_data_full if x[0] == i]))
 
         if NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE in self.settings.node_features:
             energies = [x[1] for x in qm_data.lone_vacancy_data_full if x[0] == i]
 
             # append difference if there are 2 entries or more
             if len(energies) >= 2:
-                node.append(abs(min(energies) - max(energies)))
+                node_features.append(abs(min(energies) - max(energies)))
             # append 0 otherwise
             else:
-                node.append(0.0)
+                node_features.append(0.0)
 
         if NodeFeature.LONE_VACANCY_MIN in self.settings.node_features and len(self.settings.lone_vacancy_orbital_indices) > 0:
             if i in lone_vacancy_atom_indices:
@@ -490,14 +490,14 @@ class GraphGenerator:
                 selected_index = lone_vacancy_energies.index(min(energies))
 
                 # append data (total length = 4)
-                node.append(qm_data.lone_vacancy_data_full[selected_index][1])
-                node.append(qm_data.lone_vacancy_data_full[selected_index][2])
+                node_features.append(qm_data.lone_vacancy_data_full[selected_index][1])
+                node_features.append(qm_data.lone_vacancy_data_full[selected_index][2])
 
                 # get orbital occupations
                 oribtal_symmetries = [qm_data.lone_vacancy_data_full[selected_index][3][k] for k in self.settings.lone_vacancy_orbital_indices]
-                node.extend(oribtal_symmetries)
+                node_features.extend(oribtal_symmetries)
             else:
-                node.extend((2 + len(self.settings.lone_vacancy_orbital_indices)) * [0.0])
+                node_features.extend((2 + len(self.settings.lone_vacancy_orbital_indices)) * [0.0])
 
         if NodeFeature.LONE_VACANCY_AVERAGE in self.settings.node_features and len(self.settings.lone_vacancy_orbital_indices) > 0:
             if i in lone_vacancy_atom_indices:
@@ -510,14 +510,14 @@ class GraphGenerator:
                 symmetries = [x[3] for x in qm_data.lone_vacancy_data_full if x[0] == i]
 
                 # append average values for energies and occupations
-                node.append(mean(energies))
-                node.append(mean(occupations))
+                node_features.append(mean(energies))
+                node_features.append(mean(occupations))
 
                 # get average values for orbital symmetries
                 oribtal_symmetries = [mean(x) for x in [[y[k] for y in symmetries] for k in self.settings.lone_vacancy_orbital_indices]]
-                node.extend(oribtal_symmetries)
+                node_features.extend(oribtal_symmetries)
             else:
-                node.extend((2 + len(self.settings.lone_vacancy_orbital_indices)) * [0.0])
+                node_features.extend((2 + len(self.settings.lone_vacancy_orbital_indices)) * [0.0])
 
         # add implicit hydrogens
         if self.settings.hydrogen_mode == HydrogenMode.IMPLICIT:
@@ -534,9 +534,13 @@ class GraphGenerator:
                 else:
                     hydrogen_count = self._determine_hydrogen_count(i, qm_data)
 
-            node.append(hydrogen_count)
+            node_features.append(hydrogen_count)
 
-        return node
+        # get node label and position
+        node_label = ElementLookUpTable.get_element_identifier(qm_data.atomic_numbers[i])
+        node_position = qm_data.geometric_data[i]
+
+        return Node(features=node_features, position=node_position, label=node_label)
 
     def _adjust_node_references(self, edges, qm_data: QmData):
 
