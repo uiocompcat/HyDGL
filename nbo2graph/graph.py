@@ -11,7 +11,7 @@ class Graph:
 
     """Class for representing chemical graphs with all necessary information."""
 
-    def __init__(self, nodes, edges, targets=[], graph_features=[], labels=[], positions=[], id=None, stoichiometry=None):
+    def __init__(self, nodes, edges, targets=[], graph_features=[], id=None, stoichiometry=None):
 
         """Constructor
 
@@ -33,10 +33,6 @@ class Graph:
         self._edges = edges
         self._targets = targets
         self._graph_features = graph_features
-
-        # deprecated
-        self.labels = labels
-        self.positions = positions
 
     def __str__(self):
 

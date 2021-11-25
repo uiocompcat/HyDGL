@@ -56,20 +56,12 @@ class GraphGenerator:
         # get targets
         targets = self._get_targets(qm_data)
 
-        # get labels
-        labels = self._get_node_labels(qm_data)
-        # get positions
-        positions = self._get_node_positions(qm_data)
-
         return Graph(nodes,
                      edges,
                      targets=targets,
                      graph_features=graph_features,
                      id=qm_data.id,
-                     stoichiometry=qm_data.stoichiometry,
-                     labels=labels,
-                     positions=positions
-                     )
+                     stoichiometry=qm_data.stoichiometry)
 
     def _get_node_labels(self, qm_data: QmData):
 
