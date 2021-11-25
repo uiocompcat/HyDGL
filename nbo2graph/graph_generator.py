@@ -63,6 +63,7 @@ class GraphGenerator:
                      id=qm_data.id,
                      stoichiometry=qm_data.stoichiometry)
 
+    # deprecated
     def _get_node_labels(self, qm_data: QmData):
 
         """Gets the labels for the nodes in terms of the element identifiers.
@@ -74,6 +75,7 @@ class GraphGenerator:
         node_indices = self._get_nodes_to_extract_indices(qm_data)
         return [ElementLookUpTable.get_element_identifier(qm_data.atomic_numbers[node_index]) for node_index in node_indices]
 
+    # deprecated
     def _get_node_positions(self, qm_data: QmData):
 
         """Gets the 3d positions for the nodes in terms of the element identifiers.
