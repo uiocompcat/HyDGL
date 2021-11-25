@@ -315,7 +315,7 @@ class GraphGenerator:
 
         return Edge(bond_atom_indices, features=edge_features)
 
-    def _get_nodes(self, qm_data: QmData):
+    def _get_nodes(self, qm_data: QmData, include_misc_data: bool = True):
 
         """Gets a list of feature vectors for all nodes.
 
@@ -328,7 +328,7 @@ class GraphGenerator:
         nodes = []
         for i in range(len(node_indices)):
 
-            nodes.append(self._get_individual_node(qm_data, node_indices[i]))
+            nodes.append(self._get_individual_node(qm_data, node_indices[i], include_misc_data=include_misc_data))
 
         return nodes
 
@@ -361,7 +361,7 @@ class GraphGenerator:
         # sort list before returning so that the order is correct
         return sorted(node_indices)
 
-    def _get_individual_node(self, qm_data: QmData, atom_index: int):
+    def _get_individual_node(self, qm_data: QmData, atom_index: int, include_misc_data: bool = True):
 
         """Gets the feature vector for one node.
 
@@ -536,11 +536,13 @@ class GraphGenerator:
 
             node_features.append(hydrogen_count)
 
-        # get node label and position
-        node_label = ElementLookUpTable.get_element_identifier(qm_data.atomic_numbers[i])
-        node_position = qm_data.geometric_data[i]
+        if include_misc_data:
+            # get node label and position
+            node_label = ElementLookUpTable.get_element_identifier(qm_data.atomic_numbers[i])
+            node_position = qm_data.geometric_data[i]
 
-        return Node(features=node_features, position=node_position, label=node_label)
+            return Node(features=node_features, position=node_position, label=node_label)
+        return Node(features=node_features)
 
     def _adjust_node_references(self, edges, qm_data: QmData):
 

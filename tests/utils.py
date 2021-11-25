@@ -1,6 +1,7 @@
 import unittest
 
 from nbo2graph.edge import Edge
+from nbo2graph.node import Node
 
 
 class Utils():
@@ -27,7 +28,7 @@ class Utils():
         """Deep asserts almost equality between two items (can be multidim lists or objects)."""
 
         # check if not list
-        if type(a) in [str, int, float, bool]:
+        if a is None or type(a) in [str, int, float, bool]:
             Utils.tc.assertAlmostEqual(a, b, places=places)
             # return a == b
         else:
@@ -42,7 +43,9 @@ class Utils():
     @staticmethod
     def get_comparison_function(data_type):
 
-        if data_type == Edge:
+        if data_type == Node:
+            return Utils.node_assert_are_almost_equal
+        elif data_type == Edge:
             return Utils.edge_assert_are_almost_equal
         else:
             return Utils.base_assert_are_almost_equal
@@ -55,3 +58,12 @@ class Utils():
         Utils.assert_are_almost_equal(a.features, b.features, places=places)
         Utils.assert_are_almost_equal(a.node_indices, b.node_indices, places=places)
         Utils.assert_are_almost_equal(a.is_directed, b.is_directed, places=places)
+
+    @staticmethod
+    def node_assert_are_almost_equal(a: Node, b: Node, places=5):
+
+        """Equality operator for node objects."""
+
+        Utils.assert_are_almost_equal(a.features, b.features, places=places)
+        Utils.assert_are_almost_equal(a.position, b.position, places=places)
+        Utils.assert_are_almost_equal(a.label, b.label, places=places)
