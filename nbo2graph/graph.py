@@ -26,15 +26,17 @@ class Graph:
             graph_features (list): List of graph level features.
         """
 
-        self.id = id
-        self.stoichiometry = stoichiometry
+        self._id = id
+        self._stoichiometry = stoichiometry
+
+        self._nodes = nodes
+        self._edges = edges
+        self._targets = targets
+        self._graph_features = graph_features
+
+        # deprecated
         self.labels = labels
         self.positions = positions
-
-        self.nodes = nodes
-        self.edges = edges
-        self.targets = targets
-        self.graph_features = graph_features
 
     def __str__(self):
 
@@ -54,6 +56,36 @@ class Graph:
         out += f'Graph targets:\n{self.targets}\n\n'
 
         return out
+
+    @property
+    def id(self):
+        """Getter for id"""
+        return self._id
+
+    @property
+    def stoichiometry(self):
+        """Getter for stoichiometry"""
+        return self._stoichiometry
+
+    @property
+    def nodes(self):
+        """Getter for nodes"""
+        return self._nodes
+
+    @property
+    def edges(self):
+        """Getter for edges"""
+        return self._edges
+
+    @property
+    def targets(self):
+        """Getter for targets"""
+        return self._targets
+
+    @property
+    def graph_features(self):
+        """Getter for graph_features"""
+        return self._graph_features
 
     def get_pytorch_data_object(self) -> Data:
 
@@ -140,7 +172,7 @@ class Graph:
         # output list
         disjoint_sub_graphs = []
         # contains all node indices
-        not_visited_nodes = list(range(len(self.nodes)))
+        not_visited_nodes = list(range(len(self._nodes)))
 
         while len(not_visited_nodes) > 0:
 
@@ -179,16 +211,16 @@ class Graph:
             list[int]: List of node indices denoting the adjacent nodes.
         """
 
-        if node_index < 0 or node_index > len(self.nodes) - 1:
-            raise ValueError('The specified node index is out of range. Valid range: 0 - ' + str(len(self.nodes) - 1) + '. Given: ' + str(node_index) + '.')
+        if node_index < 0 or node_index > len(self._nodes) - 1:
+            raise ValueError('The specified node index is out of range. Valid range: 0 - ' + str(len(self._nodes) - 1) + '. Given: ' + str(node_index) + '.')
 
         adjacent_nodes = []
-        for i in range(len(self.edges)):
-            if node_index in self.edges[i][0]:
+        for i in range(len(self._edges)):
+            if node_index in self._edges[i][0]:
                 # get the index of the other node in the edge node list
-                other_edge_index = (self.edges[i][0].index(node_index) + 1) % 2
+                other_edge_index = (self._edges[i][0].index(node_index) + 1) % 2
                 # get the appropriate node index
-                adjacent_node_index = self.edges[i][0][other_edge_index]
+                adjacent_node_index = self._edges[i][0][other_edge_index]
                 # append to output list
                 adjacent_nodes.append(adjacent_node_index)
 
@@ -206,12 +238,12 @@ class Graph:
         """Plots the graph with appropriate nodes and edges using plotly."""
 
         # set up node label and feature lists
-        node_features = self.nodes
-        node_labels = self.labels
+        node_features = self._nodes
+        node_labels = self._labels
 
         # set up edge index and feature lists
-        edge_indices = [x[0] for x in self.edges] + [list(reversed(x[0])) for x in self.edges]
-        edge_features = [x[1] for x in self.edges * 2]
+        edge_indices = [x[0] for x in self._edges] + [list(reversed(x[0])) for x in self._edges]
+        edge_features = [x[1] for x in self._edges * 2]
 
         # get 3d positions
         position_dict = self.get_node_position_dict()
