@@ -18,8 +18,6 @@ class Graph:
         Args:
             id (string): Identifier inferred from the file name.
             stoichiometry (string): Stoichiometry of the molecule.
-            labels (list[string]): List of labels for visualisation.
-            positions (list[list[float]]): List of 3d lists of float xyz positions for visualisation.
             nodes (list[list[floats]]): List of node feature vectors.
             edges (list[list[int], list[float]]): List with individual sublists for connected node indices as well as edge features.
             targets (list[float]): List of targets/labels associated to graph (e.g. HOMO-LUMO gap).
@@ -87,6 +85,11 @@ class Graph:
     def nodes_features_list(self):
         """Getter for a list of node features."""
         return [x.features for x in self._nodes]
+
+    @property
+    def nodes_positions_list(self):
+        """Getter for a list of node positions."""
+        return [x.position for x in self._nodes]
 
     @property
     def nodes_labels_list(self):
@@ -245,8 +248,8 @@ class Graph:
     def get_node_position_dict(self):
 
         node_position_dict = {}
-        for i in range(len(self.positions)):
-            node_position_dict[i] = self.positions[i]
+        for i in range(len(self.nodes_positions_list)):
+            node_position_dict[i] = self.nodes_positions_list[i]
         return node_position_dict
 
     def visualise(self):
