@@ -26,7 +26,7 @@ class GraphGenerator:
             settings (GraphGeneratorSettings): Settings for GG.
         """
 
-        self.settings = settings
+        self._settings = settings
 
     def generate_graph(self, qm_data: QmData):
 
@@ -42,7 +42,7 @@ class GraphGenerator:
         edges = self._get_edges(qm_data)
 
         # rescale node referenes in edges if explicit hydrogens were omitted
-        if self.settings.hydrogen_mode == HydrogenMode.OMIT or self.settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+        if self._settings.hydrogen_mode == HydrogenMode.OMIT or self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
             edges = self._adjust_node_references(edges, qm_data)
 
         # check validity of nodes
@@ -110,7 +110,7 @@ class GraphGenerator:
             edges.append(self._get_featurised_edge(adjacency_list[i], qm_data))
 
         # operations only relevant when not modelling hydrogens explicitly
-        if self.settings.hydrogen_mode == HydrogenMode.OMIT or self.settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+        if self._settings.hydrogen_mode == HydrogenMode.OMIT or self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
 
             # check for hydride hydrogens to add explicitly
             hydride_bond_indices = self._get_hydride_bond_indices(qm_data)
@@ -123,11 +123,11 @@ class GraphGenerator:
 
         adjacency_list = []
 
-        if self.settings.bond_determination_mode == BondDeterminationMode.NBO_BONDING_ORBITALS:
+        if self._settings.bond_determination_mode == BondDeterminationMode.NBO_BONDING_ORBITALS:
 
             for i in range(len(qm_data.bond_pair_data_full)):
                 # ignore hydrogens in omit and implicit mode
-                if self.settings.hydrogen_mode == HydrogenMode.OMIT or self.settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+                if self._settings.hydrogen_mode == HydrogenMode.OMIT or self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
                     if qm_data.atomic_numbers[qm_data.bond_pair_data_full[i][0][0]] == 1 or qm_data.atomic_numbers[qm_data.bond_pair_data_full[i][0][1]] == 1:
                         continue
 
@@ -146,9 +146,9 @@ class GraphGenerator:
 
                     # decide which threshold to use
                     if qm_data.atomic_numbers[i] in ElementLookUpTable.transition_metal_atomic_numbers or qm_data.atomic_numbers[j] in ElementLookUpTable.transition_metal_atomic_numbers:
-                        threshold = self.settings.bond_threshold_metal
+                        threshold = self._settings.bond_threshold_metal
                     else:
-                        threshold = self.settings.bond_threshold
+                        threshold = self._settings.bond_threshold
 
                     # if larger than threshold --> add bond
                     if (index_matrix[i][j]) > threshold:
@@ -157,7 +157,7 @@ class GraphGenerator:
                         # and Wiberg bond index as a feature (pos 1)
 
                         # ignore hydrogens in omit and implicit mode
-                        if self.settings.hydrogen_mode == HydrogenMode.OMIT or self.settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+                        if self._settings.hydrogen_mode == HydrogenMode.OMIT or self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
                             if qm_data.atomic_numbers[i] == 1 or qm_data.atomic_numbers[j] == 1:
                                 continue
 
@@ -182,24 +182,24 @@ class GraphGenerator:
         edge_features = []
 
         # append requested bond orders
-        if EdgeFeature.WIBERG_BOND_ORDER in self.settings.edge_features:
+        if EdgeFeature.WIBERG_BOND_ORDER in self._settings.edge_features:
             edge_features.append(qm_data.wiberg_bond_order_matrix[bond_atom_indices[0]][bond_atom_indices[1]])
-        if EdgeFeature.LMO_BOND_ORDER in self.settings.edge_features:
+        if EdgeFeature.LMO_BOND_ORDER in self._settings.edge_features:
             edge_features.append(qm_data.lmo_bond_order_matrix[bond_atom_indices[0]][bond_atom_indices[1]])
-        if EdgeFeature.NLMO_BOND_ORDER in self.settings.edge_features:
+        if EdgeFeature.NLMO_BOND_ORDER in self._settings.edge_features:
             edge_features.append(qm_data.nlmo_bond_order_matrix[bond_atom_indices[0]][bond_atom_indices[1]])
 
         # add bond distance as feature to edges
-        if EdgeFeature.BOND_DISTANCE in self.settings.edge_features:
+        if EdgeFeature.BOND_DISTANCE in self._settings.edge_features:
             edge_features.append(qm_data.bond_distance_matrix[bond_atom_indices[0]][bond_atom_indices[1]])
 
         # add number of bond/antibond orbitals if requested
-        if EdgeFeature.BOND_ORBITAL_MAX in self.settings.edge_features or \
-                EdgeFeature.BOND_ORBITAL_AVERAGE in self.settings.edge_features or \
-                EdgeFeature.ANTIBOND_ORBITAL_MIN in self.settings.edge_features or \
-                EdgeFeature.ANTIBOND_ORBITAL_AVERAGE in self.settings.edge_features or \
-                EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE in self.settings.edge_features or \
-                EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE in self.settings.edge_features:
+        if EdgeFeature.BOND_ORBITAL_MAX in self._settings.edge_features or \
+                EdgeFeature.BOND_ORBITAL_AVERAGE in self._settings.edge_features or \
+                EdgeFeature.ANTIBOND_ORBITAL_MIN in self._settings.edge_features or \
+                EdgeFeature.ANTIBOND_ORBITAL_AVERAGE in self._settings.edge_features or \
+                EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features or \
+                EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features:
 
             if bond_atom_indices in bond_pair_atom_indices:
                 # length of bond pair list for this edge
@@ -207,7 +207,7 @@ class GraphGenerator:
             else:
                 edge_features.append(0)
 
-        if EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE in self.settings.edge_features:
+        if EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features:
             energies = [x[1] for x in qm_data.bond_pair_data_full if x[0] == bond_atom_indices]
 
             # append difference if there are 2 entries or more
@@ -217,7 +217,7 @@ class GraphGenerator:
             else:
                 edge_features.append(0.0)
 
-        if EdgeFeature.BOND_ORBITAL_MAX in self.settings.edge_features and len(self.settings.bond_orbital_indices) > 0:
+        if EdgeFeature.BOND_ORBITAL_MAX in self._settings.edge_features and len(self._settings.bond_orbital_indices) > 0:
 
             # check if NBO data for the respective bond is available
             # if so add to feature vector
@@ -233,12 +233,12 @@ class GraphGenerator:
                 # append data (total length = 2 + number of orbital occupancies)
                 edge_features.append(qm_data.bond_pair_data_full[selected_index][1])
                 edge_features.append(qm_data.bond_pair_data_full[selected_index][2])
-                edge_features.extend([qm_data.bond_pair_data_full[selected_index][3][k] for k in self.settings.bond_orbital_indices])
+                edge_features.extend([qm_data.bond_pair_data_full[selected_index][3][k] for k in self._settings.bond_orbital_indices])
 
             else:
-                edge_features.extend((2 + len(self.settings.bond_orbital_indices)) * [0.0])
+                edge_features.extend((2 + len(self._settings.bond_orbital_indices)) * [0.0])
 
-        if EdgeFeature.BOND_ORBITAL_AVERAGE in self.settings.edge_features and len(self.settings.bond_orbital_indices) > 0:
+        if EdgeFeature.BOND_ORBITAL_AVERAGE in self._settings.edge_features and len(self._settings.bond_orbital_indices) > 0:
             # check if NBO data for the respective bonds is available
             # if so add to feature vector
             # otherwise add zeros to feature vector
@@ -256,12 +256,12 @@ class GraphGenerator:
                 edge_features.append(mean(occupations))
 
                 # get average values for orbital symmetries
-                oribtal_symmetries = [mean(x) for x in [[y[k] for y in symmetries] for k in self.settings.bond_orbital_indices]]
+                oribtal_symmetries = [mean(x) for x in [[y[k] for y in symmetries] for k in self._settings.bond_orbital_indices]]
                 edge_features.extend(oribtal_symmetries)
             else:
-                edge_features.extend((2 + len(self.settings.bond_orbital_indices)) * [0.0])
+                edge_features.extend((2 + len(self._settings.bond_orbital_indices)) * [0.0])
 
-        if EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE in self.settings.edge_features:
+        if EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features:
             energies = [x[1] for x in qm_data.antibond_pair_data_full if x[0] == bond_atom_indices]
 
             # append difference if there are 2 entries or more
@@ -271,7 +271,7 @@ class GraphGenerator:
             else:
                 edge_features.append(0.0)
 
-        if EdgeFeature.ANTIBOND_ORBITAL_MIN in self.settings.edge_features and len(self.settings.antibond_orbital_indices) > 0:
+        if EdgeFeature.ANTIBOND_ORBITAL_MIN in self._settings.edge_features and len(self._settings.antibond_orbital_indices) > 0:
             # check if NBO data for the respective antibonds is available
             # if so add to feature vector
             # otherwise add zeros to feature vector
@@ -286,11 +286,11 @@ class GraphGenerator:
                 # append data (total length = 2 + number of orbital occupancies)
                 edge_features.append(qm_data.antibond_pair_data_full[selected_index][1])
                 edge_features.append(qm_data.antibond_pair_data_full[selected_index][2])
-                edge_features.extend([qm_data.bond_pair_data_full[selected_index][3][k] for k in self.settings.antibond_orbital_indices])
+                edge_features.extend([qm_data.bond_pair_data_full[selected_index][3][k] for k in self._settings.antibond_orbital_indices])
             else:
-                edge_features.extend((2 + len(self.settings.antibond_orbital_indices)) * [0.0])
+                edge_features.extend((2 + len(self._settings.antibond_orbital_indices)) * [0.0])
 
-        if EdgeFeature.ANTIBOND_ORBITAL_AVERAGE in self.settings.edge_features and len(self.settings.antibond_orbital_indices) > 0:
+        if EdgeFeature.ANTIBOND_ORBITAL_AVERAGE in self._settings.edge_features and len(self._settings.antibond_orbital_indices) > 0:
             # check if NBO data for the respective antibonds is available
             # if so add to feature vector
             # otherwise add zeros to feature vector
@@ -308,10 +308,10 @@ class GraphGenerator:
                 edge_features.append(mean(occupations))
 
                 # get average values for orbital symmetries
-                oribtal_symmetries = [mean(x) for x in [[y[k] for y in symmetries] for k in self.settings.antibond_orbital_indices]]
+                oribtal_symmetries = [mean(x) for x in [[y[k] for y in symmetries] for k in self._settings.antibond_orbital_indices]]
                 edge_features.extend(oribtal_symmetries)
             else:
-                edge_features.extend((2 + len(self.settings.antibond_orbital_indices)) * [0.0])
+                edge_features.extend((2 + len(self._settings.antibond_orbital_indices)) * [0.0])
 
         return Edge(bond_atom_indices, features=edge_features)
 
@@ -344,14 +344,14 @@ class GraphGenerator:
         for i in range(qm_data.n_atoms):
 
             # skip if hydrogen mode is not explicit
-            if self.settings.hydrogen_mode == HydrogenMode.OMIT or self.settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+            if self._settings.hydrogen_mode == HydrogenMode.OMIT or self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
                 if qm_data.atomic_numbers[i] == 1:
                     continue
 
             node_indices.append(i)
 
         # operations only relevant when not modelling hydrogens explicitly
-        if self.settings.hydrogen_mode == HydrogenMode.OMIT or self.settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+        if self._settings.hydrogen_mode == HydrogenMode.OMIT or self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
 
             # check for hydride hydrogens to add explicitly
             hydride_bond_indices = self._get_hydride_bond_indices(qm_data)
@@ -386,37 +386,37 @@ class GraphGenerator:
         node_features = []
 
         # add atomic number
-        if NodeFeature.ATOMIC_NUMBERS in self.settings.node_features:
+        if NodeFeature.ATOMIC_NUMBERS in self._settings.node_features:
             node_features.append(qm_data.atomic_numbers[i])
 
         # add natural atomic charge
-        if NodeFeature.NATURAL_ATOMIC_CHARGES in self.settings.node_features:
+        if NodeFeature.NATURAL_ATOMIC_CHARGES in self._settings.node_features:
             node_features.append(qm_data.natural_atomic_charges[i])
 
         # add natural electron configuration (requested orbital occupancies)
-        if len(self.settings.natural_orbital_configuration_indices) > 0:
-            node_features.extend([qm_data.natural_electron_configuration[i][k] for k in self.settings.natural_orbital_configuration_indices])
+        if len(self._settings.natural_orbital_configuration_indices) > 0:
+            node_features.extend([qm_data.natural_electron_configuration[i][k] for k in self._settings.natural_orbital_configuration_indices])
 
         # add bond order totals
 
         # Wiberg mode
-        if NodeFeature.WIBERG_BOND_ORDER_TOTAL in self.settings.node_features:
+        if NodeFeature.WIBERG_BOND_ORDER_TOTAL in self._settings.node_features:
             node_features.append(qm_data.wiberg_bond_order_totals[i])
         # LMO mode
-        if NodeFeature.LMO_BOND_ORDER_TOTAL in self.settings.node_features:
+        if NodeFeature.LMO_BOND_ORDER_TOTAL in self._settings.node_features:
             node_features.append(qm_data.lmo_bond_order_matrix[i])
         # NLMO mode
-        if NodeFeature.NLMO_BOND_ORDER_TOTAL in self.settings.node_features:
+        if NodeFeature.NLMO_BOND_ORDER_TOTAL in self._settings.node_features:
             node_features.append(qm_data.nlmo_bond_order_totals[i])
 
         # add number of lone pairs if requested
-        if NodeFeature.LONE_PAIR_MAX in self.settings.node_features or \
-                NodeFeature.LONE_PAIR_AVERAGE in self.settings.node_features or \
-                NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE in self.settings.node_features:
+        if NodeFeature.LONE_PAIR_MAX in self._settings.node_features or \
+                NodeFeature.LONE_PAIR_AVERAGE in self._settings.node_features or \
+                NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE in self._settings.node_features:
 
             node_features.append(len([x[1] for x in qm_data.lone_pair_data_full if x[0] == i]))
 
-        if NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE in self.settings.node_features:
+        if NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE in self._settings.node_features:
             energies = [x[1] for x in qm_data.lone_pair_data_full if x[0] == i]
 
             # append difference if there are 2 entries or more
@@ -426,7 +426,7 @@ class GraphGenerator:
             else:
                 node_features.append(0.0)
 
-        if NodeFeature.LONE_PAIR_MAX in self.settings.node_features and len(self.settings.lone_pair_orbital_indices) > 0:
+        if NodeFeature.LONE_PAIR_MAX in self._settings.node_features and len(self._settings.lone_pair_orbital_indices) > 0:
             if i in lone_pair_atom_indices:
 
                 # get list of all lone pair energies for this atom
@@ -439,12 +439,12 @@ class GraphGenerator:
                 node_features.append(qm_data.lone_pair_data_full[selected_index][2])
 
                 # get orbital occupations
-                oribtal_symmetries = [qm_data.lone_pair_data_full[selected_index][3][k] for k in self.settings.lone_pair_orbital_indices]
+                oribtal_symmetries = [qm_data.lone_pair_data_full[selected_index][3][k] for k in self._settings.lone_pair_orbital_indices]
                 node_features.extend(oribtal_symmetries)
             else:
-                node_features.extend((2 + len(self.settings.lone_pair_orbital_indices)) * [0.0])
+                node_features.extend((2 + len(self._settings.lone_pair_orbital_indices)) * [0.0])
 
-        if NodeFeature.LONE_PAIR_AVERAGE in self.settings.node_features and len(self.settings.lone_pair_orbital_indices) > 0:
+        if NodeFeature.LONE_PAIR_AVERAGE in self._settings.node_features and len(self._settings.lone_pair_orbital_indices) > 0:
             if i in lone_pair_atom_indices:
 
                 # get list of all lone pair energies for this atom
@@ -459,19 +459,19 @@ class GraphGenerator:
                 node_features.append(mean(occupations))
 
                 # get average values for orbital symmetries
-                oribtal_symmetries = [mean(x) for x in [[y[k] for y in symmetries] for k in self.settings.lone_pair_orbital_indices]]
+                oribtal_symmetries = [mean(x) for x in [[y[k] for y in symmetries] for k in self._settings.lone_pair_orbital_indices]]
                 node_features.extend(oribtal_symmetries)
             else:
-                node_features.extend((2 + len(self.settings.lone_pair_orbital_indices)) * [0.0])
+                node_features.extend((2 + len(self._settings.lone_pair_orbital_indices)) * [0.0])
 
         # add number of lone vacancies if requested
-        if NodeFeature.LONE_VACANCY_MIN in self.settings.node_features or \
-                NodeFeature.LONE_VACANCY_AVERAGE in self.settings.node_features or \
-                NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE in self.settings.node_features:
+        if NodeFeature.LONE_VACANCY_MIN in self._settings.node_features or \
+                NodeFeature.LONE_VACANCY_AVERAGE in self._settings.node_features or \
+                NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE in self._settings.node_features:
 
             node_features.append(len([x[1] for x in qm_data.lone_vacancy_data_full if x[0] == i]))
 
-        if NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE in self.settings.node_features:
+        if NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE in self._settings.node_features:
             energies = [x[1] for x in qm_data.lone_vacancy_data_full if x[0] == i]
 
             # append difference if there are 2 entries or more
@@ -481,7 +481,7 @@ class GraphGenerator:
             else:
                 node_features.append(0.0)
 
-        if NodeFeature.LONE_VACANCY_MIN in self.settings.node_features and len(self.settings.lone_vacancy_orbital_indices) > 0:
+        if NodeFeature.LONE_VACANCY_MIN in self._settings.node_features and len(self._settings.lone_vacancy_orbital_indices) > 0:
             if i in lone_vacancy_atom_indices:
 
                 # get list of all lone pair energies for this atom
@@ -494,12 +494,12 @@ class GraphGenerator:
                 node_features.append(qm_data.lone_vacancy_data_full[selected_index][2])
 
                 # get orbital occupations
-                oribtal_symmetries = [qm_data.lone_vacancy_data_full[selected_index][3][k] for k in self.settings.lone_vacancy_orbital_indices]
+                oribtal_symmetries = [qm_data.lone_vacancy_data_full[selected_index][3][k] for k in self._settings.lone_vacancy_orbital_indices]
                 node_features.extend(oribtal_symmetries)
             else:
-                node_features.extend((2 + len(self.settings.lone_vacancy_orbital_indices)) * [0.0])
+                node_features.extend((2 + len(self._settings.lone_vacancy_orbital_indices)) * [0.0])
 
-        if NodeFeature.LONE_VACANCY_AVERAGE in self.settings.node_features and len(self.settings.lone_vacancy_orbital_indices) > 0:
+        if NodeFeature.LONE_VACANCY_AVERAGE in self._settings.node_features and len(self._settings.lone_vacancy_orbital_indices) > 0:
             if i in lone_vacancy_atom_indices:
 
                 # get list of all lone pair energies for this atom
@@ -514,16 +514,16 @@ class GraphGenerator:
                 node_features.append(mean(occupations))
 
                 # get average values for orbital symmetries
-                oribtal_symmetries = [mean(x) for x in [[y[k] for y in symmetries] for k in self.settings.lone_vacancy_orbital_indices]]
+                oribtal_symmetries = [mean(x) for x in [[y[k] for y in symmetries] for k in self._settings.lone_vacancy_orbital_indices]]
                 node_features.extend(oribtal_symmetries)
             else:
-                node_features.extend((2 + len(self.settings.lone_vacancy_orbital_indices)) * [0.0])
+                node_features.extend((2 + len(self._settings.lone_vacancy_orbital_indices)) * [0.0])
 
         # add implicit hydrogens
-        if self.settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+        if self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
             # get hydrogen count for heavy atoms in implicit mode
             hydrogen_count = None
-            if self.settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+            if self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
                 # set hydrogen count of hydrogens to 0
                 if qm_data.atomic_numbers[i] == 1:
                     hydrogen_count = 0
@@ -601,7 +601,7 @@ class GraphGenerator:
             # look for transition metals
             if qm_data.atomic_numbers[i] in ElementLookUpTable.transition_metal_atomic_numbers:
                 # get bound h atom indices and append to return variable
-                hydride_hydrogen_indices.extend(self._get_bound_h_atom_indices(i, qm_data, threshold=self.settings.hydrogen_count_threshold))
+                hydride_hydrogen_indices.extend(self._get_bound_h_atom_indices(i, qm_data, threshold=self._settings.hydrogen_count_threshold))
 
         return hydride_hydrogen_indices
 
@@ -621,7 +621,7 @@ class GraphGenerator:
             # look for transition metals
             if qm_data.atomic_numbers[i] in ElementLookUpTable.transition_metal_atomic_numbers:
                 # get bound atom indices and append to return variable
-                hydride_hydrogen_indices = self._get_bound_h_atom_indices(i, qm_data, threshold=self.settings.hydrogen_count_threshold)
+                hydride_hydrogen_indices = self._get_bound_h_atom_indices(i, qm_data, threshold=self._settings.hydrogen_count_threshold)
 
                 for j in range(len(hydride_hydrogen_indices)):
                     hydride_bond_indices.append([hydride_hydrogen_indices[j], i])
@@ -668,7 +668,7 @@ class GraphGenerator:
 
         # resolve threshold
         if threshold is None:
-            threshold = self.settings.hydrogen_count_threshold
+            threshold = self._settings.hydrogen_count_threshold
 
         # return variable
         bound_h_indices = []
@@ -709,13 +709,13 @@ class GraphGenerator:
         # decide which index matrix to return
 
         # Wiberg mode
-        if self.settings.bond_determination_mode == BondDeterminationMode.WIBERG:
+        if self._settings.bond_determination_mode == BondDeterminationMode.WIBERG:
             return qm_data.wiberg_bond_order_matrix
         # LMO mode
-        elif self.settings.bond_determination_mode == BondDeterminationMode.LMO:
+        elif self._settings.bond_determination_mode == BondDeterminationMode.LMO:
             return qm_data.lmo_bond_order_matrix
         # NLMO mode
-        elif self.settings.bond_determination_mode == BondDeterminationMode.NLMO:
+        elif self._settings.bond_determination_mode == BondDeterminationMode.NLMO:
             return qm_data.nlmo_bond_order_matrix
         # raise exception otherwise
         else:
@@ -726,16 +726,16 @@ class GraphGenerator:
         # return variable
         graph_feature_list = []
 
-        for i in range(len(self.settings.graph_features)):
+        for i in range(len(self._settings.graph_features)):
 
-            if self.settings.graph_features[i] == GraphFeature.N_ATOMS:
+            if self._settings.graph_features[i] == GraphFeature.N_ATOMS:
                 graph_feature_list.append(qm_data.n_atoms)
-            elif self.settings.graph_features[i] == GraphFeature.MOLECULAR_MASS:
+            elif self._settings.graph_features[i] == GraphFeature.MOLECULAR_MASS:
                 graph_feature_list.append(qm_data.molecular_mass)
-            elif self.settings.graph_features[i] == GraphFeature.CHARGE:
+            elif self._settings.graph_features[i] == GraphFeature.CHARGE:
                 graph_feature_list.append(qm_data.charge)
             else:
-                warnings.warn('Could not find target' + str(self.settings.graph_features[i]) + '.')
+                warnings.warn('Could not find target' + str(self._settings.graph_features[i]) + '.')
 
         return graph_feature_list
 
@@ -750,65 +750,65 @@ class GraphGenerator:
         # return variable
         target_list = []
 
-        for i in range(len(self.settings.targets)):
+        for i in range(len(self._settings.targets)):
 
-            if type(self.settings.targets[i]) is not QmTarget:
+            if type(self._settings.targets[i]) is not QmTarget:
                 warnings.warn('Element ' + str(i) + ' of list is not of type QmTarget. Entry will be skipped.')
 
-            if self.settings.targets[i] == QmTarget.SVP_ELECTRONIC_ENERGY:
+            if self._settings.targets[i] == QmTarget.SVP_ELECTRONIC_ENERGY:
                 target_list.append(qm_data.svp_electronic_energy)
-            elif self.settings.targets[i] == QmTarget.TZVP_ELECTRONIC_ENERGY:
+            elif self._settings.targets[i] == QmTarget.TZVP_ELECTRONIC_ENERGY:
                 target_list.append(qm_data.tzvp_electronic_energy)
-            elif self.settings.targets[i] == QmTarget.SVP_DISPERSION_ENERGY:
+            elif self._settings.targets[i] == QmTarget.SVP_DISPERSION_ENERGY:
                 target_list.append(qm_data.svp_dispersion_energy)
-            elif self.settings.targets[i] == QmTarget.TZVP_DISPERSION_ENERGY:
+            elif self._settings.targets[i] == QmTarget.TZVP_DISPERSION_ENERGY:
                 target_list.append(qm_data.tzvp_dispersion_energy)
-            elif self.settings.targets[i] == QmTarget.SVP_DIPOLE_MOMENT:
+            elif self._settings.targets[i] == QmTarget.SVP_DIPOLE_MOMENT:
                 target_list.append(qm_data.svp_dipole_moment)
-            elif self.settings.targets[i] == QmTarget.TZVP_DIPOLE_MOMENT:
+            elif self._settings.targets[i] == QmTarget.TZVP_DIPOLE_MOMENT:
                 target_list.append(qm_data.tzvp_dipole_moment)
-            elif self.settings.targets[i] == QmTarget.SVP_HOMO_ENERGY:
+            elif self._settings.targets[i] == QmTarget.SVP_HOMO_ENERGY:
                 target_list.append(qm_data.svp_homo_energy)
-            elif self.settings.targets[i] == QmTarget.TZVP_HOMO_ENERGY:
+            elif self._settings.targets[i] == QmTarget.TZVP_HOMO_ENERGY:
                 target_list.append(qm_data.tzvp_homo_energy)
-            elif self.settings.targets[i] == QmTarget.SVP_LUMO_ENERGY:
+            elif self._settings.targets[i] == QmTarget.SVP_LUMO_ENERGY:
                 target_list.append(qm_data.svp_lumo_energy)
-            elif self.settings.targets[i] == QmTarget.TZVP_LUMO_ENERGY:
+            elif self._settings.targets[i] == QmTarget.TZVP_LUMO_ENERGY:
                 target_list.append(qm_data.tzvp_lumo_energy)
-            elif self.settings.targets[i] == QmTarget.SVP_HOMO_LUMO_GAP:
+            elif self._settings.targets[i] == QmTarget.SVP_HOMO_LUMO_GAP:
                 target_list.append(qm_data.svp_homo_lumo_gap)
-            elif self.settings.targets[i] == QmTarget.TZVP_HOMO_LUMO_GAP:
+            elif self._settings.targets[i] == QmTarget.TZVP_HOMO_LUMO_GAP:
                 target_list.append(qm_data.tzvp_homo_lumo_gap)
-            elif self.settings.targets[i] == QmTarget.LOWEST_VIBRATIONAL_FREQUENCY:
+            elif self._settings.targets[i] == QmTarget.LOWEST_VIBRATIONAL_FREQUENCY:
                 target_list.append(qm_data.lowest_vibrational_frequency)
-            elif self.settings.targets[i] == QmTarget.HIGHEST_VIBRATIONAL_FREQUENCY:
+            elif self._settings.targets[i] == QmTarget.HIGHEST_VIBRATIONAL_FREQUENCY:
                 target_list.append(qm_data.highest_vibrational_frequency)
-            elif self.settings.targets[i] == QmTarget.HEAT_CAPACITY:
+            elif self._settings.targets[i] == QmTarget.HEAT_CAPACITY:
                 target_list.append(qm_data.heat_capacity)
-            elif self.settings.targets[i] == QmTarget.ENTROPY:
+            elif self._settings.targets[i] == QmTarget.ENTROPY:
                 target_list.append(qm_data.entropy)
-            elif self.settings.targets[i] == QmTarget.ZPE_CORRECTION:
+            elif self._settings.targets[i] == QmTarget.ZPE_CORRECTION:
                 target_list.append(qm_data.zpe_correction)
-            elif self.settings.targets[i] == QmTarget.ENTHALPY_ENERGY:
+            elif self._settings.targets[i] == QmTarget.ENTHALPY_ENERGY:
                 target_list.append(qm_data.enthalpy_energy)
-            elif self.settings.targets[i] == QmTarget.GIBBS_ENERGY:
+            elif self._settings.targets[i] == QmTarget.GIBBS_ENERGY:
                 target_list.append(qm_data.gibbs_energy)
-            elif self.settings.targets[i] == QmTarget.CORRECTED_ENTHALPY_ENERGY:
+            elif self._settings.targets[i] == QmTarget.CORRECTED_ENTHALPY_ENERGY:
                 target_list.append(qm_data.corrected_enthalpy_energy)
-            elif self.settings.targets[i] == QmTarget.CORRECTED_GIBBS_ENERGY:
+            elif self._settings.targets[i] == QmTarget.CORRECTED_GIBBS_ENERGY:
                 target_list.append(qm_data.corrected_gibbs_energy)
-            elif self.settings.targets[i] == QmTarget.ELECTRONIC_ENERGY_DELTA:
+            elif self._settings.targets[i] == QmTarget.ELECTRONIC_ENERGY_DELTA:
                 target_list.append(qm_data.electronic_energy_delta)
-            elif self.settings.targets[i] == QmTarget.DISPERSION_ENERGY_DELTA:
+            elif self._settings.targets[i] == QmTarget.DISPERSION_ENERGY_DELTA:
                 target_list.append(qm_data.dispersion_energy_delta)
-            elif self.settings.targets[i] == QmTarget.DIPOLE_MOMENT_DELTA:
+            elif self._settings.targets[i] == QmTarget.DIPOLE_MOMENT_DELTA:
                 target_list.append(qm_data.dipole_moment_delta)
-            elif self.settings.targets[i] == QmTarget.HOMO_LUMO_GAP_DELTA:
+            elif self._settings.targets[i] == QmTarget.HOMO_LUMO_GAP_DELTA:
                 target_list.append(qm_data.homo_lumo_gap_delta)
-            elif self.settings.targets[i] == QmTarget.POLARISABILITY:
+            elif self._settings.targets[i] == QmTarget.POLARISABILITY:
                 target_list.append(qm_data.polarisability)
             else:
-                warnings.warn('Could not find target' + str(self.settings.targets[i]) + '.')
+                warnings.warn('Could not find target' + str(self._settings.targets[i]) + '.')
 
         return target_list
 
