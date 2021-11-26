@@ -140,7 +140,7 @@ class ElementLookUpTable():
     }
 
     @staticmethod
-    def get_element_format_colour(element_identifier):
+    def get_element_format_colour(element_identifier: str) -> str:
 
         """Returns the appropriate formatting colour of a given element identifier.
 
@@ -154,13 +154,13 @@ class ElementLookUpTable():
             string: Discrete name for the colour.
         """
 
-        if element_identifier in ElementLookUpTable.atom_format_dict.keys():
-            return ElementLookUpTable.atom_format_dict[element_identifier]['colour']
+        if element_identifier.title() in ElementLookUpTable.atom_format_dict.keys():
+            return ElementLookUpTable.atom_format_dict[element_identifier.title()]['colour']
         else:
             raise ValueError('Requested element identifier does not exist.')
 
     @staticmethod
-    def get_element_format_size(element_identifier):
+    def get_element_format_size(element_identifier: str) -> int:
 
         """Returns the appropriate formatting size of a given element identifier.
 
@@ -173,13 +173,13 @@ class ElementLookUpTable():
         Returns:
             string: Formatting size of the element.
         """
-        if element_identifier in ElementLookUpTable.atom_format_dict.keys():
-            return ElementLookUpTable.atom_format_dict[element_identifier]['size']
+        if element_identifier.title() in ElementLookUpTable.atom_format_dict.keys():
+            return ElementLookUpTable.atom_format_dict[element_identifier.title()]['size']
         else:
             raise ValueError('Requested element identifier does not exist.')
 
     @staticmethod
-    def get_element_identifier(atomic_number):
+    def get_element_identifier(atomic_number: int) -> str:
 
         """Returns the appropriate element identifier based on a given atomic number.
 
@@ -199,7 +199,7 @@ class ElementLookUpTable():
             raise ValueError('Invalid atomic number, must be in range 1-118.')
 
     @staticmethod
-    def get_atomic_number(element_identifier):
+    def get_atomic_number(element_identifier: str) -> int:
 
         """Returns the appropriate atomic number based on a given element identifier.
 

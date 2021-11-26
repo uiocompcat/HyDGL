@@ -51,6 +51,40 @@ class TestElementLookUpTable(unittest.TestCase):
     @parameterized.expand([
 
         [
+            'P',
+            'orange'
+        ],
+
+        [
+            'cR',
+            'gray'
+        ],
+
+    ])
+    def test_get_element_format_colour(self, element_identifier, expected):
+
+        self.assertEqual(ElementLookUpTable.get_element_format_colour(element_identifier), expected)
+
+    @parameterized.expand([
+
+        [
+            'O',
+            18
+        ],
+
+        [
+            'pD',
+            30
+        ],
+
+    ])
+    def test_get_element_format_size(self, element_identifier, expected):
+
+        self.assertEqual(ElementLookUpTable.get_element_format_size(element_identifier), expected)
+
+    @parameterized.expand([
+
+        [
             0,
             ValueError
         ],
@@ -86,3 +120,37 @@ class TestElementLookUpTable(unittest.TestCase):
     def test_get_atomic_number_with_invalid_input(self, atomic_number, expected_error):
 
         self.assertRaises(expected_error, ElementLookUpTable.get_atomic_number, atomic_number)
+
+    @parameterized.expand([
+
+        [
+            '',
+            ValueError
+        ],
+
+        [
+            'by',
+            ValueError
+        ],
+
+    ])
+    def test_get_element_format_colour_with_invalid_input(self, element_identifier, expected_error):
+
+        self.assertRaises(expected_error, ElementLookUpTable.get_element_format_colour, element_identifier)
+
+    @parameterized.expand([
+
+        [
+            '',
+            ValueError
+        ],
+
+        [
+            'by',
+            ValueError
+        ],
+
+    ])
+    def test_get_element_format_size_with_invalid_input(self, element_identifier, expected_error):
+
+        self.assertRaises(expected_error, ElementLookUpTable.get_element_format_size, element_identifier)
