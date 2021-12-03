@@ -76,16 +76,16 @@ class QmData():
     nlmo_bond_order_totals: list[float] = None
 
     # nbo data
+    nbo_data = None
+    nbo_energies: list[list] = None
+
     lone_pair_data = None
     lone_vacancy_data = None
     bond_pair_data = None
     antibond_pair_data = None
-    nbo_energies: list[list] = None
 
-    lone_pair_data_full = None
-    lone_vacancy_data_full = None
-    bond_pair_data_full = None
-    antibond_pair_data_full = None
+    # data for NBO SOPA
+    sopa_data = None
 
     # deltas
     dispersion_energy_delta: float = None  # Ha
@@ -156,33 +156,48 @@ class QmData():
         self.nlmo_bond_order_totals = [sum(bond_orders) for bond_orders in self.nlmo_bond_order_matrix]
 
         # merge nbo data with corresponding energies
-        self.lone_pair_data_full = self._merge_nbo_data(self.lone_pair_data)
-        self.lone_vacancy_data_full = self._merge_nbo_data(self.lone_vacancy_data)
-        self.bond_pair_data_full = self._merge_nbo_data(self.bond_pair_data)
-        self.antibond_pair_data_full = self._merge_nbo_data(self.antibond_pair_data)
+        self._merge_nbo_data()
 
-    def _merge_nbo_data(self, nbo_data):
+        # get individual lists for LP, LV, BD, BD*
+        self._get_nbo_individual_lists()
 
-        merged_data = []
+    def _merge_nbo_data(self):
+
         # readout IDs of energies to match energies to corresponding nbo entries
         energy_ids = [x[0] for x in self.nbo_energies]
-
-        for i in range(len(nbo_data)):
+        for i in range(len(self.nbo_data)):
 
             # get the index of the ID of the current nbo data point
-            nbo_energy_index = energy_ids.index(nbo_data[i][0])
+            nbo_energy_index = energy_ids.index(self.nbo_data[i][0])
 
-            # merge together and drop ID
-            # [ atom_position, energy, occupation value, [occupations] ]
-            data_point = [nbo_data[i][1]]
-            data_point.append(self.nbo_energies[nbo_energy_index][1])
-            data_point.append(nbo_data[i][2])
-            data_point.append(nbo_data[i][3])
+            # merge together by inserting energy in position 3
+            self.nbo_data[i].insert(3, self.nbo_energies[nbo_energy_index][1])
 
-            # append to output list
-            merged_data.append(data_point)
+    def _get_nbo_individual_lists(self):
 
-        return merged_data
+        lone_pair_data = []
+        lone_vacancy_data = []
+        bond_pair_data = []
+        antibond_pair_data = []
+
+        for i in range(len(self.nbo_data)):
+
+            if self.nbo_data[i][1] == 'LP':
+                lone_pair_data.append(self.nbo_data[i][2:])
+
+            if self.nbo_data[i][1] == 'LV':
+                lone_vacancy_data.append(self.nbo_data[i][2:])
+
+            if self.nbo_data[i][1] == 'BD':
+                bond_pair_data.append(self.nbo_data[i][2:])
+
+            if self.nbo_data[i][1] == 'BD*':
+                antibond_pair_data.append(self.nbo_data[i][2:])
+
+        self.lone_pair_data = lone_pair_data
+        self.lone_vacancy_data = lone_vacancy_data
+        self.bond_pair_data = bond_pair_data
+        self.antibond_pair_data = antibond_pair_data
 
     @staticmethod
     def _calculate_euclidean_distance(x, y):

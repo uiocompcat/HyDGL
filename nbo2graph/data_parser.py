@@ -73,14 +73,13 @@ class DataParser:
                 qm_data.nlmo_bond_order_matrix, i = self._extract_index_matrix(i + 4)
 
             if 'Bond orbital / Coefficients / Hybrids' in self.lines[i]:
-                result, i = self._extract_nbo_data(i + 2)
-                qm_data.lone_pair_data, qm_data.lone_vacancy_data, qm_data.bond_pair_data, qm_data.antibond_pair_data = result[0], result[1], result[2], result[3]
+                qm_data.nbo_data, i = self._extract_nbo_data(i + 2)
 
             if 'NATURAL BOND ORBITALS' in self.lines[i]:
                 qm_data.nbo_energies, i = self._extract_nbo_energies(i + 7)
 
             if 'SECOND ORDER PERTURBATION THEORY ANALYSIS' in self.lines[i]:
-                x, i = self._extract_sopa_data(i + 9)
+                qm_data.sopa_data, i = self._extract_sopa_data(i + 9)
 
             if 'Atom I' in self.lines[i]:
                 qm_data.lmo_bond_order_matrix, i = self._extract_lmo_bond_data(i + 1)
@@ -399,11 +398,8 @@ class DataParser:
 
     def _extract_nbo_data(self, start_index):
 
-        # final output variables
-        lone_pair_data = []
-        antibond_pair_data = []
-        bond_pair_data = []
-        lone_vacancy_data = []
+        # final output variable
+        data = []
 
         # rename index for brevity
         i = start_index
@@ -415,32 +411,14 @@ class DataParser:
             if len(line_split) > 3:
 
                 # lone pairs
-                if line_split[2] == 'LP':
-
-                    lone_pair = self._extract_lone_pair_data(i)
-                    lone_pair_data.append(lone_pair)
+                if line_split[2] == 'LP' or line_split[2] == 'LV':
+                    data.append(self._extract_lone_pair_data(i))
 
                 # bonds
-                if line_split[2] == 'BD':
-
-                    bond = self._extract_bonding_data(i)
-                    bond_pair_data.append(bond)
-
-                # anti bonds
-                if line_split[2] == 'BD*':
-
-                    antibond = self._extract_bonding_data(i)
-                    antibond_pair_data.append(antibond)
-
-                # lone vacancy
-                if line_split[2] == 'LV':
-
-                    lone_vacancy = self._extract_lone_pair_data(i)
-                    lone_vacancy_data.append(lone_vacancy)
+                if line_split[2] == 'BD' or line_split[2] == 'BD*':
+                    data.append(self._extract_bonding_data(i))
 
             i += 1
-
-        data = [lone_pair_data, lone_vacancy_data, bond_pair_data, antibond_pair_data]
 
         # also return index i to jump ahead in the file
         return data, i
@@ -458,6 +436,9 @@ class DataParser:
         line_split = list(filter(None, re.split(r'\(|\)| ', self.lines[start_index])))
         full_occupation = float(line_split[1])
 
+        # nbo type
+        nbo_type = line_split[2]
+
         # get occupation from both lines using regex (values in brackets)
         merged_lines = (self.lines[start_index] + self.lines[start_index + 1]).replace(' ', '')
         result = re.findall(r'\((.{4,6})%\)', merged_lines)
@@ -470,7 +451,7 @@ class DataParser:
 
         # return id, atom position, occupation and percent occupations
         # divide occupations by 100 (get rid of %)
-        return [id, atom_position, full_occupation, [x / 100 for x in occupations]]
+        return [id, nbo_type, atom_position, full_occupation, [x / 100 for x in occupations]]
 
     def _extract_bonding_data(self, start_index):
 
@@ -484,6 +465,9 @@ class DataParser:
         # obtain occupation
         line_split = list(filter(None, re.split(r'\(|\)| ', self.lines[start_index])))
         full_occupation = float(line_split[1])
+
+        # nbo type
+        nbo_type = line_split[2]
 
         # get occupation from both lines using regex (values in brackets)
         merged_lines = (self.lines[start_index + 1] + self.lines[start_index + 2]).replace(' ', '')
@@ -514,13 +498,16 @@ class DataParser:
 
         # return id, atom position, occupation and percent occupations
         # divide occupations by 100 (get rid of %)
-        return [id, atom_positions, full_occupation, [x / 200 for x in occupations]]
+        return [id, nbo_type, atom_positions, full_occupation, [x / 200 for x in occupations]]
         # return atom_positions, [x / 200 for x in occupations]
 
     def _extract_sopa_data(self, start_index):
 
         # rename index for brevity
         i = start_index
+
+        # return variable
+        sopa_data = []
 
         while 'NATURAL BOND ORBITALS' not in self.lines[i]:
 
@@ -531,6 +518,8 @@ class DataParser:
                 nbo_ids = list(map(int, re.findall(r'([0-9]{1,5})\. [A-Z]{2}', self.lines[i])))
                 energies = list(map(float, line_split[-3:]))
 
+                sopa_data.append([nbo_ids, energies])
+
             i += 1
 
-        return None, i
+        return sopa_data, i
