@@ -36,14 +36,18 @@ class DataParser:
 
         raise Exception('Could not find number of atoms in file.')
 
+    def parse_to_qm_data_object(self):
+
+        return QmData.from_dict(self.parse())
+
     def parse(self):
 
         # output variable
-        qm_data = QmData()
-        qm_data.n_atoms = self.n_atoms
+        qm_data = {}
+        qm_data['n_atoms'] = self.n_atoms
 
         # get id token from file name
-        qm_data.id = ''.join(self.file_path.split('/')[-1].split('.')[0:-1])
+        qm_data['id'] = ''.join(self.file_path.split('/')[-1].split('.')[0:-1])
 
         # variable that shows if scan is currently in SVP or TZVP region of output file
         region_state = ''
@@ -57,106 +61,103 @@ class DataParser:
             # search for keywords and if found call appropriate functions with start index
             # the start index addition offset is based on the Gaussian output format
             if 'Standard orientation' in self.lines[i]:
-                qm_data.atomic_numbers = self._extract_atomic_numbers(i + 5)
-                qm_data.geometric_data, i = self._extract_geometric_data(i + 5)
+                qm_data['atomic_numbers'] = self._extract_atomic_numbers(i + 5)
+                qm_data['geometric_data'], i = self._extract_geometric_data(i + 5)
 
             if 'Summary of Natural Population Analysis' in self.lines[i]:
-                qm_data.natural_atomic_charges, i = self._extract_natural_atomic_charges(i + 6)
+                qm_data['natural_atomic_charges'], i = self._extract_natural_atomic_charges(i + 6)
 
             if 'Natural Electron Configuration' in self.lines[i]:
-                qm_data.natural_electron_configuration, i = self._extract_natural_electron_configuration(i + 2)
+                qm_data['natural_electron_configuration'], i = self._extract_natural_electron_configuration(i + 2)
 
             if 'Wiberg bond index matrix' in self.lines[i]:
-                qm_data.wiberg_bond_order_matrix, i = self._extract_index_matrix(i + 4)
+                qm_data['wiberg_bond_order_matrix'], i = self._extract_index_matrix(i + 4)
 
             if 'Atom-Atom Net Linear NLMO/NPA' in self.lines[i]:
-                qm_data.nlmo_bond_order_matrix, i = self._extract_index_matrix(i + 4)
+                qm_data['nlmo_bond_order_matrix'], i = self._extract_index_matrix(i + 4)
 
             if 'Bond orbital / Coefficients / Hybrids' in self.lines[i]:
-                qm_data.nbo_data, i = self._extract_nbo_data(i + 2)
+                qm_data['nbo_data'], i = self._extract_nbo_data(i + 2)
 
             if 'NATURAL BOND ORBITALS' in self.lines[i]:
-                qm_data.nbo_energies, i = self._extract_nbo_energies(i + 7)
+                qm_data['nbo_energies'], i = self._extract_nbo_energies(i + 7)
 
             if 'SECOND ORDER PERTURBATION THEORY ANALYSIS' in self.lines[i]:
-                qm_data.sopa_data, i = self._extract_sopa_data(i + 9)
+                qm_data['sopa_data'], i = self._extract_sopa_data(i + 9)
 
             if 'Atom I' in self.lines[i]:
-                qm_data.lmo_bond_order_matrix, i = self._extract_lmo_bond_data(i + 1)
+                qm_data['lmo_bond_order_matrix'], i = self._extract_lmo_bond_data(i + 1)
 
             if 'Charge = ' in self.lines[i]:
-                qm_data.charge = self._extract_charge(i)
+                qm_data['charge'] = self._extract_charge(i)
 
             if 'Stoichiometry' in self.lines[i]:
-                qm_data.stoichiometry = self._extract_stoichiometry(i)
+                qm_data['stoichiometry'] = self._extract_stoichiometry(i)
 
             if 'Molecular mass' in self.lines[i]:
-                qm_data.molecular_mass = self._extract_molecular_mass(i)
+                qm_data['molecular_mass'] = self._extract_molecular_mass(i)
 
             if 'Grimme-D3(BJ) Dispersion energy=' in self.lines[i]:
                 if region_state == 'svp':
-                    qm_data.svp_dispersion_energy = self._extract_dispersion_energy(i)
+                    qm_data['svp_dispersion_energy'] = self._extract_dispersion_energy(i)
                 elif region_state == 'tzvp':
-                    qm_data.tzvp_dispersion_energy = self._extract_dispersion_energy(i)
+                    qm_data['tzvp_dispersion_energy'] = self._extract_dispersion_energy(i)
 
             if 'SCF Done' in self.lines[i]:
                 if region_state == 'svp':
-                    qm_data.svp_electronic_energy = self._extract_electronic_energy(i)
+                    qm_data['svp_electronic_energy'] = self._extract_electronic_energy(i)
                 elif region_state == 'tzvp':
-                    qm_data.tzvp_electronic_energy = self._extract_electronic_energy(i)
+                    qm_data['tzvp_electronic_energy'] = self._extract_electronic_energy(i)
 
             if 'Dipole moment (field-independent basis, Debye)' in self.lines[i]:
                 if region_state == 'svp':
-                    qm_data.svp_dipole_moment = self._extract_dipole_moment(i + 1)
+                    qm_data['svp_dipole_moment'] = self._extract_dipole_moment(i + 1)
                 elif region_state == 'tzvp':
-                    qm_data.tzvp_dipole_moment = self._extract_dipole_moment(i + 1)
+                    qm_data['tzvp_dipole_moment'] = self._extract_dipole_moment(i + 1)
 
             if 'Isotropic polarizability' in self.lines[i]:
-                qm_data.polarisability = self._extract_polarisability(i)
+                qm_data['polarisability'] = self._extract_polarisability(i)
 
             if 'Frequencies -- ' in self.lines[i]:
-                if qm_data.frequencies is None:
-                    qm_data.frequencies = self._extract_frequency(i)
+                if 'frequencies' not in qm_data:
+                    qm_data['frequencies'] = self._extract_frequency(i)
                 else:
-                    qm_data.frequencies.extend(self._extract_frequency(i))
+                    qm_data['frequencies'].extend(self._extract_frequency(i))
 
             if 'Zero-point correction=' in self.lines[i]:
-                qm_data.zpe_correction = self._extract_zpe_correction(i)
+                qm_data['zpe_correction'] = self._extract_zpe_correction(i)
 
             if 'Sum of electronic and thermal Enthalpies=' in self.lines[i]:
-                qm_data.enthalpy_energy = self._extract_enthalpy_energy(i)
+                qm_data['enthalpy_energy'] = self._extract_enthalpy_energy(i)
 
             if 'Sum of electronic and thermal Free Energies=' in self.lines[i]:
-                qm_data.gibbs_energy = self._extract_gibbs_energy(i)
-                qm_data.heat_capacity = self._extract_heat_capacity(i + 4)
-                qm_data.entropy = self._extract_entropy(i + 4)
+                qm_data['gibbs_energy'] = self._extract_gibbs_energy(i)
+                qm_data['heat_capacity'] = self._extract_heat_capacity(i + 4)
+                qm_data['entropy'] = self._extract_entropy(i + 4)
 
             if 'Alpha  occ. eigenvalues' in self.lines[i]:
                 if region_state == 'svp':
-                    if qm_data.svp_occupied_orbital_energies is None:
-                        qm_data.svp_occupied_orbital_energies = self._extract_orbital_energies(i)
+                    if 'svp_occupied_orbital_energies' not in qm_data.keys():
+                        qm_data['svp_occupied_orbital_energies'] = self._extract_orbital_energies(i)
                     else:
-                        qm_data.svp_occupied_orbital_energies.extend(self._extract_orbital_energies(i))
+                        qm_data['svp_occupied_orbital_energies'].extend(self._extract_orbital_energies(i))
                 elif region_state == 'tzvp':
-                    if qm_data.tzvp_occupied_orbital_energies is None:
-                        qm_data.tzvp_occupied_orbital_energies = self._extract_orbital_energies(i)
+                    if 'tzvp_occupied_orbital_energies' not in qm_data.keys():
+                        qm_data['tzvp_occupied_orbital_energies'] = self._extract_orbital_energies(i)
                     else:
-                        qm_data.tzvp_occupied_orbital_energies.extend(self._extract_orbital_energies(i))
+                        qm_data['tzvp_occupied_orbital_energies'].extend(self._extract_orbital_energies(i))
 
             if 'Alpha virt. eigenvalues' in self.lines[i]:
                 if region_state == 'svp':
-                    if qm_data.svp_virtual_orbital_energies is None:
-                        qm_data.svp_virtual_orbital_energies = self._extract_orbital_energies(i)
+                    if 'svp_virtual_orbital_energies' not in qm_data.keys():
+                        qm_data['svp_virtual_orbital_energies'] = self._extract_orbital_energies(i)
                     else:
-                        qm_data.svp_virtual_orbital_energies.extend(self._extract_orbital_energies(i))
+                        qm_data['svp_virtual_orbital_energies'].extend(self._extract_orbital_energies(i))
                 elif region_state == 'tzvp':
-                    if qm_data.tzvp_virtual_orbital_energies is None:
-                        qm_data.tzvp_virtual_orbital_energies = self._extract_orbital_energies(i)
+                    if 'tzvp_virtual_orbital_energies' not in qm_data.keys():
+                        qm_data['tzvp_virtual_orbital_energies'] = self._extract_orbital_energies(i)
                     else:
-                        qm_data.tzvp_virtual_orbital_energies.extend(self._extract_orbital_energies(i))
-
-        # calculate extra properties such as delta values, HOMO, LUMU, etc.
-        qm_data.calculate_properties()
+                        qm_data['tzvp_virtual_orbital_energies'].extend(self._extract_orbital_energies(i))
 
         return qm_data
 
