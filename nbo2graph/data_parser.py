@@ -37,7 +37,6 @@ class DataParser:
         raise Exception('Could not find number of atoms in file.')
 
     def parse_to_qm_data_object(self):
-
         return QmData.from_dict(self.parse())
 
     def parse(self):
@@ -473,6 +472,7 @@ class DataParser:
         # get occupation from both lines using regex (values in brackets)
         merged_lines = (self.lines[start_index + 1] + self.lines[start_index + 2]).replace(' ', '')
         result = re.findall(r'\((.{3,5})%\)', merged_lines)
+        contribution1 = float(result[0]) / 100
         occupations1 = list(map(float, result))[1:]
         # append zeros to account for atoms that do not have higher orbital types
         while len(occupations1) < 4:
@@ -486,6 +486,7 @@ class DataParser:
         # get occupation from both lines using regex (values in brackets)
         merged_lines = (self.lines[i] + self.lines[i + 1]).replace(' ', '')
         result = re.findall(r'\((.{3,5})%\)', merged_lines)
+        contribution2 = float(result[0]) / 100
         occupations2 = list(map(float, result))[1:]
         # append zeros to account for atoms that do not have higher orbital types
         while len(occupations2) < 4:
@@ -499,7 +500,7 @@ class DataParser:
 
         # return id, atom position, occupation and percent occupations
         # divide occupations by 100 (get rid of %)
-        return [id, nbo_type, atom_positions, full_occupation, [x / 200 for x in occupations]]
+        return [id, nbo_type, atom_positions, [contribution1, contribution2], full_occupation, [x / 200 for x in occupations]]
         # return atom_positions, [x / 200 for x in occupations]
 
     def _extract_sopa_data(self, start_index):

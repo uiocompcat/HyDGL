@@ -1,3 +1,7 @@
+from nbo2graph.nbo_single_data_point import NboSingleDataPoint
+from nbo2graph.nbo_double_data_point import NboDoubleDataPoint
+
+
 class QmData():
 
     """Class for storing relevant QM data."""
@@ -91,15 +95,12 @@ class QmData():
         # nbo bond data
         self.nlmo_bond_order_matrix = nlmo_bond_order_matrix
 
-        # nbo data
-        self.nbo_data = nbo_data
-        self.nbo_energies = nbo_energies
+        # merge nbo data with corresponding energies
+        self.nbo_data = self._merge_nbo_data(nbo_data, nbo_energies)
 
         # data for NBO SOPA
         self.sopa_data = sopa_data
 
-        # merge nbo data with corresponding energies
-        self._merge_nbo_data()
         # get individual lists for LP, LV, BD, BD*
         self._get_nbo_individual_lists()
 
@@ -191,17 +192,40 @@ class QmData():
                 distance_matrix[j][i] = distance
         self.bond_distance_matrix = distance_matrix
 
-    def _merge_nbo_data(self):
+    def _merge_nbo_data(self, nbo_data, nbo_energies):
+
+        x = []
 
         # readout IDs of energies to match energies to corresponding nbo entries
-        energy_ids = [x[0] for x in self.nbo_energies]
-        for i in range(len(self.nbo_data)):
+        energy_ids = [x[0] for x in nbo_energies]
+        for i in range(len(nbo_data)):
 
             # get the index of the ID of the current nbo data point
-            nbo_energy_index = energy_ids.index(self.nbo_data[i][0])
+            nbo_energy_index = energy_ids.index(nbo_data[i][0])
+            nbo_energy = nbo_energies[nbo_energy_index][1]
 
-            # merge together by inserting energy in position 3
-            self.nbo_data[i].insert(3, self.nbo_energies[nbo_energy_index][1])
+            if nbo_data[i][1] == 'LP' or nbo_data[i][1] == 'LV':
+
+                nbo_data_point = NboSingleDataPoint(nbo_id=nbo_data[i][0],
+                                                    nbo_type=nbo_data[i][1],
+                                                    atom_index=nbo_data[i][2],
+                                                    energy=nbo_energy,
+                                                    occupation=nbo_data[i][3],
+                                                    orbital_occupations=nbo_data[i][4])
+
+            elif nbo_data[i][1] == 'BD' or nbo_data[i][1] == 'BD*':
+
+                nbo_data_point = NboDoubleDataPoint(nbo_id=nbo_data[i][0],
+                                                    nbo_type=nbo_data[i][1],
+                                                    atom_indeces=nbo_data[i][2],
+                                                    contributions=nbo_data[i][3],
+                                                    energy=nbo_energy,
+                                                    occupation=nbo_data[i][4],
+                                                    orbital_occupations=nbo_data[i][5])
+
+            x.append(nbo_data_point)
+
+        return x
 
     def _get_nbo_individual_lists(self):
 
@@ -212,17 +236,17 @@ class QmData():
 
         for i in range(len(self.nbo_data)):
 
-            if self.nbo_data[i][1] == 'LP':
-                lone_pair_data.append(self.nbo_data[i][2:])
+            if self.nbo_data[i].nbo_type == 'LP':
+                lone_pair_data.append(self.nbo_data[i])
 
-            if self.nbo_data[i][1] == 'LV':
-                lone_vacancy_data.append(self.nbo_data[i][2:])
+            if self.nbo_data[i].nbo_type == 'LV':
+                lone_vacancy_data.append(self.nbo_data[i])
 
-            if self.nbo_data[i][1] == 'BD':
-                bond_pair_data.append(self.nbo_data[i][2:])
+            if self.nbo_data[i].nbo_type == 'BD':
+                bond_pair_data.append(self.nbo_data[i])
 
-            if self.nbo_data[i][1] == 'BD*':
-                antibond_pair_data.append(self.nbo_data[i][2:])
+            if self.nbo_data[i].nbo_type == 'BD*':
+                antibond_pair_data.append(self.nbo_data[i])
 
         self.lone_pair_data = lone_pair_data
         self.lone_vacancy_data = lone_vacancy_data

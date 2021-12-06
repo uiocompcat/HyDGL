@@ -828,12 +828,18 @@ class GraphGenerator:
             assert edges[i].node_indices[0] < n_nodes
             assert edges[i].node_indices[1] < n_nodes
 
+    def _get_atom_index_from_nbo_id(self, qm_data: QmData, nbo_id: int) -> int:
+
+        return 0
+
     def _get_sopa_edges(self, qm_data: QmData) -> list[Edge]:
 
         edges = []
 
-        for i in range(len(qm_data.sopa_data)):
+        for i in range(len(qm_data.nbo_data)):
+            print(qm_data.nbo_data[i])
 
-            print(i)
+        # for i in range(len(qm_data.sopa_data)):
+            # print(qm_data.sopa_data[i])
 
         return edges
