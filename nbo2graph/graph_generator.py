@@ -123,11 +123,11 @@ class GraphGenerator:
             for i in range(len(qm_data.bond_pair_data)):
                 # ignore hydrogens in omit and implicit mode
                 if self._settings.hydrogen_mode == HydrogenMode.OMIT or self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
-                    if qm_data.atomic_numbers[qm_data.bond_pair_data[i][0][0]] == 1 or qm_data.atomic_numbers[qm_data.bond_pair_data[i][0][1]] == 1:
+                    if qm_data.atomic_numbers[qm_data.bond_pair_data[i].atom_indices[0]] == 1 or qm_data.atomic_numbers[qm_data.bond_pair_data[i].atom_indices[1]] == 1:
                         continue
 
-                if not qm_data.bond_pair_data[i][0] in adjacency_list:
-                    adjacency_list.append(qm_data.bond_pair_data[i][0])
+                if not qm_data.bond_pair_data[i].atom_indices in adjacency_list:
+                    adjacency_list.append(qm_data.bond_pair_data[i].atom_indices)
 
             return sorted(adjacency_list)
         else:
@@ -166,12 +166,12 @@ class GraphGenerator:
         # pre read data for efficiency
 
         # bonds with BD and BD*
-        bond_pair_atom_indices = [x[0] for x in qm_data.bond_pair_data]
-        antibond_pair_atom_indices = [x[0] for x in qm_data.antibond_pair_data]
+        bond_pair_atom_indices = [x.atom_indices for x in qm_data.bond_pair_data]
+        antibond_pair_atom_indices = [x.atom_indices for x in qm_data.antibond_pair_data]
 
         # corresponding energy values
-        bond_pair_energies = [x[1] for x in qm_data.bond_pair_data]
-        antibond_pair_energies = [x[1] for x in qm_data.antibond_pair_data]
+        bond_pair_energies = [x.energy for x in qm_data.bond_pair_data]
+        antibond_pair_energies = [x.energy for x in qm_data.antibond_pair_data]
 
         # setup edge_features
         edge_features = []
@@ -198,12 +198,12 @@ class GraphGenerator:
 
             if bond_atom_indices in bond_pair_atom_indices:
                 # length of bond pair list for this edge
-                edge_features.append(len([x[1] for x in qm_data.bond_pair_data if x[0] == bond_atom_indices]))
+                edge_features.append(len([x.energy for x in qm_data.bond_pair_data if x[0] == bond_atom_indices]))
             else:
                 edge_features.append(0)
 
         if EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features:
-            energies = [x[1] for x in qm_data.bond_pair_data if x[0] == bond_atom_indices]
+            energies = [x.energy for x in qm_data.bond_pair_data if x[0] == bond_atom_indices]
 
             # append difference if there are 2 entries or more
             if len(energies) >= 2:
@@ -220,15 +220,15 @@ class GraphGenerator:
             if bond_atom_indices in bond_pair_atom_indices:
 
                 # get list of all bond pair energies for this atom
-                energies = [x[1] for x in qm_data.bond_pair_data if x[0] == bond_atom_indices]
+                energies = [x.energy for x in qm_data.bond_pair_data if x.atom_indices == bond_atom_indices]
 
                 # select index of the highest energy (for BD)
                 selected_index = bond_pair_energies.index(max(energies))
 
                 # append data (total length = 2 + number of orbital occupancies)
-                edge_features.append(qm_data.bond_pair_data[selected_index][1])
-                edge_features.append(qm_data.bond_pair_data[selected_index][2])
-                edge_features.extend([qm_data.bond_pair_data[selected_index][3][k] for k in self._settings.bond_orbital_indices])
+                edge_features.append(qm_data.bond_pair_data[selected_index].energy)
+                edge_features.append(qm_data.bond_pair_data[selected_index].occupation)
+                edge_features.extend([qm_data.bond_pair_data[selected_index].orbital_occupations[k] for k in self._settings.bond_orbital_indices])
 
             else:
                 edge_features.extend((2 + len(self._settings.bond_orbital_indices)) * [0.0])
@@ -240,11 +240,11 @@ class GraphGenerator:
             if bond_atom_indices in bond_pair_atom_indices:
 
                 # get list of all antibond pair energies for this atom
-                energies = [x[1] for x in qm_data.bond_pair_data if x[0] == bond_atom_indices]
+                energies = [x.energy for x in qm_data.bond_pair_data if x.atom_indices == bond_atom_indices]
                 # get list of all occupation values for this atom
-                occupations = [x[2] for x in qm_data.bond_pair_data if x[0] == bond_atom_indices]
+                occupations = [x.occupation for x in qm_data.bond_pair_data if x.atom_indices == bond_atom_indices]
                 # get list of symmetry values of different lone pairs for this atom
-                symmetries = [x[3] for x in qm_data.bond_pair_data if x[0] == bond_atom_indices]
+                symmetries = [x.orbital_occupations for x in qm_data.bond_pair_data if x.atom_indices == bond_atom_indices]
 
                 # append average values for energies and occupations
                 edge_features.append(mean(energies))
@@ -257,7 +257,7 @@ class GraphGenerator:
                 edge_features.extend((2 + len(self._settings.bond_orbital_indices)) * [0.0])
 
         if EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features:
-            energies = [x[1] for x in qm_data.antibond_pair_data if x[0] == bond_atom_indices]
+            energies = [x.energy for x in qm_data.antibond_pair_data if x.atom_indices == bond_atom_indices]
 
             # append difference if there are 2 entries or more
             if len(energies) >= 2:
@@ -273,15 +273,15 @@ class GraphGenerator:
             if bond_atom_indices in antibond_pair_atom_indices:
 
                 # get list of all antibond pair energies for this atom
-                energies = [x[1] for x in qm_data.antibond_pair_data if x[0] == bond_atom_indices]
+                energies = [x.energy for x in qm_data.antibond_pair_data if x.atom_indices == bond_atom_indices]
 
                 # select index of the lowest energy (for BD*)
                 selected_index = antibond_pair_energies.index(min(energies))
 
                 # append data (total length = 2 + number of orbital occupancies)
-                edge_features.append(qm_data.antibond_pair_data[selected_index][1])
-                edge_features.append(qm_data.antibond_pair_data[selected_index][2])
-                edge_features.extend([qm_data.bond_pair_data[selected_index][3][k] for k in self._settings.antibond_orbital_indices])
+                edge_features.append(qm_data.antibond_pair_data[selected_index].energy)
+                edge_features.append(qm_data.antibond_pair_data[selected_index].occupation)
+                edge_features.extend([qm_data.bond_pair_data[selected_index].orbital_occupations[k] for k in self._settings.antibond_orbital_indices])
             else:
                 edge_features.extend((2 + len(self._settings.antibond_orbital_indices)) * [0.0])
 
@@ -292,11 +292,11 @@ class GraphGenerator:
             if bond_atom_indices in antibond_pair_atom_indices:
 
                 # get list of all antibond pair energies for this atom
-                energies = [x[1] for x in qm_data.antibond_pair_data if x[0] == bond_atom_indices]
+                energies = [x.energy for x in qm_data.antibond_pair_data if x.atom_indices == bond_atom_indices]
                 # get list of all occupation values for this atom
-                occupations = [x[2] for x in qm_data.antibond_pair_data if x[0] == bond_atom_indices]
+                occupations = [x.occupation for x in qm_data.antibond_pair_data if x.atom_indices == bond_atom_indices]
                 # get list of symmetry values of different lone pairs for this atom
-                symmetries = [x[3] for x in qm_data.antibond_pair_data if x[0] == bond_atom_indices]
+                symmetries = [x.orbital_occupations for x in qm_data.antibond_pair_data if x.atom_indices == bond_atom_indices]
 
                 # append average values for energies and occupations
                 edge_features.append(mean(energies))
@@ -370,12 +370,12 @@ class GraphGenerator:
         # pre read data for efficiency
 
         # atom indices that have LP or LV
-        lone_pair_atom_indices = [x[0] for x in qm_data.lone_pair_data]
-        lone_vacancy_atom_indices = [x[0] for x in qm_data.lone_vacancy_data]
+        lone_pair_atom_indices = [x.atom_index for x in qm_data.lone_pair_data]
+        lone_vacancy_atom_indices = [x.atom_index for x in qm_data.lone_vacancy_data]
 
         # corresponding energy values
-        lone_pair_energies = [x[1] for x in qm_data.lone_pair_data]
-        lone_vacancy_energies = [x[1] for x in qm_data.lone_vacancy_data]
+        lone_pair_energies = [x.energy for x in qm_data.lone_pair_data]
+        lone_vacancy_energies = [x.energy for x in qm_data.lone_vacancy_data]
 
         # set up features for node
         node_features = []
@@ -409,10 +409,10 @@ class GraphGenerator:
                 NodeFeature.LONE_PAIR_AVERAGE in self._settings.node_features or \
                 NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE in self._settings.node_features:
 
-            node_features.append(len([x[1] for x in qm_data.lone_pair_data if x[0] == i]))
+            node_features.append(len([x.energy for x in qm_data.lone_pair_data if x.atom_index == i]))
 
         if NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE in self._settings.node_features:
-            energies = [x[1] for x in qm_data.lone_pair_data if x[0] == i]
+            energies = [x.energy for x in qm_data.lone_pair_data if x.atom_index == i]
 
             # append difference if there are 2 entries or more
             if len(energies) >= 2:
@@ -425,16 +425,16 @@ class GraphGenerator:
             if i in lone_pair_atom_indices:
 
                 # get list of all lone pair energies for this atom
-                energies = [x[1] for x in qm_data.lone_pair_data if x[0] == i]
+                energies = [x.energy for x in qm_data.lone_pair_data if x.atom_index == i]
                 # select index of the highest energy (for LP)
                 selected_index = lone_pair_energies.index(max(energies))
 
                 # append data (total length = 4)
-                node_features.append(qm_data.lone_pair_data[selected_index][1])
-                node_features.append(qm_data.lone_pair_data[selected_index][2])
+                node_features.append(qm_data.lone_pair_data[selected_index].energy)
+                node_features.append(qm_data.lone_pair_data[selected_index].occupation)
 
                 # get orbital occupations
-                oribtal_symmetries = [qm_data.lone_pair_data[selected_index][3][k] for k in self._settings.lone_pair_orbital_indices]
+                oribtal_symmetries = [qm_data.lone_pair_data[selected_index].orbital_occupations[k] for k in self._settings.lone_pair_orbital_indices]
                 node_features.extend(oribtal_symmetries)
             else:
                 node_features.extend((2 + len(self._settings.lone_pair_orbital_indices)) * [0.0])
@@ -443,11 +443,11 @@ class GraphGenerator:
             if i in lone_pair_atom_indices:
 
                 # get list of all lone pair energies for this atom
-                energies = [x[1] for x in qm_data.lone_pair_data if x[0] == i]
+                energies = [x.energy for x in qm_data.lone_pair_data if x.atom_index == i]
                 # get list of all lone pair occupations for this atom
-                occupations = [x[2] for x in qm_data.lone_pair_data if x[0] == i]
+                occupations = [x.occupation for x in qm_data.lone_pair_data if x.atom_index == i]
                 # get list of symmetry values of different lone pairs for this atom
-                symmetries = [x[3] for x in qm_data.lone_pair_data if x[0] == i]
+                symmetries = [x.orbital_occupations for x in qm_data.lone_pair_data if x.atom_index == i]
 
                 # append average values for energies and occupations
                 node_features.append(mean(energies))
@@ -464,10 +464,10 @@ class GraphGenerator:
                 NodeFeature.LONE_VACANCY_AVERAGE in self._settings.node_features or \
                 NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE in self._settings.node_features:
 
-            node_features.append(len([x[1] for x in qm_data.lone_vacancy_data if x[0] == i]))
+            node_features.append(len([x.energy for x in qm_data.lone_vacancy_data if x.atom_index == i]))
 
         if NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE in self._settings.node_features:
-            energies = [x[1] for x in qm_data.lone_vacancy_data if x[0] == i]
+            energies = [x.energy for x in qm_data.lone_vacancy_data if x.atom_index == i]
 
             # append difference if there are 2 entries or more
             if len(energies) >= 2:
@@ -480,16 +480,16 @@ class GraphGenerator:
             if i in lone_vacancy_atom_indices:
 
                 # get list of all lone pair energies for this atom
-                energies = [x[1] for x in qm_data.lone_vacancy_data if x[0] == i]
+                energies = [x.energy for x in qm_data.lone_vacancy_data if x.atom_index == i]
                 # select index of the lowest energy (for LV)
                 selected_index = lone_vacancy_energies.index(min(energies))
 
                 # append data (total length = 4)
-                node_features.append(qm_data.lone_vacancy_data[selected_index][1])
-                node_features.append(qm_data.lone_vacancy_data[selected_index][2])
+                node_features.append(qm_data.lone_vacancy_data[selected_index].energy)
+                node_features.append(qm_data.lone_vacancy_data[selected_index].occupation)
 
                 # get orbital occupations
-                oribtal_symmetries = [qm_data.lone_vacancy_data[selected_index][3][k] for k in self._settings.lone_vacancy_orbital_indices]
+                oribtal_symmetries = [qm_data.lone_vacancy_data[selected_index].orbital_occupations[k] for k in self._settings.lone_vacancy_orbital_indices]
                 node_features.extend(oribtal_symmetries)
             else:
                 node_features.extend((2 + len(self._settings.lone_vacancy_orbital_indices)) * [0.0])
@@ -498,11 +498,11 @@ class GraphGenerator:
             if i in lone_vacancy_atom_indices:
 
                 # get list of all lone pair energies for this atom
-                energies = [x[1] for x in qm_data.lone_vacancy_data if x[0] == i]
+                energies = [x.energy for x in qm_data.lone_vacancy_data if x.atom_index == i]
                 # get list of all lone pair occupations for this atom
-                occupations = [x[2] for x in qm_data.lone_vacancy_data if x[0] == i]
+                occupations = [x.occupation for x in qm_data.lone_vacancy_data if x.atom_index == i]
                 # get list of symmetry values of different lone pairs for this atom
-                symmetries = [x[3] for x in qm_data.lone_vacancy_data if x[0] == i]
+                symmetries = [x.orbital_occupations for x in qm_data.lone_vacancy_data if x.atom_index == i]
 
                 # append average values for energies and occupations
                 node_features.append(mean(energies))
