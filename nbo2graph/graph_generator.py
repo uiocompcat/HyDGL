@@ -198,12 +198,12 @@ class GraphGenerator:
 
             if bond_atom_indices in bond_pair_atom_indices:
                 # length of bond pair list for this edge
-                edge_features.append(len([x.energy for x in qm_data.bond_pair_data if x[0] == bond_atom_indices]))
+                edge_features.append(len([x.energy for x in qm_data.bond_pair_data if x.atom_indices == bond_atom_indices]))
             else:
                 edge_features.append(0)
 
         if EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features:
-            energies = [x.energy for x in qm_data.bond_pair_data if x[0] == bond_atom_indices]
+            energies = [x.energy for x in qm_data.bond_pair_data if x.atom_indices == bond_atom_indices]
 
             # append difference if there are 2 entries or more
             if len(energies) >= 2:

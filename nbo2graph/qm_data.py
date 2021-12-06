@@ -217,7 +217,7 @@ class QmData():
 
                 nbo_data_point = NboDoubleDataPoint(nbo_id=nbo_data[i][0],
                                                     nbo_type=nbo_data[i][1],
-                                                    atom_indeces=nbo_data[i][2],
+                                                    atom_indices=nbo_data[i][2],
                                                     contributions=nbo_data[i][3],
                                                     energy=nbo_energy,
                                                     occupation=nbo_data[i][4],
