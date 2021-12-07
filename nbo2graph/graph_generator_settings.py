@@ -4,14 +4,17 @@ from nbo2graph.enums.node_feature import NodeFeature
 from nbo2graph.enums.edge_feature import EdgeFeature
 from nbo2graph.enums.graph_feature import GraphFeature
 from nbo2graph.enums.hydrogen_mode import HydrogenMode
+from nbo2graph.enums.sopa_resolution_mode import SopaResolutionMode
 from nbo2graph.enums.bond_determination_mode import BondDeterminationMode
 from nbo2graph.enums.orbital_occupation_types import OrbitalOccupationTypes
 
-# constants
+# constants for default values
 DEFAULT_BOND_DETERMINATION_MODE = BondDeterminationMode.WIBERG
 DEFAULT_HYDROGEN_MODE = HydrogenMode.EXPLICIT
 DEFAULT_BOND_THRESHOLD = 0.3
 DEFAULT_HYDROGEN_COUNT_THRESHOLD = 0.5
+DEFAULT_SOPA_RESOLUTION_MODE = SopaResolutionMode.AVERAGE
+DEFAULT_SOPA_CONTRIBUTION_THRESHOLD = 0.49
 
 
 class GraphGeneratorSettings:
@@ -27,7 +30,9 @@ class GraphGeneratorSettings:
                  bond_threshold=DEFAULT_BOND_THRESHOLD,
                  bond_threshold_metal=None,
                  hydrogen_mode=DEFAULT_HYDROGEN_MODE,
-                 hydrogen_count_threshold=DEFAULT_HYDROGEN_COUNT_THRESHOLD):
+                 hydrogen_count_threshold=DEFAULT_HYDROGEN_COUNT_THRESHOLD,
+                 sopa_resolution_mode=DEFAULT_SOPA_RESOLUTION_MODE,
+                 sopa_contribution_threshold=DEFAULT_SOPA_CONTRIBUTION_THRESHOLD):
 
         """Constructor
 
@@ -62,6 +67,10 @@ class GraphGeneratorSettings:
         self.hydrogen_mode = hydrogen_mode
         self.hydrogen_count_threshold = hydrogen_count_threshold
 
+        # SOPA settings
+        self.sopa_resolution_mode = sopa_resolution_mode
+        self.sopa_contribution_threshold = sopa_contribution_threshold
+
         # get orbital lists specifying which orbitals to consider
         # 0 -> s, 1 -> p, 2 -> d, 3 -> f
         self.lone_pair_orbital_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationTypes.LONE_PAIR)
@@ -87,7 +96,9 @@ class GraphGeneratorSettings:
             self.lone_vacancy_orbital_indices == other.lone_vacancy_orbital_indices and \
             self.natural_orbital_configuration_indices == other.natural_orbital_configuration_indices and \
             self.bond_orbital_indices == other.bond_orbital_indices and \
-            self.antibond_orbital_indices == other.antibond_orbital_indices
+            self.antibond_orbital_indices == other.antibond_orbital_indices and \
+            self.sopa_resolution_mode == other.sopa_resolution_mode and \
+            self.sopa_contribution_threshold == other.sopa_contribution_threshold
 
     @classmethod
     def default(cls):

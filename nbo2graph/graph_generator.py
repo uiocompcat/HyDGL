@@ -11,6 +11,9 @@ from nbo2graph.enums.node_feature import NodeFeature
 from nbo2graph.enums.hydrogen_mode import HydrogenMode
 from nbo2graph.enums.graph_feature import GraphFeature
 from nbo2graph.element_look_up_table import ElementLookUpTable
+from nbo2graph.nbo_single_data_point import NboSingleDataPoint
+from nbo2graph.nbo_double_data_point import NboDoubleDataPoint
+from nbo2graph.enums.sopa_resolution_mode import SopaResolutionMode
 from nbo2graph.graph_generator_settings import GraphGeneratorSettings
 from nbo2graph.enums.bond_determination_mode import BondDeterminationMode
 
@@ -719,6 +722,12 @@ class GraphGenerator:
 
     def _get_graph_features(self, qm_data: QmData) -> list:
 
+        """Function to return the requested graph features.
+
+        Returns:
+            list[float]: A list of requested graph features.
+        """
+
         # return variable
         graph_feature_list = []
 
@@ -821,25 +830,229 @@ class GraphGenerator:
             # check that all edges are defined by two atom indices
             assert len(edges[i].node_indices) == 2
             # check that the edge defining atom indices are different
-            assert edges[i].node_indices[0] != edges[i].node_indices[1]
+            # assert edges[i].node_indices[0] != edges[i].node_indices[1]
             # check that all edges have feature vectors of the same length
             assert len(edges[0].features) == len(edges[i].features)
             # check that the edge index identifiers are within the range of the number of atoms
             assert edges[i].node_indices[0] < n_nodes
             assert edges[i].node_indices[1] < n_nodes
 
-    def _get_atom_index_from_nbo_id(self, qm_data: QmData, nbo_id: int) -> int:
+    def _contains_hydrogen(self, qm_data: QmData, atom_indices: list[int]) -> bool:
 
-        return 0
+        """Helper function to determine whether a given list of atom indices includes a hydrogen.
+
+        Returns:
+            bool: Boolean to indicate whether the list contains a hydrogen.
+        """
+
+        for atom_index in atom_indices:
+            if self._is_hydrogen(qm_data, atom_index):
+                return True
+        return False
+
+    def _contains_metal(self, qm_data: QmData, atom_indices: list[int]) -> bool:
+
+        """Helper function to determine whether a given list of atom indices includes a metal.
+
+        Returns:
+            bool: Boolean to indicate whether the list contains a metal.
+        """
+
+        for atom_index in atom_indices:
+            if self._is_metal(qm_data, atom_index):
+                return True
+        return False
+
+    def _is_hydrogen_bond(self, qm_data: QmData, bond_atom_indices: list[int]) -> bool:
+
+        """Helper function to determine whether a given bond includes a hydrogen.
+
+        Raises:
+            ValueError: If the list of bond atom indices is not equal to 2.
+
+        Returns:
+            bool: Boolean to indicate whether it is a hydrogen bond.
+        """
+
+        if len(bond_atom_indices) != 2:
+            raise ValueError('The given list does not have length 2.')
+
+        for atom_index in bond_atom_indices:
+            if self._is_hydrogen(qm_data, atom_index):
+                return True
+        return False
+
+    def _is_metal_bond(self, qm_data: QmData, bond_atom_indices: list[int]) -> bool:
+
+        """Helper function to determine whether a given bond includes a transition metal.
+
+        Raises:
+            ValueError: If the list of bond atom indices is not equal to 2.
+
+        Returns:
+            bool: Boolean to indicate whether it is a transition metal bond.
+        """
+
+        if len(bond_atom_indices) != 2:
+            raise ValueError('The given list does not have length 2.')
+
+        for atom_index in bond_atom_indices:
+            if self._is_metal(qm_data, atom_index):
+                return True
+        return False
+
+    def _is_metal(self, qm_data: QmData, atom_index: int) -> bool:
+
+        """Helper function to determine whether a given atom is a transition metal.
+
+        Returns:
+            bool: Boolean to indicate whether it is a transition metal.
+        """
+
+        if qm_data.atomic_numbers[atom_index] in ElementLookUpTable.transition_metal_atomic_numbers:
+            return True
+        return False
+
+    def _is_hydrogen(self, qm_data: QmData, atom_index: int) -> bool:
+
+        """Helper function to determine whether a given atom is a hydrogen.
+
+        Returns:
+            bool: Boolean to indicate whether it is a hydrogen.
+        """
+
+        if qm_data.atomic_numbers[atom_index] == 1:
+            return True
+        return False
+
+    def _get_atom_indices_from_nbo_id(self, qm_data: QmData, nbo_id: int) -> list[int]:
+
+        nbo_list_index = next((i for i, item in enumerate(qm_data.nbo_data) if item.nbo_id == nbo_id), -1)
+        # if single data point return the index
+        if type(qm_data.nbo_data[nbo_list_index]) == NboSingleDataPoint:
+            return [qm_data.nbo_data[nbo_list_index].atom_index]
+        # if double data point return both indices
+        elif type(qm_data.nbo_data[nbo_list_index]) == NboDoubleDataPoint:
+            return qm_data.nbo_data[nbo_list_index].atom_indices
+
+    def _select_atom_indices_from_nbo_id(self, qm_data: QmData, nbo_id: int) -> list[int]:
+
+        nbo_list_index = next((i for i, item in enumerate(qm_data.nbo_data) if item.nbo_id == nbo_id), -1)
+        # if single data point simply return the index
+        if type(qm_data.nbo_data[nbo_list_index]) == NboSingleDataPoint:
+            return [qm_data.nbo_data[nbo_list_index].atom_index]
+        # if double data point check contributions values
+        elif type(qm_data.nbo_data[nbo_list_index]) == NboDoubleDataPoint:
+            selected_atom_indices = []
+            for i in range(len(qm_data.nbo_data[nbo_list_index].atom_indices)):
+                if qm_data.nbo_data[nbo_list_index].contributions[i] > self._settings.sopa_contribution_threshold:
+                    selected_atom_indices.append(qm_data.nbo_data[nbo_list_index].atom_indices[i])
+            return selected_atom_indices
+
+    def _get_nbo_type_from_nbo_id(self, qm_data: QmData, nbo_id: int) -> str:
+
+        nbo_list_index = next((i for i, item in enumerate(qm_data.nbo_data) if item.nbo_id == nbo_id), -1)
+        if nbo_list_index == -1:
+            raise ValueError()
+        return qm_data.nbo_data[nbo_list_index].nbo_type
+
+    def _get_sopa_adjacency_list(self, qm_data: QmData) -> list[list[int]]:
+
+        """Gets an adjacency list based on SOPA data. Also returns list of associated stabilisation energies and NBO types.
+
+        Returns:
+            list[list[int]]: Adjacency list.
+            list[list[floats]]: Corresponding lists of associated stabilisation energies.
+            list[list[str]]: Corresponding lists of asscociated NBO types.
+        """
+
+        atom_indices_list = []
+        stabilisation_energies = []
+        nbo_types = []
+        for i in range(len(qm_data.sopa_data)):
+
+            # skip if nbo type is not one of: LP, LV, BD, BD*
+            if next((j for j, item in enumerate(qm_data.nbo_data) if item.nbo_id == qm_data.sopa_data[i][0][0]), -1) == -1:
+                continue
+            if next((j for j, item in enumerate(qm_data.nbo_data) if item.nbo_id == qm_data.sopa_data[i][0][1]), -1) == -1:
+                continue
+
+            # get all atom indices involved in the two nbo entries
+            donor_atom_indices = self._get_atom_indices_from_nbo_id(qm_data, qm_data.sopa_data[i][0][0])
+            acceptor_atom_indices = self._get_atom_indices_from_nbo_id(qm_data, qm_data.sopa_data[i][0][1])
+
+            # skip if it is a hydrogen interaction unless a metal is involved
+            atom_indices_collection = donor_atom_indices + acceptor_atom_indices
+            if self._contains_hydrogen(qm_data, atom_indices_collection) and not self._contains_metal(qm_data, atom_indices_collection):
+                continue
+
+            donor_nbo_type = self._get_nbo_type_from_nbo_id(qm_data, qm_data.sopa_data[i][0][0])
+            acceptor_nbo_type = self._get_nbo_type_from_nbo_id(qm_data, qm_data.sopa_data[i][0][1])
+
+            # get selected atom indices involved in two nbo entries
+            donor_selected_atom_indices = self._select_atom_indices_from_nbo_id(qm_data, qm_data.sopa_data[i][0][0])
+            acceptor_selected_atom_indices = self._select_atom_indices_from_nbo_id(qm_data, qm_data.sopa_data[i][0][1])
+
+            # add bond indices for each combination of indeces
+            for index_a in donor_selected_atom_indices:
+                for index_b in acceptor_selected_atom_indices:
+
+                    selected_atom_indices = [index_a, index_b]
+
+                    if selected_atom_indices not in atom_indices_list:
+                        atom_indices_list.append(selected_atom_indices)
+                        stabilisation_energies.append([qm_data.sopa_data[i][1][0]])
+                        nbo_types.append([donor_nbo_type, acceptor_nbo_type])
+                    else:
+                        list_index = atom_indices_list.index(selected_atom_indices)
+                        stabilisation_energies[list_index].append(qm_data.sopa_data[i][1][0])
+
+        # make sure that lists have the same length
+        assert len(atom_indices_list) == len(stabilisation_energies)
+        assert len(atom_indices_list) == len(nbo_types)
+
+        return atom_indices_list, stabilisation_energies, nbo_types
 
     def _get_sopa_edges(self, qm_data: QmData) -> list[Edge]:
 
+        """Generates a set of edges based on SOPA data.
+
+        Returns:
+            list[Edge]: List of edges.
+        """
+
+        # obtain SOPA adjacency list and associated stabilisation energies and NBO types
+        atom_indices_list, stabilisation_energies, nbo_types = self._get_sopa_adjacency_list(qm_data)
+        # format stabilisation energies according to specification
+        stabilisation_energies = self._resolve_stabilisation_energies(stabilisation_energies)
+
         edges = []
+        for i in range(len(atom_indices_list)):
+            for j in range(len(stabilisation_energies[i])):
 
-        for i in range(len(qm_data.nbo_data)):
-            print(qm_data.nbo_data[i])
+                # set up feature list with stabilisation energy and NBO types
+                features = [stabilisation_energies[i][j]]
+                features.extend(nbo_types[i])
+                # here, additional features could be added to the feature list
+                # features.extend()
 
-        # for i in range(len(qm_data.sopa_data)):
-            # print(qm_data.sopa_data[i])
+                edges.append(Edge(atom_indices_list[i], features=features, is_directed=True))
 
         return edges
+
+    def _resolve_stabilisation_energies(self, stabilisation_energies):
+
+        if self._settings.sopa_resolution_mode == SopaResolutionMode.FULL:
+            pass
+        elif self._settings.sopa_resolution_mode == SopaResolutionMode.AVERAGE:
+            for i in range(len(stabilisation_energies)):
+                stabilisation_energies[i] = [mean(stabilisation_energies[i])]
+        elif self._settings.sopa_resolution_mode == SopaResolutionMode.MIN_MAX:
+            for i in range(len(stabilisation_energies)):
+                if len(stabilisation_energies[i]) > 1:
+                    stabilisation_energies[i] = [min(stabilisation_energies[i]), max(stabilisation_energies[i])]
+        elif self._settings.sopa_resolution_mode == SopaResolutionMode.MAX:
+            for i in range(len(stabilisation_energies)):
+                stabilisation_energies[i] = [max(stabilisation_energies[i])]
+
+        return stabilisation_energies
