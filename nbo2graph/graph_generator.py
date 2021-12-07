@@ -927,6 +927,12 @@ class GraphGenerator:
 
     def _get_atom_indices_from_nbo_id(self, qm_data: QmData, nbo_id: int) -> list[int]:
 
+        """Gets all atom indices associated to a NBO ID.
+
+        Returns:
+            list[int]: A list of atom indices.
+        """
+
         nbo_list_index = next((i for i, item in enumerate(qm_data.nbo_data) if item.nbo_id == nbo_id), -1)
         # if single data point return the index
         if type(qm_data.nbo_data[nbo_list_index]) == NboSingleDataPoint:
@@ -936,6 +942,12 @@ class GraphGenerator:
             return qm_data.nbo_data[nbo_list_index].atom_indices
 
     def _select_atom_indices_from_nbo_id(self, qm_data: QmData, nbo_id: int) -> list[int]:
+
+        """Selects atom indices associated to a NBO ID based on their respective contributions.
+
+        Returns:
+            list[int]: A list of selected atom indices.
+        """
 
         nbo_list_index = next((i for i, item in enumerate(qm_data.nbo_data) if item.nbo_id == nbo_id), -1)
         # if single data point simply return the index
@@ -950,6 +962,12 @@ class GraphGenerator:
             return selected_atom_indices
 
     def _get_nbo_type_from_nbo_id(self, qm_data: QmData, nbo_id: int) -> str:
+
+        """Gets the type of NBO entry from NBO ID.
+
+        Returns:
+            str: A string indicating the NBO type.
+        """
 
         nbo_list_index = next((i for i, item in enumerate(qm_data.nbo_data) if item.nbo_id == nbo_id), -1)
         if nbo_list_index == -1:
@@ -1042,15 +1060,25 @@ class GraphGenerator:
 
     def _resolve_stabilisation_energies(self, stabilisation_energies):
 
+        """Helper function to resolve a list of stabilisation energies according to the specification.
+
+        Returns:
+            list[list[float]]: List of lists containing the stabilisation energies.
+        """
+
+        # keeps all individual stabilisation energies
         if self._settings.sopa_resolution_mode == SopaResolutionMode.FULL:
             pass
+        # averages over stabilisation energies belonging to the same atom pair
         elif self._settings.sopa_resolution_mode == SopaResolutionMode.AVERAGE:
             for i in range(len(stabilisation_energies)):
                 stabilisation_energies[i] = [mean(stabilisation_energies[i])]
+        # uses the minimum and maximum values of stabilisation energies belonging to the same atom pair
         elif self._settings.sopa_resolution_mode == SopaResolutionMode.MIN_MAX:
             for i in range(len(stabilisation_energies)):
                 if len(stabilisation_energies[i]) > 1:
                     stabilisation_energies[i] = [min(stabilisation_energies[i]), max(stabilisation_energies[i])]
+        # uses the maximum value of stabilisation energies belonging to the same atom pair
         elif self._settings.sopa_resolution_mode == SopaResolutionMode.MAX:
             for i in range(len(stabilisation_energies)):
                 stabilisation_energies[i] = [max(stabilisation_energies[i])]
