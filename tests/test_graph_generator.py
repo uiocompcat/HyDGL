@@ -1416,15 +1416,15 @@ class TestGraphGenerator(unittest.TestCase):
             AssertionError
         ],
 
-        [
-            [
-                Edge([1, 1], features=[1]),
-                Edge([2, 3], features=[1]),
-                Edge([3, 4], features=[1])
-            ],
-            5,
-            AssertionError
-        ],
+        # [
+        #     [
+        #         Edge([1, 1], features=[1]),
+        #         Edge([2, 3], features=[1]),
+        #         Edge([3, 4], features=[1])
+        #     ],
+        #     5,
+        #     AssertionError
+        # ],
 
         [
             [
