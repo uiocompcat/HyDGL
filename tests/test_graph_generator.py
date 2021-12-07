@@ -1,5 +1,6 @@
 import unittest
 from parameterized import parameterized
+from nbo2graph.enums.sopa_resolution_mode import SopaResolutionMode
 
 from nbo2graph.node import Node
 from nbo2graph.edge import Edge
@@ -1957,6 +1958,400 @@ class TestGraphGenerator(unittest.TestCase):
         # get result
         result = gg._get_node_positions(qm_data)
 
-        print(result)
+        self.assertEqual(result, expected)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_LALMER,
+            0,
+            False
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            4,
+            False
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            20,
+            False
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            38,
+            True
+        ],
+
+    ])
+    def test_is_hydrogen(self, file_path, atom_index, expected):
+
+        # load data
+        qm_data = DataParser(file_path).parse_to_qm_data_object()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings.default())
+
+        # get result
+        result = gg._is_hydrogen(qm_data, atom_index)
 
         self.assertEqual(result, expected)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_LALMER,
+            0,
+            True
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            4,
+            False
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            20,
+            False
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            38,
+            False
+        ],
+
+        [
+            TEST_FILE_OREDIA,
+            0,
+            True
+        ],
+
+    ])
+    def test_is_metal(self, file_path, atom_index, expected):
+
+        # load data
+        qm_data = DataParser(file_path).parse_to_qm_data_object()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings.default())
+
+        # get result
+        result = gg._is_metal(qm_data, atom_index)
+
+        self.assertEqual(result, expected)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_LALMER,
+            [0, 29],
+            False
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [25, 31],
+            True
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [38, 39],
+            True
+        ],
+    ])
+    def test_is_hydrogen_bond(self, file_path, atom_indices, expected):
+
+        # load data
+        qm_data = DataParser(file_path).parse_to_qm_data_object()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings.default())
+
+        # get result
+        result = gg._is_hydrogen_bond(qm_data, atom_indices)
+
+        self.assertEqual(result, expected)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_LALMER,
+            [0, 12, 29],
+            ValueError
+        ]
+    ])
+    def test_is_hydrogen_bond_with_invalid_input(self, file_path, atom_indices, expected_error):
+
+        # load data
+        qm_data = DataParser(file_path).parse_to_qm_data_object()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings.default())
+
+        # get result
+        self.assertRaises(expected_error, gg._is_hydrogen_bond, qm_data, atom_indices)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_LALMER,
+            [0, 1],
+            True
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [21, 22],
+            False
+        ],
+    ])
+    def test_is_metal_bond(self, file_path, atom_indices, expected):
+
+        # load data
+        qm_data = DataParser(file_path).parse_to_qm_data_object()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings.default())
+
+        # get result
+        result = gg._is_metal_bond(qm_data, atom_indices)
+
+        self.assertEqual(result, expected)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_LALMER,
+            [1, 9, 34],
+            ValueError
+        ]
+    ])
+    def test_is_metal_bond_with_invalid_input(self, file_path, atom_indices, expected_error):
+
+        # load data
+        qm_data = DataParser(file_path).parse_to_qm_data_object()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings.default())
+
+        # get result
+        self.assertRaises(expected_error, gg._is_metal_bond, qm_data, atom_indices)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_LALMER,
+            [1, 14, 23, 24],
+            False
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [21, 22, 35, 42],
+            True
+        ],
+    ])
+    def test_contains_hydrogen(self, file_path, atom_indices, expected):
+
+        # load data
+        qm_data = DataParser(file_path).parse_to_qm_data_object()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings.default())
+
+        # get result
+        result = gg._contains_hydrogen(qm_data, atom_indices)
+
+        self.assertEqual(result, expected)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_LALMER,
+            [0, 14, 23, 24],
+            True
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [21, 22, 35, 42],
+            False
+        ],
+    ])
+    def test_contains_metal(self, file_path, atom_indices, expected):
+
+        # load data
+        qm_data = DataParser(file_path).parse_to_qm_data_object()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings.default())
+
+        # get result
+        result = gg._contains_metal(qm_data, atom_indices)
+
+        self.assertEqual(result, expected)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_LALMER,
+            50,
+            [0]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            54,
+            [2]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            83,
+            [5, 6]
+        ],
+    ])
+    def test_get_atom_indices_from_nbo_id(self, file_path, nbo_id, expected):
+
+        # load data
+        qm_data = DataParser(file_path).parse_to_qm_data_object()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings.default())
+
+        # get result
+        result = gg._get_atom_indices_from_nbo_id(qm_data, nbo_id)
+
+        self.assertEqual(result, expected)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_LALMER,
+            50,
+            0.5,
+            [0]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            87,
+            0.1,
+            [7, 45]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            87,
+            0.5,
+            [7]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            87,
+            0.8,
+            []
+        ],
+    ])
+    def test_select_atom_indices_from_nbo_id(self, file_path, nbo_id, sopa_contribution_threshold, expected):
+
+        # load data
+        qm_data = DataParser(file_path).parse_to_qm_data_object()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings(sopa_contribution_threshold=sopa_contribution_threshold))
+
+        # get result
+        result = gg._select_atom_indices_from_nbo_id(qm_data, nbo_id)
+
+        self.assertEqual(result, expected)
+
+    @parameterized.expand([
+
+        # [
+        #     TEST_FILE_LALMER,
+        #     1,
+        #     'CR'
+        # ],
+
+        [
+            TEST_FILE_LALMER,
+            57,
+            'LP'
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            76,
+            'BD'
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            131,
+            'LV'
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            135,
+            'BD*'
+        ],
+    ])
+    def test_get_nbo_type_from_nbo_id(self, file_path, nbo_id, expected):
+
+        # load data
+        qm_data = DataParser(file_path).parse_to_qm_data_object()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings.default())
+
+        # get result
+        result = gg._get_nbo_type_from_nbo_id(qm_data, nbo_id)
+
+        self.assertEqual(result, expected)
+
+    @parameterized.expand([
+
+        [
+            [[1.1], [1.5, 1.2, 1.9], [1.2, 1.2], [1.5, 2.3]],
+            SopaResolutionMode.FULL,
+            [[1.1], [1.5, 1.2, 1.9], [1.2, 1.2], [1.5, 2.3]]
+        ],
+
+        [
+            [[1.1], [1.5, 1.2, 1.9], [1.2, 1.2], [1.5, 2.3]],
+            SopaResolutionMode.AVERAGE,
+            [[1.1], [1.53333333], [1.2], [1.9]]
+        ],
+
+        [
+            [[1.1], [1.5, 1.2, 1.9], [1.2, 1.2], [1.5, 2.3]],
+            SopaResolutionMode.MIN_MAX,
+            [[1.1], [1.2, 1.9], [1.2, 1.2], [1.5, 2.3]]
+        ],
+
+        [
+            [[1.1], [1.5, 1.2, 1.9], [1.2, 1.2], [1.5, 2.3]],
+            SopaResolutionMode.MAX,
+            [[1.1], [1.9], [1.2], [2.3]]
+        ],
+
+    ])
+    def test_resolve_stabilisation_energies(self, stabilisation_energies, sopa_resolution_mode, expected):
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings(sopa_resolution_mode=sopa_resolution_mode))
+
+        # get result
+        result = gg._resolve_stabilisation_energies(stabilisation_energies)
+
+        Utils.assert_are_almost_equal(result, expected, places=5)
