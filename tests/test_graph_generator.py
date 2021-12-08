@@ -2355,3 +2355,40 @@ class TestGraphGenerator(unittest.TestCase):
         result = gg._resolve_stabilisation_energies(stabilisation_energies)
 
         Utils.assert_are_almost_equal(result, expected, places=5)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_LALMER,
+            1,
+            (
+                [[1, 0], [2, 0], [8, 0], [14, 0], [20, 0], [27, 0], [28, 0], [29, 0], [30, 0]],
+                [[0.58, 15.10], [25.68], [22.74], [21.99], [23.34], [7.2, 0.28, 16.63], [6.79, 0.19, 12.43], [0.33], [0.2]],
+                [['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV']]
+            )
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            0.7,
+            (
+                [[0, 33], [1, 0], [1, 0], [2, 0], [8, 0], [14, 0], [20, 0], [27, 0], [28, 0], [29, 0], [30, 0]],
+                [[0.12], [0.58, 15.10], [1.58, 1.32], [25.68], [22.74], [21.99], [23.34], [7.2, 0.28, 16.63], [6.79, 0.19, 12.43], [0.33], [0.2]],
+                [['LP', 'BD*'], ['LP', 'LV'], ['BD', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV']]
+            )
+        ],
+
+    ])
+    def test__get_sopa_adjacency_list(self, file_path, sopa_contribution_threshold, expected):
+
+        # load data
+        qm_data = DataParser(file_path).parse_to_qm_data_object()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings(sopa_contribution_threshold=sopa_contribution_threshold))
+
+        # get result
+        result = gg._get_sopa_adjacency_list(qm_data)
+        print(result)
+
+        Utils.assert_are_almost_equal(result, expected, places=5)

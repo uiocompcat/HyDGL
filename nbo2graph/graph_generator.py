@@ -1017,13 +1017,28 @@ class GraphGenerator:
 
                     selected_atom_indices = [index_a, index_b]
 
+                    # add selected atom indices if not already in list
                     if selected_atom_indices not in atom_indices_list:
                         atom_indices_list.append(selected_atom_indices)
                         stabilisation_energies.append([qm_data.sopa_data[i][1][0]])
                         nbo_types.append([donor_nbo_type, acceptor_nbo_type])
                     else:
-                        list_index = atom_indices_list.index(selected_atom_indices)
-                        stabilisation_energies[list_index].append(qm_data.sopa_data[i][1][0])
+                        # find all occurrences of atom_indices pairs
+                        list_indices = [i for i, x in enumerate(atom_indices_list) if x == selected_atom_indices]
+
+                        # find the correct index for this set of NBO types
+                        correct_list_index = None
+                        for list_index in list_indices:
+                            if nbo_types[list_index] == [donor_nbo_type, acceptor_nbo_type]:
+                                correct_list_index = list_index
+                                break
+
+                        if correct_list_index is None:
+                            atom_indices_list.append(selected_atom_indices)
+                            stabilisation_energies.append([qm_data.sopa_data[i][1][0]])
+                            nbo_types.append([donor_nbo_type, acceptor_nbo_type])
+                        else:
+                            stabilisation_energies[list_index].append(qm_data.sopa_data[i][1][0])
 
         # make sure that lists have the same length
         assert len(atom_indices_list) == len(stabilisation_energies)
