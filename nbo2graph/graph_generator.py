@@ -164,7 +164,7 @@ class GraphGenerator:
 
             return adjacency_list
 
-    def _get_featurised_edge(self, bond_atom_indices: list[int], qm_data: QmData) -> Edge:
+    def _get_edge_features(self, bond_atom_indices: list[int], qm_data: QmData) -> list[float]:
 
         # pre read data for efficiency
 
@@ -311,6 +311,11 @@ class GraphGenerator:
             else:
                 edge_features.extend((2 + len(self._settings.antibond_orbital_indices)) * [0.0])
 
+        return edge_features
+
+    def _get_featurised_edge(self, bond_atom_indices: list[int], qm_data: QmData) -> Edge:
+
+        edge_features = self._get_edge_features(bond_atom_indices, qm_data)
         return Edge(bond_atom_indices, features=edge_features)
 
     def _get_nodes(self, qm_data: QmData, include_misc_data: bool = True) -> list[Node]:
