@@ -119,6 +119,12 @@ class GraphGenerator:
 
     def _get_adjacency_list(self, qm_data: QmData) -> list[list[int]]:
 
+        """Gets the adjacency list of the system according to edge settings.
+
+        Returns:
+            list[list[int]]: A list of atom index pairs for the edges.
+        """
+
         adjacency_list = []
 
         if self._settings.bond_determination_mode == BondDeterminationMode.NBO_BONDING_ORBITALS:
@@ -165,6 +171,12 @@ class GraphGenerator:
             return adjacency_list
 
     def _get_edge_features(self, bond_atom_indices: list[int], qm_data: QmData) -> list[float]:
+
+        """Gets the edge features for given atom indices according to specification.
+
+        Returns:
+            list[float]: A list of edge features.
+        """
 
         # pre read data for efficiency
 
@@ -314,6 +326,12 @@ class GraphGenerator:
         return edge_features
 
     def _get_featurised_edge(self, bond_atom_indices: list[int], qm_data: QmData) -> Edge:
+
+        """Gets an edge object containing the edge indices as well as the request edge features.
+
+        Returns:
+            Edge: The edge object
+        """
 
         edge_features = self._get_edge_features(bond_atom_indices, qm_data)
         return Edge(bond_atom_indices, features=edge_features)
@@ -824,11 +842,15 @@ class GraphGenerator:
 
     def _validate_node_list(self, nodes: list[Node]):
 
+        """Checks the list of nodes for validity."""
+
         # check that all node vectors have the same length
         for i in range(1, len(nodes), 1):
             assert len(nodes[i].features) == len(nodes[0].features)
 
     def _validate_edge_list(self, edges: list[Edge], n_nodes: int):
+
+        """Checks the list of edges for validity."""
 
         for i in range(0, len(edges), 1):
 
@@ -1080,7 +1102,7 @@ class GraphGenerator:
 
     def _resolve_stabilisation_energies(self, stabilisation_energies):
 
-        """Helper function to resolve a list of stabilisation energies according to the specification.
+        """Helper function to resolve a list of stabilisation energies according to the SOPA mode specification.
 
         Returns:
             list[list[float]]: List of lists containing the stabilisation energies.
