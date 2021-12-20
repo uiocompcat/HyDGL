@@ -674,10 +674,10 @@ class TestGraphGenerator(unittest.TestCase):
         qm_data = DataParser(file_path).parse_to_qm_data_object()
 
         # set up graph generator settings
-        ggs = GraphGeneratorSettings(node_features=node_features,
-                                     edge_features=[],
-                                     hydrogen_mode=hydrogen_mode,
-                                     bond_determination_mode=bond_determination_mode)
+        ggs = GraphGeneratorSettings.default(node_features=node_features,
+                                             edge_features=[],
+                                             hydrogen_mode=hydrogen_mode,
+                                             bond_determination_mode=bond_determination_mode)
 
         # set up graph generator with variable node feature list
         gg = GraphGenerator(ggs)
@@ -789,10 +789,10 @@ class TestGraphGenerator(unittest.TestCase):
         qm_data = DataParser(file_path).parse_to_qm_data_object()
 
         # set up graph generator settings
-        ggs = GraphGeneratorSettings(node_features=node_features,
-                                     edge_features=[],
-                                     hydrogen_mode=hydrogen_mode,
-                                     bond_determination_mode=bond_determination_mode)
+        ggs = GraphGeneratorSettings.default(node_features=node_features,
+                                             edge_features=[],
+                                             hydrogen_mode=hydrogen_mode,
+                                             bond_determination_mode=bond_determination_mode)
 
         # set up graph generator with variable node feature list
         gg = GraphGenerator(ggs)
@@ -861,11 +861,11 @@ class TestGraphGenerator(unittest.TestCase):
         qm_data = DataParser(TEST_FILE_LALMER).parse_to_qm_data_object()
 
         # set up graph generator settings
-        ggs = GraphGeneratorSettings(node_features=[],
-                                     edge_features=edge_features,
-                                     hydrogen_mode=hydrogen_mode,
-                                     bond_determination_mode=bond_determination_mode,
-                                     bond_threshold=bond_threshold)
+        ggs = GraphGeneratorSettings.default(node_features=[],
+                                             edge_features=edge_features,
+                                             hydrogen_mode=hydrogen_mode,
+                                             bond_determination_mode=bond_determination_mode,
+                                             bond_threshold=bond_threshold)
 
         # set up graph generator with variable node feature list
         gg = GraphGenerator(ggs)
@@ -995,7 +995,7 @@ class TestGraphGenerator(unittest.TestCase):
         qm_data = DataParser(TEST_FILE_LALMER).parse_to_qm_data_object()
 
         # set up graph generator settings
-        ggs = GraphGeneratorSettings(graph_features=graph_features)
+        ggs = GraphGeneratorSettings.default(graph_features=graph_features)
 
         # set up graph generator (default values)
         gg = GraphGenerator(ggs)
@@ -1110,7 +1110,7 @@ class TestGraphGenerator(unittest.TestCase):
         qm_data = DataParser(file_path).parse_to_qm_data_object()
 
         # set up graph generator settings
-        ggs = GraphGeneratorSettings(targets=targets)
+        ggs = GraphGeneratorSettings.default(targets=targets)
 
         # set up graph generator (default values)
         gg = GraphGenerator(ggs)
@@ -1252,7 +1252,7 @@ class TestGraphGenerator(unittest.TestCase):
         qm_data = DataParser(file).parse_to_qm_data_object()
 
         # set up graph generator settings
-        ggs = GraphGeneratorSettings(bond_determination_mode=bond_determination_mode, bond_threshold=bond_threshold, bond_threshold_metal=bond_threshold_metal, hydrogen_mode=hydrogen_mode)
+        ggs = GraphGeneratorSettings.default(bond_determination_mode=bond_determination_mode, bond_threshold=bond_threshold, bond_threshold_metal=bond_threshold_metal, hydrogen_mode=hydrogen_mode)
 
         # set up graph generator (default values)
         gg = GraphGenerator(ggs)
@@ -1355,7 +1355,7 @@ class TestGraphGenerator(unittest.TestCase):
         qm_data = DataParser(TEST_FILE_LALMER).parse_to_qm_data_object()
 
         # set up graph generator settings
-        ggs = GraphGeneratorSettings(edge_features=edge_features)
+        ggs = GraphGeneratorSettings.default(edge_features=edge_features)
 
         # set up graph generator (default values)
         gg = GraphGenerator(ggs)
@@ -1566,8 +1566,8 @@ class TestGraphGenerator(unittest.TestCase):
         qm_data = DataParser(file_path).parse_to_qm_data_object()
 
         # set up graph generator (default values)
-        gg = GraphGenerator(GraphGeneratorSettings(hydrogen_mode=HydrogenMode.OMIT,
-                                                   bond_determination_mode=BondDeterminationMode.NBO_BONDING_ORBITALS))
+        gg = GraphGenerator(GraphGeneratorSettings.default(hydrogen_mode=HydrogenMode.OMIT,
+                                                           bond_determination_mode=BondDeterminationMode.NBO_BONDING_ORBITALS))
 
         # get result
         edges = gg._get_edges(qm_data)
@@ -1588,7 +1588,7 @@ class TestGraphGenerator(unittest.TestCase):
         qm_data = DataParser(file_path).parse_to_qm_data_object()
 
         # set up graph generator (default values)
-        gg = GraphGenerator(GraphGeneratorSettings(bond_determination_mode=BondDeterminationMode.WIBERG))
+        gg = GraphGenerator(GraphGeneratorSettings.default(bond_determination_mode=BondDeterminationMode.WIBERG))
 
         # get result
         result = gg._get_index_matrix(qm_data, gg._settings.bond_determination_mode)
@@ -1640,7 +1640,7 @@ class TestGraphGenerator(unittest.TestCase):
         qm_data = DataParser(file_path).parse_to_qm_data_object()
 
         # set up graph generator (default values)
-        gg = GraphGenerator(GraphGeneratorSettings(hydrogen_mode=hydrogen_mode))
+        gg = GraphGenerator(GraphGeneratorSettings.default(hydrogen_mode=hydrogen_mode))
 
         # get result
         result = gg._get_nodes_to_extract_indices(qm_data)
@@ -1701,7 +1701,7 @@ class TestGraphGenerator(unittest.TestCase):
         qm_data = DataParser(file_path).parse_to_qm_data_object()
 
         # set up graph generator (default values)
-        gg = GraphGenerator(GraphGeneratorSettings(hydrogen_mode=hydrogen_mode))
+        gg = GraphGenerator(GraphGeneratorSettings.default(hydrogen_mode=hydrogen_mode))
 
         # get result
         result = gg._get_node_labels(qm_data)
@@ -1990,7 +1990,7 @@ class TestGraphGenerator(unittest.TestCase):
         qm_data = DataParser(file_path).parse_to_qm_data_object()
 
         # set up graph generator (default values)
-        gg = GraphGenerator(GraphGeneratorSettings(hydrogen_mode=hydrogen_mode))
+        gg = GraphGenerator(GraphGeneratorSettings.default(hydrogen_mode=hydrogen_mode))
 
         # get result
         result = gg._get_node_positions(qm_data)
@@ -2304,7 +2304,7 @@ class TestGraphGenerator(unittest.TestCase):
         qm_data = DataParser(file_path).parse_to_qm_data_object()
 
         # set up graph generator (default values)
-        gg = GraphGenerator(GraphGeneratorSettings(sopa_contribution_threshold=sopa_contribution_threshold))
+        gg = GraphGenerator(GraphGeneratorSettings.default(sopa_contribution_threshold=sopa_contribution_threshold))
 
         # get result
         result = gg._select_atom_indices_from_nbo_id(qm_data, nbo_id)
@@ -2386,7 +2386,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_resolve_stabilisation_energies(self, stabilisation_energies, sopa_resolution_mode, expected):
 
         # set up graph generator (default values)
-        gg = GraphGenerator(GraphGeneratorSettings(sopa_resolution_mode=sopa_resolution_mode))
+        gg = GraphGenerator(GraphGeneratorSettings.default(sopa_resolution_mode=sopa_resolution_mode))
 
         # get result
         result = gg._resolve_stabilisation_energies(stabilisation_energies)
@@ -2422,7 +2422,7 @@ class TestGraphGenerator(unittest.TestCase):
         qm_data = DataParser(file_path).parse_to_qm_data_object()
 
         # set up graph generator (default values)
-        gg = GraphGenerator(GraphGeneratorSettings(sopa_contribution_threshold=sopa_contribution_threshold))
+        gg = GraphGenerator(GraphGeneratorSettings.default(sopa_contribution_threshold=sopa_contribution_threshold))
 
         # get result
         result = gg._get_sopa_adjacency_list(qm_data)

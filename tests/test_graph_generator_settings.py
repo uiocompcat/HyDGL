@@ -2,6 +2,7 @@ import unittest
 from parameterized import parameterized
 
 from nbo2graph.enums.hydrogen_mode import HydrogenMode
+from nbo2graph.enums.sopa_resolution_mode import SopaResolutionMode
 from nbo2graph.enums.bond_determination_mode import BondDeterminationMode
 from nbo2graph.graph_generator_settings import GraphGeneratorSettings
 
@@ -19,7 +20,10 @@ class TestGraphGeneratorSettings(unittest.TestCase):
                                    bond_determination_mode=BondDeterminationMode.WIBERG,
                                    bond_threshold=0.3,
                                    hydrogen_mode=HydrogenMode.EXPLICIT,
-                                   hydrogen_count_threshold=0.5)
+                                   hydrogen_count_threshold=0.5,
+                                   bond_threshold_metal=None,
+                                   sopa_contribution_threshold=0.49,
+                                   sopa_resolution_mode=SopaResolutionMode.AVERAGE)
         ],
 
         # [

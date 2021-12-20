@@ -21,17 +21,17 @@ class GraphGeneratorSettings:
     """Class for storing graph generator settings."""
 
     def __init__(self,
-                 node_features: list[NodeFeature] = [],
-                 edge_features: list[EdgeFeature] = [],
-                 graph_features: list[GraphFeature] = [],
-                 targets: list[QmTarget] = [],
-                 bond_determination_mode: BondDeterminationMode = DEFAULT_BOND_DETERMINATION_MODE,
-                 bond_threshold=DEFAULT_BOND_THRESHOLD,
-                 bond_threshold_metal=None,
-                 hydrogen_mode=DEFAULT_HYDROGEN_MODE,
-                 hydrogen_count_threshold=DEFAULT_HYDROGEN_COUNT_THRESHOLD,
-                 sopa_resolution_mode=DEFAULT_SOPA_RESOLUTION_MODE,
-                 sopa_contribution_threshold=DEFAULT_SOPA_CONTRIBUTION_THRESHOLD):
+                 node_features: list[NodeFeature],
+                 edge_features: list[EdgeFeature],
+                 graph_features: list[GraphFeature],
+                 targets: list[QmTarget],
+                 bond_determination_mode: BondDeterminationMode,
+                 bond_threshold,
+                 hydrogen_mode,
+                 hydrogen_count_threshold,
+                 sopa_resolution_mode,
+                 sopa_contribution_threshold,
+                 bond_threshold_metal):
 
         """Constructor
 
@@ -80,7 +80,7 @@ class GraphGeneratorSettings:
 
     def __eq__(self, other):
 
-        """Equality interface that allows comparsion between objects for unit testing"""
+        """Equality interface that allows comparison between objects for unit testing"""
 
         return self.node_features == other.node_features and \
             self.edge_features == other.edge_features and \
@@ -100,8 +100,30 @@ class GraphGeneratorSettings:
             self.sopa_contribution_threshold == other.sopa_contribution_threshold
 
     @classmethod
-    def default(cls):
-        return cls()
+    def default(cls,
+                node_features: list[NodeFeature] = [],
+                edge_features: list[EdgeFeature] = [],
+                graph_features: list[GraphFeature] = [],
+                targets: list[QmTarget] = [],
+                bond_determination_mode: BondDeterminationMode = DEFAULT_BOND_DETERMINATION_MODE,
+                bond_threshold=DEFAULT_BOND_THRESHOLD,
+                bond_threshold_metal=None,
+                hydrogen_mode=DEFAULT_HYDROGEN_MODE,
+                hydrogen_count_threshold=DEFAULT_HYDROGEN_COUNT_THRESHOLD,
+                sopa_resolution_mode=DEFAULT_SOPA_RESOLUTION_MODE,
+                sopa_contribution_threshold=DEFAULT_SOPA_CONTRIBUTION_THRESHOLD):
+
+        return cls(node_features=node_features,
+                   edge_features=edge_features,
+                   graph_features=graph_features,
+                   targets=targets,
+                   bond_determination_mode=bond_determination_mode,
+                   bond_threshold=bond_threshold,
+                   bond_threshold_metal=bond_threshold_metal,
+                   hydrogen_mode=hydrogen_mode,
+                   hydrogen_count_threshold=hydrogen_count_threshold,
+                   sopa_resolution_mode=sopa_resolution_mode,
+                   sopa_contribution_threshold=sopa_contribution_threshold)
 
     def _get_orbtials_to_extract_indices(self, mode: OrbitalOccupationTypes):
 
