@@ -41,7 +41,7 @@ class GraphGenerator:
 
         # get edges
         nodes = self._get_nodes(qm_data)
-        # get edges
+        # get edges TODO: decide between edge generation methods
         edges = self._get_sopa_edges(qm_data)
         # edges = self._get_edges(qm_data)
 
@@ -107,15 +107,119 @@ class GraphGenerator:
         for i in range(len(adjacency_list)):
             edges.append(self._get_featurised_edge(adjacency_list[i], qm_data))
 
-        # operations only relevant when not modelling hydrogens explicitly
-        if self._settings.hydrogen_mode == HydrogenMode.OMIT or self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
-
-            # check for hydride hydrogens to add explicitly
-            hydride_bond_indices = self._get_hydride_bond_indices(qm_data)
-            for i in range(len(hydride_bond_indices)):
-                edges.append(self._get_featurised_edge(hydride_bond_indices[i], qm_data))
-
         return edges
+
+    def _get_nbo_bonding_orbital_adjacency_list(self, qm_data: QmData) -> list[list[int]]:
+
+        """Gets the NBO bond orbital adjacency list.
+
+        Returns:
+            list[list[int]]: The NBO bond orbital adjacency list.
+        """
+
+        adjacency_list = []
+        for i in range(len(qm_data.bond_pair_data)):
+            # ignore hydrogens in omit and implicit mode
+            if self._settings.hydrogen_mode == HydrogenMode.OMIT or self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+                if qm_data.atomic_numbers[qm_data.bond_pair_data[i].atom_indices[0]] == 1 or qm_data.atomic_numbers[qm_data.bond_pair_data[i].atom_indices[1]] == 1:
+                    continue
+
+            if not qm_data.bond_pair_data[i].atom_indices in adjacency_list:
+                adjacency_list.append(qm_data.bond_pair_data[i].atom_indices)
+
+        return sorted(adjacency_list)
+
+    def _get_bond_order_adjacency_list(self, qm_data: QmData, bond_order_type: BondDeterminationMode) -> list[list[int]]:
+
+        """Gets an adjacency list using bond orders of the specified type.
+
+        Returns:
+            list[list[int]]: The bond order adjacency list.
+        """
+
+        metal_adjacency_list = self._get_bond_order_metal_adjacency_list(qm_data, bond_order_type)
+        non_metal_adjacency_list = self._get_bond_order_non_metal_adjacency_list(qm_data, bond_order_type)
+
+        return metal_adjacency_list + non_metal_adjacency_list
+
+    def _get_bond_order_non_metal_adjacency_list(self, qm_data: QmData, bond_order_type: BondDeterminationMode) -> list[list[int]]:
+
+        """Gets an adjacency list using bond orders of the specified type only for non-metal atoms.
+
+        Returns:
+            list[list[int]]: The bond order adjacency list for all non-metal atoms.
+        """
+
+        threshold = self._settings.bond_threshold
+
+        adjacency_list = []
+
+        # get appropriate index matrix
+        index_matrix = self._get_index_matrix(qm_data, bond_order_type)
+
+        # iterate over half triangle matrix to determine bonds
+        for i in range(len(index_matrix) - 1):
+
+            # skip if metal atom
+            if qm_data.atomic_numbers[i] in ElementLookUpTable.transition_metal_atomic_numbers:
+                continue
+
+            for j in range(i + 1, len(index_matrix), 1):
+
+                # skip if metal atom
+                if qm_data.atomic_numbers[j] in ElementLookUpTable.transition_metal_atomic_numbers:
+                    continue
+
+                # if larger than threshold --> add bond
+                if (index_matrix[i][j]) > threshold:
+
+                    # ignore hydrogens in omit and implicit mode
+                    if self._settings.hydrogen_mode == HydrogenMode.OMIT or self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+                        if qm_data.atomic_numbers[i] == 1 or qm_data.atomic_numbers[j] == 1:
+                            continue
+
+                    # append atom pair
+                    adjacency_list.append([i, j])
+
+        return adjacency_list
+
+    def _get_bond_order_metal_adjacency_list(self, qm_data: QmData, bond_order_type: BondDeterminationMode) -> list[list[int]]:
+
+        """Gets an adjacency list using bond orders of the specified type only for metal atoms.
+
+        Returns:
+            list[list[int]]: The bond order adjacency list for all metal atoms.
+        """
+
+        threshold = self._settings.bond_threshold_metal
+
+        adjacency_list = []
+
+        # get appropriate index matrix
+        index_matrix = self._get_index_matrix(qm_data, bond_order_type)
+
+        # iterate over half triangle matrix to determine bonds
+        for i in range(len(index_matrix) - 1):
+
+            for j in range(i + 1, len(index_matrix), 1):
+
+                # skip if metal atom
+                if qm_data.atomic_numbers[i] not in ElementLookUpTable.transition_metal_atomic_numbers and \
+                   qm_data.atomic_numbers[j] not in ElementLookUpTable.transition_metal_atomic_numbers:
+                    continue
+
+                # if larger than threshold --> add bond
+                if (index_matrix[i][j]) > threshold:
+
+                    # ignore hydrogens in omit and implicit mode
+                    if self._settings.hydrogen_mode == HydrogenMode.OMIT or self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+                        if qm_data.atomic_numbers[i] == 1 or qm_data.atomic_numbers[j] == 1:
+                            continue
+
+                    # append atom pair
+                    adjacency_list.append([i, j])
+
+        return adjacency_list
 
     def _get_adjacency_list(self, qm_data: QmData) -> list[list[int]]:
 
@@ -128,47 +232,18 @@ class GraphGenerator:
         adjacency_list = []
 
         if self._settings.bond_determination_mode == BondDeterminationMode.NBO_BONDING_ORBITALS:
-
-            for i in range(len(qm_data.bond_pair_data)):
-                # ignore hydrogens in omit and implicit mode
-                if self._settings.hydrogen_mode == HydrogenMode.OMIT or self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
-                    if qm_data.atomic_numbers[qm_data.bond_pair_data[i].atom_indices[0]] == 1 or qm_data.atomic_numbers[qm_data.bond_pair_data[i].atom_indices[1]] == 1:
-                        continue
-
-                if not qm_data.bond_pair_data[i].atom_indices in adjacency_list:
-                    adjacency_list.append(qm_data.bond_pair_data[i].atom_indices)
-
-            return sorted(adjacency_list)
+            adjacency_list = self._get_nbo_bonding_orbital_adjacency_list(qm_data)
         else:
-            # get appropriate index matrix
-            index_matrix = self._get_index_matrix(qm_data)
+            adjacency_list = self._get_bond_order_adjacency_list(qm_data, self._settings.bond_determination_mode)
 
-            # iterate over half triangle matrix to determine bonds
-            for i in range(len(index_matrix) - 1):
+        # get hydride bonds and append if not already in list
+        hydride_bonds = self._get_hydride_bond_indices(qm_data)
+        for hydride_bond in hydride_bonds:
 
-                for j in range(i + 1, len(index_matrix), 1):
+            if hydride_bond not in adjacency_list and list(reversed(hydride_bond)) not in adjacency_list:
+                adjacency_list.append(hydride_bond)
 
-                    # decide which threshold to use
-                    if qm_data.atomic_numbers[i] in ElementLookUpTable.transition_metal_atomic_numbers or qm_data.atomic_numbers[j] in ElementLookUpTable.transition_metal_atomic_numbers:
-                        threshold = self._settings.bond_threshold_metal
-                    else:
-                        threshold = self._settings.bond_threshold
-
-                    # if larger than threshold --> add bond
-                    if (index_matrix[i][j]) > threshold:
-
-                        # append the atom indices (pos 0)
-                        # and Wiberg bond index as a feature (pos 1)
-
-                        # ignore hydrogens in omit and implicit mode
-                        if self._settings.hydrogen_mode == HydrogenMode.OMIT or self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
-                            if qm_data.atomic_numbers[i] == 1 or qm_data.atomic_numbers[j] == 1:
-                                continue
-
-                        # append edge with empty feature vector
-                        adjacency_list.append([i, j])
-
-            return adjacency_list
+        return adjacency_list
 
     def _get_edge_features(self, bond_atom_indices: list[int], qm_data: QmData) -> list[float]:
 
@@ -665,7 +740,7 @@ class GraphGenerator:
         bound_atom_indices = []
 
         # get appropriate index matrix
-        index_matrix = self._get_index_matrix(qm_data)
+        index_matrix = self._get_index_matrix(qm_data, self._settings.bond_determination_mode)
 
         for i in range(len(index_matrix[atom_index])):
 
@@ -716,7 +791,7 @@ class GraphGenerator:
 
         return len(self._get_bound_h_atom_indices(atom_index, qm_data))
 
-    def _get_index_matrix(self, qm_data: QmData) -> list[list[float]]:
+    def _get_index_matrix(self, qm_data: QmData, bond_order_type: BondDeterminationMode) -> list[list[float]]:
 
         """Helper function that returns the appropriate index matrix based on the GraphGenerator settings.
 
@@ -730,13 +805,13 @@ class GraphGenerator:
         # decide which index matrix to return
 
         # Wiberg mode
-        if self._settings.bond_determination_mode == BondDeterminationMode.WIBERG:
+        if bond_order_type == BondDeterminationMode.WIBERG:
             return qm_data.wiberg_bond_order_matrix
         # LMO mode
-        elif self._settings.bond_determination_mode == BondDeterminationMode.LMO:
+        elif bond_order_type == BondDeterminationMode.LMO:
             return qm_data.lmo_bond_order_matrix
         # NLMO mode
-        elif self._settings.bond_determination_mode == BondDeterminationMode.NLMO:
+        elif bond_order_type == BondDeterminationMode.NLMO:
             return qm_data.nlmo_bond_order_matrix
         # raise exception otherwise
         else:
