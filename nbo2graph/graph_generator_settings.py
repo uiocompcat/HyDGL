@@ -28,12 +28,12 @@ class GraphGeneratorSettings:
                  targets: list[QmTarget],
                  edge_types: list[EdgeType],
                  bond_order_mode: BondOrderType,
-                 bond_threshold,
-                 hydrogen_mode,
-                 hydrogen_count_threshold,
-                 sopa_resolution_mode,
-                 sopa_contribution_threshold,
-                 bond_threshold_metal):
+                 hydrogen_mode: HydrogenMode,
+                 hydrogen_count_threshold: float,
+                 sopa_resolution_mode: SopaResolutionMode,
+                 sopa_contribution_threshold: float,
+                 bond_threshold: float,
+                 bond_threshold_metal: float):
 
         """Constructor
 
@@ -42,11 +42,13 @@ class GraphGeneratorSettings:
             edge_features (list[EdgeFeature]): List of edge features to extract.
             graph_features (list[GraphFeature]): List of graph features to extract.
             targets (list[QmTarget]): List of targets.
-            edge_types (list[BondDeterminationMode]): List of edges to include.
+            edge_types (list[EdgeType]): List of edges to include.
+            bond_order_mode (BondOrderMode): Specifies which bond orders to use
             targets_to_extract (list[QmTarget]): List of targets defining which QM properties should be extracted as targets.
             bond_threshold (float): Threshold value defining the lower bound for considering bonds.
-            hydrogen_count_threshold(float): Threshold value defining the lower bound for considering hydrogens as bound for implicit mode.
+            bond_threshold_metal (float): Threshold value defining the lower bound for considering metal bonds.
             hydrogen_mode (HydrogenMode): Operation mode defining the way to handle hydrogens.
+            hydrogen_count_threshold(float): Threshold value defining the lower bound for considering hydrogens as bound for implicit mode.
         """
 
         # features
