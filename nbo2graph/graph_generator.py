@@ -1,5 +1,6 @@
 import warnings
 from statistics import mean
+from nbo2graph.enums.edge_type import EdgeType
 
 from nbo2graph.node import Node
 from nbo2graph.edge import Edge
@@ -15,7 +16,7 @@ from nbo2graph.nbo_single_data_point import NboSingleDataPoint
 from nbo2graph.nbo_double_data_point import NboDoubleDataPoint
 from nbo2graph.enums.sopa_resolution_mode import SopaResolutionMode
 from nbo2graph.graph_generator_settings import GraphGeneratorSettings
-from nbo2graph.enums.bond_determination_mode import BondDeterminationMode
+from nbo2graph.enums.bond_order_type import BondOrderType
 
 
 class GraphGenerator:
@@ -41,9 +42,16 @@ class GraphGenerator:
 
         # get edges
         nodes = self._get_nodes(qm_data)
-        # get edges TODO: decide between edge generation methods
-        edges = self._get_sopa_edges(qm_data)
-        # edges = self._get_edges(qm_data)
+
+        # get edges
+        edges = []
+
+        if EdgeType.BOND_ORDER_METAL in self._settings.edge_types or \
+           EdgeType.BOND_ORDER_NON_METAL in self._settings.edge_types or \
+           EdgeType.NBO_BONDING_ORBITALS in self._settings.edge_types:
+            edges += self._get_edges(qm_data)
+        if EdgeType.SOPA in self._settings.edge_types:
+            edges += self._get_sopa_edges(qm_data)
 
         # rescale node referenes in edges if explicit hydrogens were omitted
         if self._settings.hydrogen_mode == HydrogenMode.OMIT or self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
@@ -129,7 +137,7 @@ class GraphGenerator:
 
         return sorted(adjacency_list)
 
-    def _get_bond_order_adjacency_list(self, qm_data: QmData, bond_order_type: BondDeterminationMode) -> list[list[int]]:
+    def _get_bond_order_adjacency_list(self, qm_data: QmData, bond_order_type: BondOrderType) -> list[list[int]]:
 
         """Gets an adjacency list using bond orders of the specified type.
 
@@ -142,7 +150,7 @@ class GraphGenerator:
 
         return metal_adjacency_list + non_metal_adjacency_list
 
-    def _get_bond_order_non_metal_adjacency_list(self, qm_data: QmData, bond_order_type: BondDeterminationMode) -> list[list[int]]:
+    def _get_bond_order_non_metal_adjacency_list(self, qm_data: QmData, bond_order_type: BondOrderType) -> list[list[int]]:
 
         """Gets an adjacency list using bond orders of the specified type only for non-metal atoms.
 
@@ -183,7 +191,7 @@ class GraphGenerator:
 
         return adjacency_list
 
-    def _get_bond_order_metal_adjacency_list(self, qm_data: QmData, bond_order_type: BondDeterminationMode) -> list[list[int]]:
+    def _get_bond_order_metal_adjacency_list(self, qm_data: QmData, bond_order_type: BondOrderType) -> list[list[int]]:
 
         """Gets an adjacency list using bond orders of the specified type only for metal atoms.
 
@@ -231,10 +239,14 @@ class GraphGenerator:
 
         adjacency_list = []
 
-        if self._settings.bond_determination_mode == BondDeterminationMode.NBO_BONDING_ORBITALS:
-            adjacency_list = self._get_nbo_bonding_orbital_adjacency_list(qm_data)
-        else:
-            adjacency_list = self._get_bond_order_adjacency_list(qm_data, self._settings.bond_determination_mode)
+        if EdgeType.NBO_BONDING_ORBITALS in self._settings.edge_types:
+            adjacency_list.extend(self._get_nbo_bonding_orbital_adjacency_list(qm_data))
+
+        if EdgeType.BOND_ORDER_METAL in self._settings.edge_types:
+            adjacency_list.extend(self._get_bond_order_metal_adjacency_list(qm_data, self._settings.bond_order_mode))
+
+        if EdgeType.BOND_ORDER_NON_METAL in self._settings.edge_types:
+            adjacency_list.extend(self._get_bond_order_non_metal_adjacency_list(qm_data, self._settings.bond_order_mode))
 
         # get hydride bonds and append if not already in list
         hydride_bonds = self._get_hydride_bond_indices(qm_data)
@@ -740,7 +752,7 @@ class GraphGenerator:
         bound_atom_indices = []
 
         # get appropriate index matrix
-        index_matrix = self._get_index_matrix(qm_data, self._settings.bond_determination_mode)
+        index_matrix = self._get_index_matrix(qm_data, self._settings.bond_order_mode)
 
         for i in range(len(index_matrix[atom_index])):
 
@@ -791,7 +803,7 @@ class GraphGenerator:
 
         return len(self._get_bound_h_atom_indices(atom_index, qm_data))
 
-    def _get_index_matrix(self, qm_data: QmData, bond_order_type: BondDeterminationMode) -> list[list[float]]:
+    def _get_index_matrix(self, qm_data: QmData, bond_order_type: BondOrderType) -> list[list[float]]:
 
         """Helper function that returns the appropriate index matrix based on the GraphGenerator settings.
 
@@ -805,13 +817,13 @@ class GraphGenerator:
         # decide which index matrix to return
 
         # Wiberg mode
-        if bond_order_type == BondDeterminationMode.WIBERG:
+        if bond_order_type == BondOrderType.WIBERG:
             return qm_data.wiberg_bond_order_matrix
         # LMO mode
-        elif bond_order_type == BondDeterminationMode.LMO:
+        elif bond_order_type == BondOrderType.LMO:
             return qm_data.lmo_bond_order_matrix
         # NLMO mode
-        elif bond_order_type == BondDeterminationMode.NLMO:
+        elif bond_order_type == BondOrderType.NLMO:
             return qm_data.nlmo_bond_order_matrix
         # raise exception otherwise
         else:

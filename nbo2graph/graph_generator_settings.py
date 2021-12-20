@@ -4,11 +4,12 @@ from nbo2graph.enums.edge_feature import EdgeFeature
 from nbo2graph.enums.graph_feature import GraphFeature
 from nbo2graph.enums.hydrogen_mode import HydrogenMode
 from nbo2graph.enums.sopa_resolution_mode import SopaResolutionMode
-from nbo2graph.enums.bond_determination_mode import BondDeterminationMode
+from nbo2graph.enums.bond_order_type import BondOrderType
+from nbo2graph.enums.edge_type import EdgeType
 from nbo2graph.enums.orbital_occupation_types import OrbitalOccupationTypes
 
 # constants for default values
-DEFAULT_BOND_DETERMINATION_MODE = BondDeterminationMode.WIBERG
+DEFAULT_BOND_ORDER_MODE = BondOrderType.WIBERG
 DEFAULT_HYDROGEN_MODE = HydrogenMode.EXPLICIT
 DEFAULT_BOND_THRESHOLD = 0.3
 DEFAULT_HYDROGEN_COUNT_THRESHOLD = 0.5
@@ -25,7 +26,8 @@ class GraphGeneratorSettings:
                  edge_features: list[EdgeFeature],
                  graph_features: list[GraphFeature],
                  targets: list[QmTarget],
-                 bond_determination_mode: BondDeterminationMode,
+                 edge_types: list[EdgeType],
+                 bond_order_mode: BondOrderType,
                  bond_threshold,
                  hydrogen_mode,
                  hydrogen_count_threshold,
@@ -38,7 +40,9 @@ class GraphGeneratorSettings:
         Args:
             node_features (list[NodeFeature]): List of node features to extract.
             edge_features (list[EdgeFeature]): List of edge features to extract.
-            bond_determination_mode (BondDeterminationMode): Specifies the way bonds are determined when building the graph.
+            graph_features (list[GraphFeature]): List of graph features to extract.
+            targets (list[QmTarget]): List of targets.
+            edge_types (list[BondDeterminationMode]): List of edges to include.
             targets_to_extract (list[QmTarget]): List of targets defining which QM properties should be extracted as targets.
             bond_threshold (float): Threshold value defining the lower bound for considering bonds.
             hydrogen_count_threshold(float): Threshold value defining the lower bound for considering hydrogens as bound for implicit mode.
@@ -54,7 +58,8 @@ class GraphGeneratorSettings:
         self.targets = targets
 
         # bond mode
-        self.bond_determination_mode = bond_determination_mode
+        self.edge_types = edge_types
+        self.bond_order_mode = bond_order_mode
         self.bond_threshold = bond_threshold
 
         if bond_threshold_metal is None:
@@ -86,7 +91,7 @@ class GraphGeneratorSettings:
             self.edge_features == other.edge_features and \
             self.graph_features == other.graph_features and \
             self.targets == other.targets and \
-            self.bond_determination_mode == other.bond_determination_mode and \
+            self.bond_order_mode == other.bond_order_mode and \
             self.bond_threshold == other.bond_threshold and \
             self.bond_threshold_metal == other.bond_threshold_metal and \
             self.hydrogen_mode == other.hydrogen_mode and \
@@ -105,19 +110,21 @@ class GraphGeneratorSettings:
                 edge_features: list[EdgeFeature] = [],
                 graph_features: list[GraphFeature] = [],
                 targets: list[QmTarget] = [],
-                bond_determination_mode: BondDeterminationMode = DEFAULT_BOND_DETERMINATION_MODE,
-                bond_threshold=DEFAULT_BOND_THRESHOLD,
-                bond_threshold_metal=None,
-                hydrogen_mode=DEFAULT_HYDROGEN_MODE,
-                hydrogen_count_threshold=DEFAULT_HYDROGEN_COUNT_THRESHOLD,
-                sopa_resolution_mode=DEFAULT_SOPA_RESOLUTION_MODE,
-                sopa_contribution_threshold=DEFAULT_SOPA_CONTRIBUTION_THRESHOLD):
+                edge_types: list[EdgeType] = [],
+                bond_order_mode: BondOrderType = DEFAULT_BOND_ORDER_MODE,
+                bond_threshold: float = DEFAULT_BOND_THRESHOLD,
+                bond_threshold_metal: float = None,
+                hydrogen_mode: HydrogenMode = DEFAULT_HYDROGEN_MODE,
+                hydrogen_count_threshold: float = DEFAULT_HYDROGEN_COUNT_THRESHOLD,
+                sopa_resolution_mode: SopaResolutionMode = DEFAULT_SOPA_RESOLUTION_MODE,
+                sopa_contribution_threshold: float = DEFAULT_SOPA_CONTRIBUTION_THRESHOLD):
 
         return cls(node_features=node_features,
                    edge_features=edge_features,
                    graph_features=graph_features,
                    targets=targets,
-                   bond_determination_mode=bond_determination_mode,
+                   edge_types=edge_types,
+                   bond_order_mode=bond_order_mode,
                    bond_threshold=bond_threshold,
                    bond_threshold_metal=bond_threshold_metal,
                    hydrogen_mode=hydrogen_mode,
