@@ -23,7 +23,7 @@ class TestGraphGeneratorSettings(unittest.TestCase):
                                    hydrogen_mode=HydrogenMode.EXPLICIT,
                                    hydrogen_count_threshold=0.5,
                                    bond_threshold_metal=None,
-                                   sopa_contribution_threshold=0.49,
+                                   sopa_contribution_threshold=0.5,
                                    sopa_resolution_mode=SopaResolutionMode.AVERAGE)
         ],
 

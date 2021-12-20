@@ -14,7 +14,7 @@ DEFAULT_HYDROGEN_MODE = HydrogenMode.EXPLICIT
 DEFAULT_BOND_THRESHOLD = 0.3
 DEFAULT_HYDROGEN_COUNT_THRESHOLD = 0.5
 DEFAULT_SOPA_RESOLUTION_MODE = SopaResolutionMode.AVERAGE
-DEFAULT_SOPA_CONTRIBUTION_THRESHOLD = 0.49
+DEFAULT_SOPA_CONTRIBUTION_THRESHOLD = 0.5
 
 
 class GraphGeneratorSettings:
@@ -44,11 +44,13 @@ class GraphGeneratorSettings:
             targets (list[QmTarget]): List of targets.
             edge_types (list[EdgeType]): List of edges to include.
             bond_order_mode (BondOrderMode): Specifies which bond orders to use
-            targets_to_extract (list[QmTarget]): List of targets defining which QM properties should be extracted as targets.
-            bond_threshold (float): Threshold value defining the lower bound for considering bonds.
-            bond_threshold_metal (float): Threshold value defining the lower bound for considering metal bonds.
             hydrogen_mode (HydrogenMode): Operation mode defining the way to handle hydrogens.
             hydrogen_count_threshold(float): Threshold value defining the lower bound for considering hydrogens as bound for implicit mode.
+            sopa_resolution_mode (SopaResolutionMode): Mode that specifies how to build the SOPA edges according to the stabilisation energies.
+            sopa_contribution_threshold (float): Threshold value specifying when to consider atoms for NBO interactions with more than one involved atom.
+            bond_threshold (float): Threshold value defining the lower bound for considering bonds.
+            bond_threshold_metal (float): Threshold value defining the lower bound for considering metal bonds.
+
         """
 
         # features
