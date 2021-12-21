@@ -230,25 +230,10 @@ class Graph:
             list[int]: List of node indices denoting the adjacent nodes.
         """
 
-        if node_index < 0 or node_index > len(self.nodes) - 1:
-            raise ValueError('The specified node index is out of range. Valid range: 0 - ' + str(len(self.nodes) - 1) + '. Given: ' + str(node_index) + '.')
+        # get incoming and outgoing adjecent nodes | remove duplicates
+        return list(set(self._get_incoming_adjacent_nodes(node_index) + self._get_outgoing_adjacent_nodes(node_index)))
 
-        # deprecated code for purely undirected graphs
-        # adjacent_nodes = []
-        # for i in range(len(self.edges)):
-        #     if node_index in self.edges[i].node_indices:
-        #         # get the index of the other node in the edge node list
-        #         other_edge_index = (self.edges[i].node_indices.index(node_index) + 1) % 2
-        #         # get the appropriate node index
-        #         adjacent_node_index = self.edges[i].node_indices[other_edge_index]
-        #         # append to output list
-        #         adjacent_nodes.append(adjacent_node_index)
-
-        # return adjacent_nodes
-
-        return list(set(self._get_in_adjacent_nodes(node_index) + self._get_out_adjacent_nodes(node_index)))
-
-    def _get_in_adjacent_nodes(self, node_index: int) -> list[int]:
+    def _get_incoming_adjacent_nodes(self, node_index: int) -> list[int]:
 
         """Gets the indices of incoming adjacent (with edges pointing to them) nodes.
 
@@ -262,20 +247,22 @@ class Graph:
         if node_index < 0 or node_index > len(self.nodes) - 1:
             raise ValueError('The specified node index is out of range. Valid range: 0 - ' + str(len(self.nodes) - 1) + '. Given: ' + str(node_index) + '.')
 
-        in_adjacent_nodes = []
+        in_adjacent_node_indices = []
         for edge in self.edges:
             if node_index in edge.node_indices:
 
                 # get the index of the other node in the edge node list
                 other_node_edge_list_index = (edge.node_indices.index(node_index) + 1) % 2
 
+                # in case of undirected graph ordering does not matter
+                # for directed graphs check that the other node is the source
                 if not edge.is_directed or other_node_edge_list_index == 0:
-                    adjacent_node_index = edge.node_indices[other_node_edge_list_index]
-                    in_adjacent_nodes.append(adjacent_node_index)
+                    in_adjacent_node_index = edge.node_indices[other_node_edge_list_index]
+                    in_adjacent_node_indices.append(in_adjacent_node_index)
 
-        return in_adjacent_nodes
+        return in_adjacent_node_indices
 
-    def _get_out_adjacent_nodes(self, node_index: int) -> list[int]:
+    def _get_outgoing_adjacent_nodes(self, node_index: int) -> list[int]:
 
         """Gets the indices of outgoing adjacent (with edges pointing to them) nodes.
 
@@ -289,18 +276,20 @@ class Graph:
         if node_index < 0 or node_index > len(self.nodes) - 1:
             raise ValueError('The specified node index is out of range. Valid range: 0 - ' + str(len(self.nodes) - 1) + '. Given: ' + str(node_index) + '.')
 
-        out_adjacent_nodes = []
+        out_adjacent_node_indices = []
         for edge in self.edges:
             if node_index in edge.node_indices:
 
                 # get the index of the other node in the edge node list
                 other_node_edge_list_index = (edge.node_indices.index(node_index) + 1) % 2
 
+                # in case of undirected graph ordering does not matter
+                # for directed graphs check that the other node is the receiver
                 if not edge.is_directed or other_node_edge_list_index == 1:
-                    adjacent_node_index = edge.node_indices[other_node_edge_list_index]
-                    out_adjacent_nodes.append(adjacent_node_index)
+                    out_adjacent_node_index = edge.node_indices[other_node_edge_list_index]
+                    out_adjacent_node_indices.append(out_adjacent_node_index)
 
-        return out_adjacent_nodes
+        return out_adjacent_node_indices
 
     def get_adjacency_matrix(self):
 
