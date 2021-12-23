@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 # from datetime import datetime
 import plotly.graph_objects as go
 from torch_geometric.data import Data
@@ -231,9 +232,9 @@ class Graph:
         """
 
         # get incoming and outgoing adjecent nodes | remove duplicates
-        return list(set(self._get_incoming_adjacent_nodes(node_index) + self._get_outgoing_adjacent_nodes(node_index)))
+        return list(set(self.get_incoming_adjacent_nodes(node_index) + self.get_outgoing_adjacent_nodes(node_index)))
 
-    def _get_incoming_adjacent_nodes(self, node_index: int) -> list[int]:
+    def get_incoming_adjacent_nodes(self, node_index: int) -> list[int]:
 
         """Gets the indices of incoming adjacent (with edges pointing to them) nodes.
 
@@ -262,7 +263,7 @@ class Graph:
 
         return in_adjacent_node_indices
 
-    def _get_outgoing_adjacent_nodes(self, node_index: int) -> list[int]:
+    def get_outgoing_adjacent_nodes(self, node_index: int) -> list[int]:
 
         """Gets the indices of outgoing adjacent (with edges pointing to them) nodes.
 
@@ -299,10 +300,24 @@ class Graph:
             list[list[float]]: The adjacency matrix.
         """
 
-        for node in self.nodes:
-            print(1)
+        adjacency_matrix = []
+        for i in range(len(self.nodes)):
+            in_adjacent_node_indices = self.get_incoming_adjacent_nodes(i)
+            in_adjacency_vector = [1 if node_index in in_adjacent_node_indices else 0 for node_index in range(len(self.nodes))]
+            adjacency_matrix.append(in_adjacency_vector)
 
-        return
+        return adjacency_matrix
+
+    def get_spectrum(self):
+
+        """Gets the spectrum of the graph.
+
+        Returns:
+            list[float]: The spectrum.
+        """
+        eigen_values = np.linalg.eig(self.get_adjacency_matrix())[0].tolist()
+        eigen_values.sort(reverse=True)
+        return eigen_values
 
     def get_node_position_dict(self):
 

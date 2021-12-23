@@ -1,11 +1,12 @@
 import unittest
-from parameterized import parameterized
 import torch
 from torch_geometric.data import Data
+from parameterized import parameterized
 
 from nbo2graph.node import Node
 from nbo2graph.edge import Edge
 from nbo2graph.graph import Graph
+from tests.utils import Utils
 
 
 class TestGraph(unittest.TestCase):
@@ -93,6 +94,112 @@ class TestGraph(unittest.TestCase):
     def test_get_adjacent_nodes_with_invalid_input(self, graph, node):
 
         self.assertRaises(ValueError, graph.get_adjacent_nodes, node)
+
+    @parameterized.expand([
+
+        [
+            Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
+                  [Edge([0, 1], features=[0], is_directed=True), Edge([0, 2], features=[0], is_directed=True), Edge([0, 3], features=[0], is_directed=True), Edge([3, 2], features=[0], is_directed=True), Edge([2, 4], features=[0], is_directed=True)]),
+            0,
+            []
+        ],
+
+        [
+            Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
+                  [Edge([0, 1], features=[0], is_directed=True), Edge([0, 2], features=[0], is_directed=True), Edge([0, 3], features=[0], is_directed=True), Edge([3, 2], features=[0], is_directed=True), Edge([2, 4], features=[0], is_directed=True)]),
+            4,
+            [2]
+        ],
+
+        [
+            Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
+                  [Edge([0, 1], features=[0], is_directed=True), Edge([0, 2], features=[0], is_directed=True), Edge([0, 3], features=[0], is_directed=True), Edge([3, 2], features=[0], is_directed=True), Edge([2, 4], features=[0], is_directed=True)]),
+            2,
+            [0, 3]
+        ],
+
+    ])
+    def test_get_incoming_adjacent_nodes_with_valid_input(self, graph, node, expected):
+
+        self.assertEqual(graph.get_incoming_adjacent_nodes(node), expected)
+
+    @parameterized.expand([
+
+        [
+            Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
+                  [Edge([0, 1], features=[0], is_directed=True), Edge([0, 2], features=[0], is_directed=True), Edge([0, 3], features=[0], is_directed=True), Edge([3, 2], features=[0], is_directed=True), Edge([2, 4], features=[0], is_directed=True)]),
+            0,
+            [1, 2, 3]
+        ],
+
+        [
+            Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
+                  [Edge([0, 1], features=[0], is_directed=True), Edge([0, 2], features=[0], is_directed=True), Edge([0, 3], features=[0], is_directed=True), Edge([3, 2], features=[0], is_directed=True), Edge([2, 4], features=[0], is_directed=True)]),
+            4,
+            []
+        ],
+
+        [
+            Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
+                  [Edge([0, 1], features=[0], is_directed=True), Edge([0, 2], features=[0], is_directed=True), Edge([0, 3], features=[0], is_directed=True), Edge([3, 2], features=[0], is_directed=True), Edge([2, 4], features=[0], is_directed=True)]),
+            2,
+            [4]
+        ],
+
+    ])
+    def test_get_outgoing_adjacent_nodes_with_valid_input(self, graph: Graph, node, expected):
+
+        self.assertEqual(graph.get_outgoing_adjacent_nodes(node), expected)
+
+    @parameterized.expand([
+
+        [
+            Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
+                  [Edge([0, 1], features=[0], is_directed=True), Edge([0, 2], features=[0], is_directed=False), Edge([0, 3], features=[0], is_directed=True), Edge([3, 2], features=[0], is_directed=True), Edge([2, 4], features=[0], is_directed=False)]),
+            [
+                [0, 0, 1, 0, 0],
+                [1, 0, 0, 0, 0],
+                [1, 0, 0, 1, 1],
+                [1, 0, 0, 0, 0],
+                [0, 0, 1, 0, 0]
+            ]
+        ],
+
+        [
+            Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
+                  [Edge([0, 1], features=[0], is_directed=False), Edge([0, 2], features=[0], is_directed=True), Edge([0, 3], features=[0], is_directed=False), Edge([3, 2], features=[0], is_directed=True), Edge([2, 4], features=[0], is_directed=False)]),
+            [
+                [0, 1, 0, 1, 0],
+                [1, 0, 0, 0, 0],
+                [1, 0, 0, 1, 1],
+                [1, 0, 0, 0, 0],
+                [0, 0, 1, 0, 0]
+            ]
+        ],
+
+    ])
+    def test_get_adjacency_matrix(self, graph: Graph, expected):
+
+        self.assertEqual(graph.get_adjacency_matrix(), expected)
+
+    @parameterized.expand([
+
+        [
+            Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
+                  [Edge([0, 1], features=[0], is_directed=True), Edge([0, 2], features=[0], is_directed=False), Edge([0, 3], features=[0], is_directed=True), Edge([3, 2], features=[0], is_directed=True), Edge([2, 4], features=[0], is_directed=False)]),
+            [1.61803399, 0.0, 0.0, -0.61803399, -1.0]
+        ],
+
+        [
+            Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
+                  [Edge([0, 1], features=[0], is_directed=False), Edge([0, 2], features=[0], is_directed=True), Edge([0, 3], features=[0], is_directed=False), Edge([3, 2], features=[0], is_directed=True), Edge([2, 4], features=[0], is_directed=False)]),
+            [1.41421356, 1.0, 0.0, -1.0, -1.41421356]
+        ],
+
+    ])
+    def test_get_spectrum(self, graph: Graph, expected):
+
+        Utils.assert_are_almost_equal(graph.get_spectrum(), expected, places=7)
 
     @parameterized.expand([
 
