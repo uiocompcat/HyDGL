@@ -44,7 +44,7 @@ class Tools:
     @staticmethod
     def get_one_hot_encoded_list(input_list: list[str]):
 
-        """Gets the one-hot encoded version of of a list of class features of the same type.
+        """Gets the one-hot encoded version of a list of class features of the same type.
 
         Returns:
             list[list[int]]: The one-hot encoded feature list.
