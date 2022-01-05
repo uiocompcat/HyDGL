@@ -1,18 +1,21 @@
 import torch
+import warnings
 import numpy as np
 # from datetime import datetime
 import plotly.graph_objects as go
 from torch_geometric.data import Data
+from nbo2graph.edge import Edge
 
 # from nbo2graph.file_handler import FileHandler
 from nbo2graph.element_look_up_table import ElementLookUpTable
+from nbo2graph.node import Node
 
 
 class Graph:
 
     """Class for representing chemical graphs with all necessary information."""
 
-    def __init__(self, nodes, edges, targets=[], graph_features=[], id=None, stoichiometry=None):
+    def __init__(self, nodes: list[Node], edges: list[Edge], targets: list[float] = [], graph_features: list[float] = [], id: str = None, stoichiometry: str = None):
 
         """Constructor
 
@@ -55,11 +58,17 @@ class Graph:
     @property
     def id(self):
         """Getter for id."""
+
+        if self._id is None:
+            warnings.warn('Graph ID not set.')
         return self._id
 
     @property
     def stoichiometry(self):
         """Getter for stoichiometry."""
+
+        if self._stoichiometry is None:
+            warnings.warn('Graph ID not set.')
         return self._stoichiometry
 
     @property

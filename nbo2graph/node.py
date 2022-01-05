@@ -2,7 +2,7 @@ class Node:
 
     """Class for representing a node in a graph."""
 
-    def __init__(self, features=[], position=None, label=None):
+    def __init__(self, features: list[float] = [], position: list[float] = None, label: str = None):
 
         """Constructor
 

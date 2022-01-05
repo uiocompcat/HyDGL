@@ -2,7 +2,7 @@ class Edge:
 
     """Class for representing an edge in a graph."""
 
-    def __init__(self, node_indices, features=[], is_directed=False):
+    def __init__(self, node_indices: list[int], features: list[float] = [], is_directed: bool = False):
 
         """Constructor
 
