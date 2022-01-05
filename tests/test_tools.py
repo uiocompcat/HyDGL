@@ -121,11 +121,28 @@ class TestTools(unittest.TestCase):
         ],
 
     ])
-    def test_get_one_hot_encoding_for_string_list(self, input_list, expected):
+    def test_get_one_hot_encoded_feature_lists(self, input_list, expected):
 
         result = Tools.get_one_hot_encoded_feature_lists(input_list)
 
         self.assertEqual(result, expected)
+
+    @parameterized.expand([
+
+        [
+            [
+                [1, 'C', 'T'],
+                [2, 'C', 'S'],
+                [2, 'N'],
+                [3, 'C', 'O']
+            ],
+            ValueError
+        ],
+
+    ])
+    def test_get_one_hot_encoded_feature_lists_with_invalid_input(self, input_list, expected_error):
+
+        self.assertRaises(expected_error, Tools.get_one_hot_encoded_feature_lists, input_list)
 
     @parameterized.expand([
 
