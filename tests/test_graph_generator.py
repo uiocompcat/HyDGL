@@ -2448,3 +2448,28 @@ class TestGraphGenerator(unittest.TestCase):
         print(result)
 
         Utils.assert_are_almost_equal(result, expected, places=5)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_LALMER,
+            [0.3458798245614035, 0.6517228070175439, 0.0020701754385964913, 0.0003280701754385965],
+        ],
+
+        [
+            TEST_FILE_OREDIA,
+            [0.3929666666666667, 0.59919318181818184, 0.007556818181818182, 0.00029015151515151515],
+        ],
+
+    ])
+    def test_get_average_orbital_occupations(self, file_path, expected):
+
+        # load data
+        qm_data = DataParser(file_path).parse_to_qm_data_object()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings.default())
+
+        result = gg._get_average_orbital_occupations(qm_data.bond_pair_data)
+
+        Utils.assert_are_almost_equal(result, expected)
