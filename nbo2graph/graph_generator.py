@@ -415,6 +415,13 @@ class GraphGenerator:
 
     def _get_default_orbital_occupations(self, qm_data: QmData, orbital_occupation_type: OrbitalOccupationType):
 
+        """Returns the default values for occupations used when no NBO data for a specific edge is available. The orbital
+           occupancies are used as specified in the settings.
+
+        Returns:
+            list[float]: The default orbital occupations.
+        """
+
         if orbital_occupation_type == OrbitalOccupationType.BOND_ORBITAL:
             average_occupations = self._get_average_orbital_occupations(qm_data.bond_pair_data)
             return [average_occupations[i] for i in self._settings.bond_orbital_indices]
@@ -428,6 +435,12 @@ class GraphGenerator:
 
     def _get_average_orbital_occupations(self, nbo_data: list[NboDataPoint]):
 
+        """Gets average orbital occupancy of a list of NBO data points.
+
+        Returns:
+            list[float]: The averaged orbital occupancies ordered as [s, p, d, f].
+        """
+
         orbital_occupations = [nbo_data[i].orbital_occupations for i in range(len(nbo_data))]
         average_orbital_occupations = list(map(mean, zip(*orbital_occupations)))
         return average_orbital_occupations
@@ -437,7 +450,7 @@ class GraphGenerator:
         """Gets an edge object containing the edge indices as well as the request edge features.
 
         Returns:
-            Edge: The edge object
+            Edge: The edge object.
         """
 
         edge_features = self._get_edge_features(bond_atom_indices, qm_data)
