@@ -1,6 +1,8 @@
 import warnings
 from statistics import mean
 from nbo2graph.enums.edge_type import EdgeType
+from nbo2graph.enums.orbital_occupation_type import OrbitalOccupationType
+from nbo2graph.nbo_data_point import NboDataPoint
 
 from nbo2graph.node import Node
 from nbo2graph.edge import Edge
@@ -332,7 +334,7 @@ class GraphGenerator:
                 edge_features.extend([qm_data.bond_pair_data[selected_index].orbital_occupations[k] for k in self._settings.bond_orbital_indices])
 
             else:
-                edge_features.extend((2 + len(self._settings.bond_orbital_indices)) * [0.0])
+                edge_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.BOND_ORBITAL))
 
         if EdgeFeature.BOND_ORBITAL_AVERAGE in self._settings.edge_features and len(self._settings.bond_orbital_indices) > 0:
             # check if NBO data for the respective bonds is available
@@ -355,7 +357,7 @@ class GraphGenerator:
                 oribtal_symmetries = [mean(x) for x in [[y[k] for y in symmetries] for k in self._settings.bond_orbital_indices]]
                 edge_features.extend(oribtal_symmetries)
             else:
-                edge_features.extend((2 + len(self._settings.bond_orbital_indices)) * [0.0])
+                edge_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.BOND_ORBITAL))
 
         if EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features:
             energies = [x.energy for x in qm_data.antibond_pair_data if x.atom_indices == bond_atom_indices]
@@ -384,7 +386,7 @@ class GraphGenerator:
                 edge_features.append(qm_data.antibond_pair_data[selected_index].occupation)
                 edge_features.extend([qm_data.bond_pair_data[selected_index].orbital_occupations[k] for k in self._settings.antibond_orbital_indices])
             else:
-                edge_features.extend((2 + len(self._settings.antibond_orbital_indices)) * [0.0])
+                edge_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.ANTIBOND_ORBITAL))
 
         if EdgeFeature.ANTIBOND_ORBITAL_AVERAGE in self._settings.edge_features and len(self._settings.antibond_orbital_indices) > 0:
             # check if NBO data for the respective antibonds is available
@@ -407,9 +409,28 @@ class GraphGenerator:
                 oribtal_symmetries = [mean(x) for x in [[y[k] for y in symmetries] for k in self._settings.antibond_orbital_indices]]
                 edge_features.extend(oribtal_symmetries)
             else:
-                edge_features.extend((2 + len(self._settings.antibond_orbital_indices)) * [0.0])
+                edge_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.ANTIBOND_ORBITAL))
 
         return edge_features
+
+    def _get_default_orbital_occupations(self, qm_data: QmData, orbital_occupation_type: OrbitalOccupationType):
+
+        if orbital_occupation_type == OrbitalOccupationType.BOND_ORBITAL:
+            average_occupations = self._get_average_orbital_occupations(qm_data.bond_pair_data)
+            return [average_occupations[i] for i in self._settings.bond_orbital_indices]
+        elif orbital_occupation_type == OrbitalOccupationType.ANTIBOND_ORBITAL:
+            average_occupations = self._get_average_orbital_occupations(qm_data.antibond_pair_data)
+            return [average_occupations[i] for i in self._settings.antibond_orbital_indices]
+        elif orbital_occupation_type == OrbitalOccupationType.LONE_PAIR:
+            return len(self._settings.lone_pair_orbital_indices) * [0.0]
+        elif orbital_occupation_type == OrbitalOccupationType.LONE_VACANCY:
+            return len(self._settings.lone_vacancy_orbital_indices) * [0.0]
+
+    def _get_average_orbital_occupations(self, nbo_data: list[NboDataPoint]):
+
+        orbital_occupations = [nbo_data[i].orbital_occupations for i in range(len(nbo_data))]
+        average_orbital_occupations = list(map(mean, zip(*orbital_occupations)))
+        return average_orbital_occupations
 
     def _get_featurised_edge(self, bond_atom_indices: list[int], qm_data: QmData) -> Edge:
 
@@ -549,7 +570,7 @@ class GraphGenerator:
                 oribtal_symmetries = [qm_data.lone_pair_data[selected_index].orbital_occupations[k] for k in self._settings.lone_pair_orbital_indices]
                 node_features.extend(oribtal_symmetries)
             else:
-                node_features.extend((2 + len(self._settings.lone_pair_orbital_indices)) * [0.0])
+                node_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.LONE_PAIR))
 
         if NodeFeature.LONE_PAIR_AVERAGE in self._settings.node_features and len(self._settings.lone_pair_orbital_indices) > 0:
             if i in lone_pair_atom_indices:
@@ -569,7 +590,7 @@ class GraphGenerator:
                 oribtal_symmetries = [mean(x) for x in [[y[k] for y in symmetries] for k in self._settings.lone_pair_orbital_indices]]
                 node_features.extend(oribtal_symmetries)
             else:
-                node_features.extend((2 + len(self._settings.lone_pair_orbital_indices)) * [0.0])
+                node_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.LONE_PAIR))
 
         # add number of lone vacancies if requested
         if NodeFeature.LONE_VACANCY_MIN in self._settings.node_features or \
@@ -604,7 +625,7 @@ class GraphGenerator:
                 oribtal_symmetries = [qm_data.lone_vacancy_data[selected_index].orbital_occupations[k] for k in self._settings.lone_vacancy_orbital_indices]
                 node_features.extend(oribtal_symmetries)
             else:
-                node_features.extend((2 + len(self._settings.lone_vacancy_orbital_indices)) * [0.0])
+                node_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.LONE_VACANCY))
 
         if NodeFeature.LONE_VACANCY_AVERAGE in self._settings.node_features and len(self._settings.lone_vacancy_orbital_indices) > 0:
             if i in lone_vacancy_atom_indices:
@@ -624,7 +645,7 @@ class GraphGenerator:
                 oribtal_symmetries = [mean(x) for x in [[y[k] for y in symmetries] for k in self._settings.lone_vacancy_orbital_indices]]
                 node_features.extend(oribtal_symmetries)
             else:
-                node_features.extend((2 + len(self._settings.lone_vacancy_orbital_indices)) * [0.0])
+                node_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.LONE_VACANCY))
 
         # add implicit hydrogens
         if self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:

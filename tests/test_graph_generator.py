@@ -1320,9 +1320,15 @@ class TestGraphGenerator(unittest.TestCase):
         ],
 
         [
+            [0, 4],
+            [EdgeFeature.BOND_ORBITAL_AVERAGE, EdgeFeature.BOND_ORBITAL_DATA_S, EdgeFeature.BOND_ORBITAL_DATA_P, EdgeFeature.BOND_ORBITAL_DATA_D, EdgeFeature.BOND_ORBITAL_DATA_F],
+            Edge([0, 4], [0, 0.0, 0.0, 0.3458798245614035, 0.6517228070175439, 0.0020701754385964913, 0.0003280701754385965])
+        ],
+
+        [
             [0, 5],
             [EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_P, EdgeFeature.ANTIBOND_ORBITAL_DATA_D, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
-            Edge([0, 5], [0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+            Edge([0, 5], [0, 0.0, 0.0, 0.3458798245614035, 0.6517228070175439, 0.0020701754385964913, 0.0003280701754385965])
         ],
 
         [
