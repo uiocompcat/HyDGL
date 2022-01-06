@@ -1,5 +1,6 @@
 import unittest
 from parameterized import parameterized
+from nbo2graph.enums.orbital_occupation_type import OrbitalOccupationType
 from nbo2graph.enums.sopa_resolution_mode import SopaResolutionMode
 
 from nbo2graph.node import Node
@@ -2471,5 +2472,52 @@ class TestGraphGenerator(unittest.TestCase):
         gg = GraphGenerator(GraphGeneratorSettings.default())
 
         result = gg._get_average_orbital_occupations(qm_data.bond_pair_data)
+
+        Utils.assert_are_almost_equal(result, expected)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_LALMER,
+            [NodeFeature.LONE_PAIRS_S, NodeFeature.LONE_PAIRS_P],
+            [],
+            OrbitalOccupationType.LONE_PAIR,
+            [0.0, 0.0],
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [NodeFeature.LONE_VACANCIES_P, NodeFeature.LONE_VACANCIES_F],
+            [],
+            OrbitalOccupationType.LONE_VACANCY,
+            [0.0, 0.0],
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [],
+            [EdgeFeature.BOND_ORBITAL_DATA_S, EdgeFeature.BOND_ORBITAL_DATA_P, EdgeFeature.BOND_ORBITAL_DATA_D],
+            OrbitalOccupationType.BOND_ORBITAL,
+            [0.3458798245614035, 0.6517228070175439, 0.0020701754385964913],
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [],
+            [EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
+            OrbitalOccupationType.ANTIBOND_ORBITAL,
+            [0.3458798245614035, 0.0003280701754385965],
+        ],
+
+    ])
+    def test_get_default_orbital_occupations(self, file_path, node_features, edge_features, orbital_occupation_type, expected):
+
+        # load data
+        qm_data = DataParser(file_path).parse_to_qm_data_object()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings.default(node_features, edge_features))
+
+        result = gg._get_default_orbital_occupations(qm_data, orbital_occupation_type)
 
         Utils.assert_are_almost_equal(result, expected)
