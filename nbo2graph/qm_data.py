@@ -1,3 +1,4 @@
+from nbo2graph.nbo_data_point import NboDataPoint
 from nbo2graph.nbo_single_data_point import NboSingleDataPoint
 from nbo2graph.nbo_double_data_point import NboDoubleDataPoint
 
@@ -36,7 +37,7 @@ class QmData():
                  wiberg_bond_order_matrix: list[list[float]],
                  lmo_bond_order_matrix: list[list[float]],
                  nlmo_bond_order_matrix: list[list[float]],
-                 nbo_data,
+                 nbo_data: NboDataPoint,
                  nbo_energies: list[list],
                  sopa_data) -> None:
 
