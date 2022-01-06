@@ -1,7 +1,7 @@
 from enum import Enum, auto
 
 
-class OrbitalOccupationTypes(Enum):
+class OrbitalOccupationType(Enum):
 
     '''Enum class for the different types of orbital occupancy in the data.'''
 

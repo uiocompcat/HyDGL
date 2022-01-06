@@ -6,7 +6,7 @@ from nbo2graph.enums.hydrogen_mode import HydrogenMode
 from nbo2graph.enums.sopa_resolution_mode import SopaResolutionMode
 from nbo2graph.enums.bond_order_type import BondOrderType
 from nbo2graph.enums.edge_type import EdgeType
-from nbo2graph.enums.orbital_occupation_types import OrbitalOccupationTypes
+from nbo2graph.enums.orbital_occupation_type import OrbitalOccupationType
 
 # constants for default values
 DEFAULT_BOND_ORDER_MODE = BondOrderType.WIBERG
@@ -81,11 +81,11 @@ class GraphGeneratorSettings:
 
         # get orbital lists specifying which orbitals to consider
         # 0 -> s, 1 -> p, 2 -> d, 3 -> f
-        self.lone_pair_orbital_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationTypes.LONE_PAIR)
-        self.lone_vacancy_orbital_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationTypes.LONE_VACANCY)
-        self.natural_orbital_configuration_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationTypes.NATURAL_ELECTRON_CONFIGURATION)
-        self.bond_orbital_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationTypes.BOND_ORBITAL)
-        self.antibond_orbital_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationTypes.ANTIBOND_ORBITAL)
+        self.lone_pair_orbital_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationType.LONE_PAIR)
+        self.lone_vacancy_orbital_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationType.LONE_VACANCY)
+        self.natural_orbital_configuration_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationType.NATURAL_ELECTRON_CONFIGURATION)
+        self.bond_orbital_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationType.BOND_ORBITAL)
+        self.antibond_orbital_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationType.ANTIBOND_ORBITAL)
 
     def __eq__(self, other):
 
@@ -136,7 +136,7 @@ class GraphGeneratorSettings:
                    sopa_resolution_mode=sopa_resolution_mode,
                    sopa_contribution_threshold=sopa_contribution_threshold)
 
-    def _get_orbtials_to_extract_indices(self, mode: OrbitalOccupationTypes):
+    def _get_orbtials_to_extract_indices(self, mode: OrbitalOccupationType):
 
         """Helper function to parse information about which orbitals occupancies to use as node/edge features.
 
@@ -146,7 +146,7 @@ class GraphGeneratorSettings:
 
         orbital_indices = []
 
-        if mode == OrbitalOccupationTypes.LONE_PAIR:
+        if mode == OrbitalOccupationType.LONE_PAIR:
             if NodeFeature.LONE_PAIRS_S in self.node_features:
                 orbital_indices.append(0)
             if NodeFeature.LONE_PAIRS_P in self.node_features:
@@ -155,7 +155,7 @@ class GraphGeneratorSettings:
                 orbital_indices.append(2)
             if NodeFeature.LONE_PAIRS_F in self.node_features:
                 orbital_indices.append(3)
-        elif mode == OrbitalOccupationTypes.LONE_VACANCY:
+        elif mode == OrbitalOccupationType.LONE_VACANCY:
             if NodeFeature.LONE_VACANCIES_S in self.node_features:
                 orbital_indices.append(0)
             if NodeFeature.LONE_VACANCIES_P in self.node_features:
@@ -164,7 +164,7 @@ class GraphGeneratorSettings:
                 orbital_indices.append(2)
             if NodeFeature.LONE_VACANCIES_F in self.node_features:
                 orbital_indices.append(3)
-        elif mode == OrbitalOccupationTypes.NATURAL_ELECTRON_CONFIGURATION:
+        elif mode == OrbitalOccupationType.NATURAL_ELECTRON_CONFIGURATION:
             if NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S in self.node_features:
                 orbital_indices.append(0)
             if NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P in self.node_features:
@@ -173,7 +173,7 @@ class GraphGeneratorSettings:
                 orbital_indices.append(2)
             if NodeFeature.NATURAL_ELECTRON_CONFIGURATION_F in self.node_features:
                 orbital_indices.append(3)
-        elif mode == OrbitalOccupationTypes.BOND_ORBITAL:
+        elif mode == OrbitalOccupationType.BOND_ORBITAL:
             if EdgeFeature.BOND_ORBITAL_DATA_S in self.edge_features:
                 orbital_indices.append(0)
             if EdgeFeature.BOND_ORBITAL_DATA_P in self.edge_features:
@@ -182,7 +182,7 @@ class GraphGeneratorSettings:
                 orbital_indices.append(2)
             if EdgeFeature.BOND_ORBITAL_DATA_F in self.edge_features:
                 orbital_indices.append(3)
-        elif mode == OrbitalOccupationTypes.ANTIBOND_ORBITAL:
+        elif mode == OrbitalOccupationType.ANTIBOND_ORBITAL:
             if EdgeFeature.ANTIBOND_ORBITAL_DATA_S in self.edge_features:
                 orbital_indices.append(0)
             if EdgeFeature.ANTIBOND_ORBITAL_DATA_P in self.edge_features:
