@@ -1217,8 +1217,8 @@ class GraphGenerator:
                 # set up feature list with stabilisation energy and NBO types
                 features = [stabilisation_energies[i][j]]
                 features.extend(nbo_types[i])
-                # here, additional features could be added to the feature list
-                # features.extend()
+                # add additional features
+                features.extend(self._get_edge_features(atom_indices_list[i], qm_data))
 
                 edges.append(Edge(atom_indices_list[i], features=features, is_directed=True))
 

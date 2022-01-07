@@ -2454,6 +2454,7 @@ class TestGraphGenerator(unittest.TestCase):
         [
             TEST_FILE_LALMER,
             10,
+            [],
             [
                 Edge([1, 0], [15.10, 'LP', 'LV'], is_directed=True),
                 Edge([2, 0], [25.68, 'LP', 'LV'], is_directed=True),
@@ -2468,22 +2469,24 @@ class TestGraphGenerator(unittest.TestCase):
         [
             TEST_FILE_LALMER,
             20,
+            [EdgeFeature.WIBERG_BOND_ORDER],
             [
-                Edge([2, 0], [25.68, 'LP', 'LV'], is_directed=True),
-                Edge([8, 0], [22.74, 'LP', 'LV'], is_directed=True),
-                Edge([14, 0], [21.99, 'LP', 'LV'], is_directed=True),
-                Edge([20, 0], [23.34, 'LP', 'LV'], is_directed=True),
+                Edge([2, 0], [25.68, 'LP', 'LV', 0.0936], is_directed=True),
+                Edge([8, 0], [22.74, 'LP', 'LV', 0.0752], is_directed=True),
+                Edge([14, 0], [21.99, 'LP', 'LV', 0.0723], is_directed=True),
+                Edge([20, 0], [23.34, 'LP', 'LV', 0.0864], is_directed=True),
             ]
         ],
 
     ])
-    def test_get_sopa_edges(self, file_path, sopa_interaction_threshold, expected):
+    def test_get_sopa_edges(self, file_path, sopa_interaction_threshold, edge_features, expected):
 
         # load data
         qm_data = DataParser(file_path).parse_to_qm_data_object()
 
         # set up graph generator (default values)
-        gg = GraphGenerator(GraphGeneratorSettings.default(sopa_contribution_threshold=1, sopa_resolution_mode=SopaResolutionMode.MAX,
+        gg = GraphGenerator(GraphGeneratorSettings.default(edge_features=edge_features, sopa_contribution_threshold=1,
+                                                           sopa_resolution_mode=SopaResolutionMode.MAX,
                                                            sopa_interaction_threshold=sopa_interaction_threshold))
 
         # get result
