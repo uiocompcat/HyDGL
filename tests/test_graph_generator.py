@@ -2436,7 +2436,7 @@ class TestGraphGenerator(unittest.TestCase):
         ],
 
     ])
-    def test__get_sopa_adjacency_list(self, file_path, sopa_contribution_threshold, expected):
+    def test_get_sopa_adjacency_list(self, file_path, sopa_contribution_threshold, expected):
 
         # load data
         qm_data = DataParser(file_path).parse_to_qm_data_object()
@@ -2446,6 +2446,48 @@ class TestGraphGenerator(unittest.TestCase):
 
         # get result
         result = gg._get_sopa_adjacency_list(qm_data)
+
+        Utils.assert_are_almost_equal(result, expected, places=5)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_LALMER,
+            10,
+            [
+                Edge([1, 0], [15.10, 'LP', 'LV'], is_directed=True),
+                Edge([2, 0], [25.68, 'LP', 'LV'], is_directed=True),
+                Edge([8, 0], [22.74, 'LP', 'LV'], is_directed=True),
+                Edge([14, 0], [21.99, 'LP', 'LV'], is_directed=True),
+                Edge([20, 0], [23.34, 'LP', 'LV'], is_directed=True),
+                Edge([27, 0], [16.63, 'LP', 'LV'], is_directed=True),
+                Edge([28, 0], [12.43, 'LP', 'LV'], is_directed=True)
+            ]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            20,
+            [
+                Edge([2, 0], [25.68, 'LP', 'LV'], is_directed=True),
+                Edge([8, 0], [22.74, 'LP', 'LV'], is_directed=True),
+                Edge([14, 0], [21.99, 'LP', 'LV'], is_directed=True),
+                Edge([20, 0], [23.34, 'LP', 'LV'], is_directed=True),
+            ]
+        ],
+
+    ])
+    def test_get_sopa_edges(self, file_path, sopa_interaction_threshold, expected):
+
+        # load data
+        qm_data = DataParser(file_path).parse_to_qm_data_object()
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings.default(sopa_contribution_threshold=1, sopa_resolution_mode=SopaResolutionMode.MAX,
+                                                           sopa_interaction_threshold=sopa_interaction_threshold))
+
+        # get result
+        result = gg._get_sopa_edges(qm_data)
         print(result)
 
         Utils.assert_are_almost_equal(result, expected, places=5)

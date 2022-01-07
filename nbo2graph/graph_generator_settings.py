@@ -14,6 +14,7 @@ DEFAULT_HYDROGEN_MODE = HydrogenMode.EXPLICIT
 DEFAULT_BOND_THRESHOLD = 0.3
 DEFAULT_HYDROGEN_COUNT_THRESHOLD = 0.5
 DEFAULT_SOPA_RESOLUTION_MODE = SopaResolutionMode.AVERAGE
+DEFAULT_SOPA_INTERACTION_THRESHOLD = 0
 DEFAULT_SOPA_CONTRIBUTION_THRESHOLD = 0.5
 
 
@@ -31,6 +32,7 @@ class GraphGeneratorSettings:
                  hydrogen_mode: HydrogenMode,
                  hydrogen_count_threshold: float,
                  sopa_resolution_mode: SopaResolutionMode,
+                 sopa_interaction_threshold: float,
                  sopa_contribution_threshold: float,
                  bond_threshold: float,
                  bond_threshold_metal: float):
@@ -47,7 +49,8 @@ class GraphGeneratorSettings:
             hydrogen_mode (HydrogenMode): Operation mode defining the way to handle hydrogens.
             hydrogen_count_threshold(float): Threshold value defining the lower bound for considering hydrogens as bound for implicit mode.
             sopa_resolution_mode (SopaResolutionMode): Mode that specifies how to build the SOPA edges according to the stabilisation energies.
-            sopa_contribution_threshold (float): Threshold value specifying when to consider atoms for NBO interactions with more than one involved atom.
+            sopa_interaction_threshold (float): Threshold value specifying when to consider SOPA entries (in kcal/mol).
+            sopa_contribution_threshold (float): Threshold value specifying when to consider atoms for NBO interactions with more than one involved atom (in %).
             bond_threshold (float): Threshold value defining the lower bound for considering bonds.
             bond_threshold_metal (float): Threshold value defining the lower bound for considering metal bonds.
 
@@ -77,6 +80,7 @@ class GraphGeneratorSettings:
 
         # SOPA settings
         self.sopa_resolution_mode = sopa_resolution_mode
+        self.sopa_interaction_threshold = sopa_interaction_threshold
         self.sopa_contribution_threshold = sopa_contribution_threshold
 
         # get orbital lists specifying which orbitals to consider
@@ -121,6 +125,7 @@ class GraphGeneratorSettings:
                 hydrogen_mode: HydrogenMode = DEFAULT_HYDROGEN_MODE,
                 hydrogen_count_threshold: float = DEFAULT_HYDROGEN_COUNT_THRESHOLD,
                 sopa_resolution_mode: SopaResolutionMode = DEFAULT_SOPA_RESOLUTION_MODE,
+                sopa_interaction_threshold: float = DEFAULT_SOPA_INTERACTION_THRESHOLD,
                 sopa_contribution_threshold: float = DEFAULT_SOPA_CONTRIBUTION_THRESHOLD):
 
         return cls(node_features=node_features,
@@ -134,6 +139,7 @@ class GraphGeneratorSettings:
                    hydrogen_mode=hydrogen_mode,
                    hydrogen_count_threshold=hydrogen_count_threshold,
                    sopa_resolution_mode=sopa_resolution_mode,
+                   sopa_interaction_threshold=sopa_interaction_threshold,
                    sopa_contribution_threshold=sopa_contribution_threshold)
 
     def _get_orbtials_to_extract_indices(self, mode: OrbitalOccupationType):

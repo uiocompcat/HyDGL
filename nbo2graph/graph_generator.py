@@ -1210,6 +1210,10 @@ class GraphGenerator:
         for i in range(len(atom_indices_list)):
             for j in range(len(stabilisation_energies[i])):
 
+                # skip if stabilisation energy is less than specified interaction threshold
+                if stabilisation_energies[i][j] < self._settings.sopa_interaction_threshold:
+                    continue
+
                 # set up feature list with stabilisation energy and NBO types
                 features = [stabilisation_energies[i][j]]
                 features.extend(nbo_types[i])
