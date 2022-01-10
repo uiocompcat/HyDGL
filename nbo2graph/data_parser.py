@@ -37,9 +37,22 @@ class DataParser:
         raise Exception('Could not find number of atoms in file.')
 
     def parse_to_qm_data_object(self):
+
+        """Parses a Gaussian output file to a QmData object.
+
+        Returns:
+            QmData: A QmData object containing extracted information from the Gaussian output file.
+        """
+
         return QmData.from_dict(self.parse())
 
     def parse(self):
+
+        """Iterates through a given Gaussian output file and returns a dict of extracted data.
+
+        Returns:
+            dict[]: A dict containing different information extracted from the Gaussian output file.
+        """
 
         # output variable
         qm_data = {}
@@ -80,6 +93,9 @@ class DataParser:
 
             if 'NATURAL BOND ORBITALS' in self.lines[i]:
                 qm_data['nbo_energies'], i = self._extract_nbo_energies(i + 7)
+
+            if '3-Center, 4-Electron A:-B-:C Hyperbonds (A-B :C <=> A: B-C)' in self.lines[i]:
+                qm_data['three_center_nbos'] = self._extract_three_center_nbo_data(i + 7)
 
             if 'SECOND ORDER PERTURBATION THEORY ANALYSIS' in self.lines[i]:
                 qm_data['sopa_data'], i = self._extract_sopa_data(i + 9)
@@ -166,47 +182,47 @@ class DataParser:
     # the extraction procedures are identical. The distinction between these functions is kept
     # nonetheless to ensure maintainability (e.g. when the Gaussian output format changes).
 
-    def _extract_charge(self, start_index):
+    def _extract_charge(self, start_index: int):
 
         line_split = self.lines[start_index].split()
         return int(line_split[2])
 
-    def _extract_stoichiometry(self, start_index):
+    def _extract_stoichiometry(self, start_index: int):
 
         line_split = self.lines[start_index].split()
         return line_split[1]
 
-    def _extract_molecular_mass(self, start_index):
+    def _extract_molecular_mass(self, start_index: int):
 
         line_split = self.lines[start_index].split()
         return float(line_split[2])
 
-    def _extract_dispersion_energy(self, start_index):
+    def _extract_dispersion_energy(self, start_index: int):
 
         line_split = self.lines[start_index].split()
         return float(line_split[4])
 
-    def _extract_electronic_energy(self, start_index):
+    def _extract_electronic_energy(self, start_index: int):
 
         line_split = self.lines[start_index].split()
         return float(line_split[4])
 
-    def _extract_dipole_moment(self, start_index):
+    def _extract_dipole_moment(self, start_index: int):
 
         line_split = self.lines[start_index].split()
         return float(line_split[7])
 
-    def _extract_polarisability(self, start_index):
+    def _extract_polarisability(self, start_index: int):
 
         line_split = self.lines[start_index].split()
         return float(line_split[5])
 
-    def _extract_frequency(self, start_index):
+    def _extract_frequency(self, start_index: int):
 
         line_split = self.lines[start_index].split()
         return list(map(float, line_split[2:]))
 
-    def _extract_orbital_energies(self, start_index):
+    def _extract_orbital_energies(self, start_index: int):
 
         # line_split = self.lines[start_index].split()
         line_split = re.findall('-{0,1}[0-9]{1,}.[0-9]{1,}', self.lines[start_index])
@@ -214,38 +230,38 @@ class DataParser:
         # build output list
         return [float(entry) for entry in line_split]
 
-    def _extract_enthalpy_energy(self, start_index):
+    def _extract_enthalpy_energy(self, start_index: int):
 
         line_split = self.lines[start_index].split()
         return float(line_split[6])
 
-    def _extract_gibbs_energy(self, start_index):
+    def _extract_gibbs_energy(self, start_index: int):
 
         line_split = self.lines[start_index].split()
         return float(line_split[7])
 
-    def _extract_zpe_correction(self, start_index):
+    def _extract_zpe_correction(self, start_index: int):
 
         line_split = self.lines[start_index].split()
         return float(line_split[2])
 
-    def _extract_heat_capacity(self, start_index):
+    def _extract_heat_capacity(self, start_index: int):
 
         line_split = self.lines[start_index].split()
         return float(line_split[2])
 
-    def _extract_entropy(self, start_index):
+    def _extract_entropy(self, start_index: int):
 
         line_split = self.lines[start_index].split()
         return float(line_split[3])
 
-    def _extract_atomic_numbers(self, start_index):
+    def _extract_atomic_numbers(self, start_index: int):
 
         atomic_numbers = [int(self.lines[i].split()[1]) for i in range(start_index, start_index + self.n_atoms, 1)]
 
         return atomic_numbers
 
-    def _extract_geometric_data(self, start_index):
+    def _extract_geometric_data(self, start_index: int):
 
         geometric_data = []
 
@@ -266,7 +282,7 @@ class DataParser:
         # also return index i to jump ahead in the file
         return natural_atomic_charges, start_index + self.n_atoms
 
-    def _extract_natural_electron_configuration(self, start_index):
+    def _extract_natural_electron_configuration(self, start_index: int):
 
         natural_electron_configuration = []
 
@@ -302,7 +318,7 @@ class DataParser:
         # also return index i to jump ahead in the file
         return natural_electron_configuration, i
 
-    def _extract_index_matrix(self, start_index):
+    def _extract_index_matrix(self, start_index: int):
 
         # setup n_atoms x n_atoms matrix for Wiberg indices
         wiberg_index_matrix = [[0 for x in range(self.n_atoms)] for y in range(self.n_atoms)]
@@ -341,7 +357,7 @@ class DataParser:
         # also return index i to jump ahead in the file
         return wiberg_index_matrix, i
 
-    def _extract_lmo_bond_data(self, start_index):
+    def _extract_lmo_bond_data(self, start_index: int):
 
         # output matrix
         lmo_bond_data_matrix = [[0 for x in range(self.n_atoms)] for y in range(self.n_atoms)]
@@ -365,7 +381,7 @@ class DataParser:
 
         return lmo_bond_data_matrix, i
 
-    def _extract_nbo_energies(self, start_index):
+    def _extract_nbo_energies(self, start_index: int):
 
         data = []
 
@@ -396,7 +412,7 @@ class DataParser:
         # also return index i to jump ahead in the file
         return data, i
 
-    def _extract_nbo_data(self, start_index):
+    def _extract_nbo_data(self, start_index: int):
 
         # final output variable
         data = []
@@ -423,7 +439,7 @@ class DataParser:
         # also return index i to jump ahead in the file
         return data, i
 
-    def _extract_lone_pair_data(self, start_index):
+    def _extract_lone_pair_data(self, start_index: int):
 
         # get ID of entry
         id = int(self.lines[start_index].split('.')[0])
@@ -453,7 +469,7 @@ class DataParser:
         # divide occupations by 100 (get rid of %)
         return [id, nbo_type, atom_position, full_occupation, [x / 100 for x in occupations]]
 
-    def _extract_bonding_data(self, start_index):
+    def _extract_bonding_data(self, start_index: int):
 
         # get ID of entry
         id = int(self.lines[start_index].split('.')[0])
@@ -503,7 +519,7 @@ class DataParser:
         return [id, nbo_type, atom_positions, [contribution1, contribution2], full_occupation, [x / 200 for x in occupations]]
         # return atom_positions, [x / 200 for x in occupations]
 
-    def _extract_sopa_data(self, start_index):
+    def _extract_sopa_data(self, start_index: int):
 
         # rename index for brevity
         i = start_index
@@ -525,3 +541,23 @@ class DataParser:
             i += 1
 
         return sopa_data, i
+
+    def _extract_three_center_nbo_data(self, start_index: int):
+
+        # rename index for brevity
+        i = start_index
+
+        # return variable
+        three_center_nbos = []
+
+        while self.lines[i] != '':
+
+            line_split = self.lines[i].split()
+            three_center_nbos.append([[int(line_split[9]), int(line_split[10])], float(line_split[8])])
+
+            print(line_split)
+            print(three_center_nbos)
+
+            i += 1
+
+        return three_center_nbos
