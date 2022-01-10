@@ -3,7 +3,7 @@ from enum import Enum, auto
 
 class EdgeFeature(Enum):
 
-    '''Enum class for the different node features to be used.'''
+    '''Enum class for the different edge features to be used.'''
 
     # bond orders
     WIBERG_BOND_ORDER = auto()
