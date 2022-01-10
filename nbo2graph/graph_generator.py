@@ -131,7 +131,8 @@ class GraphGenerator:
         for i in range(len(qm_data.bond_pair_data)):
             # ignore hydrogens in omit and implicit mode
             if self._settings.hydrogen_mode == HydrogenMode.OMIT or self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
-                if qm_data.atomic_numbers[qm_data.bond_pair_data[i].atom_indices[0]] == 1 or qm_data.atomic_numbers[qm_data.bond_pair_data[i].atom_indices[1]] == 1:
+                if qm_data.atomic_numbers[qm_data.bond_pair_data[i].atom_indices[0]] == 1 or \
+                   qm_data.atomic_numbers[qm_data.bond_pair_data[i].atom_indices[1]] == 1:
                     continue
 
             if not qm_data.bond_pair_data[i].atom_indices in adjacency_list:
