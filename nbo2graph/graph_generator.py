@@ -2,6 +2,7 @@ import warnings
 from statistics import mean
 from nbo2graph.enums.edge_type import EdgeType
 from nbo2graph.enums.orbital_occupation_type import OrbitalOccupationType
+from nbo2graph.enums.sopa_edge_feature import SopaEdgeFeature
 from nbo2graph.nbo_data_point import NboDataPoint
 
 from nbo2graph.node import Node
@@ -410,6 +411,37 @@ class GraphGenerator:
                 edge_features.extend(oribtal_symmetries)
             else:
                 edge_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.ANTIBOND_ORBITAL))
+
+        return edge_features
+
+    def _get_sopa_edge_features(self, bond_atom_indices: list[int], qm_data: QmData) -> list[float]:
+
+        """Gets the SOPA edge features for given atom indices according to specification.
+
+        Returns:
+            list[float]: A list of SOPA edge features.
+        """
+
+        # obtain SOPA adjacency list and associated stabilisation energies and NBO types
+        atom_indices_list, stabilisation_energies, nbo_types = self._get_sopa_adjacency_list(qm_data)
+
+        # get index of bond in SOPA data
+        i = atom_indices_list.index(bond_atom_indices)
+
+        # setup edge_features
+        edge_features = []
+
+        if SopaEdgeFeature.STABILISATION_ENERGY_MAX in self._settings.sopa_edge_features:
+            edge_features.extend(self._resolve_stabilisation_energies(stabilisation_energies, SopaResolutionMode.MAX)[i])
+
+        if SopaEdgeFeature.STABILISATION_ENERGY_AVERAGE in self._settings.sopa_edge_features:
+            edge_features.extend(self._resolve_stabilisation_energies(stabilisation_energies, SopaResolutionMode.AVERAGE)[i])
+
+        if SopaEdgeFeature.DONOR_NBO_TYPE in self._settings.sopa_edge_features:
+            edge_features.append(nbo_types[i][0])
+
+        if SopaEdgeFeature.ACCEPTOR_NBO_TYPE in self._settings.sopa_edge_features:
+            edge_features.append(nbo_types[i][1])
 
         return edge_features
 
@@ -1217,7 +1249,7 @@ class GraphGenerator:
         # obtain SOPA adjacency list and associated stabilisation energies and NBO types
         atom_indices_list, stabilisation_energies, nbo_types = self._get_sopa_adjacency_list(qm_data)
         # format stabilisation energies according to specification
-        stabilisation_energies = self._resolve_stabilisation_energies(stabilisation_energies)
+        stabilisation_energies = self._resolve_stabilisation_energies(stabilisation_energies, self._settings.sopa_resolution_mode)
 
         edges = []
         for i in range(len(atom_indices_list)):
@@ -1228,8 +1260,7 @@ class GraphGenerator:
                     continue
 
                 # set up feature list with stabilisation energy and NBO types
-                features = [stabilisation_energies[i][j]]
-                features.extend(nbo_types[i])
+                features = self._get_sopa_edge_features(atom_indices_list[i], qm_data)
                 # add additional features
                 features.extend(self._get_edge_features(atom_indices_list[i], qm_data))
 
@@ -1237,7 +1268,7 @@ class GraphGenerator:
 
         return edges
 
-    def _resolve_stabilisation_energies(self, stabilisation_energies):
+    def _resolve_stabilisation_energies(self, stabilisation_energies, mode):
 
         """Helper function to resolve a list of stabilisation energies according to the SOPA mode specification.
 
@@ -1246,19 +1277,19 @@ class GraphGenerator:
         """
 
         # keeps all individual stabilisation energies
-        if self._settings.sopa_resolution_mode == SopaResolutionMode.FULL:
+        if mode == SopaResolutionMode.FULL:
             pass
         # averages over stabilisation energies belonging to the same atom pair
-        elif self._settings.sopa_resolution_mode == SopaResolutionMode.AVERAGE:
+        elif mode == SopaResolutionMode.AVERAGE:
             for i in range(len(stabilisation_energies)):
                 stabilisation_energies[i] = [mean(stabilisation_energies[i])]
         # uses the minimum and maximum values of stabilisation energies belonging to the same atom pair
-        elif self._settings.sopa_resolution_mode == SopaResolutionMode.MIN_MAX:
+        elif mode == SopaResolutionMode.MIN_MAX:
             for i in range(len(stabilisation_energies)):
                 if len(stabilisation_energies[i]) > 1:
                     stabilisation_energies[i] = [min(stabilisation_energies[i]), max(stabilisation_energies[i])]
         # uses the maximum value of stabilisation energies belonging to the same atom pair
-        elif self._settings.sopa_resolution_mode == SopaResolutionMode.MAX:
+        elif mode == SopaResolutionMode.MAX:
             for i in range(len(stabilisation_energies)):
                 stabilisation_energies[i] = [max(stabilisation_energies[i])]
 

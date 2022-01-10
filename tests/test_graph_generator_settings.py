@@ -15,6 +15,7 @@ class TestGraphGeneratorSettings(unittest.TestCase):
             GraphGeneratorSettings.default(),
             GraphGeneratorSettings(node_features=[],
                                    edge_features=[],
+                                   sopa_edge_features=[],
                                    graph_features=[],
                                    targets=[],
                                    edge_types=[],

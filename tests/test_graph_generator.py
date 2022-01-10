@@ -1,7 +1,5 @@
 import unittest
 from parameterized import parameterized
-from nbo2graph.enums.orbital_occupation_type import OrbitalOccupationType
-from nbo2graph.enums.sopa_resolution_mode import SopaResolutionMode
 
 from nbo2graph.node import Node
 from nbo2graph.edge import Edge
@@ -15,6 +13,9 @@ from nbo2graph.graph_generator import GraphGenerator
 from nbo2graph.enums.bond_order_type import BondOrderType
 from nbo2graph.enums.edge_type import EdgeType
 from nbo2graph.graph_generator_settings import GraphGeneratorSettings
+from nbo2graph.enums.orbital_occupation_type import OrbitalOccupationType
+from nbo2graph.enums.sopa_edge_feature import SopaEdgeFeature
+from nbo2graph.enums.sopa_resolution_mode import SopaResolutionMode
 from tests.utils import Utils
 
 # constants pointing to test files
@@ -2418,7 +2419,7 @@ class TestGraphGenerator(unittest.TestCase):
         gg = GraphGenerator(GraphGeneratorSettings.default(sopa_resolution_mode=sopa_resolution_mode))
 
         # get result
-        result = gg._resolve_stabilisation_energies(stabilisation_energies)
+        result = gg._resolve_stabilisation_energies(stabilisation_energies, sopa_resolution_mode)
 
         Utils.assert_are_almost_equal(result, expected, places=5)
 
@@ -2464,6 +2465,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             10,
             [],
+            [SopaEdgeFeature.STABILISATION_ENERGY_MAX, SopaEdgeFeature.DONOR_NBO_TYPE, SopaEdgeFeature.ACCEPTOR_NBO_TYPE],
             [
                 Edge([1, 0], [15.10, 'LP', 'LV'], is_directed=True),
                 Edge([2, 0], [25.68, 'LP', 'LV'], is_directed=True),
@@ -2479,6 +2481,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             20,
             [EdgeFeature.WIBERG_BOND_ORDER],
+            [SopaEdgeFeature.STABILISATION_ENERGY_MAX, SopaEdgeFeature.DONOR_NBO_TYPE, SopaEdgeFeature.ACCEPTOR_NBO_TYPE],
             [
                 Edge([2, 0], [25.68, 'LP', 'LV', 0.0936], is_directed=True),
                 Edge([8, 0], [22.74, 'LP', 'LV', 0.0752], is_directed=True),
@@ -2487,14 +2490,32 @@ class TestGraphGenerator(unittest.TestCase):
             ]
         ],
 
+        [
+            TEST_FILE_LALMER,
+            10,
+            [],
+            [SopaEdgeFeature.STABILISATION_ENERGY_AVERAGE],
+            [
+                Edge([1, 0], [7.84], is_directed=True),
+                Edge([2, 0], [25.68], is_directed=True),
+                Edge([8, 0], [22.74], is_directed=True),
+                Edge([14, 0], [21.99], is_directed=True),
+                Edge([20, 0], [23.34], is_directed=True),
+                Edge([27, 0], [8.036666], is_directed=True),
+                Edge([28, 0], [6.47], is_directed=True)
+            ]
+        ],
+
     ])
-    def test_get_sopa_edges(self, file_path, sopa_interaction_threshold, edge_features, expected):
+    def test_get_sopa_edges(self, file_path, sopa_interaction_threshold, edge_features, sopa_edge_features, expected):
 
         # load data
         qm_data = DataParser(file_path).parse_to_qm_data_object()
 
         # set up graph generator (default values)
-        gg = GraphGenerator(GraphGeneratorSettings.default(edge_features=edge_features, sopa_contribution_threshold=1,
+        gg = GraphGenerator(GraphGeneratorSettings.default(edge_features=edge_features,
+                                                           sopa_edge_features=sopa_edge_features,
+                                                           sopa_contribution_threshold=1,
                                                            sopa_resolution_mode=SopaResolutionMode.MAX,
                                                            sopa_interaction_threshold=sopa_interaction_threshold))
 

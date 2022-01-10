@@ -4,6 +4,7 @@ from nbo2graph.enums.edge_feature import EdgeFeature
 from nbo2graph.enums.graph_feature import GraphFeature
 from nbo2graph.enums.hydrogen_mode import HydrogenMode
 from nbo2graph.enums.sopa_resolution_mode import SopaResolutionMode
+from nbo2graph.enums.sopa_edge_feature import SopaEdgeFeature
 from nbo2graph.enums.bond_order_type import BondOrderType
 from nbo2graph.enums.edge_type import EdgeType
 from nbo2graph.enums.orbital_occupation_type import OrbitalOccupationType
@@ -25,6 +26,7 @@ class GraphGeneratorSettings:
     def __init__(self,
                  node_features: list[NodeFeature],
                  edge_features: list[EdgeFeature],
+                 sopa_edge_features: list[SopaEdgeFeature],
                  graph_features: list[GraphFeature],
                  targets: list[QmTarget],
                  edge_types: list[EdgeType],
@@ -42,6 +44,7 @@ class GraphGeneratorSettings:
         Args:
             node_features (list[NodeFeature]): List of node features to extract.
             edge_features (list[EdgeFeature]): List of edge features to extract.
+            sopa_edge_features (list[EdgeFeature]): List of SOPA edge features to extract.
             graph_features (list[GraphFeature]): List of graph features to extract.
             targets (list[QmTarget]): List of targets.
             edge_types (list[EdgeType]): List of edges to include.
@@ -59,6 +62,7 @@ class GraphGeneratorSettings:
         # features
         self.node_features = node_features
         self.edge_features = edge_features
+        self.sopa_edge_features = sopa_edge_features
         self.graph_features = graph_features
 
         # targets
@@ -110,12 +114,14 @@ class GraphGeneratorSettings:
             self.bond_orbital_indices == other.bond_orbital_indices and \
             self.antibond_orbital_indices == other.antibond_orbital_indices and \
             self.sopa_resolution_mode == other.sopa_resolution_mode and \
-            self.sopa_contribution_threshold == other.sopa_contribution_threshold
+            self.sopa_contribution_threshold == other.sopa_contribution_threshold and \
+            self.sopa_edge_features == other.sopa_edge_features
 
     @classmethod
     def default(cls,
                 node_features: list[NodeFeature] = [],
                 edge_features: list[EdgeFeature] = [],
+                sopa_edge_features: list[SopaEdgeFeature] = [],
                 graph_features: list[GraphFeature] = [],
                 targets: list[QmTarget] = [],
                 edge_types: list[EdgeType] = [],
@@ -130,6 +136,7 @@ class GraphGeneratorSettings:
 
         return cls(node_features=node_features,
                    edge_features=edge_features,
+                   sopa_edge_features=sopa_edge_features,
                    graph_features=graph_features,
                    targets=targets,
                    edge_types=edge_types,
