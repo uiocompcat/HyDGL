@@ -77,7 +77,7 @@ class DataParser:
                 qm_data['geometric_data'], i = self._extract_geometric_data(i + 5)
 
             if 'Summary of Natural Population Analysis' in self.lines[i]:
-                qm_data['natural_atomic_charges'], i = self._extract_natural_atomic_charges(i + 6)
+                qm_data['natural_atomic_charges'], qm_data['natural_electron_population'], i = self._extract_natural_atomic_charges(i + 6)
 
             if 'Natural Electron Configuration' in self.lines[i]:
                 qm_data['natural_electron_configuration'], i = self._extract_natural_electron_configuration(i + 2)
@@ -278,9 +278,10 @@ class DataParser:
     def _extract_natural_atomic_charges(self, start_index):
 
         natural_atomic_charges = [float(self.lines[i].split()[2]) for i in range(start_index, start_index + self.n_atoms, 1)]
+        natural_electron_population = [[float(self.lines[i].split()[j]) for j in range(3, 6)] for i in range(start_index, start_index + self.n_atoms, 1)]
 
         # also return index i to jump ahead in the file
-        return natural_atomic_charges, start_index + self.n_atoms
+        return natural_atomic_charges, natural_electron_population, start_index + self.n_atoms
 
     def _extract_natural_electron_configuration(self, start_index: int):
 
@@ -555,7 +556,6 @@ class DataParser:
             line_split = self.lines[i].split()
             three_center_nbos.append([[int(line_split[9]), int(line_split[10])], float(line_split[8])])
 
-            print(line_split)
             print(three_center_nbos)
 
             i += 1

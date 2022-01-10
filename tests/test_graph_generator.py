@@ -784,6 +784,15 @@ class TestGraphGenerator(unittest.TestCase):
             Node(features=[3, 0.00634, 2, 1.18858], position=[-1.339211, 0.079206, -0.361021], label='Ir')
         ],
 
+        [
+            TEST_FILE_OREDIA,
+            HydrogenMode.OMIT,
+            BondOrderType.NLMO,
+            [NodeFeature.NATURAL_ELECTRON_POPULATION_TOTAL, NodeFeature.NATURAL_ELECTRON_POPULATION_CORE, NodeFeature.NATURAL_ELECTRON_POPULATION_VALENCE, NodeFeature.NATURAL_ELECTRON_POPULATION_RYDBERG],
+            0,
+            Node(features=[67.99971, 8.01992, 0.03702, 76.05666], position=[-1.339211, 0.079206, -0.361021], label='Ir')
+        ],
+
     ])
     def test_get_individual_node(self, file_path, hydrogen_mode, bond_order_mode, node_features, atom_index, expected):
 

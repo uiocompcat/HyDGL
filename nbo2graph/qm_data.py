@@ -8,8 +8,8 @@ DICT_KEYS = ['n_atoms', 'id', 'charge', 'stoichiometry', 'atomic_numbers', 'geom
              'svp_virtual_orbital_energies', 'svp_dipole_moment', 'frequencies', 'molecular_mass', 'zpe_correction',
              'enthalpy_energy', 'gibbs_energy', 'heat_capacity', 'entropy', 'tzvp_dispersion_energy', 'tzvp_electronic_energy',
              'tzvp_occupied_orbital_energies', 'tzvp_virtual_orbital_energies', 'tzvp_dipole_moment', 'natural_atomic_charges',
-             'natural_electron_configuration', 'wiberg_bond_order_matrix', 'nbo_data', 'three_center_nbos', 'sopa_data',
-             'nbo_energies', 'lmo_bond_order_matrix', 'nlmo_bond_order_matrix', 'three_center_nbos']
+             'natural_electron_configuration', 'natural_electron_population', 'wiberg_bond_order_matrix', 'nbo_data', 'three_center_nbos',
+             'sopa_data', 'nbo_energies', 'lmo_bond_order_matrix', 'nlmo_bond_order_matrix', 'three_center_nbos']
 
 
 class QmData():
@@ -43,6 +43,7 @@ class QmData():
                  gibbs_energy: float,
                  natural_atomic_charges: list[float],
                  natural_electron_configuration: list[list[float]],
+                 natural_electron_population: list[list[float]],
                  wiberg_bond_order_matrix: list[list[float]],
                  lmo_bond_order_matrix: list[list[float]],
                  nlmo_bond_order_matrix: list[list[float]],
@@ -97,6 +98,7 @@ class QmData():
         # electronic data
         self.natural_atomic_charges = natural_atomic_charges
         self.natural_electron_configuration = natural_electron_configuration
+        self.natural_electron_population = natural_electron_population
 
         # bond data
         self.wiberg_bond_order_matrix = wiberg_bond_order_matrix
@@ -155,6 +157,7 @@ class QmData():
                    gibbs_energy=qm_data_dict['gibbs_energy'],
                    natural_atomic_charges=qm_data_dict['natural_atomic_charges'],
                    natural_electron_configuration=qm_data_dict['natural_electron_configuration'],
+                   natural_electron_population=qm_data_dict['natural_electron_population'],
                    wiberg_bond_order_matrix=qm_data_dict['wiberg_bond_order_matrix'],
                    lmo_bond_order_matrix=qm_data_dict['lmo_bond_order_matrix'],
                    nlmo_bond_order_matrix=qm_data_dict['nlmo_bond_order_matrix'],

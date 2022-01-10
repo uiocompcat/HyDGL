@@ -534,6 +534,19 @@ class GraphGenerator:
         if NodeFeature.NATURAL_ATOMIC_CHARGES in self._settings.node_features:
             node_features.append(qm_data.natural_atomic_charges[i])
 
+        # add natural electron populations
+        if NodeFeature.NATURAL_ELECTRON_POPULATION_CORE in self._settings.node_features:
+            node_features.append(qm_data.natural_electron_population[i][0])
+
+        if NodeFeature.NATURAL_ELECTRON_POPULATION_VALENCE in self._settings.node_features:
+            node_features.append(qm_data.natural_electron_population[i][1])
+
+        if NodeFeature.NATURAL_ELECTRON_POPULATION_RYDBERG in self._settings.node_features:
+            node_features.append(qm_data.natural_electron_population[i][2])
+
+        if NodeFeature.NATURAL_ELECTRON_POPULATION_TOTAL in self._settings.node_features:
+            node_features.append(sum(qm_data.natural_electron_population[i]))
+
         # add natural electron configuration (requested orbital occupancies)
         if len(self._settings.natural_orbital_configuration_indices) > 0:
             node_features.extend([qm_data.natural_electron_configuration[i][k] for k in self._settings.natural_orbital_configuration_indices])

@@ -48,9 +48,8 @@ def main():
     #         # break
     #         print(i)
 
-    ggs = GraphGeneratorSettings.default(edge_types=[EdgeType.SOPA], hydrogen_mode=HydrogenMode.EXPLICIT,
-                                         edge_features=[EdgeFeature.WIBERG_BOND_ORDER],
-                                         sopa_contribution_threshold=0.49, sopa_resolution_mode=SopaResolutionMode.MAX)
+    ggs = GraphGeneratorSettings.default(edge_types=[EdgeType.BOND_ORDER_NON_METAL, EdgeType.BOND_ORDER_METAL], hydrogen_mode=HydrogenMode.EXPLICIT,
+                                         edge_features=[EdgeFeature.WIBERG_BOND_ORDER], bond_threshold=0.2)
     gg = GraphGenerator(settings=ggs)
     graph = gg.generate_graph(DataParser('/home/hkneiding/Documents/UiO/Data/tmQM/06_data_lake/OREDIA.log').parse_to_qm_data_object())
     # graph = gg.generate_graph(DataParser('/home/hkneiding/Documents/UiO/Data/tmQM/06_data_lake/OREDIA.log').parse_to_qm_data_object())
@@ -60,7 +59,7 @@ def main():
     # graph = Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
     #               [Edge([0, 1], features=[0], is_directed=True), Edge([0, 2], features=[0], is_directed=False), Edge([0, 3], features=[0], is_directed=True), Edge([3, 2], features=[0], is_directed=True), Edge([2, 4], features=[0], is_directed=False)])
     # print(graph.get_spectrum())
-    graph.visualise()
+    # graph.visualise()
 
     # for graph in graphs:
 
