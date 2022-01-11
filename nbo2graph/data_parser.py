@@ -95,7 +95,7 @@ class DataParser:
                 qm_data['nbo_energies'], i = self._extract_nbo_energies(i + 7)
 
             if '3-Center, 4-Electron A:-B-:C Hyperbonds (A-B :C <=> A: B-C)' in self.lines[i]:
-                qm_data['three_center_nbos'] = self._extract_three_center_nbo_data(i + 7)
+                qm_data['hyper_node_data'] = self._extract_hyper_node_data(i + 7)
 
             if 'SECOND ORDER PERTURBATION THEORY ANALYSIS' in self.lines[i]:
                 qm_data['sopa_data'], i = self._extract_sopa_data(i + 9)
@@ -543,7 +543,7 @@ class DataParser:
 
         return sopa_data, i
 
-    def _extract_three_center_nbo_data(self, start_index: int):
+    def _extract_hyper_node_data(self, start_index: int):
 
         # rename index for brevity
         i = start_index

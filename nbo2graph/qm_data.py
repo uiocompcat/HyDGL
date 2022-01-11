@@ -2,15 +2,6 @@ from nbo2graph.nbo_data_point import NboDataPoint
 from nbo2graph.nbo_single_data_point import NboSingleDataPoint
 from nbo2graph.nbo_double_data_point import NboDoubleDataPoint
 
-# list of keys to be expected from the data parser dict
-DICT_KEYS = ['n_atoms', 'id', 'charge', 'stoichiometry', 'atomic_numbers', 'geometric_data',
-             'svp_dispersion_energy', 'svp_electronic_energy', 'polarisability', 'svp_occupied_orbital_energies',
-             'svp_virtual_orbital_energies', 'svp_dipole_moment', 'frequencies', 'molecular_mass', 'zpe_correction',
-             'enthalpy_energy', 'gibbs_energy', 'heat_capacity', 'entropy', 'tzvp_dispersion_energy', 'tzvp_electronic_energy',
-             'tzvp_occupied_orbital_energies', 'tzvp_virtual_orbital_energies', 'tzvp_dipole_moment', 'natural_atomic_charges',
-             'natural_electron_configuration', 'natural_electron_population', 'wiberg_bond_order_matrix', 'nbo_data', 'three_center_nbos',
-             'sopa_data', 'nbo_energies', 'lmo_bond_order_matrix', 'nlmo_bond_order_matrix', 'three_center_nbos']
-
 
 class QmData():
 
@@ -125,11 +116,6 @@ class QmData():
 
     @classmethod
     def from_dict(cls, qm_data_dict: dict):
-
-        # set values of missing keys to None
-        for key in DICT_KEYS:
-            if key not in qm_data_dict.keys():
-                qm_data_dict[key] = None
 
         return cls(id=qm_data_dict['id'],
                    stoichiometry=qm_data_dict['stoichiometry'],
