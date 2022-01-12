@@ -395,12 +395,12 @@ class DataParser:
 
             if len(line_split) > 3:
 
-                energy = 0
-
                 if line_split[1] == 'LP' or line_split[1] == 'LV':
                     energy = float(line_split[6])
                 elif line_split[1] == 'BD' or line_split[1] == 'BD*':
                     energy = float(line_split[8])
+                elif line_split[1] == '3C' or line_split[1] == '3C*' or line_split[1] == '3Cn':
+                    energy = float(line_split[10])
                 else:
                     i += 1
                     continue
@@ -435,36 +435,49 @@ class DataParser:
                 if line_split[2] == 'BD' or line_split[2] == 'BD*':
                     data.append(self._extract_bonding_data(i))
 
+                # 3 centers
+                if line_split[2] == '3C' or line_split[2] == '3C*' or line_split[2] == '3Cn':
+                    data.append(self._extract_three_center_data(i))
+
             i += 1
 
         # also return index i to jump ahead in the file
         return data, i
+
+    def _get_nbo_occupations(self, text: str):
+
+        result = re.findall(r'[^\s]\((.{4,6})%\)', text)
+        occupations = list(map(float, result))
+
+        # check that length of occupation list is correct
+        # append zeros if needed
+        while len(occupations) < 4:
+            occupations.append(0.0)
+
+        return occupations
+
+    def _get_nbo_contributions(self, text: str):
+
+        result = re.findall(r'\((.{4,6})%\)', text)
+        return float(result[0]) / 100
 
     def _extract_lone_pair_data(self, start_index: int):
 
         # get ID of entry
         id = int(self.lines[start_index].split('.')[0])
 
-        # obtain atom position
-        line_split = list(filter(None, re.split(r'\(|\)| ', self.lines[start_index])))[5:]
-        atom_position = int(line_split[0]) - 1
-
-        # obtain occupation
         line_split = list(filter(None, re.split(r'\(|\)| ', self.lines[start_index])))
-        full_occupation = float(line_split[1])
 
+        # obtain atom position
+        atom_position = int(line_split[5]) - 1
+        # obtain occupation
+        full_occupation = float(line_split[1])
         # nbo type
         nbo_type = line_split[2]
 
         # get occupation from both lines using regex (values in brackets)
         merged_lines = (self.lines[start_index] + self.lines[start_index + 1]).replace(' ', '')
-        result = re.findall(r'\((.{4,6})%\)', merged_lines)
-        occupations = list(map(float, result))
-
-        # check that length of occupation list is correct
-        # append zeros if needed
-        if len(occupations) < 4:
-            occupations.extend([0.0] * (4 - len(occupations)))
+        occupations = self._get_nbo_occupations(merged_lines)
 
         # return id, atom position, occupation and percent occupations
         # divide occupations by 100 (get rid of %)
@@ -475,50 +488,73 @@ class DataParser:
         # get ID of entry
         id = int(self.lines[start_index].split('.')[0])
 
+        line_split = list(filter(None, re.split(r'\(|\)|-| ', self.lines[start_index])))
+
         # obtain atom positions
-        line_split = list(filter(None, re.split(r'\(|\)|-| ', self.lines[start_index])))[4:]
         atom_positions = [int(line_split[-3]) - 1, int(line_split[-1]) - 1]
-
         # obtain occupation
-        line_split = list(filter(None, re.split(r'\(|\)| ', self.lines[start_index])))
         full_occupation = float(line_split[1])
-
         # nbo type
         nbo_type = line_split[2]
 
-        # get occupation from both lines using regex (values in brackets)
-        merged_lines = (self.lines[start_index + 1] + self.lines[start_index + 2]).replace(' ', '')
-        result = re.findall(r'\((.{3,5})%\)', merged_lines)
-        contribution1 = float(result[0]) / 100
-        occupations1 = list(map(float, result))[1:]
-        # append zeros to account for atoms that do not have higher orbital types
-        while len(occupations1) < 4:
-            occupations1.append(0)
+        contributions = []
+        occupations = [0.0, 0.0, 0.0, 0.0]
+        for k in range(2):
 
-        # find line with second data
-        i = start_index + 3
-        while '(' not in self.lines[i]:
-            i += 1
+            i = start_index + 1 + k * 2
+            while '(' not in self.lines[i]:
+                i += 1
 
-        # get occupation from both lines using regex (values in brackets)
-        merged_lines = (self.lines[i] + self.lines[i + 1]).replace(' ', '')
-        result = re.findall(r'\((.{3,5})%\)', merged_lines)
-        contribution2 = float(result[0]) / 100
-        occupations2 = list(map(float, result))[1:]
-        # append zeros to account for atoms that do not have higher orbital types
-        while len(occupations2) < 4:
-            occupations2.append(0)
-
-        # add contributions from both parts
-        occupations = list(map(add, occupations1, occupations2))
+            # get occupation from both lines using regex (values in brackets)
+            merged_lines = (self.lines[i] + self.lines[i + 1]).replace(' ', '')
+            # append corresponding contribution
+            contributions.append(self._get_nbo_contributions(merged_lines))
+            # add occupations
+            occupations = list(map(add, occupations, self._get_nbo_occupations(merged_lines)))
 
         # check that length of occupation list is correct
         assert len(occupations) == 4
 
         # return id, atom position, occupation and percent occupations
         # divide occupations by 100 (get rid of %)
-        return [id, nbo_type, atom_positions, [contribution1, contribution2], full_occupation, [x / 200 for x in occupations]]
+        return [id, nbo_type, atom_positions, contributions, full_occupation, [x / 200 for x in occupations]]
         # return atom_positions, [x / 200 for x in occupations]
+
+    def _extract_three_center_data(self, start_index: int):
+
+        # get ID of entry
+        id = int(self.lines[start_index].split('.')[0])
+
+        line_split = list(filter(None, re.split(r'\(|\)|-| ', self.lines[start_index])))
+
+        # obtain atom positions
+        atom_positions = [int(line_split[-5]) - 1, int(line_split[-3]) - 1, int(line_split[-1]) - 1]
+        # obtain occupation
+        full_occupation = float(line_split[1])
+        # nbo type
+        nbo_type = line_split[2]
+
+        contributions = []
+        occupations = [0.0, 0.0, 0.0, 0.0]
+        for k in range(3):
+
+            i = start_index + 1 + k * 2
+            while '(' not in self.lines[i]:
+                i += 1
+
+            # get occupation from both lines using regex (values in brackets)
+            merged_lines = (self.lines[i] + self.lines[i + 1]).replace(' ', '')
+            # append corresponding contribution
+            contributions.append(self._get_nbo_contributions(merged_lines))
+            # add occupations
+            occupations = list(map(add, occupations, self._get_nbo_occupations(merged_lines)))
+
+        # check that length of occupation list is correct
+        assert len(occupations) == 4
+
+        # return id, atom position, occupation and percent occupations
+        # divide occupations by 100 (get rid of %)
+        return [id, nbo_type, atom_positions, contributions, full_occupation, [x / 300 for x in occupations]]
 
     def _extract_sopa_data(self, start_index: int):
 
