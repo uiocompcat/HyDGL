@@ -108,7 +108,7 @@ class QmData():
         self.sopa_data = sopa_data
 
         # get individual lists for LP, LV, BD, BD*
-        self._get_nbo_individual_lists()
+        self._set_nbo_individual_lists()
 
     @classmethod
     def from_dict(cls, qm_data_dict: dict):
@@ -273,7 +273,7 @@ class QmData():
 
         return merged_nbo_data
 
-    def _get_nbo_individual_lists(self):
+    def _set_nbo_individual_lists(self):
 
         """Generates individual lists for all the different NBO types and adds them as members."""
 
