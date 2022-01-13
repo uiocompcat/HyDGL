@@ -1,6 +1,6 @@
-from nbo2graph.nbo_data_point import NboDataPoint
 from nbo2graph.nbo_single_data_point import NboSingleDataPoint
 from nbo2graph.nbo_double_data_point import NboDoubleDataPoint
+from nbo2graph.nbo_triple_data_point import NboTripleDataPoint
 
 
 class QmData():
@@ -38,7 +38,7 @@ class QmData():
                  wiberg_bond_order_matrix: list[list[float]],
                  lmo_bond_order_matrix: list[list[float]],
                  nlmo_bond_order_matrix: list[list[float]],
-                 nbo_data: NboDataPoint,
+                 nbo_data: list[list],
                  nbo_energies: list[list],
                  sopa_data) -> None:
 
@@ -220,6 +220,16 @@ class QmData():
             elif nbo_data[i][1] == 'BD' or nbo_data[i][1] == 'BD*':
 
                 nbo_data_point = NboDoubleDataPoint(nbo_id=nbo_data[i][0],
+                                                    nbo_type=nbo_data[i][1],
+                                                    atom_indices=nbo_data[i][2],
+                                                    contributions=nbo_data[i][3],
+                                                    energy=nbo_energy,
+                                                    occupation=nbo_data[i][4],
+                                                    orbital_occupations=nbo_data[i][5])
+
+            elif nbo_data[i][1] == '3C' or nbo_data[i][1] == '3C*' or nbo_data[i][1] == '3Cn':
+
+                nbo_data_point = NboTripleDataPoint(nbo_id=nbo_data[i][0],
                                                     nbo_type=nbo_data[i][1],
                                                     atom_indices=nbo_data[i][2],
                                                     contributions=nbo_data[i][3],

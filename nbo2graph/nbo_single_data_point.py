@@ -3,7 +3,7 @@ from nbo2graph.nbo_data_point import NboDataPoint
 
 class NboSingleDataPoint(NboDataPoint):
 
-    """Class for storing single NBO data entries."""
+    """Class for storing single NBO data entries  (i.e. LP, LV)."""
 
     def __init__(self, nbo_id, nbo_type, atom_index, energy, occupation, orbital_occupations):
 

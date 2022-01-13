@@ -51,7 +51,7 @@ def main():
     ggs = GraphGeneratorSettings.default(edge_types=[EdgeType.BOND_ORDER_NON_METAL, EdgeType.BOND_ORDER_METAL], hydrogen_mode=HydrogenMode.EXPLICIT,
                                          edge_features=[EdgeFeature.WIBERG_BOND_ORDER], bond_threshold=0.2)
     gg = GraphGenerator(settings=ggs)
-    graph = gg.generate_graph(DataParser('/home/hkneiding/Documents/UiO/Data/tmQM/06_data_lake/OREDIA.log').parse_to_qm_data_object())
+    graph = gg.generate_graph(DataParser('/home/hkneiding/Documents/UiO/Data/tmQM/the_random_500/ZUYHEG.log').parse_to_qm_data_object())
     # graph = gg.generate_graph(DataParser('/home/hkneiding/Documents/UiO/Data/tmQM/06_data_lake/OREDIA.log').parse_to_qm_data_object())
     # graph = gg.generate_graph(DataParser('/home/hkneiding/Documents/UiO/Data/tmQM/06_data_lake/LEZYOG.log').parse_to_qm_data_object())
 
