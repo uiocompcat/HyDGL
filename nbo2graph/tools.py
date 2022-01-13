@@ -97,3 +97,21 @@ class Tools:
                 flattend_list.append(element)
 
         return flattend_list
+
+    @staticmethod
+    def calculate_euclidean_distance(x: list[float], y: list[float]) -> float:
+
+        """Calculates the euclidean distance between to points given as lists.
+
+        Returns:
+            float: The euclidean distance between the points
+        """
+
+        # make sure both lists have the same length
+        assert len(x) == len(y)
+
+        # get dimension wise squared distances
+        squares = [(a - b) ** 2 for a, b in zip(x, y)]
+
+        # return sum of square root
+        return sum(squares) ** 0.5

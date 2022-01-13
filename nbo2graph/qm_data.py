@@ -1,3 +1,4 @@
+from nbo2graph.tools import Tools
 from nbo2graph.nbo_single_data_point import NboSingleDataPoint
 from nbo2graph.nbo_double_data_point import NboDoubleDataPoint
 from nbo2graph.nbo_triple_data_point import NboTripleDataPoint
@@ -191,7 +192,7 @@ class QmData():
         distance_matrix = [[0 for x in range(self.n_atoms)] for y in range(self.n_atoms)]
         for i in range(len(distance_matrix) - 1):
             for j in range(i + 1, len(distance_matrix), 1):
-                distance = QmData._calculate_euclidean_distance(self.geometric_data[i], self.geometric_data[j])
+                distance = Tools.calculate_euclidean_distance(self.geometric_data[i], self.geometric_data[j])
                 distance_matrix[i][j] = distance
                 distance_matrix[j][i] = distance
         self.bond_distance_matrix = distance_matrix
@@ -248,33 +249,37 @@ class QmData():
         bond_pair_data = []
         antibond_pair_data = []
 
+        bond_3c_data = []
+        antibond_3c_data = []
+        nonbond_3c_data = []
+
         for i in range(len(self.nbo_data)):
 
             if self.nbo_data[i].nbo_type == 'LP':
                 lone_pair_data.append(self.nbo_data[i])
 
-            if self.nbo_data[i].nbo_type == 'LV':
+            elif self.nbo_data[i].nbo_type == 'LV':
                 lone_vacancy_data.append(self.nbo_data[i])
 
-            if self.nbo_data[i].nbo_type == 'BD':
+            elif self.nbo_data[i].nbo_type == 'BD':
                 bond_pair_data.append(self.nbo_data[i])
 
-            if self.nbo_data[i].nbo_type == 'BD*':
+            elif self.nbo_data[i].nbo_type == 'BD*':
                 antibond_pair_data.append(self.nbo_data[i])
+
+            elif self.nbo_data[i].nbo_type == '3C':
+                bond_3c_data.append(self.nbo_data[i])
+
+            elif self.nbo_data[i].nbo_type == '3C*':
+                antibond_3c_data.append(self.nbo_data[i])
+
+            elif self.nbo_data[i].nbo_type == '3Cn':
+                nonbond_3c_data.append(self.nbo_data[i])
 
         self.lone_pair_data = lone_pair_data
         self.lone_vacancy_data = lone_vacancy_data
         self.bond_pair_data = bond_pair_data
         self.antibond_pair_data = antibond_pair_data
-
-    @staticmethod
-    def _calculate_euclidean_distance(x, y):
-
-        # make sure both lists have the same length
-        assert len(x) == len(y)
-
-        # get dimension wise squared distances
-        squares = [(a - b) ** 2 for a, b in zip(x, y)]
-
-        # return sum of square root
-        return sum(squares) ** 0.5
+        self.bond_3c_data = bond_3c_data
+        self.antibond_3c_data = antibond_3c_data
+        self.nonbond_3c_data = nonbond_3c_data

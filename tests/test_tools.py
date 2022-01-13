@@ -162,3 +162,41 @@ class TestTools(unittest.TestCase):
         result = Tools.flatten_list(input_list)
 
         self.assertEqual(result, expected)
+
+    @parameterized.expand([
+
+        [
+            [1],
+            [1.9],
+            0.9
+        ],
+
+        [
+            [1, 2],
+            [2, 4],
+            2.236068
+        ],
+
+        [
+            [5, 8, 10],
+            [0.5, 90, 13],
+            82.17816
+        ],
+
+    ])
+    def test_get_distance(self, a, b, expected):
+
+        self.assertAlmostEqual(Tools.calculate_euclidean_distance(a, b), expected, places=5)
+
+    @parameterized.expand([
+
+        [
+            [1, 2],
+            [2, 4, 3],
+            AssertionError
+        ],
+
+    ])
+    def test_get_distance_with_invalid_input(self, a, b, expected_error):
+
+        self.assertRaises(expected_error, Tools.calculate_euclidean_distance, a, b)
