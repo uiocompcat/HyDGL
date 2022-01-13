@@ -110,15 +110,6 @@ class QmData():
         # get individual lists for LP, LV, BD, BD*
         self._get_nbo_individual_lists()
 
-        # frequencies
-        self.lowest_vibrational_frequency = self.frequencies[0]
-        self.highest_vibrational_frequency = self.frequencies[-1]
-
-        # calculate additional composite properties
-        self._calculate_bond_order_totals()
-        self._calculate_homo_lumo_energies()
-        self._calculate_delta_values()
-
     @classmethod
     def from_dict(cls, qm_data_dict: dict):
 
@@ -156,35 +147,80 @@ class QmData():
                    nbo_energies=qm_data_dict['nbo_energies'],
                    sopa_data=qm_data_dict['sopa_data'])
 
-    def _calculate_homo_lumo_energies(self):
+    @property
+    def lowest_vibrational_frequency(self):
+        """Getter for the lowest vibrational frequeny."""
+        return self.frequencies[0]
 
-        # calculate homo lumo svp
-        self.svp_homo_energy = self.svp_occupied_orbital_energies[-1]
-        self.svp_lumo_energy = self.svp_virtual_orbital_energies[0]
-        # calculate homo lumo tzvp
-        self.tzvp_homo_energy = self.tzvp_occupied_orbital_energies[-1]
-        self.tzvp_lumo_energy = self.tzvp_virtual_orbital_energies[0]
+    @property
+    def highest_vibrational_frequency(self):
+        """Getter for the highest vibrational frequency."""
+        return self.frequencies[-1]
 
-        # calculate homo lumo gaps
-        self.svp_homo_lumo_gap = self.svp_lumo_energy - self.svp_homo_energy
-        self.tzvp_homo_lumo_gap = self.tzvp_lumo_energy - self.tzvp_homo_energy
+    @property
+    def svp_homo_energy(self):
+        """Getter for the SVP HOMO energe."""
+        return self.svp_occupied_orbital_energies[-1]
 
-    def _calculate_bond_order_totals(self):
+    @property
+    def svp_lumo_energy(self):
+        """Getter for the SVP LUMO energy."""
+        return self.svp_virtual_orbital_energies[0]
 
-        self.wiberg_bond_order_totals = [sum(bond_orders) for bond_orders in self.wiberg_bond_order_matrix]
-        self.lmo_bond_order_totals = [sum(bond_orders) for bond_orders in self.lmo_bond_order_matrix]
-        self.nlmo_bond_order_totals = [sum(bond_orders) for bond_orders in self.nlmo_bond_order_matrix]
+    @property
+    def tzvp_homo_energy(self):
+        """Getter for the TZVP HOMO energy."""
+        return self.tzvp_occupied_orbital_energies[-1]
 
-    def _calculate_delta_values(self):
+    @property
+    def tzvp_lumo_energy(self):
+        """Getter for the TZVP LUMO energy."""
+        return self.tzvp_virtual_orbital_energies[0]
 
-        # calculate svp - tzvp dispersion energy delta
-        self.dispersion_energy_delta = abs(self.svp_dispersion_energy - self.tzvp_dispersion_energy)
-        # calculate svp - tzvp electronic energy delta
-        self.electronic_energy_delta = abs(self.svp_electronic_energy - self.tzvp_electronic_energy)
-        # calculate svp - tzvp dipole moment delta
-        self.dipole_moment_delta = abs(self.svp_dipole_moment - self.tzvp_dipole_moment)
-        # calculate svp - tzvp homo lumo gap delta
-        self.homo_lumo_gap_delta = abs(self.svp_homo_lumo_gap - self.tzvp_homo_lumo_gap)
+    @property
+    def svp_homo_lumo_gap(self):
+        """Getter for the SVP HOMO-LUMO gap."""
+        return self.svp_lumo_energy - self.svp_homo_energy
+
+    @property
+    def tzvp_homo_lumo_gap(self):
+        """Getter for the TZVP HOMO-LUMO gap."""
+        return self.tzvp_lumo_energy - self.tzvp_homo_energy
+
+    @property
+    def wiberg_bond_order_totals(self):
+        """Getter for the Wiberg bond order totals."""
+        return [sum(bond_orders) for bond_orders in self.wiberg_bond_order_matrix]
+
+    @property
+    def lmo_bond_order_totals(self):
+        """Getter for the LMO bond order totals."""
+        return [sum(bond_orders) for bond_orders in self.lmo_bond_order_matrix]
+
+    @property
+    def nlmo_bond_order_totals(self):
+        """Getter for the NLMO bond order totals."""
+        return [sum(bond_orders) for bond_orders in self.nlmo_bond_order_matrix]
+
+    @property
+    def dispersion_energy_delta(self):
+        """Getter for the dispersion energy SVP-TZVP delta."""
+        return abs(self.svp_dispersion_energy - self.tzvp_dispersion_energy)
+
+    @property
+    def electronic_energy_delta(self):
+        """Getter for the electronic energy SVP-TZVP delta."""
+        return abs(self.svp_electronic_energy - self.tzvp_electronic_energy)
+
+    @property
+    def dipole_moment_delta(self):
+        """Getter for the dipole moment SVP-TZVP delta."""
+        return abs(self.svp_dipole_moment - self.tzvp_dipole_moment)
+
+    @property
+    def homo_lumo_gap_delta(self):
+        """Getter for the HOMO-LUMO SVP-TZVP delta."""
+        return abs(self.svp_homo_lumo_gap - self.tzvp_homo_lumo_gap)
 
     def _merge_nbo_data(self, nbo_data, nbo_energies):
 
