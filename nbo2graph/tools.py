@@ -115,3 +115,24 @@ class Tools:
 
         # return sum of square root
         return sum(squares) ** 0.5
+
+    @staticmethod
+    def calculate_distance_matrix(points: list[list[float]]) -> list[list[float]]:
+
+        """Calculates the distance matrix of a list of points.
+
+        Returns:
+            list[list[float]]: The distance matrix.
+        """
+
+        # setup matrix
+        distance_matrix = [[0 for x in range(len(points))] for y in range(len(points))]
+
+        # iterate over the upper triangle
+        for i in range(len(distance_matrix) - 1):
+            for j in range(i + 1, len(distance_matrix), 1):
+                distance = Tools.calculate_euclidean_distance(points[i], points[j])
+                distance_matrix[i][j] = distance
+                distance_matrix[j][i] = distance
+
+        return distance_matrix

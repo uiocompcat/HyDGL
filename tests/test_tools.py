@@ -1,6 +1,7 @@
 import unittest
 from parameterized import parameterized
 
+from tests.utils import Utils
 from nbo2graph.tools import Tools
 
 
@@ -184,7 +185,7 @@ class TestTools(unittest.TestCase):
         ],
 
     ])
-    def test_get_distance(self, a, b, expected):
+    def test_calculate_euclidean_distance(self, a, b, expected):
 
         self.assertAlmostEqual(Tools.calculate_euclidean_distance(a, b), expected, places=5)
 
@@ -197,6 +198,35 @@ class TestTools(unittest.TestCase):
         ],
 
     ])
-    def test_get_distance_with_invalid_input(self, a, b, expected_error):
+    def test_calculate_euclidean_distance_with_invalid_input(self, a, b, expected_error):
 
         self.assertRaises(expected_error, Tools.calculate_euclidean_distance, a, b)
+
+    @parameterized.expand([
+
+        [
+            [[1, 2], [2, 3], [5, 1]],
+            [
+                [0, 1.414214, 4.123106],
+                [1.414214, 0, 3.605551],
+                [4.123106, 3.605551, 0]
+            ]
+        ]
+
+    ])
+    def test_calculate_distance_matrix(self, points, expected):
+
+        print(Tools.calculate_distance_matrix(points))
+        Utils.assert_are_almost_equal(Tools.calculate_distance_matrix(points), expected)
+
+    @parameterized.expand([
+
+        [
+            [[1, 2], [2, 3], [5, 1, 2]],
+            AssertionError
+        ],
+
+    ])
+    def test_calculate_distance_matrix_with_invalid_input(self, points, expected_error):
+
+        self.assertRaises(expected_error, Tools.calculate_distance_matrix, points)

@@ -56,6 +56,8 @@ class QmData():
         self.molecular_mass = molecular_mass
         self.polarisability = polarisability
 
+        self.bond_distance_matrix = Tools.calculate_distance_matrix(geometric_data)
+
         # energies
         self.svp_dispersion_energy = svp_dispersion_energy
         self.tzvp_dispersion_energy = tzvp_dispersion_energy
@@ -108,9 +110,11 @@ class QmData():
         # get individual lists for LP, LV, BD, BD*
         self._get_nbo_individual_lists()
 
+        # frequencies
+        self.lowest_vibrational_frequency = self.frequencies[0]
+        self.highest_vibrational_frequency = self.frequencies[-1]
+
         # calculate additional composite properties
-        self._get_frequencies()
-        self._calculate_atom_distance_matrix()
         self._calculate_bond_order_totals()
         self._calculate_homo_lumo_energies()
         self._calculate_delta_values()
@@ -152,11 +156,6 @@ class QmData():
                    nbo_energies=qm_data_dict['nbo_energies'],
                    sopa_data=qm_data_dict['sopa_data'])
 
-    def _get_frequencies(self):
-
-        self.lowest_vibrational_frequency = self.frequencies[0]
-        self.highest_vibrational_frequency = self.frequencies[-1]
-
     def _calculate_homo_lumo_energies(self):
 
         # calculate homo lumo svp
@@ -187,19 +186,15 @@ class QmData():
         # calculate svp - tzvp homo lumo gap delta
         self.homo_lumo_gap_delta = abs(self.svp_homo_lumo_gap - self.tzvp_homo_lumo_gap)
 
-    def _calculate_atom_distance_matrix(self):
-
-        distance_matrix = [[0 for x in range(self.n_atoms)] for y in range(self.n_atoms)]
-        for i in range(len(distance_matrix) - 1):
-            for j in range(i + 1, len(distance_matrix), 1):
-                distance = Tools.calculate_euclidean_distance(self.geometric_data[i], self.geometric_data[j])
-                distance_matrix[i][j] = distance
-                distance_matrix[j][i] = distance
-        self.bond_distance_matrix = distance_matrix
-
     def _merge_nbo_data(self, nbo_data, nbo_energies):
 
-        x = []
+        """Merges NBO entries (energies and occupations) and stores them in terms of custom data types.
+
+        Returns:
+            list[NboDataPoint]: The list of NBO entries
+        """
+
+        merged_nbo_data = []
 
         # readout IDs of energies to match energies to corresponding nbo entries
         energy_ids = [x[0] for x in nbo_energies]
@@ -238,11 +233,13 @@ class QmData():
                                                     occupation=nbo_data[i][4],
                                                     orbital_occupations=nbo_data[i][5])
 
-            x.append(nbo_data_point)
+            merged_nbo_data.append(nbo_data_point)
 
-        return x
+        return merged_nbo_data
 
     def _get_nbo_individual_lists(self):
+
+        """Generates individual lists for all the different NBO types and adds them as members."""
 
         lone_pair_data = []
         lone_vacancy_data = []
