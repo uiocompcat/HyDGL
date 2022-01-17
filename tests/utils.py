@@ -1,8 +1,5 @@
 import unittest
 
-from nbo2graph.edge import Edge
-from nbo2graph.node import Node
-
 
 class Utils():
 
@@ -13,25 +10,15 @@ class Utils():
     @staticmethod
     def assert_are_almost_equal(a, b, places=5):
 
-        """Deep asserts almost equality between two objects."""
-
-        # assert equal data types
-        Utils.tc.assertEqual(type(a), type(b))
-
-        # check data type and call appropriate comparison function
-        comparison_function = Utils.get_comparison_function(type(a))
-        comparison_function(a, b, places=places)
-
-    @staticmethod
-    def base_assert_are_almost_equal(a, b, places=5):
-
         """Deep asserts almost equality between two items (can be multidim lists or objects)."""
+
+        Utils.tc.assertEqual(type(a), type(b))
 
         # check if not list
         if a is None or type(a) in [str, int, float, bool]:
             Utils.tc.assertAlmostEqual(a, b, places=places)
             # return a == b
-        else:
+        elif type(a) == list or type(a) == tuple:
 
             # check length
             Utils.tc.assertEqual(len(a), len(b))
@@ -39,31 +26,19 @@ class Utils():
             # recursively call
             for a_, b_ in zip(a, b):
                 Utils.assert_are_almost_equal(a_, b_, places=places)
-
-    @staticmethod
-    def get_comparison_function(data_type):
-
-        if data_type == Node:
-            return Utils.node_assert_are_almost_equal
-        elif data_type == Edge:
-            return Utils.edge_assert_are_almost_equal
         else:
-            return Utils.base_assert_are_almost_equal
+            Utils.object_are_almost_equal(a, b, places=places)
 
     @staticmethod
-    def edge_assert_are_almost_equal(a: Edge, b: Edge, places=5):
+    def object_are_almost_equal(a, b, places=5):
 
-        """Equality operator for edge objects."""
+        """Equality operator for class-type variables."""
 
-        Utils.assert_are_almost_equal(a.features, b.features, places=places)
-        Utils.assert_are_almost_equal(a.node_indices, b.node_indices, places=places)
-        Utils.assert_are_almost_equal(a.is_directed, b.is_directed, places=places)
+        dict_a = vars(a)
+        dict_b = vars(b)
 
-    @staticmethod
-    def node_assert_are_almost_equal(a: Node, b: Node, places=5):
+        Utils.tc.assertEqual(list(dict_a.keys()), list(dict_b.keys()))
 
-        """Equality operator for node objects."""
+        for key in dict_a.keys():
 
-        Utils.assert_are_almost_equal(a.features, b.features, places=places)
-        Utils.assert_are_almost_equal(a.position, b.position, places=places)
-        Utils.assert_are_almost_equal(a.label, b.label, places=places)
+            Utils.assert_are_almost_equal(dict_a[key], dict_b[key], places)
