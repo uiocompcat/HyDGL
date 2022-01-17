@@ -7,7 +7,6 @@ from nbo2graph.enums.nbo_type import NboType
 
 
 class TestQmData(unittest.TestCase):
-    pass
 
     @parameterized.expand([
 
