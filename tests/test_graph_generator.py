@@ -16,11 +16,7 @@ from nbo2graph.graph_generator_settings import GraphGeneratorSettings
 from nbo2graph.enums.orbital_occupation_type import OrbitalOccupationType
 from nbo2graph.enums.sopa_edge_feature import SopaEdgeFeature
 from nbo2graph.enums.sopa_resolution_mode import SopaResolutionMode
-from tests.utils import Utils
-
-# constants pointing to test files
-TEST_FILE_LALMER = './tests/files/LALMER.out'
-TEST_FILE_OREDIA = './tests/files/OREDIA.out'
+from tests.utils import Utils, TEST_FILE_LALMER, TEST_FILE_OREDIA
 
 
 class TestGraphGenerator(unittest.TestCase):

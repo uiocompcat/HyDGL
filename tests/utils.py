@@ -1,5 +1,9 @@
 import unittest
 
+# constants pointing to test files
+TEST_FILE_LALMER = './tests/files/LALMER.out'
+TEST_FILE_OREDIA = './tests/files/OREDIA.out'
+
 
 class Utils():
 

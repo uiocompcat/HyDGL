@@ -2,7 +2,7 @@ import unittest
 from parameterized import parameterized
 
 from nbo2graph.file_handler import FileHandler
-from tests.test_graph_generator import TEST_FILE_LALMER
+from tests.utils import TEST_FILE_LALMER
 
 
 class TestFileHandler(unittest.TestCase):

@@ -1,13 +1,9 @@
 import unittest
 from parameterized import parameterized
 
-from tests.utils import Utils
+from tests.utils import Utils, TEST_FILE_LALMER, TEST_FILE_OREDIA
 from nbo2graph.data_parser import DataParser
 from nbo2graph.enums.nbo_type import NboType
-
-# constants pointing to test files
-TEST_FILE_LALMER = './tests/files/LALMER.out'
-TEST_FILE_OREDIA = './tests/files/OREDIA.out'
 
 
 class TestQmData(unittest.TestCase):
