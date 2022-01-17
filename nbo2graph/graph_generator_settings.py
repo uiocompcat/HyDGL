@@ -1,3 +1,4 @@
+from nbo2graph.enums.nbo_type import NboType
 from nbo2graph.enums.qm_target import QmTarget
 from nbo2graph.enums.node_feature import NodeFeature
 from nbo2graph.enums.edge_feature import EdgeFeature
@@ -206,3 +207,22 @@ class GraphGeneratorSettings:
                 orbital_indices.append(3)
 
         return orbital_indices
+
+    def get_nbo_orbital_indices_by_type(self, nbo_type: NboType):
+
+        if nbo_type == NboType.LONE_PAIR:
+            return self.lone_pair_orbital_indices
+        elif nbo_type == NboType.LONE_VACANCY:
+            return self.lone_vacancy_orbital_indices
+        elif nbo_type == NboType.BOND:
+            return self.bond_orbital_indices
+        elif nbo_type == NboType.ANTIBOND:
+            return self.antibond_orbital_indices
+        # elif nbo_type == NboType.THREE_CENTER_BOND:
+        #     return self.bon
+        # elif nbo_type == NboType.THREE_CENTER_ANTIBOND:
+        #     return self.antibond_3c_data
+        # elif nbo_type == NboType.THREE_CENTER_NONBOND:
+        #     return self.nonbond_3c_data
+        else:
+            raise ValueError('NboType ' + str(nbo_type) + ' not recognized.')
