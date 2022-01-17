@@ -592,8 +592,6 @@ class DataParser:
             line_split = self.lines[i].split()
             three_center_nbos.append([[int(line_split[9]), int(line_split[10])], float(line_split[8])])
 
-            print(three_center_nbos)
-
             i += 1
 
         return three_center_nbos
