@@ -1,4 +1,5 @@
 from nbo2graph.tools import Tools
+from nbo2graph.enums.nbo_type import NboType
 from nbo2graph.nbo_single_data_point import NboSingleDataPoint
 from nbo2graph.nbo_double_data_point import NboDoubleDataPoint
 from nbo2graph.nbo_triple_data_point import NboTripleDataPoint
@@ -316,3 +317,22 @@ class QmData():
         self.bond_3c_data = bond_3c_data
         self.antibond_3c_data = antibond_3c_data
         self.nonbond_3c_data = nonbond_3c_data
+
+    def get_nbo_data_by_type(self, nbo_type: NboType):
+
+        if nbo_type == NboType.LONE_PAIR:
+            return self.lone_pair_data
+        elif nbo_type == NboType.LONE_VACANCY:
+            return self.lone_vacancy_data
+        elif nbo_type == NboType.BOND:
+            return self.bond_pair_data
+        elif nbo_type == NboType.ANTIBOND:
+            return self.antibond_pair_data
+        elif nbo_type == NboType.THREE_CENTER_BOND:
+            return self.bond_3c_data
+        elif nbo_type == NboType.THREE_CENTER_ANTIBOND:
+            return self.antibond_3c_data
+        elif nbo_type == NboType.THREE_CENTER_NONBOND:
+            return self.nonbond_3c_data
+        else:
+            raise ValueError('NboType ' + str(nbo_type) + ' not recognized.')
