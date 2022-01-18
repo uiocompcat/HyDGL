@@ -499,9 +499,11 @@ class DataParser:
 
         contributions = []
         occupations = [0.0, 0.0, 0.0, 0.0]
+
+        # line counter
+        i = start_index + 1
         for k in range(2):
 
-            i = start_index + 1 + k * 2
             while '(' not in self.lines[i]:
                 i += 1
 
@@ -511,6 +513,9 @@ class DataParser:
             contributions.append(self._get_nbo_contributions(merged_lines))
             # add occupations
             occupations = list(map(add, occupations, self._get_nbo_occupations(merged_lines)))
+
+            # increment counter
+            i += 2
 
         # check that length of occupation list is correct
         assert len(occupations) == 4
@@ -536,9 +541,11 @@ class DataParser:
 
         contributions = []
         occupations = [0.0, 0.0, 0.0, 0.0]
+
+        # line counter
+        i = start_index + 1
         for k in range(3):
 
-            i = start_index + 1 + k * 2
             while '(' not in self.lines[i]:
                 i += 1
 
@@ -548,6 +555,9 @@ class DataParser:
             contributions.append(self._get_nbo_contributions(merged_lines))
             # add occupations
             occupations = list(map(add, occupations, self._get_nbo_occupations(merged_lines)))
+
+            # increment counter
+            i += 2
 
         # check that length of occupation list is correct
         assert len(occupations) == 4
