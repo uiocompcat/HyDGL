@@ -413,12 +413,7 @@ class GraphGenerator:
         # return variable
         nbo_features = []
 
-        if len(atom_indices) == 1:
-            # get list of all bond pair energies for this atom
-            energies = [x.energy for x in nbo_data if x.atom_indices[0] == atom_indices[0]]
-        else:
-            # get list of all bond pair energies for these atoms
-            energies = [x.energy for x in nbo_data if x.atom_indices == atom_indices]
+        energies = [x.energy for x in nbo_data if x.atom_indices == atom_indices]
 
         # select index of the extremum energy
         selected_index = nbo_energies.index(extremum_operator(energies))
@@ -442,20 +437,12 @@ class GraphGenerator:
         # return variable
         nbo_features = []
 
-        if len(atom_indices) == 1:
-            # get list of all bond pair energies for this atom
-            energies = [x.energy for x in nbo_data if x.atom_indices[0] == atom_indices[0]]
-            # get list of all occupation values for this atom
-            occupations = [x.occupation for x in nbo_data if x.atom_indices[0] == atom_indices[0]]
-            # get list of symmetry values of different lone pairs for this atom
-            symmetries = [x.orbital_occupations for x in nbo_data if x.atom_indices[0] == atom_indices[0]]
-        else:
-            # get list of all bond pair energies for this atom
-            energies = [x.energy for x in nbo_data if x.atom_indices == atom_indices]
-            # get list of all occupation values for this atom
-            occupations = [x.occupation for x in nbo_data if x.atom_indices == atom_indices]
-            # get list of symmetry values of different lone pairs for this atom
-            symmetries = [x.orbital_occupations for x in nbo_data if x.atom_indices == atom_indices]
+        # get list of all energies of this NBO
+        energies = [x.energy for x in nbo_data if x.atom_indices == atom_indices]
+        # get list of all occupation values for this NBO
+        occupations = [x.occupation for x in nbo_data if x.atom_indices == atom_indices]
+        # get list of symmetry values of different lone pairs for this NBO
+        symmetries = [x.orbital_occupations for x in nbo_data if x.atom_indices == atom_indices]
 
         # append average values for energies and occupations
         nbo_features.append(mean(energies))
