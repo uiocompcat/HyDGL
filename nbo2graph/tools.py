@@ -78,6 +78,10 @@ class Tools:
         if class_number >= n_classes:
             raise ValueError('Cannot get one hot encoding for a class number higher than the number of classes.')
 
+        # return empty list if there is only one type
+        if n_classes == 1:
+            return []
+
         return [1 if x == class_number else 0 for x in list(range(n_classes))]
 
     @staticmethod

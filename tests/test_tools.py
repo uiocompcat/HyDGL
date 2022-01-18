@@ -82,6 +82,15 @@ class TestTools(unittest.TestCase):
             ]
         ],
 
+        [
+            ['1', '1', '1'],
+            [
+                [],
+                [],
+                []
+            ]
+        ],
+
     ])
     def test_get_one_hot_encoded_list(self, input_list, expected):
 
@@ -118,6 +127,21 @@ class TestTools(unittest.TestCase):
                 [2, 1, 0, 0, 1, 0],
                 [2, 0, 1, 1, 0, 0],
                 [3, 1, 0, 0, 0, 1]
+            ]
+        ],
+
+        [
+            [
+                [1, 'C', 'T'],
+                [2, 'C', 'T'],
+                [2, 'N', 'T'],
+                [3, 'C', 'T']
+            ],
+            [
+                [1, 1, 0],
+                [2, 1, 0],
+                [2, 0, 1],
+                [3, 1, 0]
             ]
         ],
 
