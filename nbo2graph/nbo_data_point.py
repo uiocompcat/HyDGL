@@ -53,3 +53,16 @@ class NboDataPoint:
     def orbital_occupations(self):
         """Getter for orbital_occupations"""
         return self._orbital_occupations
+
+    def contains_atom_indices(self, indices: list[int]) -> bool:
+
+        """Helper function to determine whether given atom indices are contained in this NBO.
+
+        Returns:
+            bool: The result.
+        """
+
+        for i in range(len(self.atom_indices) - 1):
+            if self.atom_indices[i:i + 2] == indices:
+                return True
+        return False
