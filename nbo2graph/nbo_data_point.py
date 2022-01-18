@@ -62,6 +62,12 @@ class NboDataPoint:
             bool: The result.
         """
 
+        # if equal return true
+        if indices == self.atom_indices:
+            return True
+
+        # query for 3c TODO: dirty solution:
+        # a better approach would be check for sublist using Broyer-Moore
         for i in range(len(self.atom_indices) - 1):
             if self.atom_indices[i:i + 2] == indices:
                 return True
