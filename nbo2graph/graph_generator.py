@@ -314,6 +314,15 @@ class GraphGenerator:
         if EdgeFeature.BOND_DISTANCE in self._settings.edge_features:
             edge_features.append(qm_data.bond_distance_matrix[bond_atom_indices[0]][bond_atom_indices[1]])
 
+        if EdgeFeature.NBO_TYPE in self._settings.edge_features:
+
+            if bond_atom_indices in bond_3c_atom_indices:
+                edge_features.append('3C')
+            elif bond_atom_indices in bond_pair_atom_indices:
+                edge_features.append('BD')
+            else:
+                edge_features.append('None')
+
         # add number of bond/antibond orbitals if requested
         if EdgeFeature.BOND_ORBITAL_MAX in self._settings.edge_features or \
                 EdgeFeature.BOND_ORBITAL_AVERAGE in self._settings.edge_features or \

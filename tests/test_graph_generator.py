@@ -1424,6 +1424,27 @@ class TestGraphGenerator(unittest.TestCase):
              EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_P, EdgeFeature.ANTIBOND_ORBITAL_DATA_D, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
             [1, 0.0, 0.27167, 0.11428, 0.34376666666666666, 0.6507333333333333, 0.005166666666666666, 0.00036666666666666667, 0.27167, 0.11428, 0.34376666666666666, 0.6507333333333333, 0.005166666666666666, 0.00036666666666666667]
         ],
+
+        [
+            TEST_FILE_ZUYHEG,
+            [0, 21],
+            [EdgeFeature.NBO_TYPE],
+            ['None']
+        ],
+
+        [
+            TEST_FILE_ZUYHEG,
+            [17, 18],
+            [EdgeFeature.NBO_TYPE],
+            ['BD']
+        ],
+
+        [
+            TEST_FILE_ZUYHEG,
+            [9, 10],
+            [EdgeFeature.NBO_TYPE],
+            ['3C']
+        ],
     ])
     def test_get_edge_features(self, file_path, bond_indices, edge_features, expected):
 

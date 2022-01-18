@@ -10,6 +10,9 @@ class EdgeFeature(Enum):
     LMO_BOND_ORDER = auto()
     NLMO_BOND_ORDER = auto()
 
+    # NBO type
+    NBO_TYPE = auto()
+
     # euclidean distance between atoms
     BOND_DISTANCE = auto()
 
