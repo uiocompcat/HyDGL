@@ -1,8 +1,6 @@
+from nbo2graph.nbo_data_point import NboDataPoint
 from nbo2graph.tools import Tools
 from nbo2graph.enums.nbo_type import NboType
-from nbo2graph.nbo_single_data_point import NboSingleDataPoint
-from nbo2graph.nbo_double_data_point import NboDoubleDataPoint
-from nbo2graph.nbo_triple_data_point import NboTripleDataPoint
 
 
 class QmData():
@@ -241,34 +239,27 @@ class QmData():
             nbo_energy_index = energy_ids.index(nbo_data[i][0])
             nbo_energy = nbo_energies[nbo_energy_index][1]
 
+            # distinction between single atom and multiple atom NBOs to properly
+            # set contribution values.
             if nbo_data[i][1] == 'LP' or nbo_data[i][1] == 'LV':
 
-                nbo_data_point = NboSingleDataPoint(nbo_id=nbo_data[i][0],
-                                                    nbo_type=nbo_data[i][1],
-                                                    atom_index=nbo_data[i][2],
-                                                    energy=nbo_energy,
-                                                    occupation=nbo_data[i][3],
-                                                    orbital_occupations=nbo_data[i][4])
+                nbo_data_point = NboDataPoint(nbo_id=nbo_data[i][0],
+                                              nbo_type=nbo_data[i][1],
+                                              atom_indices=nbo_data[i][2],
+                                              energy=nbo_energy,
+                                              occupation=nbo_data[i][3],
+                                              orbital_occupations=nbo_data[i][4],
+                                              contributions=[1])
 
-            elif nbo_data[i][1] == 'BD' or nbo_data[i][1] == 'BD*':
+            else:
 
-                nbo_data_point = NboDoubleDataPoint(nbo_id=nbo_data[i][0],
-                                                    nbo_type=nbo_data[i][1],
-                                                    atom_indices=nbo_data[i][2],
-                                                    contributions=nbo_data[i][3],
-                                                    energy=nbo_energy,
-                                                    occupation=nbo_data[i][4],
-                                                    orbital_occupations=nbo_data[i][5])
-
-            elif nbo_data[i][1] == '3C' or nbo_data[i][1] == '3C*' or nbo_data[i][1] == '3Cn':
-
-                nbo_data_point = NboTripleDataPoint(nbo_id=nbo_data[i][0],
-                                                    nbo_type=nbo_data[i][1],
-                                                    atom_indices=nbo_data[i][2],
-                                                    contributions=nbo_data[i][3],
-                                                    energy=nbo_energy,
-                                                    occupation=nbo_data[i][4],
-                                                    orbital_occupations=nbo_data[i][5])
+                nbo_data_point = NboDataPoint(nbo_id=nbo_data[i][0],
+                                              nbo_type=nbo_data[i][1],
+                                              atom_indices=nbo_data[i][2],
+                                              energy=nbo_energy,
+                                              occupation=nbo_data[i][4],
+                                              orbital_occupations=nbo_data[i][5],
+                                              contributions=nbo_data[i][3])
 
             merged_nbo_data.append(nbo_data_point)
 

@@ -16,8 +16,6 @@ from nbo2graph.enums.node_feature import NodeFeature
 from nbo2graph.enums.hydrogen_mode import HydrogenMode
 from nbo2graph.enums.graph_feature import GraphFeature
 from nbo2graph.element_look_up_table import ElementLookUpTable
-from nbo2graph.nbo_single_data_point import NboSingleDataPoint
-from nbo2graph.nbo_double_data_point import NboDoubleDataPoint
 from nbo2graph.enums.sopa_resolution_mode import SopaResolutionMode
 from nbo2graph.graph_generator_settings import GraphGeneratorSettings
 from nbo2graph.enums.bond_order_type import BondOrderType
@@ -294,8 +292,12 @@ class GraphGenerator:
 
         # pre read data for efficiency
 
-        # bonds with BD
+        # bonds from BD
         bond_pair_atom_indices = [x.atom_indices for x in qm_data.bond_pair_data]
+        # bonds from 3c
+        # bond_3c_atom_indices = [x.atom_indices for x in qm_data.bond_3c_data]
+        # gets the A-B and B-C bond pairs from 3c data
+        bond_3c_atom_indices = [x.atom_indices[0:2] for x in qm_data.bond_3c_data] + [x.atom_indices[1:3] for x in qm_data.bond_3c_data]
 
         # setup edge_features
         edge_features = []
@@ -320,14 +322,20 @@ class GraphGenerator:
                 EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features or \
                 EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features:
 
-            if bond_atom_indices in bond_pair_atom_indices:
+            if bond_atom_indices in bond_3c_atom_indices:
+                edge_features.append(len([x.energy for x in qm_data.bond_3c_data if x.atom_indices == bond_atom_indices]))
+            elif bond_atom_indices in bond_pair_atom_indices:
                 # length of bond pair list for this edge
                 edge_features.append(len([x.energy for x in qm_data.bond_pair_data if x.atom_indices == bond_atom_indices]))
             else:
                 edge_features.append(0)
 
         if EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features:
-            energies = [x.energy for x in qm_data.bond_pair_data if x.atom_indices == bond_atom_indices]
+
+            if bond_atom_indices in bond_pair_atom_indices:
+                energies = [x.energy for x in qm_data.bond_pair_data if x.atom_indices == bond_atom_indices]
+            else:
+                energies = []
 
             # append difference if there are 2 entries or more
             if len(energies) >= 2:
@@ -356,7 +364,11 @@ class GraphGenerator:
                 edge_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.BOND_ORBITAL))
 
         if EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features:
-            energies = [x.energy for x in qm_data.antibond_pair_data if x.atom_indices == bond_atom_indices]
+
+            if bond_atom_indices in bond_pair_atom_indices:
+                energies = [x.energy for x in qm_data.antibond_pair_data if x.atom_indices == bond_atom_indices]
+            else:
+                energies = []
 
             # append difference if there are 2 entries or more
             if len(energies) >= 2:
@@ -403,7 +415,7 @@ class GraphGenerator:
 
         if len(atom_indices) == 1:
             # get list of all bond pair energies for this atom
-            energies = [x.energy for x in nbo_data if x.atom_index == atom_indices[0]]
+            energies = [x.energy for x in nbo_data if x.atom_indices[0] == atom_indices[0]]
         else:
             # get list of all bond pair energies for these atoms
             energies = [x.energy for x in nbo_data if x.atom_indices == atom_indices]
@@ -432,11 +444,11 @@ class GraphGenerator:
 
         if len(atom_indices) == 1:
             # get list of all bond pair energies for this atom
-            energies = [x.energy for x in nbo_data if x.atom_index == atom_indices[0]]
+            energies = [x.energy for x in nbo_data if x.atom_indices[0] == atom_indices[0]]
             # get list of all occupation values for this atom
-            occupations = [x.occupation for x in nbo_data if x.atom_index == atom_indices[0]]
+            occupations = [x.occupation for x in nbo_data if x.atom_indices[0] == atom_indices[0]]
             # get list of symmetry values of different lone pairs for this atom
-            symmetries = [x.orbital_occupations for x in nbo_data if x.atom_index == atom_indices[0]]
+            symmetries = [x.orbital_occupations for x in nbo_data if x.atom_indices[0] == atom_indices[0]]
         else:
             # get list of all bond pair energies for this atom
             energies = [x.energy for x in nbo_data if x.atom_indices == atom_indices]
@@ -589,8 +601,8 @@ class GraphGenerator:
         # pre read data for efficiency
 
         # atom indices that have LP or LV
-        lone_pair_atom_indices = [x.atom_index for x in qm_data.lone_pair_data]
-        lone_vacancy_atom_indices = [x.atom_index for x in qm_data.lone_vacancy_data]
+        lone_pair_atom_indices = [x.atom_indices[0] for x in qm_data.lone_pair_data]
+        lone_vacancy_atom_indices = [x.atom_indices[0] for x in qm_data.lone_vacancy_data]
 
         # set up features for node
         node_features = []
@@ -637,10 +649,10 @@ class GraphGenerator:
                 NodeFeature.LONE_PAIR_AVERAGE in self._settings.node_features or \
                 NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE in self._settings.node_features:
 
-            node_features.append(len([x.energy for x in qm_data.lone_pair_data if x.atom_index == i]))
+            node_features.append(len([x.energy for x in qm_data.lone_pair_data if x.atom_indices[0] == i]))
 
         if NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE in self._settings.node_features:
-            energies = [x.energy for x in qm_data.lone_pair_data if x.atom_index == i]
+            energies = [x.energy for x in qm_data.lone_pair_data if x.atom_indices[0] == i]
 
             # append difference if there are 2 entries or more
             if len(energies) >= 2:
@@ -666,10 +678,10 @@ class GraphGenerator:
                 NodeFeature.LONE_VACANCY_AVERAGE in self._settings.node_features or \
                 NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE in self._settings.node_features:
 
-            node_features.append(len([x.energy for x in qm_data.lone_vacancy_data if x.atom_index == i]))
+            node_features.append(len([x.energy for x in qm_data.lone_vacancy_data if x.atom_indices[0] == i]))
 
         if NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE in self._settings.node_features:
-            energies = [x.energy for x in qm_data.lone_vacancy_data if x.atom_index == i]
+            energies = [x.energy for x in qm_data.lone_vacancy_data if x.atom_indices[0] == i]
 
             # append difference if there are 2 entries or more
             if len(energies) >= 2:
@@ -1111,12 +1123,7 @@ class GraphGenerator:
         """
 
         nbo_list_index = next((i for i, item in enumerate(qm_data.nbo_data) if item.nbo_id == nbo_id), -1)
-        # if single data point return the index
-        if type(qm_data.nbo_data[nbo_list_index]) == NboSingleDataPoint:
-            return [qm_data.nbo_data[nbo_list_index].atom_index]
-        # if double data point return both indices
-        elif type(qm_data.nbo_data[nbo_list_index]) == NboDoubleDataPoint:
-            return qm_data.nbo_data[nbo_list_index].atom_indices
+        return qm_data.nbo_data[nbo_list_index].atom_indices
 
     def _select_atom_indices_from_nbo_id(self, qm_data: QmData, nbo_id: int) -> list[int]:
 
@@ -1127,16 +1134,11 @@ class GraphGenerator:
         """
 
         nbo_list_index = next((i for i, item in enumerate(qm_data.nbo_data) if item.nbo_id == nbo_id), -1)
-        # if single data point simply return the index
-        if type(qm_data.nbo_data[nbo_list_index]) == NboSingleDataPoint:
-            return [qm_data.nbo_data[nbo_list_index].atom_index]
-        # if double data point check contributions values
-        elif type(qm_data.nbo_data[nbo_list_index]) == NboDoubleDataPoint:
-            selected_atom_indices = []
-            for i in range(len(qm_data.nbo_data[nbo_list_index].atom_indices)):
-                if qm_data.nbo_data[nbo_list_index].contributions[i] > self._settings.sopa_contribution_threshold:
-                    selected_atom_indices.append(qm_data.nbo_data[nbo_list_index].atom_indices[i])
-            return selected_atom_indices
+        selected_atom_indices = []
+        for i in range(len(qm_data.nbo_data[nbo_list_index].atom_indices)):
+            if qm_data.nbo_data[nbo_list_index].contributions[i] >= self._settings.sopa_contribution_threshold:
+                selected_atom_indices.append(qm_data.nbo_data[nbo_list_index].atom_indices[i])
+        return selected_atom_indices
 
     def _get_nbo_type_from_nbo_id(self, qm_data: QmData, nbo_id: int) -> str:
 

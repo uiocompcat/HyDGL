@@ -469,7 +469,7 @@ class DataParser:
         line_split = list(filter(None, re.split(r'\(|\)| ', self.lines[start_index])))
 
         # obtain atom position
-        atom_position = int(line_split[5]) - 1
+        atom_position = [int(line_split[5]) - 1]
         # obtain occupation
         full_occupation = float(line_split[1])
         # nbo type

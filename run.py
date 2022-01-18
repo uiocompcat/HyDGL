@@ -1,4 +1,5 @@
 import os
+from tabnanny import check
 import tarfile
 import pickle
 from typing import Generator
@@ -48,8 +49,8 @@ def main():
     #         # break
     #         print(i)
 
-    ggs = GraphGeneratorSettings.default(edge_types=[EdgeType.BOND_ORDER_NON_METAL, EdgeType.BOND_ORDER_METAL], hydrogen_mode=HydrogenMode.EXPLICIT,
-                                         edge_features=[EdgeFeature.WIBERG_BOND_ORDER], bond_threshold=0.2)
+    ggs = GraphGeneratorSettings.default(edge_types=[EdgeType.NBO_BONDING_ORBITALS], hydrogen_mode=HydrogenMode.EXPLICIT,
+                                         edge_features=[EdgeFeature.BOND_ORBITAL_MAX, EdgeFeature.BOND_ORBITAL_DATA_S], bond_threshold=0.2)
     gg = GraphGenerator(settings=ggs)
     graph = gg.generate_graph(DataParser('/home/hkneiding/Documents/UiO/Data/tmQM/the_random_500/ZUYHEG.log').parse_to_qm_data_object())
     # graph = gg.generate_graph(DataParser('/home/hkneiding/Documents/UiO/Data/tmQM/06_data_lake/OREDIA.log').parse_to_qm_data_object())
@@ -59,7 +60,7 @@ def main():
     # graph = Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
     #               [Edge([0, 1], features=[0], is_directed=True), Edge([0, 2], features=[0], is_directed=False), Edge([0, 3], features=[0], is_directed=True), Edge([3, 2], features=[0], is_directed=True), Edge([2, 4], features=[0], is_directed=False)])
     # print(graph.get_spectrum())
-    # graph.visualise()
+    graph.visualise()
 
     # for graph in graphs:
 
@@ -96,7 +97,27 @@ def get_number_connected_graphs(qm_data_list):
     print(n_connected_graphs)
 
 
+def check_3c():
+
+    # setup target directory path
+    path = '/home/hkneiding/Documents/UiO/Data/tmQM/the_random_500/'
+    files = [file for file in os.listdir(path) if file.endswith(".log")]
+    qm_data_list = [DataParser(path + file).parse_to_qm_data_object() for file in files]
+
+    for i in range(len(qm_data_list)):
+
+        for j in range(len(qm_data_list[i].bond_3c_data)):
+
+            for k in range(len(qm_data_list[i].bond_pair_data)):
+
+                if qm_data_list[i].bond_pair_data[k].atom_indices[0] in qm_data_list[i].bond_3c_data[j].atom_indices and \
+                   qm_data_list[i].bond_pair_data[k].atom_indices[1] in qm_data_list[i].bond_3c_data[j].atom_indices:
+
+                    print(qm_data_list[i].id)
+
+
 # - - - entry point - - - #
 if __name__ == "__main__":
     # extract_tmqm()
     main()
+    # check_3c()
