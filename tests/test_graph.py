@@ -229,3 +229,43 @@ class TestGraph(unittest.TestCase):
         # self.assertTrue(torch.equal(result.x, expected.x))
         # self.assertTrue(torch.equal(result.edge_index, expected.edge_index))
         # self.assertTrue(torch.equal(result.edge_attr, expected.edge_attr))
+
+    @parameterized.expand([
+
+        [
+            Graph([Node(features=[0], position=[0, 1]), Node(features=[0], position=[2, 3]), Node(features=[0], position=[4, 7]),
+                   Node(features=[0], position=[9, 0]), Node(features=[0], position=[2, 1])], []),
+
+            {
+                0: [0, 1],
+                1: [2, 3],
+                2: [4, 7],
+                3: [9, 0],
+                4: [2, 1]
+            }
+        ],
+
+    ])
+    def test_get_node_position_dict(self, graph, expected):
+
+        self.assertEqual(graph.get_node_position_dict(), expected)
+
+    @parameterized.expand([
+
+        [
+            Graph([Node(features=[0], label='C'), Node(features=[0], label='H'), Node(features=[0], label='O'),
+                   Node(features=[0], label='N'), Node(features=[0], label='S')], []),
+
+            {
+                0: 'C',
+                1: 'H',
+                2: 'O',
+                3: 'N',
+                4: 'S'
+            }
+        ],
+
+    ])
+    def test_get_node_label_dict(self, graph, expected):
+
+        self.assertEqual(graph.get_node_label_dict(), expected)

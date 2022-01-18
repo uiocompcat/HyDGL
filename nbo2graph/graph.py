@@ -330,10 +330,29 @@ class Graph:
 
     def get_node_position_dict(self):
 
+        """Gets a dict of the node positions.
+
+        Returns:
+            dict: The dict of positions.
+        """
+
         node_position_dict = {}
         for i in range(len(self.nodes_positions_list)):
             node_position_dict[i] = self.nodes_positions_list[i]
         return node_position_dict
+
+    def get_node_label_dict(self):
+
+        """Gets a dict of the node label.
+
+        Returns:
+            dict: The dict of labels.
+        """
+
+        node_label_dict = {}
+        for i in range(len(self.nodes_labels_list)):
+            node_label_dict[i] = self.nodes_labels_list[i]
+        return node_label_dict
 
     def visualise(self):
 
