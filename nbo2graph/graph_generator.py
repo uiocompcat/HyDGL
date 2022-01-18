@@ -153,6 +153,9 @@ class GraphGenerator:
                    qm_data.atomic_numbers[qm_data.bond_3c_data[i].atom_indices[2]] == 1:
                     continue
 
+            # NOTE: For a 3c bond A-B-C This only connects A with B and B with C.
+            # For some situations (e.g. in Boranes) this might not reflect the
+            # relevant physics.
             if not qm_data.bond_3c_data[i].atom_indices[0:2] in adjacency_list:
                 adjacency_list.append(qm_data.bond_3c_data[i].atom_indices[0:2])
 
@@ -291,9 +294,8 @@ class GraphGenerator:
 
         # pre read data for efficiency
 
-        # bonds with BD and BD*
+        # bonds with BD
         bond_pair_atom_indices = [x.atom_indices for x in qm_data.bond_pair_data]
-        antibond_pair_atom_indices = [x.atom_indices for x in qm_data.antibond_pair_data]
 
         # setup edge_features
         edge_features = []
@@ -367,7 +369,7 @@ class GraphGenerator:
             # check if NBO data for the respective antibonds is available
             # if so add to feature vector
             # otherwise add zeros to feature vector
-            if bond_atom_indices in antibond_pair_atom_indices:
+            if bond_atom_indices in bond_pair_atom_indices:
                 edge_features.extend(self._get_minimum_energy_nbo(qm_data, bond_atom_indices, NboType.ANTIBOND))
             else:
                 edge_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.ANTIBOND_ORBITAL))
@@ -376,7 +378,7 @@ class GraphGenerator:
             # check if NBO data for the respective antibonds is available
             # if so add to feature vector
             # otherwise add zeros to feature vector
-            if bond_atom_indices in antibond_pair_atom_indices:
+            if bond_atom_indices in bond_pair_atom_indices:
                 edge_features.extend(self._get_average_nbo(qm_data, bond_atom_indices, NboType.ANTIBOND))
             else:
                 edge_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.ANTIBOND_ORBITAL))
