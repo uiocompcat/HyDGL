@@ -16,7 +16,7 @@ from nbo2graph.graph_generator_settings import GraphGeneratorSettings
 from nbo2graph.enums.orbital_occupation_type import OrbitalOccupationType
 from nbo2graph.enums.sopa_edge_feature import SopaEdgeFeature
 from nbo2graph.enums.sopa_resolution_mode import SopaResolutionMode
-from tests.utils import Utils, TEST_FILE_LALMER, TEST_FILE_OREDIA
+from tests.utils import Utils, TEST_FILE_LALMER, TEST_FILE_OREDIA, TEST_FILE_ZUYHEG
 
 
 class TestGraphGenerator(unittest.TestCase):
@@ -1389,6 +1389,56 @@ class TestGraphGenerator(unittest.TestCase):
         # get result
         result = gg._get_featurised_edge(bond_indices, qm_data)
 
+        Utils.assert_are_almost_equal(result, expected, places=5)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_ZUYHEG,
+            [3, 7],
+            [EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE, EdgeFeature.BOND_ORBITAL_AVERAGE, EdgeFeature.BOND_ORBITAL_MAX,
+             EdgeFeature.BOND_ORBITAL_DATA_S, EdgeFeature.BOND_ORBITAL_DATA_P, EdgeFeature.BOND_ORBITAL_DATA_D, EdgeFeature.BOND_ORBITAL_DATA_F],
+            [1, 0.0, -0.41717, 1.76966, 0.20673333333333332, 0.7872, 0.005666666666666667, 0.0004, -0.41717, 1.76966, 0.20673333333333332, 0.7872, 0.005666666666666667, 0.0004]
+        ],
+
+        [
+            TEST_FILE_ZUYHEG,
+            [7, 8],
+            [EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE, EdgeFeature.BOND_ORBITAL_AVERAGE, EdgeFeature.BOND_ORBITAL_MAX,
+             EdgeFeature.BOND_ORBITAL_DATA_S, EdgeFeature.BOND_ORBITAL_DATA_P, EdgeFeature.BOND_ORBITAL_DATA_D, EdgeFeature.BOND_ORBITAL_DATA_F],
+            [1, 0.0, -0.41717, 1.76966, 0.20673333333333332, 0.7872, 0.005666666666666667, 0.0004, -0.41717, 1.76966, 0.20673333333333332, 0.7872, 0.005666666666666667, 0.0004]
+        ],
+
+        [
+            TEST_FILE_ZUYHEG,
+            [8, 9],
+            [EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE, EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_MIN,
+             EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_P, EdgeFeature.ANTIBOND_ORBITAL_DATA_D, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
+            [1, 0.0, 0.27167, 0.11428, 0.34376666666666666, 0.6507333333333333, 0.005166666666666666, 0.00036666666666666667, 0.27167, 0.11428, 0.34376666666666666, 0.6507333333333333, 0.005166666666666666, 0.00036666666666666667]
+        ],
+
+        [
+            TEST_FILE_ZUYHEG,
+            [9, 11],
+            [EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE, EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_MIN,
+             EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_P, EdgeFeature.ANTIBOND_ORBITAL_DATA_D, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
+            [1, 0.0, 0.27167, 0.11428, 0.34376666666666666, 0.6507333333333333, 0.005166666666666666, 0.00036666666666666667, 0.27167, 0.11428, 0.34376666666666666, 0.6507333333333333, 0.005166666666666666, 0.00036666666666666667]
+        ],
+    ])
+    def test_get_edge_features(self, file_path, bond_indices, edge_features, expected):
+
+        # load data
+        qm_data = DataParser(file_path).parse_to_qm_data_object()
+
+        # set up graph generator settings
+        ggs = GraphGeneratorSettings.default(edge_features=edge_features)
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(ggs)
+
+        # get result
+        result = gg._get_edge_features(bond_indices, qm_data)
+        print(result)
         Utils.assert_are_almost_equal(result, expected, places=5)
 
     @parameterized.expand([

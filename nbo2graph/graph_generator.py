@@ -323,16 +323,17 @@ class GraphGenerator:
                 EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features:
 
             if bond_atom_indices in bond_3c_atom_indices:
-                edge_features.append(len([x.energy for x in qm_data.bond_3c_data if x.atom_indices == bond_atom_indices]))
+                edge_features.append(len([x.energy for x in qm_data.bond_3c_data if x.contains_atom_indices(bond_atom_indices)]))
             elif bond_atom_indices in bond_pair_atom_indices:
-                # length of bond pair list for this edge
                 edge_features.append(len([x.energy for x in qm_data.bond_pair_data if x.atom_indices == bond_atom_indices]))
             else:
                 edge_features.append(0)
 
         if EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features:
 
-            if bond_atom_indices in bond_pair_atom_indices:
+            if bond_atom_indices in bond_3c_atom_indices:
+                energies = [x.energy for x in qm_data.bond_3c_data if x.contains_atom_indices(bond_atom_indices)]
+            elif bond_atom_indices in bond_pair_atom_indices:
                 energies = [x.energy for x in qm_data.bond_pair_data if x.atom_indices == bond_atom_indices]
             else:
                 energies = []
@@ -346,26 +347,27 @@ class GraphGenerator:
 
         if EdgeFeature.BOND_ORBITAL_MAX in self._settings.edge_features and len(self._settings.bond_orbital_indices) > 0:
 
-            # check if NBO data for the respective bond is available
-            # if so add to feature vector
-            # otherwise add zeros to feature vector
-            if bond_atom_indices in bond_pair_atom_indices:
+            if bond_atom_indices in bond_3c_atom_indices:
+                edge_features.extend(self._get_maximum_energy_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_BOND))
+            elif bond_atom_indices in bond_pair_atom_indices:
                 edge_features.extend(self._get_maximum_energy_nbo(qm_data, bond_atom_indices, NboType.BOND))
             else:
                 edge_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.BOND_ORBITAL))
 
         if EdgeFeature.BOND_ORBITAL_AVERAGE in self._settings.edge_features and len(self._settings.bond_orbital_indices) > 0:
-            # check if NBO data for the respective bonds is available
-            # if so add to feature vector
-            # otherwise add zeros to feature vector
-            if bond_atom_indices in bond_pair_atom_indices:
+
+            if bond_atom_indices in bond_3c_atom_indices:
+                edge_features.extend(self._get_average_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_BOND))
+            elif bond_atom_indices in bond_pair_atom_indices:
                 edge_features.extend(self._get_average_nbo(qm_data, bond_atom_indices, NboType.BOND))
             else:
                 edge_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.BOND_ORBITAL))
 
         if EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features:
 
-            if bond_atom_indices in bond_pair_atom_indices:
+            if bond_atom_indices in bond_3c_atom_indices:
+                energies = [x.energy for x in qm_data.antibond_3c_data if x.contains_atom_indices(bond_atom_indices)]
+            elif bond_atom_indices in bond_pair_atom_indices:
                 energies = [x.energy for x in qm_data.antibond_pair_data if x.atom_indices == bond_atom_indices]
             else:
                 energies = []
@@ -378,19 +380,19 @@ class GraphGenerator:
                 edge_features.append(0.0)
 
         if EdgeFeature.ANTIBOND_ORBITAL_MIN in self._settings.edge_features and len(self._settings.antibond_orbital_indices) > 0:
-            # check if NBO data for the respective antibonds is available
-            # if so add to feature vector
-            # otherwise add zeros to feature vector
-            if bond_atom_indices in bond_pair_atom_indices:
+
+            if bond_atom_indices in bond_3c_atom_indices:
+                edge_features.extend(self._get_minimum_energy_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_ANTIBOND))
+            elif bond_atom_indices in bond_pair_atom_indices:
                 edge_features.extend(self._get_minimum_energy_nbo(qm_data, bond_atom_indices, NboType.ANTIBOND))
             else:
                 edge_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.ANTIBOND_ORBITAL))
 
         if EdgeFeature.ANTIBOND_ORBITAL_AVERAGE in self._settings.edge_features and len(self._settings.antibond_orbital_indices) > 0:
-            # check if NBO data for the respective antibonds is available
-            # if so add to feature vector
-            # otherwise add zeros to feature vector
-            if bond_atom_indices in bond_pair_atom_indices:
+
+            if bond_atom_indices in bond_3c_atom_indices:
+                edge_features.extend(self._get_average_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_ANTIBOND))
+            elif bond_atom_indices in bond_pair_atom_indices:
                 edge_features.extend(self._get_average_nbo(qm_data, bond_atom_indices, NboType.ANTIBOND))
             else:
                 edge_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.ANTIBOND_ORBITAL))
@@ -413,7 +415,8 @@ class GraphGenerator:
         # return variable
         nbo_features = []
 
-        energies = [x.energy for x in nbo_data if x.atom_indices == atom_indices]
+        energies = [x.energy for x in nbo_data if x.contains_atom_indices(atom_indices)]
+        # energies = [x.energy for x in nbo_data if x.atom_indices == atom_indices]
 
         # select index of the extremum energy
         selected_index = nbo_energies.index(extremum_operator(energies))
@@ -438,11 +441,11 @@ class GraphGenerator:
         nbo_features = []
 
         # get list of all energies of this NBO
-        energies = [x.energy for x in nbo_data if x.atom_indices == atom_indices]
+        energies = [x.energy for x in nbo_data if x.contains_atom_indices(atom_indices)]
         # get list of all occupation values for this NBO
-        occupations = [x.occupation for x in nbo_data if x.atom_indices == atom_indices]
+        occupations = [x.occupation for x in nbo_data if x.contains_atom_indices(atom_indices)]
         # get list of symmetry values of different lone pairs for this NBO
-        symmetries = [x.orbital_occupations for x in nbo_data if x.atom_indices == atom_indices]
+        symmetries = [x.orbital_occupations for x in nbo_data if x.contains_atom_indices(atom_indices)]
 
         # append average values for energies and occupations
         nbo_features.append(mean(energies))
