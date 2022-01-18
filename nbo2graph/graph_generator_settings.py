@@ -218,11 +218,11 @@ class GraphGeneratorSettings:
             return self.bond_orbital_indices
         elif nbo_type == NboType.ANTIBOND:
             return self.antibond_orbital_indices
-        # elif nbo_type == NboType.THREE_CENTER_BOND:
-        #     return self.bon
-        # elif nbo_type == NboType.THREE_CENTER_ANTIBOND:
-        #     return self.antibond_3c_data
-        # elif nbo_type == NboType.THREE_CENTER_NONBOND:
-        #     return self.nonbond_3c_data
+        elif nbo_type == NboType.THREE_CENTER_BOND:
+            return self.bond_orbital_indices
+        elif nbo_type == NboType.THREE_CENTER_ANTIBOND:
+            return self.antibond_orbital_indices
+        elif nbo_type == NboType.THREE_CENTER_NONBOND:
+            return self.antibond_orbital_indices
         else:
             raise ValueError('NboType ' + str(nbo_type) + ' not recognized.')
