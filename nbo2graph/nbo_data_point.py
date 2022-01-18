@@ -6,6 +6,11 @@ class NboDataPoint:
 
         """Constructor"""
 
+        # check for equal length of involved atoms and contributions
+        assert len(atom_indices) == len(contributions)
+        # check that orbital occupations for s, p, d, f are available
+        assert len(orbital_occupations) == 4
+
         self._nbo_id = nbo_id
         self._nbo_type = nbo_type
         self._atom_indices = atom_indices
