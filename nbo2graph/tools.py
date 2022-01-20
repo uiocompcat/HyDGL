@@ -85,6 +85,24 @@ class Tools:
         return [1 if x == class_number else 0 for x in list(range(n_classes))]
 
     @staticmethod
+    def get_class_feature_indices(feature_list):
+
+        """Takes a feature list a determines at which positions non-numerical class features are used.
+
+        Returns:
+            list[int]: A list with indices denoting at which positions non-numerical class features are used.
+        """
+
+        class_feature_indices = []
+
+        # get indices of features that are not numeric and need to be one-hot encoded
+        for i in range(len(feature_list)):
+            if not type(feature_list[i]) == int and not type(feature_list[i]) == float:
+                class_feature_indices.append(i)
+
+        return class_feature_indices
+
+    @staticmethod
     def flatten_list(input_list):
 
         """Flattens a irregular list. Embeds any sublist as individual values in main list.
