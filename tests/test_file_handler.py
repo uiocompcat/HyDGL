@@ -1,3 +1,4 @@
+import os
 import pickle
 import unittest
 from parameterized import parameterized
@@ -114,3 +115,17 @@ class TestFileHandler(unittest.TestCase):
 
         result = FileHandler.read_binary_file(tmp_file_path)
         Utils.assert_are_almost_equal(content, result)
+
+    @parameterized.expand([
+
+        [
+        ]
+
+    ])
+    def test_clear_directory(self):
+
+        FileHandler.write_file('/tmp/nbo2graph-test-file.txt', 'asdfasf')
+        FileHandler.clear_directory('/tmp/', ['nbo2graph-test-file.txt', 'nbo2graph-test-file2.txt'])
+
+        self.assertFalse(os.path.isfile('/tmp/nbo2graph-test-file.txt'))
+        self.assertFalse(os.path.isfile('/tmp/nbo2graph-test-file2.txt'))

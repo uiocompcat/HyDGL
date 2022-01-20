@@ -1,3 +1,4 @@
+import os
 import pickle
 
 
@@ -86,3 +87,17 @@ class FileHandler:
         f = open(file_path, 'wb')
         pickle.dump(data, f)
         f.close()
+
+    @staticmethod
+    def clear_directory(directory: str, file_names: list[str]):
+
+        """Clears a directory of specified files.
+
+        Args:
+            directory (string): The directory.
+            file_names (list[string]): A list of file names to delete.
+        """
+
+        for file_name in file_names:
+            if os.path.isfile(os.path.join(directory, file_name)):
+                os.remove(os.path.join(directory, file_name))
