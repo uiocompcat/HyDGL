@@ -466,7 +466,8 @@ class GraphGenerator:
 
         return nbo_features
 
-    def _get_sopa_edge_features(self, bond_atom_indices: list[int], qm_data: QmData) -> list[float]:
+    def _get_sopa_edge_features(self, bond_atom_indices: list[int], qm_data: QmData, atom_indices_list: list[list[int]],
+                                stabilisation_energies: list[list[float]], nbo_types: list[list[str]]) -> list[float]:
 
         """Gets the SOPA edge features for given atom indices according to specification.
 
@@ -475,7 +476,7 @@ class GraphGenerator:
         """
 
         # obtain SOPA adjacency list and associated stabilisation energies and NBO types
-        atom_indices_list, stabilisation_energies, nbo_types = self._get_sopa_adjacency_list(qm_data)
+        # atom_indices_list, stabilisation_energies, nbo_types = self._get_sopa_adjacency_list(qm_data)
 
         # get index of bond in SOPA data
         i = atom_indices_list.index(bond_atom_indices)
@@ -1246,7 +1247,7 @@ class GraphGenerator:
                     continue
 
                 # set up feature list with stabilisation energy and NBO types
-                features = self._get_sopa_edge_features(atom_indices_list[i], qm_data)
+                features = self._get_sopa_edge_features(atom_indices_list[i], qm_data, atom_indices_list, stabilisation_energies, nbo_types)
                 # add additional features
                 features.extend(self._get_edge_features(atom_indices_list[i], qm_data))
 
