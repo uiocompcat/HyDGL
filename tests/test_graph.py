@@ -209,6 +209,7 @@ class TestGraph(unittest.TestCase):
                 [Edge([0, 1], features=[-2]), Edge([0, 2], features=[3]), Edge([0, 3], features=[4]), Edge([2, 3], features=[1]), Edge([2, 4], features=[10])],
                 targets=[12.34]
             ),
+            {},
             Data(
                 x=torch.tensor([[0], [1], [3], [-2], [0]], dtype=torch.float),
                 edge_index=torch.tensor([[0, 1, 0, 2, 0, 3, 2, 3, 2, 4],
@@ -224,6 +225,7 @@ class TestGraph(unittest.TestCase):
                 [Edge([0, 1], features=[-2]), Edge([0, 2], features=[3]), Edge([0, 3], features=[4], is_directed=True), Edge([3, 2], features=[1], is_directed=True), Edge([2, 4], features=[10])],
                 targets=[12.34]
             ),
+            {},
             Data(
                 x=torch.tensor([[0], [1], [3], [-2], [0]], dtype=torch.float),
                 edge_index=torch.tensor([[0, 1, 0, 2, 0, 3, 2, 4],
@@ -233,10 +235,26 @@ class TestGraph(unittest.TestCase):
             )
         ],
 
-    ])
-    def test_get_pytorch_data_object(self, graph, expected):
+        [
+            Graph(
+                [Node(features=[0]), Node(features=[1]), Node(features=[3]), Node(features=[-2]), Node(features=[0])],
+                [Edge([0, 1], features=['A']), Edge([0, 2], features=['B']), Edge([0, 3], features=['A'], is_directed=True), Edge([3, 2], features=['C'], is_directed=True), Edge([2, 4], features=['D'])],
+                targets=[12.34]
+            ),
+            {0: ['B', 'A', 'C', 'D']},
+            Data(
+                x=torch.tensor([[0], [1], [3], [-2], [0]], dtype=torch.float),
+                edge_index=torch.tensor([[0, 1, 0, 2, 0, 3, 2, 4],
+                                         [1, 0, 2, 0, 3, 2, 4, 2]], dtype=torch.long),
+                edge_attr=torch.tensor([[0, 1, 0, 0], [0, 1, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1], [0, 0, 0, 1]], dtype=torch.float),
+                y=torch.tensor([12.34], dtype=torch.float)
+            )
+        ],
 
-        result = graph.get_pytorch_data_object()
+    ])
+    def test_get_pytorch_data_object(self, graph, edge_class_feature_dict, expected):
+
+        result = graph.get_pytorch_data_object(edge_class_feature_dict=edge_class_feature_dict)
         self.assertEqual(len(result.keys), len(expected.keys))
 
         for key in result.keys:
