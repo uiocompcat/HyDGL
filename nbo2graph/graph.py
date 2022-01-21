@@ -7,6 +7,7 @@ from torch_geometric.data import Data
 from nbo2graph.edge import Edge
 
 # from nbo2graph.file_handler import FileHandler
+from nbo2graph.tools import Tools
 from nbo2graph.element_look_up_table import ElementLookUpTable
 from nbo2graph.node import Node
 
@@ -116,7 +117,7 @@ class Graph:
         """Getter for a list of edge features."""
         return [x.features for x in self._edges]
 
-    def get_pytorch_data_object(self) -> Data:
+    def get_pytorch_data_object(self, edge_class_feature_dict={}) -> Data:
 
         """Generates a pytorch data object ready to use for learning/visualisation.
 
@@ -131,13 +132,13 @@ class Graph:
             # if directed add only once
             if edge.is_directed:
                 edge_indices.append(edge.node_indices)
-                edge_features.append(edge.features)
+                edge_features.append(Tools.get_one_hot_encoded_feature_list(edge.features, edge_class_feature_dict))
             # if undirected add twice to account for both directions
             else:
                 edge_indices.append(edge.node_indices)
                 edge_indices.append(list(reversed(edge.node_indices)))
-                edge_features.append(edge.features)
-                edge_features.append(edge.features)
+                edge_features.append(Tools.get_one_hot_encoded_feature_list(edge.features, edge_class_feature_dict))
+                edge_features.append(Tools.get_one_hot_encoded_feature_list(edge.features, edge_class_feature_dict))
 
         # cast to pytorch tensor
         edge_indices = torch.tensor(edge_indices, dtype=torch.long)

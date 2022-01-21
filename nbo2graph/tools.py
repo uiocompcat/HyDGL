@@ -9,10 +9,16 @@ class Tools:
             list[float]: The one-hot encoded feature list.
         """
 
-        for key in class_feature_dict.keys():
-            feature_list[key] = Tools.get_one_hot_encoding(len(class_feature_dict[key]), class_feature_dict[key].index(feature_list[key]))
+        one_hot_encoded_feature_list = []
 
-        return Tools.flatten_list(feature_list)
+        for i in range(len(feature_list)):
+
+            if i in class_feature_dict.keys():
+                one_hot_encoded_feature_list.append(Tools.get_one_hot_encoding(len(class_feature_dict[i]), class_feature_dict[i].index(feature_list[i])))
+            else:
+                one_hot_encoded_feature_list.append(feature_list[i])
+
+        return Tools.flatten_list(one_hot_encoded_feature_list)
 
     @staticmethod
     def get_one_hot_encoding(n_classes: int, class_number: int):
