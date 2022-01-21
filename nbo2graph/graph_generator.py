@@ -1236,14 +1236,14 @@ class GraphGenerator:
         # obtain SOPA adjacency list and associated stabilisation energies and NBO types
         atom_indices_list, stabilisation_energies, nbo_types = self._get_sopa_adjacency_list(qm_data)
         # format stabilisation energies according to specification
-        stabilisation_energies = self._resolve_stabilisation_energies(stabilisation_energies, self._settings.sopa_resolution_mode)
+        reslolved_stabilisation_energies = self._resolve_stabilisation_energies(stabilisation_energies, self._settings.sopa_resolution_mode)
 
         edges = []
         for i in range(len(atom_indices_list)):
-            for j in range(len(stabilisation_energies[i])):
+            for j in range(len(reslolved_stabilisation_energies[i])):
 
                 # skip if stabilisation energy is less than specified interaction threshold
-                if stabilisation_energies[i][j] < self._settings.sopa_interaction_threshold:
+                if reslolved_stabilisation_energies[i][j] < self._settings.sopa_interaction_threshold:
                     continue
 
                 # set up feature list with stabilisation energy and NBO types
@@ -1263,21 +1263,25 @@ class GraphGenerator:
             list[list[float]]: List of lists containing the stabilisation energies.
         """
 
+        resolved_stabilisation_energies = []
+
         # keeps all individual stabilisation energies
         if mode == SopaResolutionMode.FULL:
-            pass
+            return stabilisation_energies
         # averages over stabilisation energies belonging to the same atom pair
         elif mode == SopaResolutionMode.AVERAGE:
             for i in range(len(stabilisation_energies)):
-                stabilisation_energies[i] = [mean(stabilisation_energies[i])]
+                resolved_stabilisation_energies.append([mean(stabilisation_energies[i])])
         # uses the minimum and maximum values of stabilisation energies belonging to the same atom pair
         elif mode == SopaResolutionMode.MIN_MAX:
             for i in range(len(stabilisation_energies)):
-                if len(stabilisation_energies[i]) > 1:
-                    stabilisation_energies[i] = [min(stabilisation_energies[i]), max(stabilisation_energies[i])]
+                if len(stabilisation_energies[i]) == 1:
+                    resolved_stabilisation_energies.append(stabilisation_energies[i])
+                else:
+                    resolved_stabilisation_energies.append([min(stabilisation_energies[i]), max(stabilisation_energies[i])])
         # uses the maximum value of stabilisation energies belonging to the same atom pair
         elif mode == SopaResolutionMode.MAX:
             for i in range(len(stabilisation_energies)):
-                stabilisation_energies[i] = [max(stabilisation_energies[i])]
+                resolved_stabilisation_energies.append([max(stabilisation_energies[i])])
 
-        return stabilisation_energies
+        return resolved_stabilisation_energies
