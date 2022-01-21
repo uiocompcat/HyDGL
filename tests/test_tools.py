@@ -107,7 +107,6 @@ class TestTools(unittest.TestCase):
             [1.5, 5, 7.123, 7., 53, 1.21]
         ],
 
-
     ])
     def test_get_one_hot_encoded_feature_list(self, feature_list, class_feature_dict, expected):
 
