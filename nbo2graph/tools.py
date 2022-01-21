@@ -42,6 +42,20 @@ class Tools:
         return feature_lists
 
     @staticmethod
+    def get_one_hot_encoded_feature_list(feature_list: list, class_feature_dict: dict):
+
+        """Gets the one-hot encoding of a given feature list according to a given dict.
+
+        Returns:
+            list[float]: The one-hot encoded feature list.
+        """
+
+        for key in class_feature_dict.keys():
+            feature_list[key] = Tools.get_one_hot_encoding(len(class_feature_dict[key]), class_feature_dict[key].index(feature_list[key]))
+
+        return Tools.flatten_list(feature_list)
+
+    @staticmethod
     def get_one_hot_encoded_list(input_list: list[str]):
 
         """Gets the one-hot encoded version of a list of class features of the same type.
