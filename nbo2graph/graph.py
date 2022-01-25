@@ -1,14 +1,11 @@
 import torch
 import warnings
 import numpy as np
-# from datetime import datetime
-import plotly.graph_objects as go
 from torch_geometric.data import Data
-from nbo2graph.edge import Edge
 
-# from nbo2graph.file_handler import FileHandler
-from nbo2graph.element_look_up_table import ElementLookUpTable
+from nbo2graph.edge import Edge
 from nbo2graph.node import Node
+from nbo2graph.element_look_up_table import ElementLookUpTable
 
 
 class Graph:
@@ -358,94 +355,101 @@ class Graph:
 
         """Plots the graph with appropriate nodes and edges using plotly."""
 
-        # set up node label and feature lists
-        node_features = self.nodes_features_list
-        node_labels = self.nodes_labels_list
+        try:
 
-        # set up edge index and feature lists
-        edge_indices = self.edges_indices_list  # + [list(reversed(x)) for x in self.edges_indices_list]
-        edge_features = self.edges_features_list  # * 2
+            import plotly.graph_objects as go
 
-        # get 3d positions
-        position_dict = self.get_node_position_dict()
+            # set up node label and feature lists
+            node_features = self.nodes_features_list
+            node_labels = self.nodes_labels_list
 
-        # seperate the x, y, z coordinates for Plotly
-        x_nodes = [position_dict[key][0] for key in position_dict.keys()]
-        y_nodes = [position_dict[key][1] for key in position_dict.keys()]
-        z_nodes = [position_dict[key][2] for key in position_dict.keys()]
+            # set up edge index and feature lists
+            edge_indices = self.edges_indices_list  # + [list(reversed(x)) for x in self.edges_indices_list]
+            edge_features = self.edges_features_list  # * 2
 
-        # we need to create lists that contain the starting and ending coordinates of each edge.
-        x_edges, y_edges, z_edges = [], [], []
+            # get 3d positions
+            position_dict = self.get_node_position_dict()
 
-        # create lists holding midpoints that we will use to anchor text
-        xtp, ytp, ztp = [], [], []
+            # seperate the x, y, z coordinates for Plotly
+            x_nodes = [position_dict[key][0] for key in position_dict.keys()]
+            y_nodes = [position_dict[key][1] for key in position_dict.keys()]
+            z_nodes = [position_dict[key][2] for key in position_dict.keys()]
 
-        # need to fill these with all of the coordinates
-        for edge in edge_indices:
+            # we need to create lists that contain the starting and ending coordinates of each edge.
+            x_edges, y_edges, z_edges = [], [], []
 
-            # format: [beginning, ending, None]
-            x_coords = [position_dict[edge[0]][0], position_dict[edge[1]][0], None]
-            x_edges += x_coords
-            xtp.append(0.5 * (position_dict[edge[0]][0] + position_dict[edge[1]][0]))
+            # create lists holding midpoints that we will use to anchor text
+            xtp, ytp, ztp = [], [], []
 
-            y_coords = [position_dict[edge[0]][1], position_dict[edge[1]][1], None]
-            y_edges += y_coords
-            ytp.append(0.5 * (position_dict[edge[0]][1] + position_dict[edge[1]][1]))
+            # need to fill these with all of the coordinates
+            for edge in edge_indices:
 
-            z_coords = [position_dict[edge[0]][2], position_dict[edge[1]][2], None]
-            z_edges += z_coords
-            ztp.append(0.5 * (position_dict[edge[0]][2] + position_dict[edge[1]][2]))
+                # format: [beginning, ending, None]
+                x_coords = [position_dict[edge[0]][0], position_dict[edge[1]][0], None]
+                x_edges += x_coords
+                xtp.append(0.5 * (position_dict[edge[0]][0] + position_dict[edge[1]][0]))
 
-        # get desc text for nodes
-        text = [f'{x[0]} | {x[1]}' for x in zip(node_labels, node_features)]
-        # create a trace for the nodes
-        trace_nodes = go.Scatter3d(
-            name='Nodes',
-            x=x_nodes,
-            y=y_nodes,
-            z=z_nodes,
-            mode='markers',
-            marker=dict(symbol='circle',
-                        size=[ElementLookUpTable.get_element_format_size(element) for element in node_labels],
-                        color=[ElementLookUpTable.get_element_format_colour(element) for element in node_labels]),
-            text=text,
-            hoverinfo='text'
-        )
+                y_coords = [position_dict[edge[0]][1], position_dict[edge[1]][1], None]
+                y_edges += y_coords
+                ytp.append(0.5 * (position_dict[edge[0]][1] + position_dict[edge[1]][1]))
 
-        # get desc text for edges
-        text = [f'{x[0]} | {x[1]}' for x in zip(edge_indices, edge_features)]
-        # create edge text
-        trace_weights = go.Scatter3d(x=xtp, y=ytp, z=ztp,
-                                     mode='markers',
-                                     marker=dict(color='rgb(180,180,180)', size=2),
-                                     text=text, hoverinfo='text')
+                z_coords = [position_dict[edge[0]][2], position_dict[edge[1]][2], None]
+                z_edges += z_coords
+                ztp.append(0.5 * (position_dict[edge[0]][2] + position_dict[edge[1]][2]))
 
-        # create a trace for the edges
-        trace_edges = go.Scatter3d(
-            name='Edges',
-            x=x_edges,
-            y=y_edges,
-            z=z_edges,
-            mode='lines',
-            line=dict(color='black', width=3.5),
-            hoverinfo='none'
-        )
+            # get desc text for nodes
+            text = [f'{x[0]} | {x[1]}' for x in zip(node_labels, node_features)]
+            # create a trace for the nodes
+            trace_nodes = go.Scatter3d(
+                name='Nodes',
+                x=x_nodes,
+                y=y_nodes,
+                z=z_nodes,
+                mode='markers',
+                marker=dict(symbol='circle',
+                            size=[ElementLookUpTable.get_element_format_size(element) for element in node_labels],
+                            color=[ElementLookUpTable.get_element_format_colour(element) for element in node_labels]),
+                text=text,
+                hoverinfo='text'
+            )
 
-        # Include the traces we want to plot and create a figure
-        data = [trace_nodes, trace_edges, trace_weights]
-        fig = go.Figure(data=data)
+            # get desc text for edges
+            text = [f'{x[0]} | {x[1]}' for x in zip(edge_indices, edge_features)]
+            # create edge text
+            trace_weights = go.Scatter3d(x=xtp, y=ytp, z=ztp,
+                                         mode='markers',
+                                         marker=dict(color='rgb(180,180,180)', size=2),
+                                         text=text, hoverinfo='text')
 
-        # get highest and lowest coordinate value to scale graph correctly
-        low_coord = min(x_nodes + y_nodes + z_nodes)
-        high_coord = max(x_nodes + y_nodes + z_nodes)
+            # create a trace for the edges
+            trace_edges = go.Scatter3d(
+                name='Edges',
+                x=x_edges,
+                y=y_edges,
+                z=z_edges,
+                mode='lines',
+                line=dict(color='black', width=3.5),
+                hoverinfo='none'
+            )
 
-        # remove grid and adjust all axes to same range, no legend
-        fig.update_layout(title='ID: ' + self.id,
-                          title_font_color='teal',
-                          paper_bgcolor='#040466',
-                          showlegend=False,
-                          scene=dict(aspectmode='manual', aspectratio=dict(x=1, y=1, z=1),
-                                     xaxis=dict(showbackground=False, visible=False, range=[low_coord, high_coord]),
-                                     yaxis=dict(showbackground=False, visible=False, range=[low_coord, high_coord]),
-                                     zaxis=dict(showbackground=False, visible=False, range=[low_coord, high_coord])))
-        fig.show()
+            # Include the traces we want to plot and create a figure
+            data = [trace_nodes, trace_edges, trace_weights]
+            fig = go.Figure(data=data)
+
+            # get highest and lowest coordinate value to scale graph correctly
+            low_coord = min(x_nodes + y_nodes + z_nodes)
+            high_coord = max(x_nodes + y_nodes + z_nodes)
+
+            # remove grid and adjust all axes to same range, no legend
+            fig.update_layout(title='ID: ' + self.id,
+                              title_font_color='teal',
+                              paper_bgcolor='#040466',
+                              showlegend=False,
+                              scene=dict(aspectmode='manual', aspectratio=dict(x=1, y=1, z=1),
+                                         xaxis=dict(showbackground=False, visible=False, range=[low_coord, high_coord]),
+                                         yaxis=dict(showbackground=False, visible=False, range=[low_coord, high_coord]),
+                                         zaxis=dict(showbackground=False, visible=False, range=[low_coord, high_coord])))
+            fig.show()
+
+        except ModuleNotFoundError:
+            warnings.warn('Cannot plot. The library <plotly> is not installed.')
