@@ -4,7 +4,7 @@ import unittest
 from parameterized import parameterized
 
 from nbo2graph.file_handler import FileHandler
-from tests.utils import TEST_FILE_LALMER, TEST_FILE_QM_DATA_OREDIA, Utils
+from tests.utils import TEST_FILE_LALMER, TEST_FILE_QM_DATA_OREDIA, TEST_FILE_JSON, Utils
 
 
 class TestFileHandler(unittest.TestCase):
@@ -129,3 +129,55 @@ class TestFileHandler(unittest.TestCase):
 
         self.assertFalse(os.path.isfile('/tmp/nbo2graph-test-file.txt'))
         self.assertFalse(os.path.isfile('/tmp/nbo2graph-test-file2.txt'))
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_JSON,
+            {
+                'age': 30,
+                'matrix': [[1, 2, 3], [1, 2, 3], [1, 2, 3]],
+                'name': 'John'
+            }
+        ]
+
+    ])
+    def test_read_dict_from_json_file(self, file_path, expected):
+
+        result = FileHandler.read_dict_from_json_file(file_path)
+
+        self.assertEqual(result, expected)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_JSON,
+        ]
+
+    ])
+    def test_write_dict_to_json_file(self, file_path):
+
+        tmp_file_path = '/tmp/nbo2graph-test-file.json'
+
+        content = FileHandler.read_dict_from_json_file(file_path)
+        FileHandler.write_dict_to_json_file(tmp_file_path, content)
+
+        result = FileHandler.read_dict_from_json_file(tmp_file_path)
+        Utils.assert_are_almost_equal(content, result)
+
+    @parameterized.expand([
+
+        [
+            './tests/files/not-existing-file',
+            FileNotFoundError
+        ],
+
+        [
+            './tests/files/',
+            IsADirectoryError
+        ],
+
+    ])
+    def test_read_dict_from_json_file_with_invalid_input(self, file_path, expected_error):
+
+        self.assertRaises(expected_error, FileHandler.read_dict_from_json_file, file_path)
