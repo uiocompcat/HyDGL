@@ -1,7 +1,9 @@
 import torch
 import warnings
 import numpy as np
+import networkx as nx
 from torch_geometric.data import Data
+from torch_geometric.utils.convert import to_networkx
 
 from nbo2graph.edge import Edge
 from nbo2graph.node import Node
@@ -114,6 +116,11 @@ class Graph:
         """Getter for a list of edge features."""
         return [x.features for x in self._edges]
 
+    @property
+    def networkx_graph(self):
+        """Getter for networkx graph object."""
+        return to_networkx(data=self.get_pytorch_data_object())
+
     def get_pytorch_data_object(self, edge_class_feature_dict={}) -> Data:
 
         """Generates a pytorch data object ready to use for learning/visualisation.
@@ -151,39 +158,6 @@ class Graph:
         data = Data(x=node_features, edge_index=edge_indices.t().contiguous(), edge_attr=edge_features, y=targets)
 
         return data
-
-    # deprecated. Since the node resolve relied on the fact that the first element of each feature string contains the atomic number.
-    # def write_mol_file(self, file_path: str):
-
-    #     """Writes the graph in mol format to file.
-
-    #     Args:
-    #         filepath (string): The path to the output file.
-    #     """
-
-    #     # data to write
-    #     data = 'Molecule\n_generated ' + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + '\n\n'
-
-    #     # set up summary data line
-    #     data += str(len(self.nodes)).rjust(3, ' ') + str(len(self.edges)).rjust(3, ' ') + '  0  0  0  0  0  0  0  0999 V2000\n'
-
-    #     # TODO node resolve relies on the fact that the first element of each feature string contains the atomic number
-    #     for i in range(len(self.nodes)):
-    #         data += '    0.0000    0.0000    0.0000 ' + ElementLookUpTable.get_element_identifier(self.nodes[i][0]).ljust(5, ' ') + '0  0  0  0  0  0  0  0  0  0  0  0\n'
-
-    #     # bond order is read out from first position in edge feature vector
-    #     for i in range(len(self.edges)):
-
-    #         bond_order = 1
-    #         if self.edges[i][1][0] > 1.5:
-    #             bond_order = 2
-    #         if self.edges[i][1][0] > 2.5:
-    #             bond_order = 3
-
-    #         data += str(self.edges[i][0][0] + 1).rjust(3, ' ') + str(self.edges[i][0][1] + 1).rjust(3, ' ') + str(bond_order).rjust(3, ' ') + '  0  0  0  0 \n'
-
-    #     data += 'M  END'
-    #     FileHandler.write_file(file_path, data)
 
     def is_connected(self) -> bool:
 
@@ -267,20 +241,8 @@ class Graph:
         if node_index < 0 or node_index > len(self.nodes) - 1:
             raise ValueError('The specified node index is out of range. Valid range: 0 - ' + str(len(self.nodes) - 1) + '. Given: ' + str(node_index) + '.')
 
-        in_adjacent_node_indices = []
-        for edge in self.edges:
-            if node_index in edge.node_indices:
-
-                # get the index of the other node in the edge node list
-                other_node_edge_list_index = (edge.node_indices.index(node_index) + 1) % 2
-
-                # in case of undirected graph ordering does not matter
-                # for directed graphs check that the other node is the source
-                if not edge.is_directed or other_node_edge_list_index == 0:
-                    in_adjacent_node_index = edge.node_indices[other_node_edge_list_index]
-                    in_adjacent_node_indices.append(in_adjacent_node_index)
-
-        return in_adjacent_node_indices
+        adjacency_matrix = self.get_adjacency_matrix()
+        return [i for i in range(len(adjacency_matrix)) if adjacency_matrix[node_index][i] == 1]
 
     def get_outgoing_adjacent_nodes(self, node_index: int) -> list[int]:
 
@@ -296,20 +258,8 @@ class Graph:
         if node_index < 0 or node_index > len(self.nodes) - 1:
             raise ValueError('The specified node index is out of range. Valid range: 0 - ' + str(len(self.nodes) - 1) + '. Given: ' + str(node_index) + '.')
 
-        out_adjacent_node_indices = []
-        for edge in self.edges:
-            if node_index in edge.node_indices:
-
-                # get the index of the other node in the edge node list
-                other_node_edge_list_index = (edge.node_indices.index(node_index) + 1) % 2
-
-                # in case of undirected graph ordering does not matter
-                # for directed graphs check that the other node is the receiver
-                if not edge.is_directed or other_node_edge_list_index == 1:
-                    out_adjacent_node_index = edge.node_indices[other_node_edge_list_index]
-                    out_adjacent_node_indices.append(out_adjacent_node_index)
-
-        return out_adjacent_node_indices
+        adjacency_matrix = self.get_adjacency_matrix()
+        return [i for i in range(len(adjacency_matrix)) if adjacency_matrix[i][node_index] == 1]
 
     def get_adjacency_matrix(self):
 
@@ -319,13 +269,7 @@ class Graph:
             list[list[float]]: The adjacency matrix.
         """
 
-        adjacency_matrix = []
-        for i in range(len(self.nodes)):
-            in_adjacent_node_indices = self.get_incoming_adjacent_nodes(i)
-            in_adjacency_vector = [1 if node_index in in_adjacent_node_indices else 0 for node_index in range(len(self.nodes))]
-            adjacency_matrix.append(in_adjacency_vector)
-
-        return adjacency_matrix
+        return nx.linalg.graphmatrix.adjacency_matrix(self.networkx_graph).transpose().toarray().tolist()
 
     def get_spectrum(self):
 
@@ -334,6 +278,7 @@ class Graph:
         Returns:
             list[float]: The spectrum.
         """
+
         eigen_values = np.linalg.eig(self.get_adjacency_matrix())[0].tolist()
         eigen_values.sort(reverse=True)
         return eigen_values
