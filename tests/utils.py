@@ -4,6 +4,7 @@ import unittest
 TEST_FILE_LALMER = './tests/files/LALMER.out'
 TEST_FILE_OREDIA = './tests/files/OREDIA.out'
 TEST_FILE_ZUYHEG = './tests/files/ZUYHEG.out'
+TEST_FILE_QM_DATA_OREDIA = './tests/files/OREDIA.qmdata'
 
 
 class Utils():

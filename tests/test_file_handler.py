@@ -1,8 +1,10 @@
+import os
+import pickle
 import unittest
 from parameterized import parameterized
 
 from nbo2graph.file_handler import FileHandler
-from tests.utils import TEST_FILE_LALMER
+from tests.utils import TEST_FILE_LALMER, TEST_FILE_QM_DATA_OREDIA, Utils
 
 
 class TestFileHandler(unittest.TestCase):
@@ -57,6 +59,73 @@ class TestFileHandler(unittest.TestCase):
     ])
     def test_write_file(self, content):
 
-        FileHandler.write_file('/tmp/nbo2graph-test-file.txt', content)
-        result = FileHandler.read_file('/tmp/nbo2graph-test-file.txt')
+        tmp_file_path = '/tmp/nbo2graph-test-file.txt'
+
+        FileHandler.write_file(tmp_file_path, content)
+        result = FileHandler.read_file(tmp_file_path)
         self.assertEqual(content, result)
+
+    @parameterized.expand([
+
+        [
+            './tests/files/not-existing-file',
+            FileNotFoundError
+        ],
+
+        [
+            './tests/files/',
+            IsADirectoryError
+        ],
+
+    ])
+    def test_read_binary_file_with_invalid_input(self, file_path, expected_error):
+
+        self.assertRaises(expected_error, FileHandler.read_binary_file, file_path)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_QM_DATA_OREDIA
+        ]
+
+    ])
+    def test_read_binary_file(self, file_path):
+
+        result = FileHandler.read_binary_file(file_path)
+
+        f = open(file_path, 'rb')
+        expected = pickle.load(f)
+        f.close()
+
+        Utils.assert_are_almost_equal(result, expected)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_QM_DATA_OREDIA
+        ]
+
+    ])
+    def test_write_binary_file(self, file_path):
+
+        tmp_file_path = '/tmp/nbo2graph-test-file.bin'
+
+        content = FileHandler.read_binary_file(file_path)
+        FileHandler.write_binary_file(tmp_file_path, content)
+
+        result = FileHandler.read_binary_file(tmp_file_path)
+        Utils.assert_are_almost_equal(content, result)
+
+    @parameterized.expand([
+
+        [
+        ]
+
+    ])
+    def test_clear_directory(self):
+
+        FileHandler.write_file('/tmp/nbo2graph-test-file.txt', 'asdfasf')
+        FileHandler.clear_directory('/tmp/', ['nbo2graph-test-file.txt', 'nbo2graph-test-file2.txt'])
+
+        self.assertFalse(os.path.isfile('/tmp/nbo2graph-test-file.txt'))
+        self.assertFalse(os.path.isfile('/tmp/nbo2graph-test-file2.txt'))

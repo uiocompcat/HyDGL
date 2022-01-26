@@ -5,6 +5,7 @@ from torch_geometric.data import Data
 
 from nbo2graph.edge import Edge
 from nbo2graph.node import Node
+from nbo2graph.tools import Tools
 from nbo2graph.element_look_up_table import ElementLookUpTable
 
 
@@ -113,7 +114,7 @@ class Graph:
         """Getter for a list of edge features."""
         return [x.features for x in self._edges]
 
-    def get_pytorch_data_object(self) -> Data:
+    def get_pytorch_data_object(self, edge_class_feature_dict={}) -> Data:
 
         """Generates a pytorch data object ready to use for learning/visualisation.
 
@@ -121,12 +122,24 @@ class Graph:
             torch_geometric.data.Data: Pytorch data object containing nodes, edges and edge features.
         """
 
-        # set up pytorch object for edges
-        # include reverse edges (to account for both directions)
-        edge_indices = torch.tensor(self.edges_indices_list + [list(reversed(x)) for x in self.edges_indices_list], dtype=torch.long)
-        # set up pytorch object for edge features
-        # duplicated list to account for the targets of the additional reverse edges
-        edge_features = torch.tensor(self.edges_features_list * 2, dtype=torch.float)
+        edge_indices = []
+        edge_features = []
+        for edge in self.edges:
+
+            # if directed add only once
+            if edge.is_directed:
+                edge_indices.append(edge.node_indices)
+                edge_features.append(Tools.get_one_hot_encoded_feature_list(edge.features, edge_class_feature_dict))
+            # if undirected add twice to account for both directions
+            else:
+                edge_indices.append(edge.node_indices)
+                edge_indices.append(list(reversed(edge.node_indices)))
+                edge_features.append(Tools.get_one_hot_encoded_feature_list(edge.features, edge_class_feature_dict))
+                edge_features.append(Tools.get_one_hot_encoded_feature_list(edge.features, edge_class_feature_dict))
+
+        # cast to pytorch tensor
+        edge_indices = torch.tensor(edge_indices, dtype=torch.long)
+        edge_features = torch.tensor(edge_features, dtype=torch.float)
 
         # set up pytorch object for nodes
         node_features = torch.tensor(self.nodes_features_list, dtype=torch.float)

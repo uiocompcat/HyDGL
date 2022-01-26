@@ -1,67 +1,24 @@
 class Tools:
 
     @staticmethod
-    def get_one_hot_encoded_feature_lists(feature_lists):
+    def get_one_hot_encoded_feature_list(feature_list: list, class_feature_dict: dict):
 
-        """Takes a list of feature lists and replaces non-numerical values with appropriate one-hot encoded representations.
-
-        Raises:
-            ValueError: If the individual feature lists have different lengths.
+        """Gets the one-hot encoding of a given feature list according to a given dict.
 
         Returns:
-            list[float]: Returns the corresponding feature list with one-hot encoded values.
+            list[float]: The one-hot encoded feature list.
         """
 
-        # check that all feature lists have the same length
-        for feature_list in feature_lists:
-            if len(feature_list) != len(feature_lists[0]):
-                raise ValueError('The provided feature lists have differing lengths.')
+        one_hot_encoded_feature_list = []
 
-        # get indices of features that are not numeric and need to be one-hot encoded
-        class_feature_indices = []
-        for i in range(len(feature_lists[0])):
-            if not type(feature_lists[0][i]) == int and not type(feature_lists[0][i]) == float:
-                class_feature_indices.append(i)
+        for i in range(len(feature_list)):
 
-        # replace features with one-hot encoding
-        for class_feature_index in class_feature_indices:
+            if i in class_feature_dict.keys():
+                one_hot_encoded_feature_list.append(Tools.get_one_hot_encoding(len(class_feature_dict[i]), class_feature_dict[i].index(feature_list[i])))
+            else:
+                one_hot_encoded_feature_list.append(feature_list[i])
 
-            # get the individual feature list
-            feature_list = [x[class_feature_index] for x in feature_lists]
-            # get its one-hot encoding
-            one_hot_feature_list = Tools.get_one_hot_encoded_list(feature_list)
-
-            # change feature lists in place
-            for i in range(len(feature_lists)):
-                feature_lists[i][class_feature_index] = one_hot_feature_list[i]
-
-        # flatten all individual feature lists
-        for i in range(len(feature_lists)):
-            feature_lists[i] = Tools.flatten_list(feature_lists[i])
-
-        return feature_lists
-
-    @staticmethod
-    def get_one_hot_encoded_list(input_list: list[str]):
-
-        """Gets the one-hot encoded version of a list of class features of the same type.
-
-        Returns:
-            list[list[int]]: The one-hot encoded feature list.
-        """
-
-        # get all classes
-        class_list = []
-        for item in input_list:
-            if item not in class_list:
-                class_list.append(item)
-
-        # build one-hot encoded list
-        output_list = []
-        for item in input_list:
-            output_list.append(Tools.get_one_hot_encoding(len(class_list), class_list.index(item)))
-
-        return output_list
+        return Tools.flatten_list(one_hot_encoded_feature_list)
 
     @staticmethod
     def get_one_hot_encoding(n_classes: int, class_number: int):
@@ -83,6 +40,24 @@ class Tools:
             return []
 
         return [1 if x == class_number else 0 for x in list(range(n_classes))]
+
+    @staticmethod
+    def get_class_feature_indices(feature_list):
+
+        """Takes a feature list a determines at which positions non-numerical class features are used.
+
+        Returns:
+            list[int]: A list with indices denoting at which positions non-numerical class features are used.
+        """
+
+        class_feature_indices = []
+
+        # get indices of features that are not numeric and need to be one-hot encoded
+        for i in range(len(feature_list)):
+            if not type(feature_list[i]) == int and not type(feature_list[i]) == float:
+                class_feature_indices.append(i)
+
+        return class_feature_indices
 
     @staticmethod
     def flatten_list(input_list):

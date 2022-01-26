@@ -580,7 +580,7 @@ class DataParser:
             line_split = self.lines[i].split()
             if len(line_split) > 6:
 
-                nbo_ids = list(map(int, re.findall(r'([0-9]{1,5})\. [A-Z]{2}', self.lines[i])))
+                nbo_ids = list(map(int, re.findall(r'([0-9]{1,5})\. [A-Z,0-9]{2}', self.lines[i])))
                 energies = list(map(float, line_split[-3:]))
 
                 sopa_data.append([nbo_ids, energies])
