@@ -5,6 +5,7 @@ TEST_FILE_LALMER = './tests/files/LALMER.out'
 TEST_FILE_OREDIA = './tests/files/OREDIA.out'
 TEST_FILE_ZUYHEG = './tests/files/ZUYHEG.out'
 TEST_FILE_QM_DATA_OREDIA = './tests/files/OREDIA.qmdata'
+TEST_FILE_JSON = './tests/files/test-file.json'
 
 
 class Utils():
@@ -21,7 +22,7 @@ class Utils():
         Utils.tc.assertEqual(type(a), type(b))
 
         # check if not list
-        if a is None or type(a) in [str, int, float, bool]:
+        if a is None or type(a) in [str, int, float, bool, dict]:
             Utils.tc.assertAlmostEqual(a, b, places=places)
             # return a == b
         elif type(a) == list or type(a) == tuple:
