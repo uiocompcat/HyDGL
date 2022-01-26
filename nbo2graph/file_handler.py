@@ -43,9 +43,8 @@ class FileHandler:
             data (): The file content to write.
         """
 
-        f = open(file_path, 'w')
-        f.write(data)
-        f.close()
+        with open(file_path, 'w') as f:
+            f.write(data)
 
     @staticmethod
     def read_binary_file(file_path):
@@ -84,9 +83,8 @@ class FileHandler:
             data (): The file content to write.
         """
 
-        f = open(file_path, 'wb')
-        pickle.dump(data, f)
-        f.close()
+        with open(file_path, 'wb') as f:
+            pickle.dump(data, f)
 
     @staticmethod
     def clear_directory(directory: str, file_names: list[str]):
