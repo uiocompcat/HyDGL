@@ -98,7 +98,7 @@ class DataParser:
                 qm_data['hyper_node_data'] = self._extract_hyper_node_data(i + 7)
 
             if 'SECOND ORDER PERTURBATION THEORY ANALYSIS' in self.lines[i]:
-                qm_data['sopa_data'], i = self._extract_sopa_data(i + 9)
+                qm_data['sopa_data'], i = self._extract_sopa_data(i + 8)
 
             if 'Atom I' in self.lines[i]:
                 qm_data['lmo_bond_order_matrix'], i = self._extract_lmo_bond_data(i + 1)
