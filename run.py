@@ -11,29 +11,29 @@ from nbo2graph.enums.node_feature import NodeFeature
 from nbo2graph.enums.qm_target import QmTarget
 from nbo2graph.enums.sopa_edge_feature import SopaEdgeFeature
 from nbo2graph.enums.sopa_resolution_mode import SopaResolutionMode
+from nbo2graph.file_handler import FileHandler
 from nbo2graph.graph import Graph
 from nbo2graph.node import Node
 from nbo2graph.graph_generator_settings import GraphGeneratorSettings
-from nbo2graph.datasets.tmQMg import tmQMg
+from nbo2graph.qm_data import QmData
+# from nbo2graph.datasets.tmQMg import tmQMg
 
-from nbo2graph.data_parser import DataParser
+from scripts.data_parser import DataParser
 from nbo2graph.graph_generator import GraphGenerator
 
 # import networkx as nx
 # import matplotlib.pyplot as plt
-# from torch_geometric.utils.convert import to_networkx
+from torch_geometric.utils.convert import to_networkx
 
 
 def main():
 
     # setup target directory path
     path = '/home/hkneiding/Documents/UiO/Data/tmQM/raw/'
-    file_name = 'OREDIA.log'
-    qm_data = DataParser(path + file_name).parse_to_qm_data_object()
+    file_name = 'ZUYHEG.log'
+    qm_data = DataParser(path + file_name).parse()
 
-    # write to file
-    with open('/home/hkneiding/Desktop/OREDIA.qmdata', 'wb') as handle:
-        pickle.dump(qm_data, handle)
+    FileHandler.write_dict_to_json_file('/home/hkneiding/Desktop/ZUYHEG.json', qm_data)
 
     exit()
     # # load from file
@@ -228,6 +228,6 @@ def test_ml():
 # - - - entry point - - - #
 if __name__ == "__main__":
     # extract_tmqm()
-    # main()
+    main()
     # check_3c()
-    test_ml()
+    # test_ml()

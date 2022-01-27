@@ -1,9 +1,9 @@
 import unittest
 
 # constants pointing to test files
-TEST_FILE_LALMER = './tests/files/LALMER.out'
-TEST_FILE_OREDIA = './tests/files/OREDIA.out'
-TEST_FILE_ZUYHEG = './tests/files/ZUYHEG.out'
+TEST_FILE_LALMER = './tests/files/LALMER.json'
+TEST_FILE_OREDIA = './tests/files/OREDIA.json'
+TEST_FILE_ZUYHEG = './tests/files/ZUYHEG.json'
 TEST_FILE_QM_DATA_OREDIA = './tests/files/OREDIA.qmdata'
 TEST_FILE_JSON = './tests/files/test-file.json'
 
@@ -17,7 +17,7 @@ class Utils():
     @staticmethod
     def assert_are_almost_equal(a, b, places=5):
 
-        """Deep asserts almost equality between two items (can be multidim lists or objects)."""
+        """Deep asserts almost equality between two items (can be multidim lists, dicts or objects)."""
 
         Utils.tc.assertEqual(type(a), type(b))
 

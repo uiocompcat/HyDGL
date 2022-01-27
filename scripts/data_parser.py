@@ -1,9 +1,6 @@
 import re
 from operator import add
 
-from nbo2graph.qm_data import QmData
-from nbo2graph.file_handler import FileHandler
-
 
 class DataParser:
 
@@ -14,11 +11,13 @@ class DataParser:
         """Constructor
 
         Args:
-            file_path (string): Path to the Gaussian output file.
+            file_path (string): Path to the output file.
         """
 
         self.file_path = file_path
-        self.lines = FileHandler.read_file(file_path).split('\n')
+
+        with open(file_path, 'r') as f:
+            self.lines = f.read().split('\n')
         self.n_atoms = self._get_number_of_atoms()
 
     def _get_number_of_atoms(self):
@@ -35,16 +34,6 @@ class DataParser:
                 return int(line_split[n_atomsIndex])
 
         raise Exception('Could not find number of atoms in file.')
-
-    def parse_to_qm_data_object(self):
-
-        """Parses a Gaussian output file to a QmData object.
-
-        Returns:
-            QmData: A QmData object containing extracted information from the Gaussian output file.
-        """
-
-        return QmData.from_dict(self.parse())
 
     def parse(self):
 
@@ -89,10 +78,10 @@ class DataParser:
                 qm_data['nlmo_bond_order_matrix'], i = self._extract_index_matrix(i + 4)
 
             if 'Bond orbital / Coefficients / Hybrids' in self.lines[i]:
-                qm_data['nbo_data'], i = self._extract_nbo_data(i + 2)
+                nbo_entries, i = self._extract_nbo_data(i + 2)
 
             if 'NATURAL BOND ORBITALS' in self.lines[i]:
-                qm_data['nbo_energies'], i = self._extract_nbo_energies(i + 7)
+                nbo_energies, i = self._extract_nbo_energies(i + 7)
 
             if '3-Center, 4-Electron A:-B-:C Hyperbonds (A-B :C <=> A: B-C)' in self.lines[i]:
                 qm_data['hyper_node_data'] = self._extract_hyper_node_data(i + 7)
@@ -173,6 +162,8 @@ class DataParser:
                         qm_data['tzvp_virtual_orbital_energies'] = self._extract_orbital_energies(i)
                     else:
                         qm_data['tzvp_virtual_orbital_energies'].extend(self._extract_orbital_energies(i))
+
+        qm_data['nbo_data'] = self._merge_nbo_data(nbo_entries, nbo_energies)
 
         return qm_data
 
@@ -479,9 +470,10 @@ class DataParser:
         merged_lines = (self.lines[start_index] + self.lines[start_index + 1]).replace(' ', '')
         occupations = self._get_nbo_occupations(merged_lines)
 
-        # return id, atom position, occupation and percent occupations
+        # return id, atom position, contribution, occupation and percent occupations
         # divide occupations by 100 (get rid of %)
-        return [id, nbo_type, atom_position, full_occupation, [x / 100 for x in occupations]]
+        # for one atom NBOs the contribution is simply a list with one entry 1.
+        return [id, nbo_type, atom_position, [1], full_occupation, [x / 100 for x in occupations]]
 
     def _extract_bonding_data(self, start_index: int):
 
@@ -605,3 +597,43 @@ class DataParser:
             i += 1
 
         return three_center_nbos
+
+    def _merge_nbo_data(self, nbo_entries: list, nbo_energies: list) -> list[list]:
+
+        """Merges NBO entries (energies and occupations) and stores them as a list of lists.
+
+        Returns:
+            list[list]: The list of NBO entries
+        """
+
+        nbo_data = []
+
+        # readout IDs of energies to match energies to corresponding nbo entries
+        energy_ids = [x[0] for x in nbo_energies]
+        for i in range(len(nbo_entries)):
+
+            # get the index of the ID of the current nbo data point
+            nbo_energy_index = energy_ids.index(nbo_entries[i][0])
+            nbo_energy = nbo_energies[nbo_energy_index][1]
+
+            # # list assignment of NBO data
+            # 0: ID
+            # 1: NBO type
+            # 2: atom indices
+            # 3: energy
+            # 4: contributions
+            # 5: occupation
+            # 6: orbital occupations
+            nbo_data_point = [
+                nbo_entries[i][0],
+                nbo_entries[i][1],
+                nbo_entries[i][2],
+                nbo_energy,
+                nbo_entries[i][3],
+                nbo_entries[i][4],
+                nbo_entries[i][5],
+            ]
+
+            nbo_data.append(nbo_data_point)
+
+        return nbo_data

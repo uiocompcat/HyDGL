@@ -19,6 +19,19 @@ class NboDataPoint:
         self._orbital_occupations = orbital_occupations
         self._contributions = contributions
 
+    @classmethod
+    def from_list(cls, nbo_data: list):
+
+        """Overloaded constructor to initialise from ordered list."""
+
+        return cls(nbo_id=nbo_data[0],
+                   nbo_type=nbo_data[1],
+                   atom_indices=nbo_data[2],
+                   energy=nbo_data[3],
+                   contributions=nbo_data[4],
+                   occupation=nbo_data[5],
+                   orbital_occupations=nbo_data[6])
+
     @property
     def atom_indices(self):
         """Getter for atom_indices"""

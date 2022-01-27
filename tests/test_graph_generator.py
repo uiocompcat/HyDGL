@@ -1,9 +1,9 @@
 import unittest
 from parameterized import parameterized
+from nbo2graph.file_handler import FileHandler
 
 from nbo2graph.node import Node
 from nbo2graph.edge import Edge
-from nbo2graph.data_parser import DataParser
 from nbo2graph.enums.edge_feature import EdgeFeature
 from nbo2graph.enums.node_feature import NodeFeature
 from nbo2graph.enums.graph_feature import GraphFeature
@@ -16,6 +16,7 @@ from nbo2graph.graph_generator_settings import GraphGeneratorSettings
 from nbo2graph.enums.orbital_occupation_type import OrbitalOccupationType
 from nbo2graph.enums.sopa_edge_feature import SopaEdgeFeature
 from nbo2graph.enums.sopa_resolution_mode import SopaResolutionMode
+from nbo2graph.qm_data import QmData
 from tests.utils import Utils, TEST_FILE_LALMER, TEST_FILE_OREDIA, TEST_FILE_ZUYHEG
 
 
@@ -670,7 +671,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_nodes(self, file_path, hydrogen_mode, bond_order_mode, node_features, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator settings
         ggs = GraphGeneratorSettings.default(node_features=node_features,
@@ -794,7 +795,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_individual_node(self, file_path, hydrogen_mode, bond_order_mode, node_features, atom_index, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator settings
         ggs = GraphGeneratorSettings.default(node_features=node_features,
@@ -869,7 +870,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_edges(self, hydrogen_mode, edge_types, bond_order_mode, edge_features, bond_threshold, expected):
 
         # load data
-        qm_data = DataParser(TEST_FILE_LALMER).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(TEST_FILE_LALMER))
 
         # set up graph generator settings
         ggs = GraphGeneratorSettings.default(node_features=[],
@@ -898,7 +899,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_bound_atom_indices(self, atom_index, threshold, expected):
 
         # load data
-        qm_data = DataParser(TEST_FILE_LALMER).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(TEST_FILE_LALMER))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -918,7 +919,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_bound_atom_indices_with_invalid_input(self, atom_index, threshold):
 
         # load data
-        qm_data = DataParser(TEST_FILE_LALMER).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(TEST_FILE_LALMER))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -936,7 +937,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_bound_h_indices(self, atom_index, threshold, expected):
 
         # load data
-        qm_data = DataParser(TEST_FILE_LALMER).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(TEST_FILE_LALMER))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -956,7 +957,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_bound_h_indices_with_invalid_input(self, atom_index, threshold):
 
         # load data
-        qm_data = DataParser(TEST_FILE_LALMER).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(TEST_FILE_LALMER))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -974,7 +975,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_determine_hydrogen_count(self, atom_index, expected):
 
         # load data
-        qm_data = DataParser(TEST_FILE_LALMER).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(TEST_FILE_LALMER))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -1004,7 +1005,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_graph_features(self, graph_features, expected):
 
         # load data
-        qm_data = DataParser(TEST_FILE_LALMER).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(TEST_FILE_LALMER))
 
         # set up graph generator settings
         ggs = GraphGeneratorSettings.default(graph_features=graph_features)
@@ -1119,7 +1120,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_targets(self, file_path, targets, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator settings
         ggs = GraphGeneratorSettings.default(targets=targets)
@@ -1266,10 +1267,10 @@ class TestGraphGenerator(unittest.TestCase):
         ],
 
     ])
-    def test_get_adjacency_list(self, file, hydrogen_mode, edge_types, bond_order_mode, bond_threshold, bond_threshold_metal, expected):
+    def test_get_adjacency_list(self, file_path, hydrogen_mode, edge_types, bond_order_mode, bond_threshold, bond_threshold_metal, expected):
 
         # load data
-        qm_data = DataParser(file).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator settings
         ggs = GraphGeneratorSettings.default(edge_types=edge_types, bond_order_mode=bond_order_mode, bond_threshold=bond_threshold, bond_threshold_metal=bond_threshold_metal, hydrogen_mode=hydrogen_mode)
@@ -1378,7 +1379,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_featurised_edge(self, bond_indices, edge_features, expected):
 
         # load data
-        qm_data = DataParser(TEST_FILE_LALMER).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(TEST_FILE_LALMER))
 
         # set up graph generator settings
         ggs = GraphGeneratorSettings.default(edge_features=edge_features)
@@ -1449,7 +1450,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_edge_features(self, file_path, bond_indices, edge_features, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator settings
         ggs = GraphGeneratorSettings.default(edge_features=edge_features)
@@ -1478,7 +1479,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_hydride_hydrogen_indices(self, file_path, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -1504,7 +1505,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_hydride_bonds_indices(self, file_path, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -1607,7 +1608,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_determine_hydrogen_position_offset(self, file_path, atom_index, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -1660,7 +1661,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_adjust_node_references(self, file_path, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default(hydrogen_mode=HydrogenMode.OMIT,
@@ -1682,7 +1683,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_index_matrix(self, file_path):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default(bond_order_mode=BondOrderType.WIBERG))
@@ -1734,7 +1735,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_nodes_to_extract_indices(self, file_path, hydrogen_mode, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default(hydrogen_mode=hydrogen_mode))
@@ -1795,7 +1796,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_node_labels(self, file_path, hydrogen_mode, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default(hydrogen_mode=hydrogen_mode))
@@ -2084,7 +2085,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_node_positions(self, file_path, hydrogen_mode, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default(hydrogen_mode=hydrogen_mode))
@@ -2124,7 +2125,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_is_hydrogen(self, file_path, atom_index, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -2170,7 +2171,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_is_metal(self, file_path, atom_index, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -2203,7 +2204,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_is_hydrogen_bond(self, file_path, atom_indices, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -2224,7 +2225,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_is_hydrogen_bond_with_invalid_input(self, file_path, atom_indices, expected_error):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -2249,7 +2250,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_is_metal_bond(self, file_path, atom_indices, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -2270,7 +2271,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_is_metal_bond_with_invalid_input(self, file_path, atom_indices, expected_error):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -2295,7 +2296,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_contains_hydrogen(self, file_path, atom_indices, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -2322,7 +2323,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_contains_metal(self, file_path, atom_indices, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -2355,7 +2356,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_atom_indices_from_nbo_id(self, file_path, nbo_id, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -2398,7 +2399,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_select_atom_indices_from_nbo_id(self, file_path, nbo_id, sopa_contribution_threshold, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default(sopa_contribution_threshold=sopa_contribution_threshold))
@@ -2443,7 +2444,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_nbo_type_from_nbo_id(self, file_path, nbo_id, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -2516,7 +2517,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_sopa_adjacency_list(self, file_path, sopa_contribution_threshold, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default(sopa_contribution_threshold=sopa_contribution_threshold))
@@ -2577,7 +2578,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_sopa_edges(self, file_path, sopa_interaction_threshold, edge_features, sopa_edge_features, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default(edge_features=edge_features,
@@ -2608,7 +2609,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_average_orbital_occupations(self, file_path, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default())
@@ -2655,7 +2656,7 @@ class TestGraphGenerator(unittest.TestCase):
     def test_get_default_orbital_occupations(self, file_path, node_features, edge_features, orbital_occupation_type, expected):
 
         # load data
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
         gg = GraphGenerator(GraphGeneratorSettings.default(node_features, edge_features))

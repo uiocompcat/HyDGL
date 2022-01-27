@@ -39,7 +39,6 @@ class QmData():
                  lmo_bond_order_matrix: list[list[float]],
                  nlmo_bond_order_matrix: list[list[float]],
                  nbo_data: list[list],
-                 nbo_energies: list[list],
                  sopa_data) -> None:
 
         # misc
@@ -100,9 +99,8 @@ class QmData():
         # nbo bond data
         self.nlmo_bond_order_matrix = nlmo_bond_order_matrix
 
-        # merge nbo data with corresponding energies
-        self.nbo_data = self._merge_nbo_data(nbo_data, nbo_energies)
-
+        # NBO data
+        self.nbo_data = [NboDataPoint.from_list(nbo_data_point) for nbo_data_point in nbo_data]
         # data for NBO SOPA
         self.sopa_data = sopa_data
 
@@ -143,7 +141,6 @@ class QmData():
                    lmo_bond_order_matrix=qm_data_dict['lmo_bond_order_matrix'],
                    nlmo_bond_order_matrix=qm_data_dict['nlmo_bond_order_matrix'],
                    nbo_data=qm_data_dict['nbo_data'],
-                   nbo_energies=qm_data_dict['nbo_energies'],
                    sopa_data=qm_data_dict['sopa_data'])
 
     @property
@@ -220,50 +217,6 @@ class QmData():
     def homo_lumo_gap_delta(self):
         """Getter for the HOMO-LUMO SVP-TZVP delta."""
         return abs(self.svp_homo_lumo_gap - self.tzvp_homo_lumo_gap)
-
-    def _merge_nbo_data(self, nbo_data, nbo_energies):
-
-        """Merges NBO entries (energies and occupations) and stores them in terms of custom data types.
-
-        Returns:
-            list[NboDataPoint]: The list of NBO entries
-        """
-
-        merged_nbo_data = []
-
-        # readout IDs of energies to match energies to corresponding nbo entries
-        energy_ids = [x[0] for x in nbo_energies]
-        for i in range(len(nbo_data)):
-
-            # get the index of the ID of the current nbo data point
-            nbo_energy_index = energy_ids.index(nbo_data[i][0])
-            nbo_energy = nbo_energies[nbo_energy_index][1]
-
-            # distinction between single atom and multiple atom NBOs to properly
-            # set contribution values.
-            if nbo_data[i][1] == 'LP' or nbo_data[i][1] == 'LV':
-
-                nbo_data_point = NboDataPoint(nbo_id=nbo_data[i][0],
-                                              nbo_type=nbo_data[i][1],
-                                              atom_indices=nbo_data[i][2],
-                                              energy=nbo_energy,
-                                              occupation=nbo_data[i][3],
-                                              orbital_occupations=nbo_data[i][4],
-                                              contributions=[1])
-
-            else:
-
-                nbo_data_point = NboDataPoint(nbo_id=nbo_data[i][0],
-                                              nbo_type=nbo_data[i][1],
-                                              atom_indices=nbo_data[i][2],
-                                              energy=nbo_energy,
-                                              occupation=nbo_data[i][4],
-                                              orbital_occupations=nbo_data[i][5],
-                                              contributions=nbo_data[i][3])
-
-            merged_nbo_data.append(nbo_data_point)
-
-        return merged_nbo_data
 
     def _set_nbo_individual_lists(self):
 

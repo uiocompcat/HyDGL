@@ -1,9 +1,10 @@
 import unittest
 from parameterized import parameterized
 
-from tests.utils import Utils, TEST_FILE_LALMER, TEST_FILE_OREDIA
-from nbo2graph.data_parser import DataParser
+from nbo2graph.qm_data import QmData
 from nbo2graph.enums.nbo_type import NboType
+from nbo2graph.file_handler import FileHandler
+from tests.utils import Utils, TEST_FILE_QM_DATA_OREDIA
 
 
 class TestQmData(unittest.TestCase):
@@ -11,17 +12,13 @@ class TestQmData(unittest.TestCase):
     @parameterized.expand([
 
         [
-            TEST_FILE_LALMER,
+            TEST_FILE_QM_DATA_OREDIA,
         ],
-
-        [
-            TEST_FILE_OREDIA,
-        ]
 
     ])
     def test_get_nbo_data_by_type(self, file_path):
 
-        qm_data = DataParser(file_path).parse_to_qm_data_object()
+        qm_data: QmData = FileHandler.read_binary_file(file_path)
 
         Utils.assert_are_almost_equal(qm_data.get_nbo_data_by_type(NboType.LONE_PAIR), qm_data.lone_pair_data)
         Utils.assert_are_almost_equal(qm_data.get_nbo_data_by_type(NboType.LONE_VACANCY), qm_data.lone_vacancy_data)
