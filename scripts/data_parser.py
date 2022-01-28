@@ -15,7 +15,6 @@ class DataParser:
         """
 
         self.file_path = file_path
-
         with open(file_path, 'r') as f:
             self.lines = f.read().split('\n')
         self.n_atoms = self._get_number_of_atoms()
