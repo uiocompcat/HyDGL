@@ -3,7 +3,6 @@ import warnings
 import numpy as np
 import networkx as nx
 from torch_geometric.data import Data
-from torch_geometric.utils.convert import to_networkx
 
 from nbo2graph.edge import Edge
 from nbo2graph.node import Node
@@ -117,9 +116,59 @@ class Graph:
         return [x.features for x in self._edges]
 
     @property
-    def networkx_graph(self):
-        """Getter for networkx graph object."""
-        return to_networkx(data=self.get_pytorch_data_object())
+    def graph_type(self):
+        """Getter for is_directed."""
+        directed_edge_count = 0
+        for edge in self.edges:
+            if edge.is_directed:
+                directed_edge_count += 1
+
+        if directed_edge_count == len(self.edges):
+            return 'directed'
+        elif directed_edge_count == 0:
+            return 'undirected'
+        else:
+            return 'mixed'
+
+    def get_networkx_graph_object(self) -> nx.Graph:
+
+        """Generates a networkx graph object..
+
+        Returns:
+            networkx.Graph: networkx graph object.
+        """
+
+        if self.graph_type == 'directed':
+            nx_graph = nx.MultiDiGraph()
+        elif self.graph_type == 'undirected':
+            nx_graph = nx.MultiGraph()
+        else:
+            raise NotImplementedError('The graph has directed as well as undirected edges which is not supported by the networkx library.')
+
+        for i, node in enumerate(self.nodes):
+            if len(node.features) == 0:
+                nx_graph.add_node(i)
+            elif len(node.features) == 1:
+                nx_graph.add_node(i, x=node.features[0])
+            else:
+                nx_graph.add_node(i, x=node.features)
+
+        for i, edge in enumerate(self.edges):
+            if len(edge.features) == 0:
+                nx_graph.add_edge(edge.node_indices[0], edge.node_indices[1])
+            elif len(edge.features) == 1:
+                nx_graph.add_edge(edge.node_indices[0], edge.node_indices[1], edge_attr=edge.features[0])
+            else:
+                nx_graph.add_edge(edge.node_indices[0], edge.node_indices[1], edge_attr=edge.features)
+
+        if len(self.targets) == 0:
+            pass
+        elif len(self.targets) == 1:
+            nx_graph.graph['y'] = self.targets[0]
+        else:
+            nx_graph.graph['y'] = self.targets
+
+        return nx_graph
 
     def get_pytorch_data_object(self, edge_class_feature_dict={}) -> Data:
 
@@ -230,10 +279,8 @@ class Graph:
     def get_incoming_adjacent_nodes(self, node_index: int) -> list[int]:
 
         """Gets the indices of incoming adjacent (with edges pointing to them) nodes.
-
         Raises:
             ValueError: If the specified node is out of the valid range (either less than zero or higher than the number of nodes).
-
         Returns:
             list[int]: List of node indices denoting the incoming adjacent nodes.
         """
@@ -241,16 +288,26 @@ class Graph:
         if node_index < 0 or node_index > len(self.nodes) - 1:
             raise ValueError('The specified node index is out of range. Valid range: 0 - ' + str(len(self.nodes) - 1) + '. Given: ' + str(node_index) + '.')
 
-        adjacency_matrix = self.get_adjacency_matrix()
-        return [i for i in range(len(adjacency_matrix)) if adjacency_matrix[node_index][i] == 1]
+        in_adjacent_node_indices = []
+        for edge in self.edges:
+            if node_index in edge.node_indices:
+
+                # get the index of the other node in the edge node list
+                other_node_edge_list_index = (edge.node_indices.index(node_index) + 1) % 2
+
+                # in case of undirected graph ordering does not matter
+                # for directed graphs check that the other node is the source
+                if not edge.is_directed or other_node_edge_list_index == 0:
+                    in_adjacent_node_index = edge.node_indices[other_node_edge_list_index]
+                    in_adjacent_node_indices.append(in_adjacent_node_index)
+
+        return in_adjacent_node_indices
 
     def get_outgoing_adjacent_nodes(self, node_index: int) -> list[int]:
 
         """Gets the indices of outgoing adjacent (with edges pointing to them) nodes.
-
         Raises:
             ValueError: If the specified node is out of the valid range (either less than zero or higher than the number of nodes).
-
         Returns:
             list[int]: List of node indices denoting the outgoing adjacent nodes.
         """
@@ -258,8 +315,20 @@ class Graph:
         if node_index < 0 or node_index > len(self.nodes) - 1:
             raise ValueError('The specified node index is out of range. Valid range: 0 - ' + str(len(self.nodes) - 1) + '. Given: ' + str(node_index) + '.')
 
-        adjacency_matrix = self.get_adjacency_matrix()
-        return [i for i in range(len(adjacency_matrix)) if adjacency_matrix[i][node_index] == 1]
+        out_adjacent_node_indices = []
+        for edge in self.edges:
+            if node_index in edge.node_indices:
+
+                # get the index of the other node in the edge node list
+                other_node_edge_list_index = (edge.node_indices.index(node_index) + 1) % 2
+
+                # in case of undirected graph ordering does not matter
+                # for directed graphs check that the other node is the receiver
+                if not edge.is_directed or other_node_edge_list_index == 1:
+                    out_adjacent_node_index = edge.node_indices[other_node_edge_list_index]
+                    out_adjacent_node_indices.append(out_adjacent_node_index)
+
+        return out_adjacent_node_indices
 
     def get_adjacency_matrix(self):
 
@@ -269,7 +338,13 @@ class Graph:
             list[list[float]]: The adjacency matrix.
         """
 
-        return nx.linalg.graphmatrix.adjacency_matrix(self.networkx_graph).transpose().toarray().tolist()
+        adjacency_matrix = []
+        for i in range(len(self.nodes)):
+            in_adjacent_node_indices = self.get_incoming_adjacent_nodes(i)
+            in_adjacency_vector = [1 if node_index in in_adjacent_node_indices else 0 for node_index in range(len(self.nodes))]
+            adjacency_matrix.append(in_adjacency_vector)
+
+        return adjacency_matrix
 
     def get_spectrum(self):
 

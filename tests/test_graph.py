@@ -1,5 +1,6 @@
 import unittest
 import torch
+import networkx as nx
 from torch_geometric.data import Data
 from parameterized import parameterized
 
@@ -299,3 +300,95 @@ class TestGraph(unittest.TestCase):
     def test_get_node_label_dict(self, graph, expected):
 
         self.assertEqual(graph.get_node_label_dict(), expected)
+
+    @parameterized.expand([
+
+        [
+            Graph(
+                [Node(), Node()],
+                [Edge([0, 1])],
+                targets=[]
+            ),
+            {
+                'graph': nx.MultiGraph(),
+                'targets': [],
+                'nodes': [(0), (1)],
+                'edges': [(0, 1)]
+            },
+        ],
+
+        [
+            Graph(
+                [Node(features=[0]), Node(features=[1])],
+                [Edge([0, 1], features=[-2])],
+                targets=[12.34]
+            ),
+            {
+                'graph': nx.MultiGraph(),
+                'targets': 12.34,
+                'nodes': [(0, {'x': 0}), (1, {'x': 1})],
+                'edges': [(0, 1, {'edge_attr': -2})]
+            },
+        ],
+
+        [
+            Graph(
+                [Node(features=[0, 1]), Node(features=[1, 0])],
+                [Edge([0, 1], features=[-2, 2])],
+                targets=[12.34, 23.45, 34.56]
+            ),
+            {
+                'graph': nx.MultiGraph(),
+                'targets': [12.34, 23.45, 34.56],
+                'nodes': [(0, {'x': [0, 1]}), (1, {'x': [1, 0]})],
+                'edges': [(0, 1, {'edge_attr': [-2, 2]})]
+            },
+        ],
+
+        [
+            Graph(
+                [Node(features=[0, 1]), Node(features=[1, 0])],
+                [Edge([0, 1], features=[-2, 2], is_directed=True)],
+                targets=[12.34, 23.45, 34.56]
+            ),
+            {
+                'graph': nx.MultiDiGraph(),
+                'targets': [12.34, 23.45, 34.56],
+                'nodes': [(0, {'x': [0, 1]}), (1, {'x': [1, 0]})],
+                'edges': [(0, 1, {'edge_attr': [-2, 2]})]
+            },
+        ],
+
+    ])
+    def test_get_networkx_graph_object(self, graph, expected):
+
+        # setup expected graph
+        expected_graph = expected['graph']
+
+        if not expected['targets'] == []:
+            expected_graph.graph['y'] = expected['targets']
+        expected_graph.add_nodes_from(expected['nodes'])
+        expected_graph.add_edges_from(expected['edges'])
+
+        result: nx.MultiGraph = graph.get_networkx_graph_object()
+
+        Utils.tc.assertEqual(type(result), type(expected_graph))
+        Utils.assert_are_almost_equal(result.graph, expected_graph.graph)
+        Utils.assert_are_almost_equal(list(result.nodes(data=True)), list(expected_graph.nodes(data=True)))
+        Utils.assert_are_almost_equal(list(result.edges(data=True)), list(expected_graph.edges(data=True)))
+
+    @parameterized.expand([
+
+        [
+            Graph(
+                [Node(), Node(), Node()],
+                [Edge([0, 1]), Edge([1, 2], is_directed=True)],
+                targets=[]
+            ),
+            NotImplementedError
+        ],
+
+    ])
+    def test_get_networkx_graph_object_with_invalid_data(self, graph, expected_exception):
+
+        Utils.tc.assertRaises(expected_exception, graph.get_networkx_graph_object)
