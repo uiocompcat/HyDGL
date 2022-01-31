@@ -22,9 +22,10 @@ class Utils():
         Utils.tc.assertEqual(type(a), type(b))
 
         # check if not list
-        if a is None or type(a) in [str, int, float, bool, dict]:
+        if a is None or type(a) in [str, int, float, bool]:
             Utils.tc.assertAlmostEqual(a, b, places=places)
-            # return a == b
+        elif type(a) == dict:
+            Utils.dict_are_almost_equal(a, b, places=places)
         elif type(a) == list or type(a) == tuple:
 
             # check length
@@ -35,6 +36,19 @@ class Utils():
                 Utils.assert_are_almost_equal(a_, b_, places=places)
         else:
             Utils.object_are_almost_equal(a, b, places=places)
+
+    @staticmethod
+    def dict_are_almost_equal(a, b, places=5):
+
+        """Equality operator for dicts."""
+
+        keys_a = sorted(a.keys())
+        keys_b = sorted(b.keys())
+
+        Utils.tc.assertEqual(keys_a, keys_b)
+
+        for key in keys_a:
+            Utils.assert_are_almost_equal(a[key], b[key], places=places)
 
     @staticmethod
     def object_are_almost_equal(a, b, places=5):
