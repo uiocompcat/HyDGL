@@ -639,7 +639,7 @@ class GraphGenerator:
             node_features.append(qm_data.wiberg_bond_order_totals[i])
         # LMO mode
         if NodeFeature.LMO_BOND_ORDER_TOTAL in self._settings.node_features:
-            node_features.append(qm_data.lmo_bond_order_matrix[i])
+            node_features.append(qm_data.lmo_bond_order_totals[i])
         # NLMO mode
         if NodeFeature.NLMO_BOND_ORDER_TOTAL in self._settings.node_features:
             node_features.append(qm_data.nlmo_bond_order_totals[i])
