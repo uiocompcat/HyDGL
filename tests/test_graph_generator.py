@@ -1297,6 +1297,25 @@ class TestGraphGenerator(unittest.TestCase):
             ]
         ],
 
+        [
+            TEST_FILE_ZUYHEG,
+            HydrogenMode.EXPLICIT,
+            [EdgeType.NBO_BONDING_ORBITALS],
+            BondOrderType.WIBERG,
+            1,
+            0.3,
+            [
+                [0, 12], [0, 14], [1, 2], [1, 5], [1, 10], [1, 22], [2, 3],
+                [2, 7], [2, 23], [3, 4], [3, 7], [3, 16], [4, 5], [4, 8], [4, 24],
+                [5, 9], [5, 25], [6, 7], [6, 10], [6, 26], [7, 8], [7, 11],
+                [7, 27], [8, 9], [8, 28], [9, 10], [9, 11], [9, 29], [10, 11],
+                [10, 30], [11, 31], [12, 13], [14, 15], [16, 17], [16, 32],
+                [17, 18], [17, 33], [18, 19], [18, 20], [18, 21], [19, 34],
+                [19, 35], [19, 36], [20, 37], [20, 38], [20, 39], [21, 40],
+                [21, 41], [21, 42]
+            ]
+        ],
+
     ])
     def test_get_adjacency_list(self, file_path, hydrogen_mode, edge_types, bond_order_mode, bond_threshold, bond_threshold_metal, expected):
 
