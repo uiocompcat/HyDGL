@@ -1168,6 +1168,21 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             TEST_FILE_LALMER,
+            HydrogenMode.IMPLICIT,
+            [EdgeType.BOND_ORDER_METAL, EdgeType.BOND_ORDER_NON_METAL],
+            BondOrderType.LMO,
+            1,
+            1,
+            [
+                [2, 3], [3, 4], [3, 9], [4, 5], [5, 6], [8, 9], [8, 13],
+                [9, 10], [10, 11], [11, 12], [12, 13], [13, 19], [14, 15],
+                [14, 19], [15, 16], [15, 21], [16, 17], [17, 18], [18, 19],
+                [20, 21], [21, 22], [22, 23], [23, 24], [26, 29], [26, 30]
+            ]
+        ],
+
+        [
+            TEST_FILE_LALMER,
             HydrogenMode.EXPLICIT,
             [EdgeType.BOND_ORDER_METAL, EdgeType.BOND_ORDER_NON_METAL],
             BondOrderType.NLMO,
@@ -1197,6 +1212,22 @@ class TestGraphGenerator(unittest.TestCase):
                 [18, 40], [20, 21], [20, 24], [21, 22], [22, 23], [23, 24],
                 [23, 35], [24, 25], [25, 38], [25, 39], [25, 43], [26, 27],
                 [26, 28], [26, 29], [26, 30]
+            ]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            HydrogenMode.IMPLICIT,
+            [EdgeType.NBO_BONDING_ORBITALS],
+            BondOrderType.WIBERG,
+            1,
+            1,
+            [
+                [2, 3], [2, 6], [3, 4], [3, 9], [4, 5], [5, 6], [6, 7], [8, 9],
+                [8, 13], [9, 10], [10, 11], [11, 12], [12, 13], [13, 19], [14, 15],
+                [14, 19], [15, 16], [15, 21], [16, 17], [17, 18], [18, 19], [20, 21],
+                [20, 24], [21, 22], [22, 23], [23, 24], [24, 25], [26, 27], [26, 28],
+                [26, 29], [26, 30]
             ]
         ],
 
