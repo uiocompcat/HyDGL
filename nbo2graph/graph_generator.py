@@ -983,9 +983,9 @@ class GraphGenerator:
                 target_list.append(qm_data.enthalpy_energy)
             elif self._settings.targets[i] == QmTarget.GIBBS_ENERGY:
                 target_list.append(qm_data.gibbs_energy)
-            elif self._settings.targets[i] == QmTarget.CORRECTED_ENTHALPY_ENERGY:
+            elif self._settings.targets[i] == QmTarget.ENTHALPY_ENERGY_CORRECTION:
                 target_list.append(qm_data.corrected_enthalpy_energy)
-            elif self._settings.targets[i] == QmTarget.CORRECTED_GIBBS_ENERGY:
+            elif self._settings.targets[i] == QmTarget.GIBBS_ENERGY_CORRECTION:
                 target_list.append(qm_data.corrected_gibbs_energy)
             elif self._settings.targets[i] == QmTarget.ELECTRONIC_ENERGY_DELTA:
                 target_list.append(qm_data.electronic_energy_delta)

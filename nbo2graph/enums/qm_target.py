@@ -40,8 +40,8 @@ class QmTarget(Enum):
     ZPE_CORRECTION = auto()
     ENTHALPY_ENERGY = auto()
     GIBBS_ENERGY = auto()
-    CORRECTED_ENTHALPY_ENERGY = auto()
-    CORRECTED_GIBBS_ENERGY = auto()
+    ENTHALPY_ENERGY_CORRECTION = auto()
+    GIBBS_ENERGY_CORRECTION = auto()
 
     # delta values
     DISPERSION_ENERGY_DELTA = auto()

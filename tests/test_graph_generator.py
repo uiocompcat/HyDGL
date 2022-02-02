@@ -1130,13 +1130,13 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             TEST_FILE_LALMER,
-            [QmTarget.CORRECTED_ENTHALPY_ENERGY],
+            [QmTarget.ENTHALPY_ENERGY_CORRECTION],
             [0.351473]
         ],
 
         [
             TEST_FILE_LALMER,
-            [QmTarget.CORRECTED_GIBBS_ENERGY],
+            [QmTarget.GIBBS_ENERGY_CORRECTION],
             [0.253781]
         ],
 
