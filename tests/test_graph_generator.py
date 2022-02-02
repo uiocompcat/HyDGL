@@ -1316,6 +1316,21 @@ class TestGraphGenerator(unittest.TestCase):
             ]
         ],
 
+        [
+            TEST_FILE_ZUYHEG,
+            HydrogenMode.IMPLICIT,
+            [EdgeType.NBO_BONDING_ORBITALS],
+            BondOrderType.WIBERG,
+            1,
+            0.3,
+            [
+                [0, 12], [0, 14], [1, 2], [1, 5], [1, 10], [2, 3], [2, 7], [3, 4],
+                [3, 7], [3, 16], [4, 5], [4, 8], [5, 9], [6, 7], [6, 10], [7, 8],
+                [7, 11], [8, 9], [9, 10], [9, 11], [10, 11], [12, 13], [14, 15],
+                [16, 17], [17, 18], [18, 19], [18, 20], [18, 21]
+            ]
+        ],
+
     ])
     def test_get_adjacency_list(self, file_path, hydrogen_mode, edge_types, bond_order_mode, bond_threshold, bond_threshold_metal, expected):
 
@@ -1443,6 +1458,20 @@ class TestGraphGenerator(unittest.TestCase):
         Utils.assert_are_almost_equal(result, expected, places=5)
 
     @parameterized.expand([
+
+        [
+            TEST_FILE_OREDIA,
+            [2, 5],
+            [EdgeFeature.LMO_BOND_ORDER],
+            [-0.0394236]
+        ],
+
+        [
+            TEST_FILE_OREDIA,
+            [2, 5],
+            [EdgeFeature.NLMO_BOND_ORDER],
+            [-0.0471]
+        ],
 
         [
             TEST_FILE_ZUYHEG,
