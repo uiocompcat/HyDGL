@@ -1022,6 +1022,48 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             TEST_FILE_LALMER,
+            [QmTarget.SVP_ELECTRONIC_ENERGY],
+            [-2711.31113930]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [QmTarget.TZVP_ELECTRONIC_ENERGY],
+            [-2713.37704931]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [QmTarget.ELECTRONIC_ENERGY_DELTA],
+            [2.06591001000015]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [QmTarget.SVP_HOMO_ENERGY],
+            [-0.31642]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [QmTarget.SVP_LUMO_ENERGY],
+            [-0.22836]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [QmTarget.TZVP_HOMO_ENERGY],
+            [-0.35379]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [QmTarget.TZVP_LUMO_ENERGY],
+            [-0.20437]
+        ],
+
+        [
+            TEST_FILE_LALMER,
             [QmTarget.POLARISABILITY],
             [334.01]
         ],
@@ -1036,6 +1078,12 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             [QmTarget.TZVP_DISPERSION_ENERGY],
             [-0.0751559981]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [QmTarget.DISPERSION_ENERGY_DELTA],
+            [0.0064316294]
         ],
 
         [
@@ -1078,6 +1126,18 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             [QmTarget.GIBBS_ENERGY],
             [-2711.057358]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [QmTarget.CORRECTED_ENTHALPY_ENERGY],
+            [0.351473]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [QmTarget.CORRECTED_GIBBS_ENERGY],
+            [0.253781]
         ],
 
         [
