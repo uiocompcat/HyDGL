@@ -161,22 +161,22 @@ class GraphGeneratorSettings:
         orbital_indices = []
 
         if mode == OrbitalOccupationType.LONE_PAIR:
-            if NodeFeature.LONE_PAIRS_S in self.node_features:
+            if NodeFeature.LONE_PAIR_S in self.node_features:
                 orbital_indices.append(0)
-            if NodeFeature.LONE_PAIRS_P in self.node_features:
+            if NodeFeature.LONE_PAIR_P in self.node_features:
                 orbital_indices.append(1)
-            if NodeFeature.LONE_PAIRS_D in self.node_features:
+            if NodeFeature.LONE_PAIR_D in self.node_features:
                 orbital_indices.append(2)
-            if NodeFeature.LONE_PAIRS_F in self.node_features:
+            if NodeFeature.LONE_PAIR_F in self.node_features:
                 orbital_indices.append(3)
         elif mode == OrbitalOccupationType.LONE_VACANCY:
-            if NodeFeature.LONE_VACANCIES_S in self.node_features:
+            if NodeFeature.LONE_VACANCY_S in self.node_features:
                 orbital_indices.append(0)
-            if NodeFeature.LONE_VACANCIES_P in self.node_features:
+            if NodeFeature.LONE_VACANCY_P in self.node_features:
                 orbital_indices.append(1)
-            if NodeFeature.LONE_VACANCIES_D in self.node_features:
+            if NodeFeature.LONE_VACANCY_D in self.node_features:
                 orbital_indices.append(2)
-            if NodeFeature.LONE_VACANCIES_F in self.node_features:
+            if NodeFeature.LONE_VACANCY_F in self.node_features:
                 orbital_indices.append(3)
         elif mode == OrbitalOccupationType.NATURAL_ELECTRON_CONFIGURATION:
             if NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S in self.node_features:

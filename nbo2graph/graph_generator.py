@@ -608,11 +608,11 @@ class GraphGenerator:
         node_features = []
 
         # add atomic number
-        if NodeFeature.ATOMIC_NUMBERS in self._settings.node_features:
+        if NodeFeature.ATOMIC_NUMBER in self._settings.node_features:
             node_features.append(qm_data.atomic_numbers[i])
 
         # add natural atomic charge
-        if NodeFeature.NATURAL_ATOMIC_CHARGES in self._settings.node_features:
+        if NodeFeature.NATURAL_ATOMIC_CHARGE in self._settings.node_features:
             node_features.append(qm_data.natural_atomic_charges[i])
 
         # add natural electron populations

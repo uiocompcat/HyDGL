@@ -28,7 +28,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             HydrogenMode.EXPLICIT,
             BondOrderType.WIBERG,
-            [NodeFeature.ATOMIC_NUMBERS],
+            [NodeFeature.ATOMIC_NUMBER],
             [
                 Node(features=[48]),
                 Node(features=[8]),
@@ -84,7 +84,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             HydrogenMode.OMIT,
             BondOrderType.WIBERG,
-            [NodeFeature.ATOMIC_NUMBERS],
+            [NodeFeature.ATOMIC_NUMBER],
             [
                 Node(features=[48]),
                 Node(features=[8]),
@@ -124,7 +124,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             HydrogenMode.IMPLICIT,
             BondOrderType.WIBERG,
-            [NodeFeature.ATOMIC_NUMBERS],
+            [NodeFeature.ATOMIC_NUMBER],
             [
                 Node(features=[48, 0]),
                 Node(features=[8, 2]),
@@ -164,7 +164,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_OREDIA,
             HydrogenMode.OMIT,
             BondOrderType.WIBERG,
-            [NodeFeature.ATOMIC_NUMBERS],
+            [NodeFeature.ATOMIC_NUMBER],
             [
                 Node(features=[77]),
                 Node(features=[1]),
@@ -317,7 +317,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             HydrogenMode.EXPLICIT,
             BondOrderType.WIBERG,
-            [NodeFeature.NATURAL_ATOMIC_CHARGES],
+            [NodeFeature.NATURAL_ATOMIC_CHARGE],
             [
                 Node(features=[1.68876]),
                 Node(features=[-0.97287]),
@@ -429,7 +429,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             HydrogenMode.OMIT,
             BondOrderType.WIBERG,
-            [NodeFeature.LONE_PAIR_MAX, NodeFeature.LONE_PAIRS_S, NodeFeature.LONE_PAIRS_P, NodeFeature.LONE_PAIRS_D, NodeFeature.LONE_PAIRS_F],
+            [NodeFeature.LONE_PAIR_MAX, NodeFeature.LONE_PAIR_S, NodeFeature.LONE_PAIR_P, NodeFeature.LONE_PAIR_D, NodeFeature.LONE_PAIR_F],
             [
                 Node(features=[5, -0.62573, 1.99593, 0.0001, 0.0, 0.9998, 0.0]),
                 Node(features=[2, -0.56001, 1.99619, 0.1619, 0.8369, 0.0011, 0.0]),
@@ -469,7 +469,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             HydrogenMode.OMIT,
             BondOrderType.WIBERG,
-            [NodeFeature.LONE_PAIR_AVERAGE, NodeFeature.LONE_PAIRS_S, NodeFeature.LONE_PAIRS_P, NodeFeature.LONE_PAIRS_D, NodeFeature.LONE_PAIRS_F],
+            [NodeFeature.LONE_PAIR_AVERAGE, NodeFeature.LONE_PAIR_S, NodeFeature.LONE_PAIR_P, NodeFeature.LONE_PAIR_D, NodeFeature.LONE_PAIR_F],
             [
                 Node(features=[5, -0.627936, 1.996892, 0.00014, 0.0, 0.99984, 0.0]),
                 Node(features=[2, -0.61476, 1.9834, 0.26065, 0.73855, 0.00075, 0.0]),
@@ -509,7 +509,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             HydrogenMode.OMIT,
             BondOrderType.WIBERG,
-            [NodeFeature.LONE_VACANCY_MIN, NodeFeature.LONE_VACANCIES_S, NodeFeature.LONE_VACANCIES_P, NodeFeature.LONE_VACANCIES_D, NodeFeature.LONE_VACANCIES_F],
+            [NodeFeature.LONE_VACANCY_MIN, NodeFeature.LONE_VACANCY_S, NodeFeature.LONE_VACANCY_P, NodeFeature.LONE_VACANCY_D, NodeFeature.LONE_VACANCY_F],
             [
                 Node(features=[1, -0.04626, 0.30391, 0.9988, 0.0002, 0.001, 0.0]),
                 Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
@@ -549,7 +549,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             HydrogenMode.OMIT,
             BondOrderType.WIBERG,
-            [NodeFeature.LONE_VACANCY_AVERAGE, NodeFeature.LONE_VACANCIES_S, NodeFeature.LONE_VACANCIES_P, NodeFeature.LONE_VACANCIES_D, NodeFeature.LONE_VACANCIES_F],
+            [NodeFeature.LONE_VACANCY_AVERAGE, NodeFeature.LONE_VACANCY_S, NodeFeature.LONE_VACANCY_P, NodeFeature.LONE_VACANCY_D, NodeFeature.LONE_VACANCY_F],
             [
                 Node(features=[1, -0.04626, 0.30391, 0.9988, 0.0002, 0.001, 0.0]),
                 Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
@@ -589,7 +589,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_OREDIA,
             HydrogenMode.OMIT,
             BondOrderType.WIBERG,
-            [NodeFeature.LONE_VACANCY_MIN, NodeFeature.LONE_VACANCIES_S, NodeFeature.LONE_VACANCIES_P, NodeFeature.LONE_VACANCIES_D, NodeFeature.LONE_VACANCIES_F],
+            [NodeFeature.LONE_VACANCY_MIN, NodeFeature.LONE_VACANCY_S, NodeFeature.LONE_VACANCY_P, NodeFeature.LONE_VACANCY_D, NodeFeature.LONE_VACANCY_F],
             [
                 Node(features=[2, -0.16639, 0.76906, 0.0015, 0.0001, 0.9984, 0.0]),
                 Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
@@ -630,7 +630,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_OREDIA,
             HydrogenMode.OMIT,
             BondOrderType.WIBERG,
-            [NodeFeature.LONE_VACANCY_AVERAGE, NodeFeature.LONE_VACANCIES_S, NodeFeature.LONE_VACANCIES_P, NodeFeature.LONE_VACANCIES_D, NodeFeature.LONE_VACANCIES_F],
+            [NodeFeature.LONE_VACANCY_AVERAGE, NodeFeature.LONE_VACANCY_S, NodeFeature.LONE_VACANCY_P, NodeFeature.LONE_VACANCY_D, NodeFeature.LONE_VACANCY_F],
             [
                 Node(features=[2, 0.4279, 0.570795, 0.43415, 0.0003, 0.5655, 0.00005]),
                 Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
@@ -696,7 +696,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             HydrogenMode.OMIT,
             BondOrderType.NLMO,
-            [NodeFeature.ATOMIC_NUMBERS, NodeFeature.NLMO_BOND_ORDER_TOTAL],
+            [NodeFeature.ATOMIC_NUMBER, NodeFeature.NLMO_BOND_ORDER_TOTAL],
             4,
             Node(features=[16, 1.9874], position=[-4.918379, -0.662092, -0.151817], label='S')
         ],
@@ -714,7 +714,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_OREDIA,
             HydrogenMode.OMIT,
             BondOrderType.NLMO,
-            [NodeFeature.NATURAL_ATOMIC_CHARGES],
+            [NodeFeature.NATURAL_ATOMIC_CHARGE],
             1,
             Node(features=[-0.05261], position=[-1.744384, 0.823097, -1.698982], label='H')
         ],
@@ -2622,7 +2622,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             TEST_FILE_LALMER,
-            [NodeFeature.LONE_PAIRS_S, NodeFeature.LONE_PAIRS_P],
+            [NodeFeature.LONE_PAIR_S, NodeFeature.LONE_PAIR_P],
             [],
             OrbitalOccupationType.LONE_PAIR,
             [0.0, 0.0],
@@ -2630,7 +2630,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             TEST_FILE_LALMER,
-            [NodeFeature.LONE_VACANCIES_P, NodeFeature.LONE_VACANCIES_F],
+            [NodeFeature.LONE_VACANCY_P, NodeFeature.LONE_VACANCY_F],
             [],
             OrbitalOccupationType.LONE_VACANCY,
             [0.0, 0.0],
