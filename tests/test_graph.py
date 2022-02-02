@@ -16,13 +16,13 @@ class TestGraph(unittest.TestCase):
 
         [
             Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
-                  [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0]), Edge([2, 4], features=[0])]),
+                  [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0]), Edge([2, 4], features=[0])], id='TestGraph'),
             True
         ],
 
         [
             Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
-                  [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0])]),
+                  [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0])], id='TestGraph'),
             False
         ],
 
@@ -34,21 +34,38 @@ class TestGraph(unittest.TestCase):
     @parameterized.expand([
 
         [
-            Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
-                  [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0]), Edge([2, 4], features=[0])]),
-            [[0, 1, 2, 3, 4]]
-        ],
-
-        [
-            Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
-                  [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0])]),
-            [[0, 1, 2, 3], [4]]
+            Graph([Node(features=[0]), Node(features=[1]), Node(features=[2])],
+                  [Edge([0, 1], features=[3])], id='TestGraph'),
+            [
+                Graph([Node(features=[0]), Node(features=[1])], [Edge([0, 1], features=[3])], id='TestGraph-subgraph-0'),
+                Graph([Node(features=[2])], edges=[], id='TestGraph-subgraph-1'),
+            ]
         ],
 
     ])
     def test_get_disjoint_sub_graphs(self, graph, expected):
 
-        self.assertEqual(graph.get_disjoint_sub_graphs(), expected)
+        result = graph.get_disjoint_sub_graphs()
+        Utils.assert_are_almost_equal(result, expected)
+
+    @parameterized.expand([
+
+        [
+            Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
+                  [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0]), Edge([2, 4], features=[0])], id='TestGraph'),
+            [[0, 1, 2, 3, 4]]
+        ],
+
+        [
+            Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
+                  [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0])], id='TestGraph'),
+            [[0, 1, 2, 3], [4]]
+        ],
+
+    ])
+    def test_get_disjoint_sub_graphs_node_indices(self, graph, expected):
+
+        self.assertEqual(graph.get_disjoint_sub_graphs_node_indices(), expected)
 
     @parameterized.expand([
 

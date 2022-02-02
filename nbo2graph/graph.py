@@ -42,15 +42,13 @@ class Graph:
         out += f'Number of nodes: {len(self.nodes)}\n'
         out += f'Number of edges: {len(self.edges)}\n\n'
 
-        out += f'Number of node features: {len(self.nodes[0])}\n'
-        out += f'Number of edge features: {len(self.edges[0][1])}\n'
+        out += f'Number of node features: {len(self.nodes[0].features)}\n'
+        # out += f'Number of edge features: {len(self.edges[0].features)}\n'
         out += f'Number of graph features: {len(self.graph_features)}\n'
-        out += f'Number of targets: {len(self.targets)}\nIs connected: {self.is_connected()}\n\n'
+        out += f'Number of targets: {len(self.targets)}\n\n'
 
-        out += f'Nodes:\n{self.nodes}\n\n'
-        out += f'Edges:\n{self.edges}\n\n'
-        out += f'Graph features:\n{self.graph_features}\n\n'
-        out += f'Graph targets:\n{self.targets}\n\n'
+        # if len(self.nodes) > 1:
+        #     out += f'Is connected: {self.is_connected()}\n\n'
 
         return out
 
@@ -223,7 +221,7 @@ class Graph:
         # otherwise there are not connected nodes --> disconnected
         return False
 
-    def get_disjoint_sub_graphs(self) -> list[list[int]]:
+    def get_disjoint_sub_graphs_node_indices(self) -> list[list[int]]:
 
         """Gets a list of lists of node indices belonging to respective disjoint subgraphs.
 
@@ -261,6 +259,45 @@ class Graph:
 
         # return disjoint sub graphs as sub lists
         return disjoint_sub_graphs
+
+    def get_disjoint_sub_graphs(self) -> list[list[int]]:
+
+        """Gets a list of Graph objects of respective disjoint subgraphs.
+
+        Returns:
+            list[list[int]]: List of subgraph node indices.
+        """
+
+        subgraphs_node_indices = self.get_disjoint_sub_graphs_node_indices()
+
+        subgraphs = []
+
+        for i, subgraph_node_indices in enumerate(subgraphs_node_indices):
+
+            nodes = []
+            edge_indices_to_consider = []
+            for node_index in subgraph_node_indices:
+                # obtain nodes of subgraph
+                nodes.append(self.nodes[node_index])
+
+                # get edge list indices of edges in subgraph
+                for j, edge in enumerate(self.edges):
+                    if node_index in edge.node_indices and j not in edge_indices_to_consider:
+                        edge_indices_to_consider.append(j)
+
+            # get edges of subgraph
+            edges = []
+            for idx in edge_indices_to_consider:
+                # update edge indices according to subgraph
+                edge_indices = [subgraph_node_indices.index(self.edges[idx].node_indices[0]), subgraph_node_indices.index(self.edges[idx].node_indices[1])]
+                edges.append(Edge(edge_indices, features=self.edges[idx].features))
+
+            # set graph
+            graph = Graph(nodes, edges, id=str(self.id) + '-subgraph-' + str(i))
+            # append to list
+            subgraphs.append(graph)
+
+        return subgraphs
 
     def get_adjacent_nodes(self, node_index: int) -> list[int]:
 
@@ -474,7 +511,7 @@ class Graph:
             high_coord = max(x_nodes + y_nodes + z_nodes)
 
             # remove grid and adjust all axes to same range, no legend
-            fig.update_layout(title='ID: ' + self.id,
+            fig.update_layout(title='ID: ' + str(self.id),
                               title_font_color='teal',
                               paper_bgcolor='#040466',
                               showlegend=False,
