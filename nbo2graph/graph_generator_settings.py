@@ -150,6 +150,49 @@ class GraphGeneratorSettings:
                    sopa_interaction_threshold=sopa_interaction_threshold,
                    sopa_contribution_threshold=sopa_contribution_threshold)
 
+    @classmethod
+    def natQ2(cls, targets):
+
+        return cls(node_features=[NodeFeature.ATOMIC_NUMBER,
+                                  NodeFeature.NATURAL_ATOMIC_CHARGE,
+                                  NodeFeature.NATURAL_ELECTRON_POPULATION_VALENCE,
+                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S,
+                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P,
+                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D,
+                                  NodeFeature.LONE_PAIR_MAX,
+                                  NodeFeature.LONE_VACANCY_MIN,
+                                  NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE,
+                                  NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE,
+                                  NodeFeature.LONE_PAIR_S,
+                                  NodeFeature.LONE_PAIR_P,
+                                  NodeFeature.LONE_PAIR_D,
+                                  NodeFeature.LONE_VACANCY_S,
+                                  NodeFeature.LONE_VACANCY_P,
+                                  NodeFeature.LONE_VACANCY_D],
+                   edge_features=[EdgeFeature.NBO_TYPE,
+                                  EdgeFeature.BOND_ORBITAL_MAX,
+                                  EdgeFeature.ANTIBOND_ORBITAL_MIN,
+                                  EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE,
+                                  EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE,
+                                  EdgeFeature.BOND_ORBITAL_DATA_S,
+                                  EdgeFeature.BOND_ORBITAL_DATA_P,
+                                  EdgeFeature.BOND_ORBITAL_DATA_D,
+                                  EdgeFeature.ANTIBOND_ORBITAL_DATA_S,
+                                  EdgeFeature.ANTIBOND_ORBITAL_DATA_P,
+                                  EdgeFeature.ANTIBOND_ORBITAL_DATA_D],
+                   edge_types=[EdgeType.NBO_BONDING_ORBITALS, EdgeType.BOND_ORDER_METAL],
+                   bond_order_mode=BondOrderType.WIBERG,
+                   bond_threshold=DEFAULT_BOND_THRESHOLD,
+                   bond_threshold_metal=0.05,
+                   hydrogen_mode=HydrogenMode.IMPLICIT,
+                   hydrogen_count_threshold=DEFAULT_HYDROGEN_COUNT_THRESHOLD,
+                   sopa_edge_features=None,
+                   graph_features=[],
+                   targets=targets,
+                   sopa_resolution_mode=None,
+                   sopa_interaction_threshold=None,
+                   sopa_contribution_threshold=None)
+
     def _get_orbtials_to_extract_indices(self, mode: OrbitalOccupationType):
 
         """Helper function to parse information about which orbitals occupancies to use as node/edge features.
