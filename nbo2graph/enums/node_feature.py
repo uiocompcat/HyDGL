@@ -8,6 +8,8 @@ class NodeFeature(Enum):
     # basic
     ATOMIC_NUMBER = auto()
 
+    BOUND_HYDROGEN_COUNT = auto()
+
     WIBERG_BOND_ORDER_TOTAL = auto()
     LMO_BOND_ORDER_TOTAL = auto()
     NLMO_BOND_ORDER_TOTAL = auto()

@@ -55,7 +55,7 @@ class GraphGenerator:
             edges += self._get_sopa_edges(qm_data)
 
         # rescale node references in edges if explicit hydrogens were omitted
-        if self._settings.hydrogen_mode == HydrogenMode.OMIT or self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+        if self._settings.hydrogen_mode == HydrogenMode.OMIT:
             edges = self._adjust_node_references(edges, qm_data)
 
         # check validity of nodes
@@ -133,7 +133,7 @@ class GraphGenerator:
         for i in range(len(qm_data.bond_pair_data)):
 
             # ignore hydrogens in omit and implicit mode
-            if self._settings.hydrogen_mode == HydrogenMode.OMIT or self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+            if self._settings.hydrogen_mode == HydrogenMode.OMIT:
                 if qm_data.atomic_numbers[qm_data.bond_pair_data[i].atom_indices[0]] == 1 or \
                    qm_data.atomic_numbers[qm_data.bond_pair_data[i].atom_indices[1]] == 1:
                     continue
@@ -145,7 +145,7 @@ class GraphGenerator:
         for i in range(len(qm_data.bond_3c_data)):
 
             # ignore hydrogens in omit and implicit mode
-            if self._settings.hydrogen_mode == HydrogenMode.OMIT or self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+            if self._settings.hydrogen_mode == HydrogenMode.OMIT:
                 if qm_data.atomic_numbers[qm_data.bond_3c_data[i].atom_indices[0]] == 1 or \
                    qm_data.atomic_numbers[qm_data.bond_3c_data[i].atom_indices[1]] == 1 or \
                    qm_data.atomic_numbers[qm_data.bond_3c_data[i].atom_indices[2]] == 1:
@@ -207,7 +207,7 @@ class GraphGenerator:
                 if (index_matrix[i][j]) > threshold:
 
                     # ignore hydrogens in omit and implicit mode
-                    if self._settings.hydrogen_mode == HydrogenMode.OMIT or self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+                    if self._settings.hydrogen_mode == HydrogenMode.OMIT:
                         if qm_data.atomic_numbers[i] == 1 or qm_data.atomic_numbers[j] == 1:
                             continue
 
@@ -245,7 +245,7 @@ class GraphGenerator:
                 if (index_matrix[i][j]) > threshold:
 
                     # ignore hydrogens in omit and implicit mode
-                    if self._settings.hydrogen_mode == HydrogenMode.OMIT or self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+                    if self._settings.hydrogen_mode == HydrogenMode.OMIT:
                         if qm_data.atomic_numbers[i] == 1 or qm_data.atomic_numbers[j] == 1:
                             continue
 
@@ -570,14 +570,14 @@ class GraphGenerator:
         for i in range(qm_data.n_atoms):
 
             # skip if hydrogen mode is not explicit
-            if self._settings.hydrogen_mode == HydrogenMode.OMIT or self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+            if self._settings.hydrogen_mode == HydrogenMode.OMIT:
                 if qm_data.atomic_numbers[i] == 1:
                     continue
 
             node_indices.append(i)
 
         # operations only relevant when not modelling hydrogens explicitly
-        if self._settings.hydrogen_mode == HydrogenMode.OMIT or self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+        if self._settings.hydrogen_mode == HydrogenMode.OMIT:
 
             # check for hydride hydrogens to add explicitly
             hydride_bond_indices = self._get_hydride_bond_indices(qm_data)
@@ -703,19 +703,19 @@ class GraphGenerator:
                 node_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.LONE_VACANCY))
 
         # add implicit hydrogens
-        if self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
+        if NodeFeature.BOUND_HYDROGEN_COUNT in self._settings.node_features:
             # get hydrogen count for heavy atoms in implicit mode
             hydrogen_count = None
-            if self._settings.hydrogen_mode == HydrogenMode.IMPLICIT:
-                # set hydrogen count of hydrogens to 0
-                if qm_data.atomic_numbers[i] == 1:
-                    hydrogen_count = 0
-                # set hydrogen count to 0 if transition metal (will be modelled explicitly)
-                elif qm_data.atomic_numbers[i] in ElementLookUpTable.transition_metal_atomic_numbers:
-                    hydrogen_count = 0
-                # otherwise determine hydrogen count normally
-                else:
-                    hydrogen_count = self._determine_hydrogen_count(i, qm_data)
+
+            # set hydrogen count of hydrogens to 0
+            if qm_data.atomic_numbers[i] == 1:
+                hydrogen_count = 0
+            # set hydrogen count to 0 if transition metal (will be modelled explicitly)
+            elif qm_data.atomic_numbers[i] in ElementLookUpTable.transition_metal_atomic_numbers:
+                hydrogen_count = 0
+            # otherwise determine hydrogen count normally
+            else:
+                hydrogen_count = self._determine_hydrogen_count(i, qm_data)
 
             node_features.append(hydrogen_count)
 

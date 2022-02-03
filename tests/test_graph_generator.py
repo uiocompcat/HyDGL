@@ -122,9 +122,9 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             TEST_FILE_LALMER,
-            HydrogenMode.IMPLICIT,
+            HydrogenMode.OMIT,
             BondOrderType.WIBERG,
-            [NodeFeature.ATOMIC_NUMBER],
+            [NodeFeature.ATOMIC_NUMBER, NodeFeature.BOUND_HYDROGEN_COUNT],
             [
                 Node(features=[48, 0]),
                 Node(features=[8, 2]),
@@ -703,11 +703,20 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             TEST_FILE_OREDIA,
-            HydrogenMode.IMPLICIT,
+            HydrogenMode.OMIT,
             BondOrderType.NLMO,
-            [],
+            [NodeFeature.BOUND_HYDROGEN_COUNT],
             0,
             Node(features=[0], position=[-1.339211, 0.079206, -0.361021], label='Ir')
+        ],
+
+        [
+            TEST_FILE_OREDIA,
+            HydrogenMode.EXPLICIT,
+            BondOrderType.NLMO,
+            [NodeFeature.BOUND_HYDROGEN_COUNT],
+            3,
+            Node(features=[1], position=[1.516895, -0.164342, -0.168083], label='C')
         ],
 
         [
@@ -1228,7 +1237,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             TEST_FILE_LALMER,
-            HydrogenMode.IMPLICIT,
+            HydrogenMode.OMIT,
             [EdgeType.BOND_ORDER_METAL, EdgeType.BOND_ORDER_NON_METAL],
             BondOrderType.LMO,
             1,
@@ -1277,7 +1286,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             TEST_FILE_LALMER,
-            HydrogenMode.IMPLICIT,
+            HydrogenMode.OMIT,
             [EdgeType.NBO_BONDING_ORBITALS],
             BondOrderType.WIBERG,
             1,
@@ -1378,7 +1387,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             TEST_FILE_ZUYHEG,
-            HydrogenMode.IMPLICIT,
+            HydrogenMode.OMIT,
             [EdgeType.NBO_BONDING_ORBITALS],
             BondOrderType.WIBERG,
             1,
@@ -1848,7 +1857,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             TEST_FILE_LALMER,
-            HydrogenMode.IMPLICIT,
+            HydrogenMode.OMIT,
             [i for i in range(31)]
         ],
 
@@ -1866,7 +1875,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             TEST_FILE_OREDIA,
-            HydrogenMode.IMPLICIT,
+            HydrogenMode.OMIT,
             [i for i in range(56) if i not in [4, 9, 11, 13, 15, 19, 21, 23, 25, 27, 31, 35, 36, 37, 39, 40, 41, 45, 49, 50, 51, 53, 54, 55]]
         ],
 
@@ -1903,7 +1912,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             TEST_FILE_LALMER,
-            HydrogenMode.IMPLICIT,
+            HydrogenMode.OMIT,
             ['Cd', 'O', 'N', 'C', 'S', 'C', 'C', 'C', 'N', 'C', 'C', 'C', 'C', 'C', 'N', 'C',
              'C', 'C', 'C', 'C', 'N', 'C', 'S', 'C', 'C', 'C', 'Cl', 'O', 'O', 'O', 'O']
         ],
@@ -1926,7 +1935,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             TEST_FILE_OREDIA,
-            HydrogenMode.IMPLICIT,
+            HydrogenMode.OMIT,
             ['Ir', 'H', 'N', 'C', 'C', 'N', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C',
              'C', 'O', 'C', 'C', 'C', 'O', 'C', 'C', 'O', 'C', 'C', 'C', 'O', 'C', 'C']
         ],
@@ -2043,7 +2052,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             TEST_FILE_LALMER,
-            HydrogenMode.IMPLICIT,
+            HydrogenMode.OMIT,
             [
                 [-0.106076, -0.278587, -0.33231],
                 [-0.170725, -0.845567, -2.701124],
@@ -2183,7 +2192,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             TEST_FILE_OREDIA,
-            HydrogenMode.IMPLICIT,
+            HydrogenMode.OMIT,
             [
                 [-1.339211, 0.079206, -0.361021],
                 [-1.744384, 0.823097, -1.698982],
