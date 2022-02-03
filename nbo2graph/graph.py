@@ -143,7 +143,7 @@ class Graph:
             raise NotImplementedError('The graph has directed as well as undirected edges which is not supported by the networkx library.')
 
         # add CSD code
-        nx_graph.graph['ID'] = str(self.id)
+        nx_graph.graph['id'] = str(self.id)
 
         # add nodes
         for i, node in enumerate(self.nodes):
