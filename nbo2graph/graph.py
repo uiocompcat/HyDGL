@@ -142,6 +142,10 @@ class Graph:
         else:
             raise NotImplementedError('The graph has directed as well as undirected edges which is not supported by the networkx library.')
 
+        # add CSD code
+        nx_graph.graph['ID'] = str(self.id)
+
+        # add nodes
         for i, node in enumerate(self.nodes):
             if len(node.features) == 0:
                 nx_graph.add_node(i)
@@ -150,6 +154,7 @@ class Graph:
             else:
                 nx_graph.add_node(i, x=node.features)
 
+        # add edges
         for i, edge in enumerate(self.edges):
             if len(edge.features) == 0:
                 nx_graph.add_edge(edge.node_indices[0], edge.node_indices[1])
@@ -158,6 +163,7 @@ class Graph:
             else:
                 nx_graph.add_edge(edge.node_indices[0], edge.node_indices[1], edge_attr=edge.features)
 
+        # add targets
         if len(self.targets) == 0:
             pass
         elif len(self.targets) == 1:
