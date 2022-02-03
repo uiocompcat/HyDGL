@@ -42,14 +42,6 @@ class Graph:
         out += f'Number of nodes: {len(self.nodes)}\n'
         out += f'Number of edges: {len(self.edges)}\n\n'
 
-        out += f'Number of node features: {len(self.nodes[0].features)}\n'
-        # out += f'Number of edge features: {len(self.edges[0].features)}\n'
-        out += f'Number of graph features: {len(self.graph_features)}\n'
-        out += f'Number of targets: {len(self.targets)}\n\n'
-
-        # if len(self.nodes) > 1:
-        #     out += f'Is connected: {self.is_connected()}\n\n'
-
         return out
 
     @property
@@ -116,11 +108,18 @@ class Graph:
     @property
     def graph_type(self):
         """Getter for is_directed."""
+
+        # if there are no edges default to undirected
+        if len(self.edges) == 0:
+            return 'undirected'
+
+        # count number of directed edges
         directed_edge_count = 0
         for edge in self.edges:
             if edge.is_directed:
                 directed_edge_count += 1
 
+        # compare to absolute amount of edges
         if directed_edge_count == len(self.edges):
             return 'directed'
         elif directed_edge_count == 0:
