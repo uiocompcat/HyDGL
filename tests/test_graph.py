@@ -337,21 +337,6 @@ class TestGraph(unittest.TestCase):
 
         [
             Graph(
-                [Node(features=[0]), Node(features=[1])],
-                [Edge([0, 1], features=[-2])],
-                targets={'a': 12.34}, id='TestGraph'
-            ),
-            {
-                'graph': nx.MultiGraph(),
-                'id': 'TestGraph',
-                'targets': {'a': 12.34},
-                'nodes': [(0, {'x': 0}), (1, {'x': 1})],
-                'edges': [(0, 1, {'edge_attr': -2})]
-            },
-        ],
-
-        [
-            Graph(
                 [Node(features=[0, 1]), Node(features=[1, 0])],
                 [Edge([0, 1], features=[-2, 2])],
                 targets={'a': 12.34, 'b': 23.45, 'c': 34.56}, id='TestGraph'
@@ -360,8 +345,8 @@ class TestGraph(unittest.TestCase):
                 'graph': nx.MultiGraph(),
                 'id': 'TestGraph',
                 'targets': {'a': 12.34, 'b': 23.45, 'c': 34.56},
-                'nodes': [(0, {'x': [0, 1]}), (1, {'x': [1, 0]})],
-                'edges': [(0, 1, {'edge_attr': [-2, 2]})]
+                'nodes': [(0, {'feature_0': 0, 'feature_1': 1}), (1, {'feature_0': 1, 'feature_1': 0})],
+                'edges': [(0, 1, {'feature_0': -2, 'feature_1': 2})]
             },
         ],
 
@@ -375,8 +360,8 @@ class TestGraph(unittest.TestCase):
                 'graph': nx.MultiDiGraph(),
                 'id': 'TestGraph',
                 'targets': {'a': 12.34, 'b': 23.45, 'c': 34.56},
-                'nodes': [(0, {'x': [0, 1]}), (1, {'x': [1, 0]})],
-                'edges': [(0, 1, {'edge_attr': [-2, 2]})]
+                'nodes': [(0, {'feature_0': 0, 'feature_1': 1}), (1, {'feature_0': 1, 'feature_1': 0})],
+                'edges': [(0, 1, {'feature_0': -2, 'feature_1': 2})]
             },
         ],
 

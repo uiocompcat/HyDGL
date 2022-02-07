@@ -300,28 +300,28 @@ class GraphGenerator:
         bond_3c_atom_indices = [x.atom_indices[0:2] for x in qm_data.bond_3c_data] + [x.atom_indices[1:3] for x in qm_data.bond_3c_data]
 
         # setup edge_features
-        edge_features = []
+        edge_features = {}
 
         # append requested bond orders
         if EdgeFeature.WIBERG_BOND_ORDER in self._settings.edge_features:
-            edge_features.append(qm_data.wiberg_bond_order_matrix[bond_atom_indices[0]][bond_atom_indices[1]])
+            edge_features['wiberg_bond_order'] = qm_data.wiberg_bond_order_matrix[bond_atom_indices[0]][bond_atom_indices[1]]
         if EdgeFeature.LMO_BOND_ORDER in self._settings.edge_features:
-            edge_features.append(qm_data.lmo_bond_order_matrix[bond_atom_indices[0]][bond_atom_indices[1]])
+            edge_features['lmo_bond_order'] = qm_data.lmo_bond_order_matrix[bond_atom_indices[0]][bond_atom_indices[1]]
         if EdgeFeature.NLMO_BOND_ORDER in self._settings.edge_features:
-            edge_features.append(qm_data.nlmo_bond_order_matrix[bond_atom_indices[0]][bond_atom_indices[1]])
+            edge_features['nlmo_bond_order'] = qm_data.nlmo_bond_order_matrix[bond_atom_indices[0]][bond_atom_indices[1]]
 
         # add bond distance as feature to edges
         if EdgeFeature.BOND_DISTANCE in self._settings.edge_features:
-            edge_features.append(qm_data.bond_distance_matrix[bond_atom_indices[0]][bond_atom_indices[1]])
+            edge_features['bond_distance'] = qm_data.bond_distance_matrix[bond_atom_indices[0]][bond_atom_indices[1]]
 
         if EdgeFeature.NBO_TYPE in self._settings.edge_features:
 
             if bond_atom_indices in bond_3c_atom_indices:
-                edge_features.append('3C')
+                edge_features['nbo_type'] = '3C'
             elif bond_atom_indices in bond_pair_atom_indices:
-                edge_features.append('BD')
+                edge_features['nbo_type'] = 'BD'
             else:
-                edge_features.append('None')
+                edge_features['nbo_type'] = 'None'
 
         # add number of bond/antibond orbitals if requested
         if EdgeFeature.BOND_ORBITAL_MAX in self._settings.edge_features or \
@@ -332,11 +332,11 @@ class GraphGenerator:
                 EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features:
 
             if bond_atom_indices in bond_3c_atom_indices:
-                edge_features.append(len([x.energy for x in qm_data.bond_3c_data if x.contains_atom_indices(bond_atom_indices)]))
+                edge_features['n_bn'] = len([x.energy for x in qm_data.bond_3c_data if x.contains_atom_indices(bond_atom_indices)])
             elif bond_atom_indices in bond_pair_atom_indices:
-                edge_features.append(len([x.energy for x in qm_data.bond_pair_data if x.atom_indices == bond_atom_indices]))
+                edge_features['n_bn'] = len([x.energy for x in qm_data.bond_pair_data if x.atom_indices == bond_atom_indices])
             else:
-                edge_features.append(0)
+                edge_features['n_bn'] = 0
 
         if EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features:
 
@@ -349,28 +349,28 @@ class GraphGenerator:
 
             # append difference if there are 2 entries or more
             if len(energies) >= 2:
-                edge_features.append(abs(min(energies) - max(energies)))
+                edge_features['bond_energy_min_max_difference'] = abs(min(energies) - max(energies))
             # append 0 otherwise
             else:
-                edge_features.append(0.0)
+                edge_features['bond_energy_min_max_difference'] = 0.0
 
         if EdgeFeature.BOND_ORBITAL_MAX in self._settings.edge_features and len(self._settings.bond_orbital_indices) > 0:
 
             if bond_atom_indices in bond_3c_atom_indices:
-                edge_features.extend(self._get_maximum_energy_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_BOND))
+                edge_features['bond_orbital_max'] = self._get_maximum_energy_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_BOND)
             elif bond_atom_indices in bond_pair_atom_indices:
-                edge_features.extend(self._get_maximum_energy_nbo(qm_data, bond_atom_indices, NboType.BOND))
+                edge_features['bond_orbital_max'] = self._get_maximum_energy_nbo(qm_data, bond_atom_indices, NboType.BOND)
             else:
-                edge_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.BOND_ORBITAL))
+                edge_features['bond_orbital_max'] = [0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.BOND_ORBITAL)
 
         if EdgeFeature.BOND_ORBITAL_AVERAGE in self._settings.edge_features and len(self._settings.bond_orbital_indices) > 0:
 
             if bond_atom_indices in bond_3c_atom_indices:
-                edge_features.extend(self._get_average_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_BOND))
+                edge_features['bond_orbital_average'] = self._get_average_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_BOND)
             elif bond_atom_indices in bond_pair_atom_indices:
-                edge_features.extend(self._get_average_nbo(qm_data, bond_atom_indices, NboType.BOND))
+                edge_features['bond_orbital_average'] = self._get_average_nbo(qm_data, bond_atom_indices, NboType.BOND)
             else:
-                edge_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.BOND_ORBITAL))
+                edge_features['bond_orbital_average'] = [0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.BOND_ORBITAL)
 
         if EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features:
 
@@ -383,28 +383,28 @@ class GraphGenerator:
 
             # append difference if there are 2 entries or more
             if len(energies) >= 2:
-                edge_features.append(abs(min(energies) - max(energies)))
+                edge_features['antibond_energy_min_max_difference'] = abs(min(energies) - max(energies))
             # append 0 otherwise
             else:
-                edge_features.append(0.0)
+                edge_features['antibond_energy_min_max_difference'] = 0.0
 
         if EdgeFeature.ANTIBOND_ORBITAL_MIN in self._settings.edge_features and len(self._settings.antibond_orbital_indices) > 0:
 
             if bond_atom_indices in bond_3c_atom_indices:
-                edge_features.extend(self._get_minimum_energy_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_ANTIBOND))
+                edge_features['antibond_orbital_min'] = self._get_minimum_energy_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_ANTIBOND)
             elif bond_atom_indices in bond_pair_atom_indices:
-                edge_features.extend(self._get_minimum_energy_nbo(qm_data, bond_atom_indices, NboType.ANTIBOND))
+                edge_features['antibond_orbital_min'] = self._get_minimum_energy_nbo(qm_data, bond_atom_indices, NboType.ANTIBOND)
             else:
-                edge_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.ANTIBOND_ORBITAL))
+                edge_features['antibond_orbital_min'] = [0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.ANTIBOND_ORBITAL)
 
         if EdgeFeature.ANTIBOND_ORBITAL_AVERAGE in self._settings.edge_features and len(self._settings.antibond_orbital_indices) > 0:
 
             if bond_atom_indices in bond_3c_atom_indices:
-                edge_features.extend(self._get_average_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_ANTIBOND))
+                edge_features['antibond_orbital_average'] = self._get_average_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_ANTIBOND)
             elif bond_atom_indices in bond_pair_atom_indices:
-                edge_features.extend(self._get_average_nbo(qm_data, bond_atom_indices, NboType.ANTIBOND))
+                edge_features['antibond_orbital_average'] = self._get_average_nbo(qm_data, bond_atom_indices, NboType.ANTIBOND)
             else:
-                edge_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.ANTIBOND_ORBITAL))
+                edge_features['antibond_orbital_average'] = [0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.ANTIBOND_ORBITAL)
 
         return edge_features
 
@@ -482,19 +482,19 @@ class GraphGenerator:
         i = atom_indices_list.index(bond_atom_indices)
 
         # setup edge_features
-        edge_features = []
+        edge_features = {}
 
         if SopaEdgeFeature.STABILISATION_ENERGY_MAX in self._settings.sopa_edge_features:
-            edge_features.extend(self._resolve_stabilisation_energies(stabilisation_energies, SopaResolutionMode.MAX)[i])
+            edge_features['stabilisation_energy_max'] = self._resolve_stabilisation_energies(stabilisation_energies, SopaResolutionMode.MAX)[i][0]
 
         if SopaEdgeFeature.STABILISATION_ENERGY_AVERAGE in self._settings.sopa_edge_features:
-            edge_features.extend(self._resolve_stabilisation_energies(stabilisation_energies, SopaResolutionMode.AVERAGE)[i])
+            edge_features['stabilisation_energy_average'] = self._resolve_stabilisation_energies(stabilisation_energies, SopaResolutionMode.AVERAGE)[i][0]
 
         if SopaEdgeFeature.DONOR_NBO_TYPE in self._settings.sopa_edge_features:
-            edge_features.append(nbo_types[i][0])
+            edge_features['donor_nbo_type'] = nbo_types[i][0]
 
         if SopaEdgeFeature.ACCEPTOR_NBO_TYPE in self._settings.sopa_edge_features:
-            edge_features.append(nbo_types[i][1])
+            edge_features['acceptor_nbo_type'] = nbo_types[i][1]
 
         return edge_features
 
@@ -605,102 +605,102 @@ class GraphGenerator:
         lone_vacancy_atom_indices = [x.atom_indices[0] for x in qm_data.lone_vacancy_data]
 
         # set up features for node
-        node_features = []
+        node_features = {}
 
         # add atomic number
         if NodeFeature.ATOMIC_NUMBER in self._settings.node_features:
-            node_features.append(qm_data.atomic_numbers[i])
+            node_features['atomic_number'] = qm_data.atomic_numbers[i]
 
         # add natural atomic charge
         if NodeFeature.NATURAL_ATOMIC_CHARGE in self._settings.node_features:
-            node_features.append(qm_data.natural_atomic_charges[i])
+            node_features['natural_atomic_charge'] = qm_data.natural_atomic_charges[i]
 
         # add natural electron populations
         if NodeFeature.NATURAL_ELECTRON_POPULATION_CORE in self._settings.node_features:
-            node_features.append(qm_data.natural_electron_population[i][0])
+            node_features['natural_electron_population_core'] = qm_data.natural_electron_population[i][0]
 
         if NodeFeature.NATURAL_ELECTRON_POPULATION_VALENCE in self._settings.node_features:
-            node_features.append(qm_data.natural_electron_population[i][1])
+            node_features['natural_electron_population_valence'] = qm_data.natural_electron_population[i][1]
 
         if NodeFeature.NATURAL_ELECTRON_POPULATION_RYDBERG in self._settings.node_features:
-            node_features.append(qm_data.natural_electron_population[i][2])
+            node_features['natural_electron_population_rydberg'] = qm_data.natural_electron_population[i][2]
 
         if NodeFeature.NATURAL_ELECTRON_POPULATION_TOTAL in self._settings.node_features:
-            node_features.append(sum(qm_data.natural_electron_population[i]))
+            node_features['natural_electron_population_total'] = sum(qm_data.natural_electron_population[i])
 
         # add natural electron configuration (requested orbital occupancies)
         if len(self._settings.natural_orbital_configuration_indices) > 0:
-            node_features.extend([qm_data.natural_electron_configuration[i][k] for k in self._settings.natural_orbital_configuration_indices])
+            node_features['natural_electron_configuration'] = [qm_data.natural_electron_configuration[i][k] for k in self._settings.natural_orbital_configuration_indices]
 
         # add bond order totals
 
         # Wiberg mode
         if NodeFeature.WIBERG_BOND_ORDER_TOTAL in self._settings.node_features:
-            node_features.append(qm_data.wiberg_bond_order_totals[i])
+            node_features['wiberg_bond_order_total'] = qm_data.wiberg_bond_order_totals[i]
         # LMO mode
         if NodeFeature.LMO_BOND_ORDER_TOTAL in self._settings.node_features:
-            node_features.append(qm_data.lmo_bond_order_totals[i])
+            node_features['lmo_bond_order_total'] = qm_data.lmo_bond_order_totals[i]
         # NLMO mode
         if NodeFeature.NLMO_BOND_ORDER_TOTAL in self._settings.node_features:
-            node_features.append(qm_data.nlmo_bond_order_totals[i])
+            node_features['nlmo_bond_order_total'] = qm_data.nlmo_bond_order_totals[i]
 
         # add number of lone pairs if requested
         if NodeFeature.LONE_PAIR_MAX in self._settings.node_features or \
                 NodeFeature.LONE_PAIR_AVERAGE in self._settings.node_features or \
                 NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE in self._settings.node_features:
 
-            node_features.append(len([x.energy for x in qm_data.lone_pair_data if x.atom_indices[0] == i]))
+            node_features['n_lone_pairs'] = len([x.energy for x in qm_data.lone_pair_data if x.atom_indices[0] == i])
 
         if NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE in self._settings.node_features:
             energies = [x.energy for x in qm_data.lone_pair_data if x.atom_indices[0] == i]
 
             # append difference if there are 2 entries or more
             if len(energies) >= 2:
-                node_features.append(abs(min(energies) - max(energies)))
+                node_features['lone_pair_energy_min_max_difference'] = abs(min(energies) - max(energies))
             # append 0 otherwise
             else:
-                node_features.append(0.0)
+                node_features['lone_pair_energy_min_max_difference'] = 0.0
 
         if NodeFeature.LONE_PAIR_MAX in self._settings.node_features and len(self._settings.lone_pair_orbital_indices) > 0:
             if i in lone_pair_atom_indices:
-                node_features.extend(self._get_maximum_energy_nbo(qm_data, [i], NboType.LONE_PAIR))
+                node_features['lone_pair_max'] = self._get_maximum_energy_nbo(qm_data, [i], NboType.LONE_PAIR)
             else:
-                node_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.LONE_PAIR))
+                node_features['lone_pair_max'] = [0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.LONE_PAIR)
 
         if NodeFeature.LONE_PAIR_AVERAGE in self._settings.node_features and len(self._settings.lone_pair_orbital_indices) > 0:
             if i in lone_pair_atom_indices:
-                node_features.extend(self._get_average_nbo(qm_data, [i], NboType.LONE_PAIR))
+                node_features['lone_pair_average'] = self._get_average_nbo(qm_data, [i], NboType.LONE_PAIR)
             else:
-                node_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.LONE_PAIR))
+                node_features['lone_pair_average'] = [0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.LONE_PAIR)
 
         # add number of lone vacancies if requested
         if NodeFeature.LONE_VACANCY_MIN in self._settings.node_features or \
                 NodeFeature.LONE_VACANCY_AVERAGE in self._settings.node_features or \
                 NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE in self._settings.node_features:
 
-            node_features.append(len([x.energy for x in qm_data.lone_vacancy_data if x.atom_indices[0] == i]))
+            node_features['n_lone_vacancies'] = len([x.energy for x in qm_data.lone_vacancy_data if x.atom_indices[0] == i])
 
         if NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE in self._settings.node_features:
             energies = [x.energy for x in qm_data.lone_vacancy_data if x.atom_indices[0] == i]
 
             # append difference if there are 2 entries or more
             if len(energies) >= 2:
-                node_features.append(abs(min(energies) - max(energies)))
+                node_features['lone_vacancy_energy_min_max_difference'] = abs(min(energies) - max(energies))
             # append 0 otherwise
             else:
-                node_features.append(0.0)
+                node_features['lone_vacancy_energy_min_max_difference'] = 0.0
 
         if NodeFeature.LONE_VACANCY_MIN in self._settings.node_features and len(self._settings.lone_vacancy_orbital_indices) > 0:
             if i in lone_vacancy_atom_indices:
-                node_features.extend(self._get_minimum_energy_nbo(qm_data, [i], NboType.LONE_VACANCY))
+                node_features['lone_vacancy_min'] = self._get_minimum_energy_nbo(qm_data, [i], NboType.LONE_VACANCY)
             else:
-                node_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.LONE_VACANCY))
+                node_features['lone_vacancy_min'] = [0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.LONE_VACANCY)
 
         if NodeFeature.LONE_VACANCY_AVERAGE in self._settings.node_features and len(self._settings.lone_vacancy_orbital_indices) > 0:
             if i in lone_vacancy_atom_indices:
-                node_features.extend(self._get_average_nbo(qm_data, [i], NboType.LONE_VACANCY))
+                node_features['lone_vacancy_average'] = self._get_average_nbo(qm_data, [i], NboType.LONE_VACANCY)
             else:
-                node_features.extend([0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.LONE_VACANCY))
+                node_features['lone_vacancy_average'] = [0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.LONE_VACANCY)
 
         # add implicit hydrogens
         if NodeFeature.BOUND_HYDROGEN_COUNT in self._settings.node_features:
@@ -717,7 +717,7 @@ class GraphGenerator:
             else:
                 hydrogen_count = self._determine_hydrogen_count(i, qm_data)
 
-            node_features.append(hydrogen_count)
+            node_features['hydrogen_count'] = hydrogen_count
 
         if include_misc_data:
             # get node label and position
@@ -1249,7 +1249,7 @@ class GraphGenerator:
                 # set up feature list with stabilisation energy and NBO types
                 features = self._get_sopa_edge_features(atom_indices_list[i], qm_data, atom_indices_list, stabilisation_energies, nbo_types)
                 # add additional features
-                features.extend(self._get_edge_features(atom_indices_list[i], qm_data))
+                features = features | self._get_edge_features(atom_indices_list[i], qm_data)
 
                 edges.append(Edge(atom_indices_list[i], features=features, is_directed=True))
 

@@ -52,33 +52,38 @@ def main():
                                             ],
                                          node_features=[
                                              NodeFeature.ATOMIC_NUMBER,
-                                             NodeFeature.NATURAL_ATOMIC_CHARGE,
-                                             NodeFeature.NATURAL_ELECTRON_POPULATION_VALENCE,
-                                             NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S,
-                                             NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P,
-                                             NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D,
-                                             NodeFeature.LONE_PAIR_MAX,
-                                             NodeFeature.LONE_VACANCY_MIN,
-                                             NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE,
-                                             NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE,
-                                             NodeFeature.LONE_PAIR_S,
-                                             NodeFeature.LONE_PAIR_P,
-                                             NodeFeature.LONE_PAIR_D,
-                                             NodeFeature.LONE_VACANCY_S,
-                                             NodeFeature.LONE_VACANCY_P,
-                                             NodeFeature.LONE_VACANCY_D],
+                                            #  NodeFeature.NATURAL_ATOMIC_CHARGE,
+                                            #  NodeFeature.NATURAL_ELECTRON_POPULATION_VALENCE,
+                                            #  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S,
+                                            #  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P,
+                                            #  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D,
+                                            #  NodeFeature.LONE_PAIR_MAX,
+                                            #  NodeFeature.LONE_VACANCY_MIN,
+                                            #  NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE,
+                                            #  NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE,
+                                            #  NodeFeature.LONE_PAIR_S,
+                                            #  NodeFeature.LONE_PAIR_P,
+                                            #  NodeFeature.LONE_PAIR_D,
+                                            #  NodeFeature.LONE_VACANCY_S,
+                                            #  NodeFeature.LONE_VACANCY_P,
+                                            #  NodeFeature.LONE_VACANCY_D
+                                        ],
                                          targets=[QmTarget.SVP_HOMO_LUMO_GAP],
                                          bond_threshold_metal=0.05)
 
-    ggs = GraphGeneratorSettings.natQ2([QmTarget.SVP_HOMO_LUMO_GAP])
+    # ggs = GraphGeneratorSettings.natQ2([QmTarget.SVP_HOMO_LUMO_GAP])
 
     gg = GraphGenerator(settings=ggs)
     graph = gg.generate_graph(qm_data_object)
     subgraphs = graph.get_disjoint_sub_graphs()
 
+    print(graph.edges[0].features)
+
     nx.write_gml(graph.get_networkx_graph_object(), '/home/hkneiding/Desktop/test.gml')
 
     graph.get_pytorch_data_object({0: ['BD', '3C', 'None']})
+
+    graph.visualise()
 
     exit()
     # nx_h2o_graph = nx.MultiGraph()

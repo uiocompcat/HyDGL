@@ -30,53 +30,53 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.WIBERG,
             [NodeFeature.ATOMIC_NUMBER],
             [
-                Node(features=[48]),
-                Node(features=[8]),
-                Node(features=[7]),
-                Node(features=[6]),
-                Node(features=[16]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[7]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[7]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[7]),
-                Node(features=[6]),
-                Node(features=[16]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[17]),
-                Node(features=[8]),
-                Node(features=[8]),
-                Node(features=[8]),
-                Node(features=[8]),
-                Node(features=[1]),
-                Node(features=[1]),
-                Node(features=[1]),
-                Node(features=[1]),
-                Node(features=[1]),
-                Node(features=[1]),
-                Node(features=[1]),
-                Node(features=[1]),
-                Node(features=[1]),
-                Node(features=[1]),
-                Node(features=[1]),
-                Node(features=[1]),
-                Node(features=[1]),
-                Node(features=[1]),
-                Node(features=[1]),
-                Node(features=[1])
+                Node(features={'atomic_number': 48}),
+                Node(features={'atomic_number': 8}),
+                Node(features={'atomic_number': 7}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 16}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 7}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 7}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 7}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 16}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 17}),
+                Node(features={'atomic_number': 8}),
+                Node(features={'atomic_number': 8}),
+                Node(features={'atomic_number': 8}),
+                Node(features={'atomic_number': 8}),
+                Node(features={'atomic_number': 1}),
+                Node(features={'atomic_number': 1}),
+                Node(features={'atomic_number': 1}),
+                Node(features={'atomic_number': 1}),
+                Node(features={'atomic_number': 1}),
+                Node(features={'atomic_number': 1}),
+                Node(features={'atomic_number': 1}),
+                Node(features={'atomic_number': 1}),
+                Node(features={'atomic_number': 1}),
+                Node(features={'atomic_number': 1}),
+                Node(features={'atomic_number': 1}),
+                Node(features={'atomic_number': 1}),
+                Node(features={'atomic_number': 1}),
+                Node(features={'atomic_number': 1}),
+                Node(features={'atomic_number': 1}),
+                Node(features={'atomic_number': 1})
             ]
         ],
 
@@ -86,37 +86,37 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.WIBERG,
             [NodeFeature.ATOMIC_NUMBER],
             [
-                Node(features=[48]),
-                Node(features=[8]),
-                Node(features=[7]),
-                Node(features=[6]),
-                Node(features=[16]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[7]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[7]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[7]),
-                Node(features=[6]),
-                Node(features=[16]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[17]),
-                Node(features=[8]),
-                Node(features=[8]),
-                Node(features=[8]),
-                Node(features=[8])
+                Node(features={'atomic_number': 48}),
+                Node(features={'atomic_number': 8}),
+                Node(features={'atomic_number': 7}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 16}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 7}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 7}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 7}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 16}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 17}),
+                Node(features={'atomic_number': 8}),
+                Node(features={'atomic_number': 8}),
+                Node(features={'atomic_number': 8}),
+                Node(features={'atomic_number': 8})
             ]
         ],
 
@@ -126,37 +126,37 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.WIBERG,
             [NodeFeature.ATOMIC_NUMBER, NodeFeature.BOUND_HYDROGEN_COUNT],
             [
-                Node(features=[48, 0]),
-                Node(features=[8, 2]),
-                Node(features=[7, 0]),
-                Node(features=[6, 0]),
-                Node(features=[16, 0]),
-                Node(features=[6, 1]),
-                Node(features=[6, 0]),
-                Node(features=[6, 3]),
-                Node(features=[7, 0]),
-                Node(features=[6, 0]),
-                Node(features=[6, 1]),
-                Node(features=[6, 1]),
-                Node(features=[6, 1]),
-                Node(features=[6, 0]),
-                Node(features=[7, 0]),
-                Node(features=[6, 0]),
-                Node(features=[6, 1]),
-                Node(features=[6, 1]),
-                Node(features=[6, 1]),
-                Node(features=[6, 0]),
-                Node(features=[7, 0]),
-                Node(features=[6, 0]),
-                Node(features=[16, 0]),
-                Node(features=[6, 1]),
-                Node(features=[6, 0]),
-                Node(features=[6, 3]),
-                Node(features=[17, 0]),
-                Node(features=[8, 0]),
-                Node(features=[8, 0]),
-                Node(features=[8, 0]),
-                Node(features=[8, 0])
+                Node(features={'atomic_number': 48, 'hydrogen_count': 0}),
+                Node(features={'atomic_number': 8, 'hydrogen_count': 2}),
+                Node(features={'atomic_number': 7, 'hydrogen_count': 0}),
+                Node(features={'atomic_number': 6, 'hydrogen_count': 0}),
+                Node(features={'atomic_number': 16, 'hydrogen_count': 0}),
+                Node(features={'atomic_number': 6, 'hydrogen_count': 1}),
+                Node(features={'atomic_number': 6, 'hydrogen_count': 0}),
+                Node(features={'atomic_number': 6, 'hydrogen_count': 3}),
+                Node(features={'atomic_number': 7, 'hydrogen_count': 0}),
+                Node(features={'atomic_number': 6, 'hydrogen_count': 0}),
+                Node(features={'atomic_number': 6, 'hydrogen_count': 1}),
+                Node(features={'atomic_number': 6, 'hydrogen_count': 1}),
+                Node(features={'atomic_number': 6, 'hydrogen_count': 1}),
+                Node(features={'atomic_number': 6, 'hydrogen_count': 0}),
+                Node(features={'atomic_number': 7, 'hydrogen_count': 0}),
+                Node(features={'atomic_number': 6, 'hydrogen_count': 0}),
+                Node(features={'atomic_number': 6, 'hydrogen_count': 1}),
+                Node(features={'atomic_number': 6, 'hydrogen_count': 1}),
+                Node(features={'atomic_number': 6, 'hydrogen_count': 1}),
+                Node(features={'atomic_number': 6, 'hydrogen_count': 0}),
+                Node(features={'atomic_number': 7, 'hydrogen_count': 0}),
+                Node(features={'atomic_number': 6, 'hydrogen_count': 0}),
+                Node(features={'atomic_number': 16, 'hydrogen_count': 0}),
+                Node(features={'atomic_number': 6, 'hydrogen_count': 1}),
+                Node(features={'atomic_number': 6, 'hydrogen_count': 0}),
+                Node(features={'atomic_number': 6, 'hydrogen_count': 3}),
+                Node(features={'atomic_number': 17, 'hydrogen_count': 0}),
+                Node(features={'atomic_number': 8, 'hydrogen_count': 0}),
+                Node(features={'atomic_number': 8, 'hydrogen_count': 0}),
+                Node(features={'atomic_number': 8, 'hydrogen_count': 0}),
+                Node(features={'atomic_number': 8, 'hydrogen_count': 0})
             ]
         ],
 
@@ -166,38 +166,38 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.WIBERG,
             [NodeFeature.ATOMIC_NUMBER],
             [
-                Node(features=[77]),
-                Node(features=[1]),
-                Node(features=[7]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[7]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[8]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[8]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[8]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[6]),
-                Node(features=[8]),
-                Node(features=[6]),
-                Node(features=[6])
+                Node(features={'atomic_number': 77}),
+                Node(features={'atomic_number': 1}),
+                Node(features={'atomic_number': 7}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 7}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 8}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 8}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 8}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 8}),
+                Node(features={'atomic_number': 6}),
+                Node(features={'atomic_number': 6})
             ]
         ],
 
@@ -207,53 +207,53 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.WIBERG,
             [NodeFeature.WIBERG_BOND_ORDER_TOTAL],
             [
-                Node(features=[0.5922]),
-                Node(features=[1.5640]),
-                Node(features=[3.1352]),
-                Node(features=[4.0037]),
-                Node(features=[2.7551]),
-                Node(features=[3.9207]),
-                Node(features=[3.9888]),
-                Node(features=[3.8371]),
-                Node(features=[3.1270]),
-                Node(features=[3.9977]),
-                Node(features=[3.9509]),
-                Node(features=[3.9440]),
-                Node(features=[3.9536]),
-                Node(features=[3.9935]),
-                Node(features=[3.1278]),
-                Node(features=[3.9975]),
-                Node(features=[3.9509]),
-                Node(features=[3.9445]),
-                Node(features=[3.9542]),
-                Node(features=[3.9953]),
-                Node(features=[3.1300]),
-                Node(features=[4.0056]),
-                Node(features=[2.7623]),
-                Node(features=[3.9225]),
-                Node(features=[3.9905]),
-                Node(features=[3.8393]),
-                Node(features=[4.5847]),
-                Node(features=[1.4772]),
-                Node(features=[1.5452]),
-                Node(features=[1.7228]),
-                Node(features=[1.7681]),
-                Node(features=[0.7499]),
-                Node(features=[0.9248]),
-                Node(features=[0.7511]),
-                Node(features=[0.9401]),
-                Node(features=[0.9277]),
-                Node(features=[0.9395]),
-                Node(features=[0.9432]),
-                Node(features=[0.9423]),
-                Node(features=[0.9257]),
-                Node(features=[0.9439]),
-                Node(features=[0.9392]),
-                Node(features=[0.9400]),
-                Node(features=[0.9473]),
-                Node(features=[0.9272]),
-                Node(features=[0.9445]),
-                Node(features=[0.9420])
+                Node(features={'wiberg_bond_order_total': 0.5922}),
+                Node(features={'wiberg_bond_order_total': 1.5640}),
+                Node(features={'wiberg_bond_order_total': 3.1352}),
+                Node(features={'wiberg_bond_order_total': 4.0037}),
+                Node(features={'wiberg_bond_order_total': 2.7551}),
+                Node(features={'wiberg_bond_order_total': 3.9207}),
+                Node(features={'wiberg_bond_order_total': 3.9888}),
+                Node(features={'wiberg_bond_order_total': 3.8371}),
+                Node(features={'wiberg_bond_order_total': 3.1270}),
+                Node(features={'wiberg_bond_order_total': 3.9977}),
+                Node(features={'wiberg_bond_order_total': 3.9509}),
+                Node(features={'wiberg_bond_order_total': 3.9440}),
+                Node(features={'wiberg_bond_order_total': 3.9536}),
+                Node(features={'wiberg_bond_order_total': 3.9935}),
+                Node(features={'wiberg_bond_order_total': 3.1278}),
+                Node(features={'wiberg_bond_order_total': 3.9975}),
+                Node(features={'wiberg_bond_order_total': 3.9509}),
+                Node(features={'wiberg_bond_order_total': 3.9445}),
+                Node(features={'wiberg_bond_order_total': 3.9542}),
+                Node(features={'wiberg_bond_order_total': 3.9953}),
+                Node(features={'wiberg_bond_order_total': 3.1300}),
+                Node(features={'wiberg_bond_order_total': 4.0056}),
+                Node(features={'wiberg_bond_order_total': 2.7623}),
+                Node(features={'wiberg_bond_order_total': 3.9225}),
+                Node(features={'wiberg_bond_order_total': 3.9905}),
+                Node(features={'wiberg_bond_order_total': 3.8393}),
+                Node(features={'wiberg_bond_order_total': 4.5847}),
+                Node(features={'wiberg_bond_order_total': 1.4772}),
+                Node(features={'wiberg_bond_order_total': 1.5452}),
+                Node(features={'wiberg_bond_order_total': 1.7228}),
+                Node(features={'wiberg_bond_order_total': 1.7681}),
+                Node(features={'wiberg_bond_order_total': 0.7499}),
+                Node(features={'wiberg_bond_order_total': 0.9248}),
+                Node(features={'wiberg_bond_order_total': 0.7511}),
+                Node(features={'wiberg_bond_order_total': 0.9401}),
+                Node(features={'wiberg_bond_order_total': 0.9277}),
+                Node(features={'wiberg_bond_order_total': 0.9395}),
+                Node(features={'wiberg_bond_order_total': 0.9432}),
+                Node(features={'wiberg_bond_order_total': 0.9423}),
+                Node(features={'wiberg_bond_order_total': 0.9257}),
+                Node(features={'wiberg_bond_order_total': 0.9439}),
+                Node(features={'wiberg_bond_order_total': 0.9392}),
+                Node(features={'wiberg_bond_order_total': 0.9400}),
+                Node(features={'wiberg_bond_order_total': 0.9473}),
+                Node(features={'wiberg_bond_order_total': 0.9272}),
+                Node(features={'wiberg_bond_order_total': 0.9445}),
+                Node(features={'wiberg_bond_order_total': 0.9420})
             ]
         ],
 
@@ -263,53 +263,53 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.NLMO_BOND_ORDER_TOTAL],
             [
-                Node(features=[0.5744]),
-                Node(features=[1.022]),
-                Node(features=[2.2828]),
-                Node(features=[3.3946]),
-                Node(features=[1.9874]),
-                Node(features=[3.3227]),
-                Node(features=[3.5845]),
-                Node(features=[3.1819]),
-                Node(features=[2.2794]),
-                Node(features=[3.5223]),
-                Node(features=[3.5658]),
-                Node(features=[3.7724]),
-                Node(features=[3.5903]),
-                Node(features=[3.7262]),
-                Node(features=[2.2683]),
-                Node(features=[3.532]),
-                Node(features=[3.5804]),
-                Node(features=[3.7722]),
-                Node(features=[3.5926]),
-                Node(features=[3.7325]),
-                Node(features=[2.27]),
-                Node(features=[3.3969]),
-                Node(features=[1.993]),
-                Node(features=[3.3239]),
-                Node(features=[3.5949]),
-                Node(features=[3.1929]),
-                Node(features=[4.1104]),
-                Node(features=[0.7012]),
-                Node(features=[0.7221]),
-                Node(features=[0.7784]),
-                Node(features=[0.8416]),
-                Node(features=[0.498]),
-                Node(features=[0.7029]),
-                Node(features=[0.4975]),
-                Node(features=[0.755]),
-                Node(features=[0.7378]),
-                Node(features=[0.744]),
-                Node(features=[0.7555]),
-                Node(features=[0.7705]),
-                Node(features=[0.7003]),
-                Node(features=[0.7588]),
-                Node(features=[0.7436]),
-                Node(features=[0.7536]),
-                Node(features=[0.7619]),
-                Node(features=[0.735]),
-                Node(features=[0.7559]),
-                Node(features=[0.7702])
+                Node(features={'nlmo_bond_order_total': 0.5744}),
+                Node(features={'nlmo_bond_order_total': 1.022}),
+                Node(features={'nlmo_bond_order_total': 2.2828}),
+                Node(features={'nlmo_bond_order_total': 3.3946}),
+                Node(features={'nlmo_bond_order_total': 1.9874}),
+                Node(features={'nlmo_bond_order_total': 3.3227}),
+                Node(features={'nlmo_bond_order_total': 3.5845}),
+                Node(features={'nlmo_bond_order_total': 3.1819}),
+                Node(features={'nlmo_bond_order_total': 2.2794}),
+                Node(features={'nlmo_bond_order_total': 3.5223}),
+                Node(features={'nlmo_bond_order_total': 3.5658}),
+                Node(features={'nlmo_bond_order_total': 3.7724}),
+                Node(features={'nlmo_bond_order_total': 3.5903}),
+                Node(features={'nlmo_bond_order_total': 3.7262}),
+                Node(features={'nlmo_bond_order_total': 2.2683}),
+                Node(features={'nlmo_bond_order_total': 3.532}),
+                Node(features={'nlmo_bond_order_total': 3.5804}),
+                Node(features={'nlmo_bond_order_total': 3.7722}),
+                Node(features={'nlmo_bond_order_total': 3.5926}),
+                Node(features={'nlmo_bond_order_total': 3.7325}),
+                Node(features={'nlmo_bond_order_total': 2.27}),
+                Node(features={'nlmo_bond_order_total': 3.3969}),
+                Node(features={'nlmo_bond_order_total': 1.993}),
+                Node(features={'nlmo_bond_order_total': 3.3239}),
+                Node(features={'nlmo_bond_order_total': 3.5949}),
+                Node(features={'nlmo_bond_order_total': 3.1929}),
+                Node(features={'nlmo_bond_order_total': 4.1104}),
+                Node(features={'nlmo_bond_order_total': 0.7012}),
+                Node(features={'nlmo_bond_order_total': 0.7221}),
+                Node(features={'nlmo_bond_order_total': 0.7784}),
+                Node(features={'nlmo_bond_order_total': 0.8416}),
+                Node(features={'nlmo_bond_order_total': 0.498}),
+                Node(features={'nlmo_bond_order_total': 0.7029}),
+                Node(features={'nlmo_bond_order_total': 0.4975}),
+                Node(features={'nlmo_bond_order_total': 0.755}),
+                Node(features={'nlmo_bond_order_total': 0.7378}),
+                Node(features={'nlmo_bond_order_total': 0.744}),
+                Node(features={'nlmo_bond_order_total': 0.7555}),
+                Node(features={'nlmo_bond_order_total': 0.7705}),
+                Node(features={'nlmo_bond_order_total': 0.7003}),
+                Node(features={'nlmo_bond_order_total': 0.7588}),
+                Node(features={'nlmo_bond_order_total': 0.7436}),
+                Node(features={'nlmo_bond_order_total': 0.7536}),
+                Node(features={'nlmo_bond_order_total': 0.7619}),
+                Node(features={'nlmo_bond_order_total': 0.735}),
+                Node(features={'nlmo_bond_order_total': 0.7559}),
+                Node(features={'nlmo_bond_order_total': 0.7702})
             ]
         ],
 
@@ -319,53 +319,53 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.WIBERG,
             [NodeFeature.NATURAL_ATOMIC_CHARGE],
             [
-                Node(features=[1.68876]),
-                Node(features=[-0.97287]),
-                Node(features=[-0.5208]),
-                Node(features=[-0.00055]),
-                Node(features=[0.50384]),
-                Node(features=[-0.42569]),
-                Node(features=[0.16518]),
-                Node(features=[-0.67147]),
-                Node(features=[-0.49808]),
-                Node(features=[0.15474]),
-                Node(features=[-0.20643]),
-                Node(features=[-0.14183]),
-                Node(features=[-0.20915]),
-                Node(features=[0.18]),
-                Node(features=[-0.49346]),
-                Node(features=[0.16092]),
-                Node(features=[-0.20272]),
-                Node(features=[-0.14315]),
-                Node(features=[-0.20931]),
-                Node(features=[0.17315]),
-                Node(features=[-0.52989]),
-                Node(features=[0.00237]),
-                Node(features=[0.50834]),
-                Node(features=[-0.42223]),
-                Node(features=[0.1705]),
-                Node(features=[-0.67088]),
-                Node(features=[2.36189]),
-                Node(features=[-0.9251]),
-                Node(features=[-0.87318]),
-                Node(features=[-0.75172]),
-                Node(features=[-0.7181]),
-                Node(features=[0.50206]),
-                Node(features=[0.27661]),
-                Node(features=[0.50076]),
-                Node(features=[0.24647]),
-                Node(features=[0.27044]),
-                Node(features=[0.24758]),
-                Node(features=[0.24012]),
-                Node(features=[0.24114]),
-                Node(features=[0.27532]),
-                Node(features=[0.23865]),
-                Node(features=[0.2482]),
-                Node(features=[0.24659]),
-                Node(features=[0.23192]),
-                Node(features=[0.27127]),
-                Node(features=[0.23798]),
-                Node(features=[0.24182])
+                Node(features={'natural_atomic_charge': 1.68876}),
+                Node(features={'natural_atomic_charge': -0.97287}),
+                Node(features={'natural_atomic_charge': -0.5208}),
+                Node(features={'natural_atomic_charge': -0.00055}),
+                Node(features={'natural_atomic_charge': 0.50384}),
+                Node(features={'natural_atomic_charge': -0.42569}),
+                Node(features={'natural_atomic_charge': 0.16518}),
+                Node(features={'natural_atomic_charge': -0.67147}),
+                Node(features={'natural_atomic_charge': -0.49808}),
+                Node(features={'natural_atomic_charge': 0.15474}),
+                Node(features={'natural_atomic_charge': -0.20643}),
+                Node(features={'natural_atomic_charge': -0.14183}),
+                Node(features={'natural_atomic_charge': -0.20915}),
+                Node(features={'natural_atomic_charge': 0.18}),
+                Node(features={'natural_atomic_charge': -0.49346}),
+                Node(features={'natural_atomic_charge': 0.16092}),
+                Node(features={'natural_atomic_charge': -0.20272}),
+                Node(features={'natural_atomic_charge': -0.14315}),
+                Node(features={'natural_atomic_charge': -0.20931}),
+                Node(features={'natural_atomic_charge': 0.17315}),
+                Node(features={'natural_atomic_charge': -0.52989}),
+                Node(features={'natural_atomic_charge': 0.00237}),
+                Node(features={'natural_atomic_charge': 0.50834}),
+                Node(features={'natural_atomic_charge': -0.42223}),
+                Node(features={'natural_atomic_charge': 0.1705}),
+                Node(features={'natural_atomic_charge': -0.67088}),
+                Node(features={'natural_atomic_charge': 2.36189}),
+                Node(features={'natural_atomic_charge': -0.9251}),
+                Node(features={'natural_atomic_charge': -0.87318}),
+                Node(features={'natural_atomic_charge': -0.75172}),
+                Node(features={'natural_atomic_charge': -0.7181}),
+                Node(features={'natural_atomic_charge': 0.50206}),
+                Node(features={'natural_atomic_charge': 0.27661}),
+                Node(features={'natural_atomic_charge': 0.50076}),
+                Node(features={'natural_atomic_charge': 0.24647}),
+                Node(features={'natural_atomic_charge': 0.27044}),
+                Node(features={'natural_atomic_charge': 0.24758}),
+                Node(features={'natural_atomic_charge': 0.24012}),
+                Node(features={'natural_atomic_charge': 0.24114}),
+                Node(features={'natural_atomic_charge': 0.27532}),
+                Node(features={'natural_atomic_charge': 0.23865}),
+                Node(features={'natural_atomic_charge': 0.2482}),
+                Node(features={'natural_atomic_charge': 0.24659}),
+                Node(features={'natural_atomic_charge': 0.23192}),
+                Node(features={'natural_atomic_charge': 0.27127}),
+                Node(features={'natural_atomic_charge': 0.23798}),
+                Node(features={'natural_atomic_charge': 0.24182})
             ]
         ],
 
@@ -375,53 +375,53 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.WIBERG,
             [NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_F],
             [
-                Node(features=[0.31, 0.01, 9.98, 0.0]),
-                Node(features=[1.75, 5.21, 0.01, 0.0]),
-                Node(features=[1.37, 4.13, 0.01, 0.0]),
-                Node(features=[0.97, 3.01, 0.01, 0.0]),
-                Node(features=[1.65, 3.82, 0.03, 0.0]),
-                Node(features=[1.10, 3.32, 0.01, 0.0]),
-                Node(features=[0.91, 2.92, 0.0, 0.0]),
-                Node(features=[1.13, 3.53, 0.01, 0.0]),
-                Node(features=[1.34, 4.14, 0.01, 0.0]),
-                Node(features=[0.89, 2.94, 0.0, 0.0]),
-                Node(features=[1.00, 3.2, 0.0, 0.0]),
-                Node(features=[1.00, 3.13, 0.0, 0.0]),
-                Node(features=[1.00, 3.2, 0.0, 0.0]),
-                Node(features=[0.89, 2.91, 0.0, 0.0]),
-                Node(features=[1.34, 4.13, 0.01, 0.0]),
-                Node(features=[0.89, 2.94, 0.0, 0.0]),
-                Node(features=[1.00, 3.2, 0.0, 0.0]),
-                Node(features=[1.00, 3.13, 0.0, 0.0]),
-                Node(features=[1.00, 3.2, 0.0, 0.0]),
-                Node(features=[0.89, 2.92, 0.0, 0.0]),
-                Node(features=[1.37, 4.14, 0.02, 0.0]),
-                Node(features=[0.96, 3.01, 0.01, 0.0]),
-                Node(features=[1.65, 3.82, 0.03, 0.0]),
-                Node(features=[1.10, 3.31, 0.01, 0.0]),
-                Node(features=[0.91, 2.91, 0.0, 0.0]),
-                Node(features=[1.13, 3.53, 0.01, 0.0]),
-                Node(features=[1.25, 3.08, 0.3, 0.01]),
-                Node(features=[1.89, 5.01, 0.02, 0.0]),
-                Node(features=[1.89, 4.96, 0.02, 0.0]),
-                Node(features=[1.87, 4.85, 0.02, 0.0]),
-                Node(features=[1.87, 4.82, 0.02, 0.0]),
-                Node(features=[0.5, 0.0, 0.0, 0.0]),
-                Node(features=[0.72, 0.0, 0.0, 0.0]),
-                Node(features=[0.5, 0.0, 0.0, 0.0]),
-                Node(features=[0.75, 0.0, 0.0, 0.0]),
-                Node(features=[0.73, 0.0, 0.0, 0.0]),
-                Node(features=[0.75, 0.0, 0.0, 0.0]),
-                Node(features=[0.76, 0.0, 0.0, 0.0]),
-                Node(features=[0.76, 0.0, 0.0, 0.0]),
-                Node(features=[0.72, 0.0, 0.0, 0.0]),
-                Node(features=[0.76, 0.0, 0.0, 0.0]),
-                Node(features=[0.75, 0.0, 0.0, 0.0]),
-                Node(features=[0.75, 0.0, 0.0, 0.0]),
-                Node(features=[0.77, 0.0, 0.0, 0.0]),
-                Node(features=[0.73, 0.0, 0.0, 0.0]),
-                Node(features=[0.76, 0.0, 0.0, 0.0]),
-                Node(features=[0.76, 0.0, 0.0, 0.0])
+                Node(features={'natural_electron_configuration': [0.31, 0.01, 9.98, 0.0]}),
+                Node(features={'natural_electron_configuration': [1.75, 5.21, 0.01, 0.0]}),
+                Node(features={'natural_electron_configuration': [1.37, 4.13, 0.01, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.97, 3.01, 0.01, 0.0]}),
+                Node(features={'natural_electron_configuration': [1.65, 3.82, 0.03, 0.0]}),
+                Node(features={'natural_electron_configuration': [1.10, 3.32, 0.01, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.91, 2.92, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [1.13, 3.53, 0.01, 0.0]}),
+                Node(features={'natural_electron_configuration': [1.34, 4.14, 0.01, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.89, 2.94, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [1.00, 3.2, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [1.00, 3.13, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [1.00, 3.2, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.89, 2.91, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [1.34, 4.13, 0.01, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.89, 2.94, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [1.00, 3.2, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [1.00, 3.13, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [1.00, 3.2, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.89, 2.92, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [1.37, 4.14, 0.02, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.96, 3.01, 0.01, 0.0]}),
+                Node(features={'natural_electron_configuration': [1.65, 3.82, 0.03, 0.0]}),
+                Node(features={'natural_electron_configuration': [1.10, 3.31, 0.01, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.91, 2.91, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [1.13, 3.53, 0.01, 0.0]}),
+                Node(features={'natural_electron_configuration': [1.25, 3.08, 0.3, 0.01]}),
+                Node(features={'natural_electron_configuration': [1.89, 5.01, 0.02, 0.0]}),
+                Node(features={'natural_electron_configuration': [1.89, 4.96, 0.02, 0.0]}),
+                Node(features={'natural_electron_configuration': [1.87, 4.85, 0.02, 0.0]}),
+                Node(features={'natural_electron_configuration': [1.87, 4.82, 0.02, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.5, 0.0, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.72, 0.0, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.5, 0.0, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.75, 0.0, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.73, 0.0, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.75, 0.0, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.76, 0.0, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.76, 0.0, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.72, 0.0, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.76, 0.0, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.75, 0.0, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.75, 0.0, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.77, 0.0, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.73, 0.0, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.76, 0.0, 0.0, 0.0]}),
+                Node(features={'natural_electron_configuration': [0.76, 0.0, 0.0, 0.0]})
             ]
         ],
 
@@ -431,239 +431,37 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.WIBERG,
             [NodeFeature.LONE_PAIR_MAX, NodeFeature.LONE_PAIR_S, NodeFeature.LONE_PAIR_P, NodeFeature.LONE_PAIR_D, NodeFeature.LONE_PAIR_F],
             [
-                Node(features=[5, -0.62573, 1.99593, 0.0001, 0.0, 0.9998, 0.0]),
-                Node(features=[2, -0.56001, 1.99619, 0.1619, 0.8369, 0.0011, 0.0]),
-                Node(features=[1, -0.50043, 1.86184, 0.3127, 0.6867, 0.0005, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[2, -0.37741, 1.55738, 0.0, 0.9979, 0.002, 0.0001]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[1, -0.48921, 1.87884, 0.2791, 0.7203, 0.0005, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[1, -0.48483, 1.87975, 0.2796, 0.7198, 0.0006, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[1, -0.49310, 1.86490, 0.3133, 0.6860, 0.0006, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[2, -0.36939, 1.55195, 0.0001, 0.9978, 0.002, 0.0001]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[3, -0.41714, 1.88616, 0.0003, 0.9976, 0.002, 0.0001]),
-                Node(features=[3, -0.4117, 1.86643, 0.0002, 0.9972, 0.0025, 0.0001]),
-                Node(features=[3, -0.4003, 1.79398, 0.0, 0.9964, 0.0035, 0.0001]),
-                Node(features=[3, -0.39761, 1.77785, 0.0, 0.9961, 0.0038, 0.0001])
-            ]
-        ],
-
-        [
-            TEST_FILE_LALMER,
-            HydrogenMode.OMIT,
-            BondOrderType.WIBERG,
-            [NodeFeature.LONE_PAIR_AVERAGE, NodeFeature.LONE_PAIR_S, NodeFeature.LONE_PAIR_P, NodeFeature.LONE_PAIR_D, NodeFeature.LONE_PAIR_F],
-            [
-                Node(features=[5, -0.627936, 1.996892, 0.00014, 0.0, 0.99984, 0.0]),
-                Node(features=[2, -0.61476, 1.9834, 0.26065, 0.73855, 0.00075, 0.0]),
-                Node(features=[1, -0.50043, 1.86184, 0.3127, 0.6867, 0.0005, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[2, -0.51211, 1.76919, 0.32825, 0.6705, 0.0012, 0.00005]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[1, -0.48921, 1.87884, 0.2791, 0.7203, 0.0005, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[1, -0.48483, 1.87975, 0.2796, 0.7198, 0.0006, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[1, -0.49310, 1.86490, 0.3133, 0.6860, 0.0006, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[2, -0.504135, 1.766285, 0.32715, 0.6716, 0.0012, 0.00005]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[3, -0.5798866, 1.91078, 0.2991, 0.6994333, 0.0014, 0.0000333]),
-                Node(features=[3, -0.5712033, 1.89843666666667, 0.2962666, 0.7019, 0.0017666, 0.0000666]),
-                Node(features=[3, -0.55052, 1.863, 0.2877333, 0.70986666, 0.002333, 0.00006666]),
-                Node(features=[3, -0.5467866, 1.85364, 0.2865666, 0.7108333, 0.0025333, 0.0000666])
-            ]
-        ],
-
-        [
-            TEST_FILE_LALMER,
-            HydrogenMode.OMIT,
-            BondOrderType.WIBERG,
-            [NodeFeature.LONE_VACANCY_MIN, NodeFeature.LONE_VACANCY_S, NodeFeature.LONE_VACANCY_P, NodeFeature.LONE_VACANCY_D, NodeFeature.LONE_VACANCY_F],
-            [
-                Node(features=[1, -0.04626, 0.30391, 0.9988, 0.0002, 0.001, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
-            ]
-        ],
-
-        [
-            TEST_FILE_LALMER,
-            HydrogenMode.OMIT,
-            BondOrderType.WIBERG,
-            [NodeFeature.LONE_VACANCY_AVERAGE, NodeFeature.LONE_VACANCY_S, NodeFeature.LONE_VACANCY_P, NodeFeature.LONE_VACANCY_D, NodeFeature.LONE_VACANCY_F],
-            [
-                Node(features=[1, -0.04626, 0.30391, 0.9988, 0.0002, 0.001, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
-            ]
-        ],
-
-        [
-            TEST_FILE_OREDIA,
-            HydrogenMode.OMIT,
-            BondOrderType.WIBERG,
-            [NodeFeature.LONE_VACANCY_MIN, NodeFeature.LONE_VACANCY_S, NodeFeature.LONE_VACANCY_P, NodeFeature.LONE_VACANCY_D, NodeFeature.LONE_VACANCY_F],
-            [
-                Node(features=[2, -0.16639, 0.76906, 0.0015, 0.0001, 0.9984, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[1, -0.12926, 0.9643, 0.0, 00.9995, 0.0, 0.0005]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
-            ]
-        ],
-
-        [
-            TEST_FILE_OREDIA,
-            HydrogenMode.OMIT,
-            BondOrderType.WIBERG,
-            [NodeFeature.LONE_VACANCY_AVERAGE, NodeFeature.LONE_VACANCY_S, NodeFeature.LONE_VACANCY_P, NodeFeature.LONE_VACANCY_D, NodeFeature.LONE_VACANCY_F],
-            [
-                Node(features=[2, 0.4279, 0.570795, 0.43415, 0.0003, 0.5655, 0.00005]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[1, -0.12926, 0.9643, 0.0, 0.9995, 0.0, 0.0005]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
-                Node(features=[0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+                Node(features={'n_lone_pairs': 5, 'lone_pair_max': [-0.62573, 1.99593, 0.0001, 0.0, 0.9998, 0.0]}),
+                Node(features={'n_lone_pairs': 2, 'lone_pair_max': [-0.56001, 1.99619, 0.1619, 0.8369, 0.0011, 0.0]}),
+                Node(features={'n_lone_pairs': 1, 'lone_pair_max': [-0.50043, 1.86184, 0.3127, 0.6867, 0.0005, 0.0]}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}),
+                Node(features={'n_lone_pairs': 2, 'lone_pair_max': [-0.37741, 1.55738, 0.0, 0.9979, 0.002, 0.0001]}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}),
+                Node(features={'n_lone_pairs': 1, 'lone_pair_max': [-0.48921, 1.87884, 0.2791, 0.7203, 0.0005, 0.0]}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}),
+                Node(features={'n_lone_pairs': 1, 'lone_pair_max': [-0.48483, 1.87975, 0.2796, 0.7198, 0.0006, 0.0]}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}),
+                Node(features={'n_lone_pairs': 1, 'lone_pair_max': [-0.49310, 1.86490, 0.3133, 0.6860, 0.0006, 0.0]}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}),
+                Node(features={'n_lone_pairs': 2, 'lone_pair_max': [-0.36939, 1.55195, 0.0001, 0.9978, 0.002, 0.0001]}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}),
+                Node(features={'n_lone_pairs': 3, 'lone_pair_max': [-0.41714, 1.88616, 0.0003, 0.9976, 0.002, 0.0001]}),
+                Node(features={'n_lone_pairs': 3, 'lone_pair_max': [-0.4117, 1.86643, 0.0002, 0.9972, 0.0025, 0.0001]}),
+                Node(features={'n_lone_pairs': 3, 'lone_pair_max': [-0.4003, 1.79398, 0.0, 0.9964, 0.0035, 0.0001]}),
+                Node(features={'n_lone_pairs': 3, 'lone_pair_max': [-0.39761, 1.77785, 0.0, 0.9961, 0.0038, 0.0001]})
             ]
         ],
 
@@ -698,7 +496,7 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.ATOMIC_NUMBER, NodeFeature.NLMO_BOND_ORDER_TOTAL],
             4,
-            Node(features=[16, 1.9874], position=[-4.918379, -0.662092, -0.151817], label='S')
+            Node(features={'atomic_number': 16, 'nlmo_bond_order_total': 1.9874}, position=[-4.918379, -0.662092, -0.151817], label='S')
         ],
 
         [
@@ -707,7 +505,7 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.BOUND_HYDROGEN_COUNT],
             0,
-            Node(features=[0], position=[-1.339211, 0.079206, -0.361021], label='Ir')
+            Node(features={'hydrogen_count': 0}, position=[-1.339211, 0.079206, -0.361021], label='Ir')
         ],
 
         [
@@ -716,7 +514,7 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.BOUND_HYDROGEN_COUNT],
             3,
-            Node(features=[1], position=[1.516895, -0.164342, -0.168083], label='C')
+            Node(features={'hydrogen_count': 1}, position=[1.516895, -0.164342, -0.168083], label='C')
         ],
 
         [
@@ -725,7 +523,7 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.NATURAL_ATOMIC_CHARGE],
             1,
-            Node(features=[-0.05261], position=[-1.744384, 0.823097, -1.698982], label='H')
+            Node(features={'natural_atomic_charge': -0.05261}, position=[-1.744384, 0.823097, -1.698982], label='H')
         ],
 
         [
@@ -734,7 +532,7 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE],
             0,
-            Node(features=[3, 0.00634], position=[-1.339211, 0.079206, -0.361021], label='Ir')
+            Node(features={'n_lone_pairs': 3, 'lone_pair_energy_min_max_difference': 0.00634}, position=[-1.339211, 0.079206, -0.361021], label='Ir')
         ],
 
         [
@@ -743,7 +541,7 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE],
             2,
-            Node(features=[1, 0.0], position=[0.559518, 0.732394, -0.460712], label='N')
+            Node(features={'n_lone_pairs': 1, 'lone_pair_energy_min_max_difference': 0.0}, position=[0.559518, 0.732394, -0.460712], label='N')
         ],
 
         [
@@ -752,7 +550,7 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE],
             1,
-            Node(features=[0, 0.0], position=[-1.744384, 0.823097, -1.698982], label='H')
+            Node(features={'n_lone_pairs': 0, 'lone_pair_energy_min_max_difference': 0.0}, position=[-1.744384, 0.823097, -1.698982], label='H')
         ],
 
         [
@@ -761,7 +559,7 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE],
             0,
-            Node(features=[2, 1.18858], position=[-1.339211, 0.079206, -0.361021], label='Ir')
+            Node(features={'n_lone_vacancies': 2, 'lone_vacancy_energy_min_max_difference': 1.18858}, position=[-1.339211, 0.079206, -0.361021], label='Ir')
         ],
 
         [
@@ -770,7 +568,7 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE],
             7,
-            Node(features=[1, 0.0], position=[2.376961, 2.324297, -0.765855], label='C')
+            Node(features={'n_lone_vacancies': 1, 'lone_vacancy_energy_min_max_difference': 0.0}, position=[2.376961, 2.324297, -0.765855], label='C')
         ],
 
         [
@@ -779,7 +577,7 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE],
             1,
-            Node(features=[0, 0.0], position=[-1.744384, 0.823097, -1.698982], label='H')
+            Node(features={'n_lone_vacancies': 0, 'lone_vacancy_energy_min_max_difference': 0.0}, position=[-1.744384, 0.823097, -1.698982], label='H')
         ],
 
         [
@@ -788,7 +586,7 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE, NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE],
             0,
-            Node(features=[3, 0.00634, 2, 1.18858], position=[-1.339211, 0.079206, -0.361021], label='Ir')
+            Node(features={'n_lone_pairs': 3, 'lone_pair_energy_min_max_difference': 0.00634, 'n_lone_vacancies': 2, 'lone_vacancy_energy_min_max_difference': 1.18858}, position=[-1.339211, 0.079206, -0.361021], label='Ir')
         ],
 
         [
@@ -797,7 +595,52 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.NATURAL_ELECTRON_POPULATION_TOTAL, NodeFeature.NATURAL_ELECTRON_POPULATION_CORE, NodeFeature.NATURAL_ELECTRON_POPULATION_VALENCE, NodeFeature.NATURAL_ELECTRON_POPULATION_RYDBERG],
             0,
-            Node(features=[67.99971, 8.01992, 0.03702, 76.05666], position=[-1.339211, 0.079206, -0.361021], label='Ir')
+            Node(features={'natural_electron_population_core': 67.99971, 'natural_electron_population_valence': 8.01992, 'natural_electron_population_rydberg': 0.03702, 'natural_electron_population_total': 76.05666}, position=[-1.339211, 0.079206, -0.361021], label='Ir')
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            HydrogenMode.OMIT,
+            BondOrderType.NLMO,
+            [NodeFeature.LONE_PAIR_AVERAGE, NodeFeature.LONE_PAIR_S, NodeFeature.LONE_PAIR_P, NodeFeature.LONE_PAIR_D, NodeFeature.LONE_PAIR_F],
+            0,
+            Node(features={'n_lone_pairs': 5, 'lone_pair_average': [-0.627936, 1.996892, 0.00014, 0.0, 0.99984, 0.0]}, position=[-0.106076, -0.278587, -0.332310], label='Cd')
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            HydrogenMode.OMIT,
+            BondOrderType.NLMO,
+            [NodeFeature.LONE_VACANCY_AVERAGE, NodeFeature.LONE_VACANCY_S, NodeFeature.LONE_VACANCY_P, NodeFeature.LONE_VACANCY_D, NodeFeature.LONE_VACANCY_F],
+            0,
+            Node(features={'n_lone_vacancies': 1, 'lone_vacancy_average': [-0.04626, 0.30391, 0.9988, 0.0002, 0.001, 0.0]}, position=[-0.106076, -0.278587, -0.332310], label='Cd')
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            HydrogenMode.OMIT,
+            BondOrderType.NLMO,
+            [NodeFeature.LONE_VACANCY_MIN, NodeFeature.LONE_VACANCY_S, NodeFeature.LONE_VACANCY_P, NodeFeature.LONE_VACANCY_D, NodeFeature.LONE_VACANCY_F],
+            0,
+            Node(features={'n_lone_vacancies': 1, 'lone_vacancy_min': [-0.04626, 0.30391, 0.9988, 0.0002, 0.001, 0.0]}, position=[-0.106076, -0.278587, -0.332310], label='Cd')
+        ],
+
+        [
+            TEST_FILE_OREDIA,
+            HydrogenMode.OMIT,
+            BondOrderType.NLMO,
+            [NodeFeature.LONE_VACANCY_AVERAGE, NodeFeature.LONE_VACANCY_S, NodeFeature.LONE_VACANCY_P, NodeFeature.LONE_VACANCY_D, NodeFeature.LONE_VACANCY_F],
+            0,
+            Node(features={'n_lone_vacancies': 2, 'lone_vacancy_average': [0.4279, 0.570795, 0.43415, 0.0003, 0.5655, 0.00005]}, position=[-1.339211, 0.079206, -0.361021], label='Ir')
+        ],
+
+        [
+            TEST_FILE_OREDIA,
+            HydrogenMode.OMIT,
+            BondOrderType.NLMO,
+            [NodeFeature.LONE_VACANCY_MIN, NodeFeature.LONE_VACANCY_S, NodeFeature.LONE_VACANCY_P, NodeFeature.LONE_VACANCY_D, NodeFeature.LONE_VACANCY_F],
+            0,
+            Node(features={'n_lone_vacancies': 2, 'lone_vacancy_min': [-0.16639, 0.76906, 0.0015, 0.0001, 0.9984, 0.0]}, position=[-1.339211, 0.079206, -0.361021], label='Ir')
         ],
 
     ])
@@ -829,14 +672,14 @@ class TestGraphGenerator(unittest.TestCase):
             [EdgeFeature.WIBERG_BOND_ORDER],
             1,
             [
-                Edge([2, 3], [1.4785]), Edge([2, 6], [1.2435]), Edge([3, 4], [1.2259]), Edge([3, 9], [1.0752]),
-                Edge([4, 5], [1.2267]), Edge([5, 6], [1.5581]), Edge([6, 7], [1.0438]), Edge([8, 9], [1.3553]),
-                Edge([8, 13], [1.3698]), Edge([9, 10], [1.3595]), Edge([10, 11], [1.4483]), Edge([11, 12], [1.4358]),
-                Edge([12, 13], [1.3751]), Edge([13, 19], [1.0384]), Edge([14, 15], [1.3568]), Edge([14, 19], [1.3691]),
-                Edge([15, 16], [1.3538]), Edge([15, 21], [1.0775]), Edge([16, 17], [1.4541]), Edge([17, 18], [1.4305]),
-                Edge([18, 19], [1.3784]), Edge([20, 21], [1.4728]), Edge([20, 24], [1.2457]), Edge([21, 22], [1.2279]),
-                Edge([22, 23], [1.2305]), Edge([23, 24], [1.554]), Edge([24, 25], [1.0439]), Edge([26, 28], [1.0553]),
-                Edge([26, 29], [1.2463]), Edge([26, 30], [1.2875])
+                Edge([2, 3], features={'wiberg_bond_order': 1.4785}), Edge([2, 6], features={'wiberg_bond_order': 1.2435}), Edge([3, 4], features={'wiberg_bond_order': 1.2259}), Edge([3, 9], features={'wiberg_bond_order': 1.0752}),
+                Edge([4, 5], features={'wiberg_bond_order': 1.2267}), Edge([5, 6], features={'wiberg_bond_order': 1.5581}), Edge([6, 7], features={'wiberg_bond_order': 1.0438}), Edge([8, 9], features={'wiberg_bond_order': 1.3553}),
+                Edge([8, 13], features={'wiberg_bond_order': 1.3698}), Edge([9, 10], features={'wiberg_bond_order': 1.3595}), Edge([10, 11], features={'wiberg_bond_order': 1.4483}), Edge([11, 12], features={'wiberg_bond_order': 1.4358}),
+                Edge([12, 13], features={'wiberg_bond_order': 1.3751}), Edge([13, 19], features={'wiberg_bond_order': 1.0384}), Edge([14, 15], features={'wiberg_bond_order': 1.3568}), Edge([14, 19], features={'wiberg_bond_order': 1.3691}),
+                Edge([15, 16], features={'wiberg_bond_order': 1.3538}), Edge([15, 21], features={'wiberg_bond_order': 1.0775}), Edge([16, 17], features={'wiberg_bond_order': 1.4541}), Edge([17, 18], features={'wiberg_bond_order': 1.4305}),
+                Edge([18, 19], features={'wiberg_bond_order': 1.3784}), Edge([20, 21], features={'wiberg_bond_order': 1.4728}), Edge([20, 24], features={'wiberg_bond_order': 1.2457}), Edge([21, 22], features={'wiberg_bond_order': 1.2279}),
+                Edge([22, 23], features={'wiberg_bond_order': 1.2305}), Edge([23, 24], features={'wiberg_bond_order': 1.554}), Edge([24, 25], features={'wiberg_bond_order': 1.0439}), Edge([26, 28], features={'wiberg_bond_order': 1.0553}),
+                Edge([26, 29], features={'wiberg_bond_order': 1.2463}), Edge([26, 30], features={'wiberg_bond_order': 1.2875})
             ]
         ],
 
@@ -847,14 +690,14 @@ class TestGraphGenerator(unittest.TestCase):
             [EdgeFeature.BOND_DISTANCE],
             1,
             [
-                Edge([2, 3], features=[1.327352]), Edge([2, 6], [1.376780]), Edge([3, 4], [1.738008]), Edge([3, 9], [1.470177]),
-                Edge([4, 5], [1.724577]), Edge([5, 6], [1.388826]), Edge([6, 7], [1.493880]), Edge([8, 9], [1.345686]),
-                Edge([8, 13], [1.344363]), Edge([9, 10], [1.410199]), Edge([10, 11], [1.399380]), Edge([11, 12], [1.402615]),
-                Edge([12, 13], [1.409355]), Edge([13, 19], [1.495214]), Edge([14, 15], [1.345307]), Edge([14, 19], [1.343885]),
-                Edge([15, 16], [1.411362]), Edge([15, 21], [1.468893]), Edge([16, 17], [1.398391]), Edge([17, 18], [1.403130]),
-                Edge([18, 19], [1.408509]), Edge([20, 21], [1.327983]), Edge([20, 24], [1.376516]), Edge([21, 22], [1.737262]),
-                Edge([22, 23], [1.722296]), Edge([23, 24], [1.388434]), Edge([24, 25], [1.493701]), Edge([26, 28], [1.544322]),
-                Edge([26, 29], [1.482748]), Edge([26, 30], [1.471084])
+                Edge([2, 3], features={'bond_distance': 1.327352}), Edge([2, 6], features={'bond_distance': 1.376780}), Edge([3, 4], features={'bond_distance': 1.738008}), Edge([3, 9], features={'bond_distance': 1.470177}),
+                Edge([4, 5], features={'bond_distance': 1.724577}), Edge([5, 6], features={'bond_distance': 1.388826}), Edge([6, 7], features={'bond_distance': 1.493880}), Edge([8, 9], features={'bond_distance': 1.345686}),
+                Edge([8, 13], features={'bond_distance': 1.344363}), Edge([9, 10], features={'bond_distance': 1.410199}), Edge([10, 11], features={'bond_distance': 1.399380}), Edge([11, 12], features={'bond_distance': 1.402615}),
+                Edge([12, 13], features={'bond_distance': 1.409355}), Edge([13, 19], features={'bond_distance': 1.495214}), Edge([14, 15], features={'bond_distance': 1.345307}), Edge([14, 19], features={'bond_distance': 1.343885}),
+                Edge([15, 16], features={'bond_distance': 1.411362}), Edge([15, 21], features={'bond_distance': 1.468893}), Edge([16, 17], features={'bond_distance': 1.398391}), Edge([17, 18], features={'bond_distance': 1.403130}),
+                Edge([18, 19], features={'bond_distance': 1.408509}), Edge([20, 21], features={'bond_distance': 1.327983}), Edge([20, 24], features={'bond_distance': 1.376516}), Edge([21, 22], features={'bond_distance': 1.737262}),
+                Edge([22, 23], features={'bond_distance': 1.722296}), Edge([23, 24], features={'bond_distance': 1.388434}), Edge([24, 25], features={'bond_distance': 1.493701}), Edge([26, 28], features={'bond_distance': 1.544322}),
+                Edge([26, 29], features={'bond_distance': 1.482748}), Edge([26, 30], features={'bond_distance': 1.471084})
             ]
         ],
 
@@ -865,14 +708,14 @@ class TestGraphGenerator(unittest.TestCase):
             [EdgeFeature.BOND_ORBITAL_MAX, EdgeFeature.BOND_ORBITAL_DATA_D],
             1,
             [
-                Edge([2, 3], [2, -0.47335, 1.86181, 0.00125]), Edge([2, 6], [1, -0.83628, 1.98204, 0.0024]), Edge([3, 4], [1, -0.71751, 1.97740, 0.0048]), Edge([3, 9], [1, -0.75230, 1.97911, 0.00075]),
-                Edge([4, 5], [1, -0.70950, 1.97628, 0.0055]), Edge([5, 6], [2, -0.40546, 1.80326, 0.0011]), Edge([6, 7], [1, -0.68826, 1.98282, 0.0011]), Edge([8, 9], [2, -0.46423, 1.73906, 0.00115]),
-                Edge([8, 13], [1, -0.87779, 1.98407, 0.0021]), Edge([9, 10], [1, -0.75976, 1.98302, 0.0011]), Edge([10, 11], [2, -0.39926, 1.61498, 0.00055]), Edge([11, 12], [1, -0.75330, 1.98387, 0.00135]),
-                Edge([12, 13], [2, -0.40128, 1.58771, 0.0003]), Edge([13, 19], [1, -0.72173, 1.97437, 0.0007]), Edge([14, 15], [2, -0.45893, 1.73616, 0.00115]), Edge([14, 19], [1, -0.87405, 1.98390, 0.0021]),
-                Edge([15, 16], [1, -0.75425, 1.98305, 0.00105]), Edge([15, 21], [1, -0.74646, 1.97899, 0.00075]), Edge([16, 17], [2, -0.39528, 1.61781, 0.00055]), Edge([17, 18], [1, -0.74945, 1.98371, 0.00135]),
-                Edge([18, 19], [2, -0.39886, 1.59508, 0.0003]), Edge([20, 21], [2, -0.46620, 1.86014, 0.00085]), Edge([20, 24], [1, -0.82945, 1.98174, 0.0024]), Edge([21, 22], [1, -0.71051, 1.97741, 0.0048]),
-                Edge([22, 23], [1, -0.70280, 1.97615, 0.00545]), Edge([23, 24], [2, -0.39736, 1.79809, 0.0011]), Edge([24, 25], [1, -0.68261, 1.98279, 0.00105]), Edge([26, 28], [1, -0.92396, 1.98066, 0.01155]),
-                Edge([26, 29], [1, -0.97513, 1.98174, 0.0112]), Edge([26, 30], [1, -0.98492, 1.98216, 0.011])
+                Edge([2, 3], features={'n_bn': 2, 'bond_orbital_max': [-0.47335, 1.86181, 0.00125]}), Edge([2, 6], features={'n_bn': 1, 'bond_orbital_max': [-0.83628, 1.98204, 0.0024]}), Edge([3, 4], features={'n_bn': 1, 'bond_orbital_max': [-0.71751, 1.97740, 0.0048]}), Edge([3, 9], features={'n_bn': 1, 'bond_orbital_max': [-0.75230, 1.97911, 0.00075]}),
+                Edge([4, 5], features={'n_bn': 1, 'bond_orbital_max': [-0.70950, 1.97628, 0.0055]}), Edge([5, 6], features={'n_bn': 2, 'bond_orbital_max': [-0.40546, 1.80326, 0.0011]}), Edge([6, 7], features={'n_bn': 1, 'bond_orbital_max': [-0.68826, 1.98282, 0.0011]}), Edge([8, 9], features={'n_bn': 2, 'bond_orbital_max': [-0.46423, 1.73906, 0.00115]}),
+                Edge([8, 13], features={'n_bn': 1, 'bond_orbital_max': [-0.87779, 1.98407, 0.0021]}), Edge([9, 10], features={'n_bn': 1, 'bond_orbital_max': [-0.75976, 1.98302, 0.0011]}), Edge([10, 11], features={'n_bn': 2, 'bond_orbital_max': [-0.39926, 1.61498, 0.00055]}), Edge([11, 12], features={'n_bn': 1, 'bond_orbital_max': [-0.75330, 1.98387, 0.00135]}),
+                Edge([12, 13], features={'n_bn': 2, 'bond_orbital_max': [-0.40128, 1.58771, 0.0003]}), Edge([13, 19], features={'n_bn': 1, 'bond_orbital_max': [-0.72173, 1.97437, 0.0007]}), Edge([14, 15], features={'n_bn': 2, 'bond_orbital_max': [-0.45893, 1.73616, 0.00115]}), Edge([14, 19], features={'n_bn': 1, 'bond_orbital_max': [-0.87405, 1.98390, 0.0021]}),
+                Edge([15, 16], features={'n_bn': 1, 'bond_orbital_max': [-0.75425, 1.98305, 0.00105]}), Edge([15, 21], features={'n_bn': 1, 'bond_orbital_max': [-0.74646, 1.97899, 0.00075]}), Edge([16, 17], features={'n_bn': 2, 'bond_orbital_max': [-0.39528, 1.61781, 0.00055]}), Edge([17, 18], features={'n_bn': 1, 'bond_orbital_max': [-0.74945, 1.98371, 0.00135]}),
+                Edge([18, 19], features={'n_bn': 2, 'bond_orbital_max': [-0.39886, 1.59508, 0.0003]}), Edge([20, 21], features={'n_bn': 2, 'bond_orbital_max': [-0.46620, 1.86014, 0.00085]}), Edge([20, 24], features={'n_bn': 1, 'bond_orbital_max': [-0.82945, 1.98174, 0.0024]}), Edge([21, 22], features={'n_bn': 1, 'bond_orbital_max': [-0.71051, 1.97741, 0.0048]}),
+                Edge([22, 23], features={'n_bn': 1, 'bond_orbital_max': [-0.70280, 1.97615, 0.00545]}), Edge([23, 24], features={'n_bn': 2, 'bond_orbital_max': [-0.39736, 1.79809, 0.0011]}), Edge([24, 25], features={'n_bn': 1, 'bond_orbital_max': [-0.68261, 1.98279, 0.00105]}), Edge([26, 28], features={'n_bn': 1, 'bond_orbital_max': [-0.92396, 1.98066, 0.01155]}),
+                Edge([26, 29], features={'n_bn': 1, 'bond_orbital_max': [-0.97513, 1.98174, 0.0112]}), Edge([26, 30], features={'n_bn': 1, 'bond_orbital_max': [-0.98492, 1.98216, 0.011]})
             ]
         ],
     ])
@@ -1428,91 +1271,140 @@ class TestGraphGenerator(unittest.TestCase):
         [
             [15, 21],
             [EdgeFeature.BOND_ORBITAL_MAX, EdgeFeature.BOND_DISTANCE, EdgeFeature.BOND_ORBITAL_DATA_S],
-            Edge([15, 21], features=[1.468893, 1, -0.74646, 1.97899, 0.34105])
+            Edge([15, 21], features={
+                'bond_distance': 1.468893,
+                'n_bn': 1,
+                'bond_orbital_max': [-0.74646, 1.97899, 0.34105]
+            })
         ],
 
         [
             [15, 21],
             [EdgeFeature.BOND_ORBITAL_AVERAGE, EdgeFeature.BOND_DISTANCE, EdgeFeature.BOND_ORBITAL_DATA_S],
-            Edge([15, 21], [1.468893, 1, -0.74646, 1.97899, 0.34105])
+            Edge([15, 21], features={
+                'bond_distance': 1.468893,
+                'n_bn': 1,
+                'bond_orbital_average': [-0.74646, 1.97899, 0.34105]
+            })
         ],
 
         [
             [2, 3],
             [EdgeFeature.BOND_ORBITAL_MAX, EdgeFeature.BOND_ORBITAL_DATA_S, EdgeFeature.BOND_ORBITAL_DATA_P, EdgeFeature.BOND_ORBITAL_DATA_D, EdgeFeature.  BOND_ORBITAL_DATA_F],
-            Edge([2, 3], [2, -0.47335, 1.86181, 0.0, 0.9983, 0.00125, 0.0004])
+            Edge([2, 3], features={
+                'n_bn': 2,
+                'bond_orbital_max': [-0.47335, 1.86181, 0.0, 0.9983, 0.00125, 0.0004]
+            })
         ],
 
         [
             [2, 3],
             [EdgeFeature.BOND_ORBITAL_AVERAGE, EdgeFeature.BOND_ORBITAL_DATA_S, EdgeFeature.BOND_ORBITAL_DATA_P, EdgeFeature.BOND_ORBITAL_DATA_D, EdgeFeature.  BOND_ORBITAL_DATA_F],
-            Edge([2, 3], [2, -0.68039, 1.924115, 0.174625, 0.823025, 0.00195, 0.00035])
+            Edge([2, 3], features={
+                'n_bn': 2,
+                'bond_orbital_average': [-0.68039, 1.924115, 0.174625, 0.823025, 0.00195, 0.00035]
+            })
         ],
 
         [
             [2, 3],
             [EdgeFeature.ANTIBOND_ORBITAL_MIN, EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_P, EdgeFeature.ANTIBOND_ORBITAL_DATA_D, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
-            Edge([2, 3], [2, -0.15285, 0.47234, 0.0, 0.9983, 0.00125, 0.0004])
+            Edge([2, 3], features={
+                'n_bn': 2,
+                'antibond_orbital_min': [-0.15285, 0.47234, 0.0, 0.9983, 0.00125, 0.0004]
+            })
         ],
 
         [
             [2, 3],
             [EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_P, EdgeFeature.ANTIBOND_ORBITAL_DATA_D, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
-            Edge([2, 3], [2, 0.110375, 0.247345, 0.174625, 0.823025, 0.00195, 0.00035])
+            Edge([2, 3], features={
+                'n_bn': 2,
+                'antibond_orbital_average': [0.110375, 0.247345, 0.174625, 0.823025, 0.00195, 0.00035]
+            })
         ],
 
         [
             [2, 3],
             [EdgeFeature.ANTIBOND_ORBITAL_MIN, EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_P, EdgeFeature.ANTIBOND_ORBITAL_DATA_D, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
-            Edge([2, 3], [2, -0.15285, 0.47234, 0.0, 0.9983, 0.00125, 0.0004, 0.110375, 0.247345, 0.174625, 0.823025, 0.00195, 0.00035])
+            Edge([2, 3], features={
+                'n_bn': 2,
+                'antibond_orbital_min': [-0.15285, 0.47234, 0.0, 0.9983, 0.00125, 0.0004],
+                'antibond_orbital_average': [0.110375, 0.247345, 0.174625, 0.823025, 0.00195, 0.00035]
+            })
         ],
 
         [
             [0, 4],
             [EdgeFeature.BOND_ORBITAL_AVERAGE, EdgeFeature.BOND_ORBITAL_DATA_S, EdgeFeature.BOND_ORBITAL_DATA_P, EdgeFeature.BOND_ORBITAL_DATA_D, EdgeFeature.BOND_ORBITAL_DATA_F],
-            Edge([0, 4], [0, 0.0, 0.0, 0.3458798245614035, 0.6517228070175439, 0.0020701754385964913, 0.0003280701754385965])
+            Edge([0, 4], features={
+                'n_bn': 0,
+                'bond_orbital_average': [0.0, 0.0, 0.3458798245614035, 0.6517228070175439, 0.0020701754385964913, 0.0003280701754385965]
+            })
         ],
 
         [
             [0, 5],
             [EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_P, EdgeFeature.ANTIBOND_ORBITAL_DATA_D, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
-            Edge([0, 5], [0, 0.0, 0.0, 0.3458798245614035, 0.6517228070175439, 0.0020701754385964913, 0.0003280701754385965])
+            Edge([0, 5], features={
+                'n_bn': 0,
+                'antibond_orbital_average': [0.0, 0.0, 0.3458798245614035, 0.6517228070175439, 0.0020701754385964913, 0.0003280701754385965]
+            })
         ],
 
         [
             [2, 3],
             [EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE],
-            Edge([2, 3], [2, 0.41408])
+            Edge([2, 3], features={
+                'n_bn': 2,
+                'bond_energy_min_max_difference': 0.41408
+            })
         ],
 
         [
             [2, 3],
             [EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE],
-            Edge([2, 3], [2, 0.52645])
+            Edge([2, 3], features={
+                'n_bn': 2,
+                'antibond_energy_min_max_difference': 0.52645
+            })
         ],
 
         [
             [0, 5],
             [EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE],
-            Edge([0, 5], [0, 0.0])
+            Edge([0, 5], features={
+                'n_bn': 0,
+                'bond_energy_min_max_difference': 0.0
+            })
         ],
 
         [
             [0, 5],
             [EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE],
-            Edge([0, 5], [0, 0.0])
+            Edge([0, 5], features={
+                'n_bn': 0,
+                'antibond_energy_min_max_difference': 0.0
+            })
         ],
 
         [
             [2, 3],
             [EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE, EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE],
-            Edge([2, 3], [2, 0.41408, 0.52645])
+            Edge([2, 3], features={
+                'n_bn': 2,
+                'bond_energy_min_max_difference': 0.41408,
+                'antibond_energy_min_max_difference': 0.52645
+            })
         ],
 
         [
             [2, 6],
             [EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE],
-            Edge([2, 6], [1, 0.0])
+            Edge([2, 6], features={
+                'n_bn': 1,
+                'bond_energy_min_max_difference': 0.0
+            })
         ],
 
     ])
@@ -1538,14 +1430,14 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_OREDIA,
             [2, 5],
             [EdgeFeature.LMO_BOND_ORDER],
-            [-0.0394236]
+            {'lmo_bond_order': -0.0394236}
         ],
 
         [
             TEST_FILE_OREDIA,
             [2, 5],
             [EdgeFeature.NLMO_BOND_ORDER],
-            [-0.0471]
+            {'nlmo_bond_order': -0.0471}
         ],
 
         [
@@ -1553,7 +1445,12 @@ class TestGraphGenerator(unittest.TestCase):
             [3, 7],
             [EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE, EdgeFeature.BOND_ORBITAL_AVERAGE, EdgeFeature.BOND_ORBITAL_MAX,
              EdgeFeature.BOND_ORBITAL_DATA_S, EdgeFeature.BOND_ORBITAL_DATA_P, EdgeFeature.BOND_ORBITAL_DATA_D, EdgeFeature.BOND_ORBITAL_DATA_F],
-            [1, 0.0, -0.41717, 1.76966, 0.20673333333333332, 0.7872, 0.005666666666666667, 0.0004, -0.41717, 1.76966, 0.20673333333333332, 0.7872, 0.005666666666666667, 0.0004]
+            {
+                'n_bn': 1,
+                'bond_energy_min_max_difference': 0.0,
+                'bond_orbital_average': [-0.41717, 1.76966, 0.20673333333333332, 0.7872, 0.005666666666666667, 0.0004],
+                'bond_orbital_max': [-0.41717, 1.76966, 0.20673333333333332, 0.7872, 0.005666666666666667, 0.0004]
+            }
         ],
 
         [
@@ -1561,7 +1458,12 @@ class TestGraphGenerator(unittest.TestCase):
             [7, 8],
             [EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE, EdgeFeature.BOND_ORBITAL_AVERAGE, EdgeFeature.BOND_ORBITAL_MAX,
              EdgeFeature.BOND_ORBITAL_DATA_S, EdgeFeature.BOND_ORBITAL_DATA_P, EdgeFeature.BOND_ORBITAL_DATA_D, EdgeFeature.BOND_ORBITAL_DATA_F],
-            [1, 0.0, -0.41717, 1.76966, 0.20673333333333332, 0.7872, 0.005666666666666667, 0.0004, -0.41717, 1.76966, 0.20673333333333332, 0.7872, 0.005666666666666667, 0.0004]
+            {
+                'n_bn': 1,
+                'bond_energy_min_max_difference': 0.0,
+                'bond_orbital_average': [-0.41717, 1.76966, 0.20673333333333332, 0.7872, 0.005666666666666667, 0.0004],
+                'bond_orbital_max': [-0.41717, 1.76966, 0.20673333333333332, 0.7872, 0.005666666666666667, 0.0004]
+            }
         ],
 
         [
@@ -1569,7 +1471,12 @@ class TestGraphGenerator(unittest.TestCase):
             [8, 9],
             [EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE, EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_MIN,
              EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_P, EdgeFeature.ANTIBOND_ORBITAL_DATA_D, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
-            [1, 0.0, 0.27167, 0.11428, 0.34376666666666666, 0.6507333333333333, 0.005166666666666666, 0.00036666666666666667, 0.27167, 0.11428, 0.34376666666666666, 0.6507333333333333, 0.005166666666666666, 0.00036666666666666667]
+            {
+                'n_bn': 1,
+                'antibond_energy_min_max_difference': 0.0,
+                'antibond_orbital_average': [0.27167, 0.11428, 0.34376666666666666, 0.6507333333333333, 0.005166666666666666, 0.00036666666666666667],
+                'antibond_orbital_min': [0.27167, 0.11428, 0.34376666666666666, 0.6507333333333333, 0.005166666666666666, 0.00036666666666666667]
+            }
         ],
 
         [
@@ -1577,28 +1484,33 @@ class TestGraphGenerator(unittest.TestCase):
             [9, 11],
             [EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE, EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_MIN,
              EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_P, EdgeFeature.ANTIBOND_ORBITAL_DATA_D, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
-            [1, 0.0, 0.27167, 0.11428, 0.34376666666666666, 0.6507333333333333, 0.005166666666666666, 0.00036666666666666667, 0.27167, 0.11428, 0.34376666666666666, 0.6507333333333333, 0.005166666666666666, 0.00036666666666666667]
+            {
+                'n_bn': 1,
+                'antibond_energy_min_max_difference': 0.0,
+                'antibond_orbital_average': [0.27167, 0.11428, 0.34376666666666666, 0.6507333333333333, 0.005166666666666666, 0.00036666666666666667],
+                'antibond_orbital_min': [0.27167, 0.11428, 0.34376666666666666, 0.6507333333333333, 0.005166666666666666, 0.00036666666666666667]
+            }
         ],
 
         [
             TEST_FILE_ZUYHEG,
             [0, 21],
             [EdgeFeature.NBO_TYPE],
-            ['None']
+            {'nbo_type': 'None'}
         ],
 
         [
             TEST_FILE_ZUYHEG,
             [17, 18],
             [EdgeFeature.NBO_TYPE],
-            ['BD']
+            {'nbo_type': 'BD'}
         ],
 
         [
             TEST_FILE_ZUYHEG,
             [9, 10],
             [EdgeFeature.NBO_TYPE],
-            ['3C']
+            {'nbo_type': '3C'}
         ],
     ])
     def test_get_edge_features(self, file_path, bond_indices, edge_features, expected):
@@ -2689,13 +2601,13 @@ class TestGraphGenerator(unittest.TestCase):
             [],
             [SopaEdgeFeature.STABILISATION_ENERGY_MAX, SopaEdgeFeature.DONOR_NBO_TYPE, SopaEdgeFeature.ACCEPTOR_NBO_TYPE],
             [
-                Edge([1, 0], [15.10, 'LP', 'LV'], is_directed=True),
-                Edge([2, 0], [25.68, 'LP', 'LV'], is_directed=True),
-                Edge([8, 0], [22.74, 'LP', 'LV'], is_directed=True),
-                Edge([14, 0], [21.99, 'LP', 'LV'], is_directed=True),
-                Edge([20, 0], [23.34, 'LP', 'LV'], is_directed=True),
-                Edge([27, 0], [16.63, 'LP', 'LV'], is_directed=True),
-                Edge([28, 0], [12.43, 'LP', 'LV'], is_directed=True)
+                Edge([1, 0], {'stabilisation_energy_max': 15.10, 'donor_nbo_type': 'LP', 'acceptor_nbo_type': 'LV'}, is_directed=True),
+                Edge([2, 0], {'stabilisation_energy_max': 25.68, 'donor_nbo_type': 'LP', 'acceptor_nbo_type': 'LV'}, is_directed=True),
+                Edge([8, 0], {'stabilisation_energy_max': 22.74, 'donor_nbo_type': 'LP', 'acceptor_nbo_type': 'LV'}, is_directed=True),
+                Edge([14, 0], {'stabilisation_energy_max': 21.99, 'donor_nbo_type': 'LP', 'acceptor_nbo_type': 'LV'}, is_directed=True),
+                Edge([20, 0], {'stabilisation_energy_max': 23.34, 'donor_nbo_type': 'LP', 'acceptor_nbo_type': 'LV'}, is_directed=True),
+                Edge([27, 0], {'stabilisation_energy_max': 16.63, 'donor_nbo_type': 'LP', 'acceptor_nbo_type': 'LV'}, is_directed=True),
+                Edge([28, 0], {'stabilisation_energy_max': 12.43, 'donor_nbo_type': 'LP', 'acceptor_nbo_type': 'LV'}, is_directed=True)
             ]
         ],
 
@@ -2705,10 +2617,10 @@ class TestGraphGenerator(unittest.TestCase):
             [EdgeFeature.WIBERG_BOND_ORDER],
             [SopaEdgeFeature.STABILISATION_ENERGY_MAX, SopaEdgeFeature.DONOR_NBO_TYPE, SopaEdgeFeature.ACCEPTOR_NBO_TYPE],
             [
-                Edge([2, 0], [25.68, 'LP', 'LV', 0.0936], is_directed=True),
-                Edge([8, 0], [22.74, 'LP', 'LV', 0.0752], is_directed=True),
-                Edge([14, 0], [21.99, 'LP', 'LV', 0.0723], is_directed=True),
-                Edge([20, 0], [23.34, 'LP', 'LV', 0.0864], is_directed=True),
+                Edge([2, 0], {'wiberg_bond_order': 0.0936, 'stabilisation_energy_max': 25.68, 'donor_nbo_type': 'LP', 'acceptor_nbo_type': 'LV'}, is_directed=True),
+                Edge([8, 0], {'wiberg_bond_order': 0.0752, 'stabilisation_energy_max': 22.74, 'donor_nbo_type': 'LP', 'acceptor_nbo_type': 'LV'}, is_directed=True),
+                Edge([14, 0], {'wiberg_bond_order': 0.0723, 'stabilisation_energy_max': 21.99, 'donor_nbo_type': 'LP', 'acceptor_nbo_type': 'LV'}, is_directed=True),
+                Edge([20, 0], {'wiberg_bond_order': 0.0864, 'stabilisation_energy_max': 23.34, 'donor_nbo_type': 'LP', 'acceptor_nbo_type': 'LV'}, is_directed=True),
             ]
         ],
 
@@ -2718,13 +2630,13 @@ class TestGraphGenerator(unittest.TestCase):
             [],
             [SopaEdgeFeature.STABILISATION_ENERGY_AVERAGE],
             [
-                Edge([1, 0], [7.84], is_directed=True),
-                Edge([2, 0], [25.68], is_directed=True),
-                Edge([8, 0], [22.74], is_directed=True),
-                Edge([14, 0], [21.99], is_directed=True),
-                Edge([20, 0], [23.34], is_directed=True),
-                Edge([27, 0], [8.036666], is_directed=True),
-                Edge([28, 0], [6.47], is_directed=True)
+                Edge([1, 0], {'stabilisation_energy_average': 7.84}, is_directed=True),
+                Edge([2, 0], {'stabilisation_energy_average': 25.68}, is_directed=True),
+                Edge([8, 0], {'stabilisation_energy_average': 22.74}, is_directed=True),
+                Edge([14, 0], {'stabilisation_energy_average': 21.99}, is_directed=True),
+                Edge([20, 0], {'stabilisation_energy_average': 23.34}, is_directed=True),
+                Edge([27, 0], {'stabilisation_energy_average': 8.036666}, is_directed=True),
+                Edge([28, 0], {'stabilisation_energy_average': 6.47}, is_directed=True)
             ]
         ],
 

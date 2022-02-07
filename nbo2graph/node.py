@@ -2,7 +2,7 @@ class Node:
 
     """Class for representing a node in a graph."""
 
-    def __init__(self, features: list[float] = [], position: list[float] = None, label: str = None):
+    def __init__(self, features: dict = {}, position: list[float] = None, label: str = None):
 
         """Constructor
 
@@ -12,7 +12,13 @@ class Node:
             label (string): Label of the node.
         """
 
-        self._features = features
+        if type(features) == list:
+            self._features = {}
+            for i, feature in enumerate(features):
+                self._features['feature_' + str(i)] = feature
+        else:
+            self._features = features
+
         self._position = position
         self._label = label
 
@@ -30,3 +36,8 @@ class Node:
     def label(self):
         """Getter for label"""
         return self._label
+
+    @property
+    def feature_list(self):
+        """Getter for a list of features."""
+        return [self._features[key] for key in self._features.keys()]

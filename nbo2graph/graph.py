@@ -81,8 +81,13 @@ class Graph:
         return self._graph_features
 
     @property
-    def nodes_features_list(self):
-        """Getter for a list of node features."""
+    def nodes_feature_list_list(self):
+        """Getter for a list of node feature lists."""
+        return [x.feature_list for x in self._nodes]
+
+    @property
+    def nodes_feature_dict_list(self):
+        """Getter for a list of node feature dicts."""
         return [x.features for x in self._nodes]
 
     @property
@@ -101,8 +106,13 @@ class Graph:
         return [x.node_indices for x in self._edges]
 
     @property
-    def edges_features_list(self):
-        """Getter for a list of edge features."""
+    def edges_feature_list_list(self):
+        """Getter for a list of edge feature lists."""
+        return [x.feature_list for x in self._edges]
+
+    @property
+    def edges_feature_dict_list(self):
+        """Getter for a list of edge feature dicts."""
         return [x.features for x in self._edges]
 
     @property
@@ -147,22 +157,16 @@ class Graph:
 
         # add nodes
         for i, node in enumerate(self.nodes):
-            if len(node.features) == 0:
-                nx_graph.add_node(i)
-            elif len(node.features) == 1:
-                nx_graph.add_node(i, x=node.features[0])
-            else:
-                nx_graph.add_node(i, x=node.features)
+            nx_graph.add_nodes_from([(i, node.features)])
 
         # add edges
-        for i, edge in enumerate(self.edges):
-            if len(edge.features) == 0:
-                nx_graph.add_edge(edge.node_indices[0], edge.node_indices[1])
-            elif len(edge.features) == 1:
-                nx_graph.add_edge(edge.node_indices[0], edge.node_indices[1], edge_attr=edge.features[0])
-            else:
-                nx_graph.add_edge(edge.node_indices[0], edge.node_indices[1], edge_attr=edge.features)
+        for edge in self.edges:
+            nx_graph.add_edges_from([(edge.node_indices[0], edge.node_indices[1], edge.features)])
 
+        # add graph features
+        # TODO
+
+        # add targets
         for key in self.targets.keys():
             nx_graph.graph[key] = self.targets[key]
 
@@ -183,13 +187,13 @@ class Graph:
             # if directed add only once
             if edge.is_directed:
                 edge_indices.append(edge.node_indices)
-                edge_features.append(Tools.get_one_hot_encoded_feature_list(edge.features, edge_class_feature_dict))
+                edge_features.append(Tools.get_one_hot_encoded_feature_list(edge.feature_list, edge_class_feature_dict))
             # if undirected add twice to account for both directions
             else:
                 edge_indices.append(edge.node_indices)
                 edge_indices.append(list(reversed(edge.node_indices)))
-                edge_features.append(Tools.get_one_hot_encoded_feature_list(edge.features, edge_class_feature_dict))
-                edge_features.append(Tools.get_one_hot_encoded_feature_list(edge.features, edge_class_feature_dict))
+                edge_features.append(Tools.get_one_hot_encoded_feature_list(edge.feature_list, edge_class_feature_dict))
+                edge_features.append(Tools.get_one_hot_encoded_feature_list(edge.feature_list, edge_class_feature_dict))
 
         print(edge_features)
 
@@ -198,7 +202,7 @@ class Graph:
         edge_features = torch.tensor(edge_features, dtype=torch.float)
 
         # set up pytorch object for nodes
-        node_features = torch.tensor(self.nodes_features_list, dtype=torch.float)
+        node_features = torch.tensor(self.nodes_feature_list_list, dtype=torch.float)
 
         # set up pytorch object for graph level targets / labels
         targets = []
@@ -435,12 +439,12 @@ class Graph:
             import plotly.graph_objects as go
 
             # set up node label and feature lists
-            node_features = self.nodes_features_list
+            node_features = self.nodes_feature_dict_list
             node_labels = self.nodes_labels_list
 
             # set up edge index and feature lists
             edge_indices = self.edges_indices_list  # + [list(reversed(x)) for x in self.edges_indices_list]
-            edge_features = self.edges_features_list  # * 2
+            edge_features = self.edges_feature_dict_list  # * 2
 
             # get 3d positions
             position_dict = self.get_node_position_dict()
