@@ -225,7 +225,7 @@ class TestGraph(unittest.TestCase):
             Graph(
                 [Node(features=[0]), Node(features=[1]), Node(features=[3]), Node(features=[-2]), Node(features=[0])],
                 [Edge([0, 1], features=[-2]), Edge([0, 2], features=[3]), Edge([0, 3], features=[4]), Edge([2, 3], features=[1]), Edge([2, 4], features=[10])],
-                targets=[12.34]
+                targets={'a': 12.34}
             ),
             {},
             Data(
@@ -241,7 +241,7 @@ class TestGraph(unittest.TestCase):
             Graph(
                 [Node(features=[0]), Node(features=[1]), Node(features=[3]), Node(features=[-2]), Node(features=[0])],
                 [Edge([0, 1], features=[-2]), Edge([0, 2], features=[3]), Edge([0, 3], features=[4], is_directed=True), Edge([3, 2], features=[1], is_directed=True), Edge([2, 4], features=[10])],
-                targets=[12.34]
+                targets={'a': 12.34}
             ),
             {},
             Data(
@@ -257,7 +257,7 @@ class TestGraph(unittest.TestCase):
             Graph(
                 [Node(features=[0]), Node(features=[1]), Node(features=[3]), Node(features=[-2]), Node(features=[0])],
                 [Edge([0, 1], features=['A']), Edge([0, 2], features=['B']), Edge([0, 3], features=['A'], is_directed=True), Edge([3, 2], features=['C'], is_directed=True), Edge([2, 4], features=['D'])],
-                targets=[12.34]
+                targets={'a': 12.34}
             ),
             {0: ['B', 'A', 'C', 'D']},
             Data(
@@ -324,12 +324,12 @@ class TestGraph(unittest.TestCase):
             Graph(
                 [Node(), Node()],
                 [Edge([0, 1])],
-                targets=[], id='TestGraph'
+                targets={}, id='TestGraph'
             ),
             {
                 'graph': nx.MultiGraph(),
                 'id': 'TestGraph',
-                'targets': [],
+                'targets': {},
                 'nodes': [(0), (1)],
                 'edges': [(0, 1)]
             },
@@ -339,12 +339,12 @@ class TestGraph(unittest.TestCase):
             Graph(
                 [Node(features=[0]), Node(features=[1])],
                 [Edge([0, 1], features=[-2])],
-                targets=[12.34], id='TestGraph'
+                targets={'a': 12.34}, id='TestGraph'
             ),
             {
                 'graph': nx.MultiGraph(),
                 'id': 'TestGraph',
-                'targets': 12.34,
+                'targets': {'a': 12.34},
                 'nodes': [(0, {'x': 0}), (1, {'x': 1})],
                 'edges': [(0, 1, {'edge_attr': -2})]
             },
@@ -354,12 +354,12 @@ class TestGraph(unittest.TestCase):
             Graph(
                 [Node(features=[0, 1]), Node(features=[1, 0])],
                 [Edge([0, 1], features=[-2, 2])],
-                targets=[12.34, 23.45, 34.56], id='TestGraph'
+                targets={'a': 12.34, 'b': 23.45, 'c': 34.56}, id='TestGraph'
             ),
             {
                 'graph': nx.MultiGraph(),
                 'id': 'TestGraph',
-                'targets': [12.34, 23.45, 34.56],
+                'targets': {'a': 12.34, 'b': 23.45, 'c': 34.56},
                 'nodes': [(0, {'x': [0, 1]}), (1, {'x': [1, 0]})],
                 'edges': [(0, 1, {'edge_attr': [-2, 2]})]
             },
@@ -369,12 +369,12 @@ class TestGraph(unittest.TestCase):
             Graph(
                 [Node(features=[0, 1]), Node(features=[1, 0])],
                 [Edge([0, 1], features=[-2, 2], is_directed=True)],
-                targets=[12.34, 23.45, 34.56], id='TestGraph'
+                targets={'a': 12.34, 'b': 23.45, 'c': 34.56}, id='TestGraph'
             ),
             {
                 'graph': nx.MultiDiGraph(),
                 'id': 'TestGraph',
-                'targets': [12.34, 23.45, 34.56],
+                'targets': {'a': 12.34, 'b': 23.45, 'c': 34.56},
                 'nodes': [(0, {'x': [0, 1]}), (1, {'x': [1, 0]})],
                 'edges': [(0, 1, {'edge_attr': [-2, 2]})]
             },
@@ -388,8 +388,9 @@ class TestGraph(unittest.TestCase):
 
         expected_graph.graph['id'] = expected['id']
 
-        if not expected['targets'] == []:
-            expected_graph.graph['y'] = expected['targets']
+        if not expected['targets'] == {}:
+            for key in expected['targets'].keys():
+                expected_graph.graph[key] = expected['targets'][key]
         expected_graph.add_nodes_from(expected['nodes'])
         expected_graph.add_edges_from(expected['edges'])
 
@@ -406,7 +407,7 @@ class TestGraph(unittest.TestCase):
             Graph(
                 [Node(), Node(), Node()],
                 [Edge([0, 1]), Edge([1, 2], is_directed=True)],
-                targets=[]
+                targets={}
             ),
             NotImplementedError
         ],

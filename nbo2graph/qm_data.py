@@ -83,9 +83,9 @@ class QmData():
         self.enthalpy_energy = enthalpy_energy
         self.gibbs_energy = gibbs_energy
         # calculate ZPE, thermal, and internal energy corrections
-        self.corrected_enthalpy_energy = self.enthalpy_energy - self.svp_electronic_energy
+        self.enthalpy_energy_correction = self.enthalpy_energy - self.svp_electronic_energy
         # calculate ZPE, thermal, internal, and entropy energy corrections
-        self.corrected_gibbs_energy = self.gibbs_energy - self.svp_electronic_energy
+        self.gibbs_energy_correction = self.gibbs_energy - self.svp_electronic_energy
 
         # electronic data
         self.natural_atomic_charges = natural_atomic_charges

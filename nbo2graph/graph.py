@@ -14,7 +14,7 @@ class Graph:
 
     """Class for representing chemical graphs with all necessary information."""
 
-    def __init__(self, nodes: list[Node], edges: list[Edge], targets: list[float] = [], graph_features: list[float] = [], id: str = None, stoichiometry: str = None):
+    def __init__(self, nodes: list[Node], edges: list[Edge], targets: dict = {}, graph_features: list[float] = [], id: str = None, stoichiometry: str = None):
 
         """Constructor
 
@@ -163,13 +163,8 @@ class Graph:
             else:
                 nx_graph.add_edge(edge.node_indices[0], edge.node_indices[1], edge_attr=edge.features)
 
-        # add targets
-        if len(self.targets) == 0:
-            pass
-        elif len(self.targets) == 1:
-            nx_graph.graph['y'] = self.targets[0]
-        else:
-            nx_graph.graph['y'] = self.targets
+        for key in self.targets.keys():
+            nx_graph.graph[key] = self.targets[key]
 
         return nx_graph
 
@@ -204,7 +199,10 @@ class Graph:
         node_features = torch.tensor(self.nodes_features_list, dtype=torch.float)
 
         # set up pytorch object for graph level targets / labels
-        targets = torch.tensor(self.targets, dtype=torch.float)
+        targets = []
+        for key in self.targets.keys():
+            targets.append(self.targets[key])
+        targets = torch.tensor(targets, dtype=torch.float)
 
         # set up full pytorch data object
         data = Data(x=node_features, edge_index=edge_indices.t().contiguous(), edge_attr=edge_features, y=targets)

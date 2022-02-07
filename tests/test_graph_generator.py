@@ -1032,157 +1032,157 @@ class TestGraphGenerator(unittest.TestCase):
         [
             TEST_FILE_LALMER,
             [QmTarget.SVP_ELECTRONIC_ENERGY],
-            [-2711.31113930]
+            {'svp_electronic_energy': -2711.31113930}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.TZVP_ELECTRONIC_ENERGY],
-            [-2713.37704931]
+            {'tzvp_electronic_energy': -2713.37704931}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.ELECTRONIC_ENERGY_DELTA],
-            [2.06591001000015]
+            {'electronic_energy_delta': 2.06591001000015}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.SVP_HOMO_ENERGY],
-            [-0.31642]
+            {'svp_homo_energy': -0.31642}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.SVP_LUMO_ENERGY],
-            [-0.22836]
+            {'svp_lumo_energy': -0.22836}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.TZVP_HOMO_ENERGY],
-            [-0.35379]
+            {'tzvp_homo_energy': -0.35379}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.TZVP_LUMO_ENERGY],
-            [-0.20437]
+            {'tzvp_lumo_energy': -0.20437}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.POLARISABILITY],
-            [334.01]
+            {'polarisability': 334.01}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.SVP_DISPERSION_ENERGY],
-            [-0.0815876275]
+            {'svp_dispersion_energy': -0.0815876275}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.TZVP_DISPERSION_ENERGY],
-            [-0.0751559981]
+            {'tzvp_dispersion_energy': -0.0751559981}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.DISPERSION_ENERGY_DELTA],
-            [0.0064316294]
+            {'dispersion_energy_delta': 0.0064316294}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.LOWEST_VIBRATIONAL_FREQUENCY],
-            [19.9016]
+            {'lowest_vibrational_frequency': 19.9016}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.HIGHEST_VIBRATIONAL_FREQUENCY],
-            [3786.4682]
+            {'highest_vibrational_frequency': 3786.4682}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.HEAT_CAPACITY],
-            [116.184]
+            {'heat_capacity': 116.184}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.ENTROPY],
-            [205.610]
+            {'entropy': 205.610}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.ZPE_CORRECTION],
-            [0.318790]
+            {'zpe_correction': 0.318790}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.ENTHALPY_ENERGY],
-            [-2710.959666]
+            {'enthalpy_energy': -2710.959666}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.GIBBS_ENERGY],
-            [-2711.057358]
+            {'gibbs_energy': -2711.057358}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.ENTHALPY_ENERGY_CORRECTION],
-            [0.351473]
+            {'enthalpy_energy_correction': 0.351473}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.GIBBS_ENERGY_CORRECTION],
-            [0.253781]
+            {'gibbs_energy_correction': 0.253781}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.SVP_HOMO_LUMO_GAP],
-            [0.08806]
+            {'svp_homo_lumo_gap': 0.08806}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.TZVP_HOMO_LUMO_GAP],
-            [0.14942]
+            {'tzvp_homo_lumo_gap': 0.14942}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.HOMO_LUMO_GAP_DELTA],
-            [0.06136]
+            {'homo_lumo_gap_delta': 0.06136}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.SVP_DIPOLE_MOMENT],
-            [11.3194]
+            {'svp_dipole_moment': 11.3194}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.TZVP_DIPOLE_MOMENT],
-            [11.8657]
+            {'tzvp_dipole_moment': 11.8657}
         ],
 
         [
             TEST_FILE_LALMER,
             [QmTarget.DIPOLE_MOMENT_DELTA],
-            [0.5463]
+            {'dipole_moment_delta': 0.5463}
         ],
 
     ])

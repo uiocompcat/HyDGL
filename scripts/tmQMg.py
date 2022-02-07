@@ -5,8 +5,8 @@ from tqdm import tqdm
 
 from nbo2graph.graph_generator import GraphGenerator
 from nbo2graph.graph_generator_settings import GraphGeneratorSettings
-from nbo2graph.data_parser import DataParser
 from nbo2graph.file_handler import FileHandler
+from nbo2graph.qm_data import QmData
 from nbo2graph.tools import Tools
 
 
@@ -15,8 +15,7 @@ class tmQMg(Dataset):
 
         self._graph_generator = GraphGenerator(settings)
 
-        self._raw_file_extension = '.log'
-        self._qm_data_file_extension = '.qmdata'
+        self._raw_file_extension = '.json'
         self._graph_object_file_extension = '.graph'
         self._pytorch_graph_file_extension = '.pt'
 
@@ -25,12 +24,8 @@ class tmQMg(Dataset):
     @property
     def file_names(self):
         # random 500 file names
-        return ['ICUMEY', 'VIRBEF', 'OGOBIV', 'RIVPUH', 'FIFCAB', 'DICTUE', 'LOGZIS', 'KUNBOK', 'VUSSUZ', 'TERJIK', 'UKASUU', 'LEZYOG', 'AGOHUZ', 'XIRFIP', 'AKUGIX', 'HINNEX', 'RACGUZ', 'TEXSUM', 'KELLUJ', 'FIVWIQ', 'SADXON', 'FERQOJ', 'VULFEN', 'VIGXOZ', 'VIHWEQ', 'QELDIU', 'WANNAB', 'EPIKIY', 'CAWLER', 'QARPUW', 'KELFEN', 'TIGXOY', 'HISJOI', 'GETWEI', 'KEQGIZ', 'KEJVEA', 'UFOYOE', 'MIDKUF', 'HESHAP', 'JEXZES', 'SUJPAO', 'FEFDUP', 'GEQXUW', 'TUDXIZ', 'DONCER', 'MAXNII', 'UNOPUJ', 'IPORUB', 'YATMAJ', 'SIXFAG', 'NANTUT', 'NIYBAY', 'HONDIZ', 'OZILEQ', 'CAXVED', 'SUFHOQ', 'MEHGIR', 'KILXEK', 'QIWKEN', 'FOBBUU', 'FAVSOM', 'DOQZIT', 'OREDIA', 'TITZEE', 'FEDJAA', 'QITXIC', 'JONNUY', 'MIVJEG', 'VEZGUD', 'YESXAW', 'XEFSOR', 'VUDYIC', 'SIZDOW', 'ENCYCO', 'MOQREQ', 'WABLAM', 'HORCIC', 'XAQFOK', 'FUYREY', 'EQURAL', 'PIBYOO', 'SOWMAV', 'TIHCAO', 'LOMWOB', 'TOCVAI', 'DMSCCR', 'AQAVIZ', 'NEVKII', 'QELVIM', 'UROPUN', 'CIRVOO', 'PIBQOJ', 'WIHLEE', 'UCEBOT', 'RIVZUU', 'HIKKIY', 'POTVOJ', 'ZUJHAP', 'LITWUJ', 'CIXGIA', 'ADOCII', 'BIGRAL', 'CIDZEX', 'OXEBUP', 'GIRCIW', 'JECBOJ', 'WAKGAT', 'REWMEO', 'FITLUQ', 'JOWBII', 'HUXSOK', 'MADWIZ', 'EMUQAG', 'QAHBAC', 'FAVTUR', 'BOYQAH', 'YIWTAC', 'QIWNIU', 'WADGUE', 'XIFBOG', 'LUZSUV', 'YEDGUM', 'VEGKIC', 'MAKGIO', 'VOWDAO', 'IVAPIG', 'SIYQOJ', 'QEZQER', 'RIDJEU', 'WEDBIQ', 'ZESHEN', 'FIJFEL', 'POYMAS', 'UHALEV', 'NEVNIO', 'ETESON', 'POJFEA', 'BINCOQ', 'RISCEE', 'BITHUH', 'BCNFEC', 'DAZTOO', 'LARYOS', 'EZURUN', 'SIKZOE', 'BOJHUF', 'CUQPIP', 'SEMXAL', 'QAYZAR', 'MACZEW', 'POTNEU', 'DOGJIT', 'FEFYUL', 'QACKIP', 'ZOJROI', 'GAKQIV', 'XEYNAS', 'QIRYEW', 'TUNKET', 'GATMAP', 'USUXOX', 'YAVLAL', 'GEHJOS', 'MODXEL', 'ATEPUL', 'WAPMEH', 'QEBPAR', 'UDOFAW', 'WUCXUP', 'COMSPW', 'GUPDOM', 'BENDOO', 'JUHPAF', 'CIMWED', 'VONVAX', 'RIDNEZ', 'ITUVEA', 'FIVCAP', 'KOBBEJ', 'QOFTIO', 'IXEZOB', 'GASNOF', 'WEJFUN', 'NOBBAJ', 'HEXFOH', 'AKILAJ', 'OYOPEY', 'EGIBEB', 'UXUQAG', 'SUMBIN', 'APICUY', 'COCSET', 'NEDKOZ', 'NIBHEO', 'SIRLEM', 'GAYRIJ', 'CETZIN', 'WUGVOJ', 'GIRVAH', 'MESDIA', 'TIBQUR', 'TADLOZ', 'SASGOL', 'HOKCEQ', 'MECKAH', 'YOGCIG', 'UMATOR', 'YOWWAK', 'DAZRUU', 'XUYCAV', 'ROLMUB', 'NIVPUG', 'NOSZIE', 'TBPCFE', 'DUMJIE', 'BAQROB', 'AFUXOP', 'WELJUS', 'FOTXOD', 'ZIFVUH', 'VEYTAX', 'OYIDIL', 'DITFUI', 'RAYHIK', 'ROGGUP', 'XEJSEK', 'CEMSEU', 'ATOPII', 'XOGCUU', 'OFAHOS', 'REBDEI', 'ZOCCAV', 'MALWAZ', 'ZUJHIX', 'ZOHQOE', 'SOTWAA', 'FOSHIG', 'WURFAS', 'FUNKOP', 'KEWROT', 'SIWFAG', 'HUPNAI', 'KEBGUU', 'EKEDIJ', 'MAQPIG', 'URUGUL', 'GEPKIW', 'SUPYIN', 'KIMLOH', 'BEZVOT', 'NECJUC', 'PIZGOV', 'IGATUF', 'QABYAV', 'FIPFEQ', 'KIBMAK', 'EHEBIE', 'SEPZOC', 'VUYXUJ', 'LEGXEA', 'OAMECO', 'KEJMES', 'KULGIH', 'UDARUP', 'INEQAU', 'KIJSUS', 'SANRUV', 'LOKPEH', 'COCXAU', 'ZEGVIQ', 'CMEEAM', 'WALZIU', 'MIFVIH', 'VOVRAZ', 'BOTZUI', 'QOZBOY', 'ROBYAJ', 'PUNFIN', 'HECCEX', 'LETTOW', 'OTEVOZ', 'MHPYCR', 'WILHOR', 'VIVKIV', 'VIJWAO', 'LEJPEW', 'FENVEA', 'AHASAF', 'NEFXOM', 'QOGBEU', 'LETXEQ', 'WEFLOI', 'MIRDUN', 'SEBTUO', 'WIRHOU', 'HIGQIX', 'FACGUN', 'LADVIY', 'ROLTES', 'GIWNEH', 'MIVBEZ', 'MIYWIA', 'PALZOS', 'LEYZAT', 'QEFSEB', 'FIPTED', 'UFIZAM', 'REFRAV', 'KUNWIB', 'SETPOX', 'HOSWAP', 'LIMZOY', 'JIPTIO', 'VIKZEW', 'ZEJVER', 'VASJOO', 'IGEBEB', 'OKEZOU', 'MUPFAE', 'SUYXAN', 'JIPJAU', 'SULYED', 'WEHLIH', 'YIDGAW', 'CAGBAQ', 'ZAVROG', 'GIYMAC', 'GEFWUM', 'LIPMAY', 'GORMOP', 'ROQRAT', 'TIVNUJ', 'HUDYAG', 'DODNAL', 'MARWEK', 'SAKHUJ', 'GAWYIM', 'HEVDOB', 'PIKBOB', 'UVOFUI', 'VUDKEM', 'YODMUB', 'UCUSIX', 'RISLIR', 'RERQUA', 'TATTEO', 'JIRBAN', 'REVPAL', 'QOXKOF', 'ZOQFOA', 'MAXQUX', 'DOSXAN', 'JOFTIK', 'KUCWUC', 'KAYBIV', 'SEQGIH', 'TAGHAK', 'QONHEG', 'OGATOI', 'XUQWOX', 'VOWXAG', 'BEKPUC', 'GOGPEA', 'GUVFAG', 'PUJWUM', 'VALKAV', 'SELSIL', 'UGOHOO', 'KASKAQ', 'NIBCIM', 'RITRIY', 'UTIXAY', 'XOTVAD', 'GOYVIB', 'KUNQOA', 'VEMWOA', 'JATBEL', 'LAMDUY', 'EMAZID', 'TULGUC', 'BULYEM', 'FIQCUF', 'AFICIC', 'VORCIR', 'HELGEK', 'VEZGEO', 'MEBXUN', 'UQAFUO', 'ZUYHEG', 'FUZFIQ', 'YOJNUG', 'FANLIP', 'PEQCUK', 'VEQLEI', 'VUWMAB', 'LAZQIP', 'PEZFUY', 'BABQUR', 'JUPPOZ', 'SIYLES', 'XOTLOJ', 'BOJMAQ', 'AQENIV', 'MAJBAC', 'LUYXAE', 'ROJLUX', 'LAXCOF', 'JOTJOR', 'QAYCEB', 'PALTAX', 'TUYPIM', 'UQAMEF', 'KICYAW', 'HUVSUN', 'YOSYEM', 'USONUN', 'EWISOS', 'REWHIK', 'OMEBEN', 'UDOVAM', 'EMULON', 'PUFQUC', 'UCEDOX', 'IFEGEH', 'TIKWAN', 'YEMVER', 'SIHTOT', 'COZFIH', 'MAMSAU', 'ETACEH', 'ZOCBEY', 'YEBXOV', 'YEBYAI', 'EZARAA', 'WUXCOI', 'ZIWPAW', 'YEKCOH', 'BAKBEV', 'GIQWEK', 'TIYNAT', 'IMAKOX', 'UJADAK', 'XUBKUB', 'TEXDOS', 'XAJWOX', 'QUJXEZ', 'TIFTUX', 'PUDPAF', 'ZIRJOZ', 'JAQPAS', 'QOPWIB', 'MASLEA', 'BUZQUK', 'CODYOK', 'AXIBAK', 'SUVYUF', 'JURGUY', 'LAQVEH', 'XOBFIF', 'OGEYAC', 'EPIMEW', 'JOKVOX', 'MUKHUX', 'CAFROQ', 'XIDGUO', 'SIMXIX', 'KAMSUM', 'TUMPEY', 'MECCEF', 'VIKRAJ', 'ALINEP', 'UYOVUA', 'QIJREI', 'ZITYOQ', 'VAWCEE', 'VOVDIV', 'SIJJUT', 'ZOLSOI', 'CEGKEH', 'GIDPAM', 'QAKBOT', 'FOCJIR', 'YEZBEK', 'BERQEV', 'ZAXXUR', 'BOVBOG', 'YILQAO', 'HETMUO', 'PEYGEI', 'ISITEL', 'XELDIE', 'BUKYUC', 'LOPDEC', 'JOCKAO', 'JOJZAK', 'QAQGEX', 'QUCBIB']
+        return ['LALMER', 'ICUMEY', 'VIRBEF', 'OGOBIV', 'RIVPUH', 'FIFCAB', 'DICTUE', 'LOGZIS', 'KUNBOK', 'VUSSUZ', 'TERJIK', 'UKASUU', 'LEZYOG', 'AGOHUZ', 'XIRFIP', 'AKUGIX', 'HINNEX', 'RACGUZ', 'TEXSUM', 'KELLUJ', 'FIVWIQ', 'SADXON', 'FERQOJ', 'VULFEN', 'VIGXOZ', 'VIHWEQ', 'QELDIU', 'WANNAB', 'EPIKIY', 'CAWLER', 'QARPUW', 'KELFEN', 'TIGXOY', 'HISJOI', 'GETWEI', 'KEQGIZ', 'KEJVEA', 'UFOYOE', 'MIDKUF', 'HESHAP', 'JEXZES', 'SUJPAO', 'FEFDUP', 'GEQXUW', 'TUDXIZ', 'DONCER', 'MAXNII', 'UNOPUJ', 'IPORUB', 'YATMAJ', 'SIXFAG', 'NANTUT', 'NIYBAY', 'HONDIZ', 'OZILEQ', 'CAXVED', 'SUFHOQ', 'MEHGIR', 'KILXEK', 'QIWKEN', 'FOBBUU', 'FAVSOM', 'DOQZIT', 'OREDIA', 'TITZEE', 'FEDJAA', 'QITXIC', 'JONNUY', 'MIVJEG', 'VEZGUD', 'YESXAW', 'XEFSOR', 'VUDYIC', 'SIZDOW', 'ENCYCO', 'MOQREQ', 'WABLAM', 'HORCIC', 'XAQFOK', 'FUYREY', 'EQURAL', 'PIBYOO', 'SOWMAV', 'TIHCAO', 'LOMWOB', 'TOCVAI', 'DMSCCR', 'AQAVIZ', 'NEVKII', 'QELVIM', 'UROPUN', 'CIRVOO', 'PIBQOJ', 'WIHLEE', 'UCEBOT', 'RIVZUU', 'HIKKIY', 'POTVOJ', 'ZUJHAP', 'LITWUJ', 'CIXGIA', 'ADOCII', 'BIGRAL', 'CIDZEX', 'OXEBUP', 'GIRCIW', 'JECBOJ', 'WAKGAT', 'REWMEO', 'FITLUQ', 'JOWBII', 'HUXSOK', 'MADWIZ', 'EMUQAG', 'QAHBAC', 'FAVTUR', 'BOYQAH', 'YIWTAC', 'QIWNIU', 'WADGUE', 'XIFBOG', 'LUZSUV', 'YEDGUM', 'VEGKIC', 'MAKGIO', 'VOWDAO', 'IVAPIG', 'SIYQOJ', 'QEZQER', 'RIDJEU', 'WEDBIQ', 'ZESHEN', 'FIJFEL', 'POYMAS', 'UHALEV', 'NEVNIO', 'ETESON', 'POJFEA', 'BINCOQ', 'RISCEE', 'BITHUH', 'BCNFEC', 'DAZTOO', 'LARYOS', 'EZURUN', 'SIKZOE', 'BOJHUF', 'CUQPIP', 'SEMXAL', 'QAYZAR', 'MACZEW', 'POTNEU', 'DOGJIT', 'FEFYUL', 'QACKIP', 'ZOJROI', 'GAKQIV', 'XEYNAS', 'QIRYEW', 'TUNKET', 'GATMAP', 'USUXOX', 'YAVLAL', 'GEHJOS', 'MODXEL', 'ATEPUL', 'WAPMEH', 'QEBPAR', 'UDOFAW', 'WUCXUP', 'COMSPW', 'GUPDOM', 'BENDOO', 'JUHPAF', 'CIMWED', 'VONVAX', 'RIDNEZ', 'ITUVEA', 'FIVCAP', 'KOBBEJ', 'QOFTIO', 'IXEZOB', 'GASNOF', 'WEJFUN', 'NOBBAJ', 'HEXFOH', 'AKILAJ', 'OYOPEY', 'EGIBEB', 'UXUQAG', 'SUMBIN', 'APICUY', 'COCSET', 'NEDKOZ', 'NIBHEO', 'SIRLEM', 'GAYRIJ', 'CETZIN', 'WUGVOJ', 'GIRVAH', 'MESDIA', 'TIBQUR', 'TADLOZ', 'SASGOL', 'HOKCEQ', 'MECKAH', 'YOGCIG', 'UMATOR', 'YOWWAK', 'DAZRUU', 'XUYCAV', 'ROLMUB', 'NIVPUG', 'NOSZIE', 'TBPCFE', 'DUMJIE', 'BAQROB', 'AFUXOP', 'WELJUS', 'FOTXOD', 'ZIFVUH', 'VEYTAX', 'OYIDIL', 'DITFUI', 'RAYHIK', 'ROGGUP', 'XEJSEK', 'CEMSEU', 'ATOPII', 'XOGCUU', 'OFAHOS', 'REBDEI', 'ZOCCAV', 'MALWAZ', 'ZUJHIX', 'ZOHQOE', 'SOTWAA', 'FOSHIG', 'WURFAS', 'FUNKOP', 'KEWROT', 'SIWFAG', 'HUPNAI', 'KEBGUU', 'EKEDIJ', 'MAQPIG', 'URUGUL', 'GEPKIW', 'SUPYIN', 'KIMLOH', 'BEZVOT', 'NECJUC', 'PIZGOV', 'IGATUF', 'QABYAV', 'FIPFEQ', 'KIBMAK', 'EHEBIE', 'SEPZOC', 'VUYXUJ', 'LEGXEA', 'OAMECO', 'KEJMES', 'KULGIH', 'UDARUP', 'INEQAU', 'KIJSUS', 'SANRUV', 'LOKPEH', 'COCXAU', 'ZEGVIQ', 'CMEEAM', 'WALZIU', 'MIFVIH', 'VOVRAZ', 'BOTZUI', 'QOZBOY', 'ROBYAJ', 'PUNFIN', 'HECCEX', 'LETTOW', 'OTEVOZ', 'MHPYCR', 'WILHOR', 'VIVKIV', 'VIJWAO', 'LEJPEW', 'FENVEA', 'AHASAF', 'NEFXOM', 'QOGBEU', 'LETXEQ', 'WEFLOI', 'MIRDUN', 'SEBTUO', 'WIRHOU', 'HIGQIX', 'FACGUN', 'LADVIY', 'ROLTES', 'GIWNEH', 'MIVBEZ', 'MIYWIA', 'PALZOS', 'LEYZAT', 'QEFSEB', 'FIPTED', 'UFIZAM', 'REFRAV', 'KUNWIB', 'SETPOX', 'HOSWAP', 'LIMZOY', 'JIPTIO', 'VIKZEW', 'ZEJVER', 'VASJOO', 'IGEBEB', 'OKEZOU', 'MUPFAE', 'SUYXAN', 'JIPJAU', 'SULYED', 'WEHLIH', 'YIDGAW', 'CAGBAQ', 'ZAVROG', 'GIYMAC', 'GEFWUM', 'LIPMAY', 'GORMOP', 'ROQRAT', 'TIVNUJ', 'HUDYAG', 'DODNAL', 'MARWEK', 'SAKHUJ', 'GAWYIM', 'HEVDOB', 'PIKBOB', 'UVOFUI', 'VUDKEM', 'YODMUB', 'UCUSIX', 'RISLIR', 'RERQUA', 'TATTEO', 'JIRBAN', 'REVPAL', 'QOXKOF', 'ZOQFOA', 'MAXQUX', 'DOSXAN', 'JOFTIK', 'KUCWUC', 'KAYBIV', 'SEQGIH', 'TAGHAK', 'QONHEG', 'OGATOI', 'XUQWOX', 'VOWXAG', 'BEKPUC', 'GOGPEA', 'GUVFAG', 'PUJWUM', 'VALKAV', 'SELSIL', 'UGOHOO', 'KASKAQ', 'NIBCIM', 'RITRIY', 'UTIXAY', 'XOTVAD', 'GOYVIB', 'KUNQOA', 'VEMWOA', 'JATBEL', 'LAMDUY', 'EMAZID', 'TULGUC', 'BULYEM', 'FIQCUF', 'AFICIC', 'VORCIR', 'HELGEK', 'VEZGEO', 'MEBXUN', 'UQAFUO', 'ZUYHEG', 'FUZFIQ', 'YOJNUG', 'FANLIP', 'PEQCUK', 'VEQLEI', 'VUWMAB', 'LAZQIP', 'PEZFUY', 'BABQUR', 'JUPPOZ', 'SIYLES', 'XOTLOJ', 'BOJMAQ', 'AQENIV', 'MAJBAC', 'LUYXAE', 'ROJLUX', 'LAXCOF', 'JOTJOR', 'QAYCEB', 'PALTAX', 'TUYPIM', 'UQAMEF', 'KICYAW', 'HUVSUN', 'YOSYEM', 'USONUN', 'EWISOS', 'REWHIK', 'OMEBEN', 'UDOVAM', 'EMULON', 'PUFQUC', 'UCEDOX', 'IFEGEH', 'TIKWAN', 'YEMVER', 'SIHTOT', 'COZFIH', 'MAMSAU', 'ETACEH', 'ZOCBEY', 'YEBXOV', 'YEBYAI', 'EZARAA', 'WUXCOI', 'ZIWPAW', 'YEKCOH', 'BAKBEV', 'GIQWEK', 'TIYNAT', 'IMAKOX', 'UJADAK', 'XUBKUB', 'TEXDOS', 'XAJWOX', 'QUJXEZ', 'TIFTUX', 'PUDPAF', 'ZIRJOZ', 'JAQPAS', 'QOPWIB', 'MASLEA', 'BUZQUK', 'CODYOK', 'AXIBAK', 'SUVYUF', 'JURGUY', 'LAQVEH', 'XOBFIF', 'OGEYAC', 'EPIMEW', 'JOKVOX', 'MUKHUX', 'CAFROQ', 'XIDGUO', 'SIMXIX', 'KAMSUM', 'TUMPEY', 'MECCEF', 'VIKRAJ', 'ALINEP', 'UYOVUA', 'QIJREI', 'ZITYOQ', 'VAWCEE', 'VOVDIV', 'SIJJUT', 'ZOLSOI', 'CEGKEH', 'GIDPAM', 'QAKBOT', 'FOCJIR', 'YEZBEK', 'BERQEV', 'ZAXXUR', 'BOVBOG', 'YILQAO', 'HETMUO', 'PEYGEI', 'ISITEL', 'XELDIE', 'BUKYUC', 'LOPDEC', 'JOCKAO', 'JOJZAK', 'QAQGEX', 'QUCBIB']
         # TODO: full tmQMg dataset
-
-    @property
-    def qm_data_dir(self):
-        return self.root + '/qm_data'
 
     @property
     def graph_object_dir(self):
@@ -68,9 +63,6 @@ class tmQMg(Dataset):
 
         print('')
 
-        print('Extracting QmData..')
-        self.extract_qm_data()
-
         print('Building graph objects..')
         self.build_graph_objects()
 
@@ -84,6 +76,9 @@ class tmQMg(Dataset):
         graph_object_files = [file for file in os.listdir(self.graph_object_dir)]
 
         pivot_graph_object = FileHandler.read_binary_file(self.graph_object_dir + '/' + graph_object_files[0])
+
+        if len(pivot_graph_object.edges) == 0:
+            return
         # get indicies in edge feature list that are non-numerical class values
         edge_class_feature_indices = Tools.get_class_feature_indices(pivot_graph_object.edges[0].features)
 
@@ -105,24 +100,6 @@ class tmQMg(Dataset):
 
         return edge_class_feature_dict
 
-    def extract_qm_data(self):
-
-        """Extracts raw data into QmData objects."""
-
-        # create qm_data directory if it does not exist
-        if not os.path.isdir(self.qm_data_dir):
-            os.mkdir(self.qm_data_dir)
-
-        qm_data_files = [file for file in os.listdir(self.qm_data_dir)]
-        for file_name in tqdm(self.file_names):
-
-            # if file is not extracted yet
-            if file_name + self._qm_data_file_extension not in qm_data_files:
-                # extract QmData
-                qm_data = DataParser(self.raw_dir + '/' + file_name + self._raw_file_extension).parse_to_qm_data_object()
-                # write to file
-                FileHandler.write_binary_file(self.qm_data_dir + '/' + file_name + self._qm_data_file_extension, qm_data)
-
     def build_graph_objects(self):
 
         """Builds graph objects from previously extracted QmData."""
@@ -137,7 +114,7 @@ class tmQMg(Dataset):
             # if graph is not built yet
             if file_name + self._graph_object_file_extension not in graph_object_files:
                 # read QmData file
-                qm_data = FileHandler.read_binary_file(self.qm_data_dir + '/' + file_name + self._qm_data_file_extension)
+                qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(self.raw_dir + '/' + file_name + self._raw_file_extension))
                 # build graph
                 graph_object = self._graph_generator.generate_graph(qm_data)
                 # write to file
@@ -164,9 +141,9 @@ class tmQMg(Dataset):
 
     def clear_directories(self):
 
-        """Deletes all files in the qm_data, graph_objects and processed directories."""
+        """Deletes all files in the raw, graph_objects and processed directories."""
 
-        self.clear_qm_data_dir()
+        self.clear_raw_dir()
         self.clear_graph_directories()
 
     def clear_graph_directories(self):
@@ -176,11 +153,19 @@ class tmQMg(Dataset):
         self.clear_graph_object_dir()
         self.clear_processed_dir()
 
-    def clear_qm_data_dir(self):
+    def clear_raw_dir(self):
 
-        """Deletes all files in the qm_data directory."""
+        """Deletes all files in the raw directory."""
 
-        FileHandler.clear_directory(self.qm_data_dir, [file_name + self._qm_data_file_extension for file_name in self.file_names])
+        print('This will delete the files in the raw data directory.')
+        reply = input('Do you really wish to continue? [Y/n]')
+        while not (reply.strip().lower() == 'y' or reply.strip().lower() == 'n'):
+            reply = input('Please anser with "y" or "n".')
+
+        if reply.lower() == 'y':
+            FileHandler.clear_directory(self.raw_dir, [file_name + self._raw_file_extension for file_name in self.file_names])
+        elif reply.lower() == 'n':
+            print('Aborting. If you only wish to clear the directories containing graph representations use the "clear_graph_directories()" function.')
 
     def clear_graph_object_dir(self):
 

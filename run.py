@@ -1,7 +1,7 @@
 import os
 import pickle
 import numpy as np
-from torchaudio import datasets
+from sklearn.cluster import k_means
 from nbo2graph.edge import Edge
 from nbo2graph.enums.bond_order_type import BondOrderType
 from nbo2graph.enums.edge_feature import EdgeFeature
@@ -19,23 +19,99 @@ from nbo2graph.qm_data import QmData
 # from nbo2graph.datasets.tmQMg import tmQMg
 
 from scripts.data_parser import DataParser
+from scripts.tmQMg import tmQMg
 from nbo2graph.graph_generator import GraphGenerator
 
-# import networkx as nx
-# import matplotlib.pyplot as plt
-from torch_geometric.utils.convert import to_networkx
+import networkx as nx
 
 
 def main():
 
     # setup target directory path
-    path = '/home/hkneiding/Documents/UiO/Data/tmQM/raw/'
-    file_name = 'ZUYHEG.log'
-    qm_data = DataParser(path + file_name).parse()
+    path = '/home/hkneiding/Documents/UiO/Data/tmQMg/raw/'
+    file_name = 'ZUYHEG'
+    qm_data = DataParser(path + file_name + '.log').parse()
 
-    FileHandler.write_dict_to_json_file('/home/hkneiding/Desktop/ZUYHEG.json', qm_data)
+    # FileHandler.write_dict_to_json_file('/home/hkneiding/Desktop/' + file_name + '.json', qm_data)
+
+    qm_data_object = QmData.from_dict(qm_data)
+
+    ggs = GraphGeneratorSettings.default(edge_types=[EdgeType.NBO_BONDING_ORBITALS], hydrogen_mode=HydrogenMode.EXPLICIT,
+                                         edge_features=[
+                                             EdgeFeature.NBO_TYPE,
+                                             EdgeFeature.BOND_ORBITAL_MAX,
+                                             EdgeFeature.ANTIBOND_ORBITAL_MIN,
+                                             EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE,
+                                             EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE,
+                                             EdgeFeature.BOND_ORBITAL_DATA_S,
+                                             EdgeFeature.BOND_ORBITAL_DATA_P,
+                                             EdgeFeature.BOND_ORBITAL_DATA_D,
+                                             EdgeFeature.ANTIBOND_ORBITAL_DATA_S,
+                                             EdgeFeature.ANTIBOND_ORBITAL_DATA_P,
+                                             EdgeFeature.ANTIBOND_ORBITAL_DATA_D
+                                            ],
+                                         node_features=[
+                                             NodeFeature.ATOMIC_NUMBER,
+                                             NodeFeature.NATURAL_ATOMIC_CHARGE,
+                                             NodeFeature.NATURAL_ELECTRON_POPULATION_VALENCE,
+                                             NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S,
+                                             NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P,
+                                             NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D,
+                                             NodeFeature.LONE_PAIR_MAX,
+                                             NodeFeature.LONE_VACANCY_MIN,
+                                             NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE,
+                                             NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE,
+                                             NodeFeature.LONE_PAIR_S,
+                                             NodeFeature.LONE_PAIR_P,
+                                             NodeFeature.LONE_PAIR_D,
+                                             NodeFeature.LONE_VACANCY_S,
+                                             NodeFeature.LONE_VACANCY_P,
+                                             NodeFeature.LONE_VACANCY_D],
+                                         targets=[QmTarget.SVP_HOMO_LUMO_GAP],
+                                         bond_threshold_metal=0.05)
+
+    ggs = GraphGeneratorSettings.natQ2([QmTarget.SVP_HOMO_LUMO_GAP])
+
+    gg = GraphGenerator(settings=ggs)
+    graph = gg.generate_graph(qm_data_object)
+    subgraphs = graph.get_disjoint_sub_graphs()
+
+    nx.write_gml(graph.get_networkx_graph_object(), '/home/hkneiding/Desktop/test.gml')
+
+    graph.get_pytorch_data_object()
 
     exit()
+    # nx_h2o_graph = nx.MultiGraph()
+    # nx_h2o_graph.add_nodes_from([
+    #     (0, {"x": 8}),
+    #     (1, {"x": 1}),
+    #     (2, {"x": 1})
+    # ])
+    # nx_h2o_graph.add_edges_from([
+    #     (0, 1),
+    #     (0, 2)
+    # ])
+    # nm = nx.algorithms.isomorphism.categorical_node_match('x', 0)
+
+    nx.write_gml(graph.get_networkx_graph_object(), '/home/hkneiding/Desktop/test.gml')
+    # exit()
+
+    # print(nx_h2o_graph.is_directed())
+
+    # print(subgraphs)
+    # for subgraph in subgraphs:
+
+    #     nx_subgraph = subgraph.get_networkx_graph_object()
+    #     # print(nx_subgraph.is_directed())
+
+    #     print(nx.is_isomorphic(nx_subgraph, nx_h2o_graph, node_match=nm))
+
+    # print(graph.networkx_graph.edge_attr_dict_factory)
+    # print(graph.get_networkx_graph_object().nodes(data=True))
+    # nx.write_gml(graph.get_networkx_graph_object(), '/home/hkneiding/Desktop/' + file_name + '.gml')
+
+    exit()
+
     # # load from file
     # file_to_read = open("/home/hkneiding/Desktop/nbo data/the_random_500/r500-qmdata.pickle", "rb")
     # qm_data_list = pickle.load(file_to_read)
@@ -99,32 +175,36 @@ def get_number_connected_graphs(qm_data_list):
     print(n_connected_graphs)
 
 
-def check_3c():
+def extract_gaussian_data():
 
-    # setup target directory path
-    path = '/home/hkneiding/Documents/UiO/Data/tmQM/the_random_500/'
-    files = [file for file in os.listdir(path) if file.endswith(".log")]
-    qm_data_list = [DataParser(path + file).parse_to_qm_data_object() for file in files]
+    raw_file_path = '/home/hkneiding/Documents/UiO/Data/tmQMg/raw/'
+    extracted_file_path = '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/'
 
-    for i in range(len(qm_data_list)):
+    raw_files = [file for file in os.listdir(raw_file_path)]
 
-        for j in range(len(qm_data_list[i].bond_3c_data)):
+    for raw_file in raw_files:
 
-            for k in range(len(qm_data_list[i].bond_pair_data)):
-
-                if qm_data_list[i].bond_pair_data[k].atom_indices[0] in qm_data_list[i].bond_3c_data[j].atom_indices and \
-                   qm_data_list[i].bond_pair_data[k].atom_indices[1] in qm_data_list[i].bond_3c_data[j].atom_indices:
-
-                    print(qm_data_list[i].id)
+        try:
+            qm_data_dict = DataParser(raw_file_path + raw_file).parse()
+            FileHandler.write_dict_to_json_file(extracted_file_path + raw_file.replace('.log', '') + '.json', qm_data_dict)
+        except ValueError:
+            print(raw_file)
 
 
 def test_ml():
 
-    dataset = tmQMg('/home/hkneiding/Documents/UiO/Data/tmQM/', GraphGeneratorSettings.default(edge_types=[EdgeType.SOPA],
-                                                                                               sopa_interaction_threshold=1,
-                                                                                               sopa_edge_features=[SopaEdgeFeature.ACCEPTOR_NBO_TYPE, SopaEdgeFeature.DONOR_NBO_TYPE],
-                                                                                               edge_features=[EdgeFeature.NBO_TYPE, EdgeFeature.WIBERG_BOND_ORDER],
-                                                                                               targets=[QmTarget.POLARISABILITY]))
+    ggs = GraphGeneratorSettings.default(edge_types=[EdgeType.SOPA],
+                                         sopa_interaction_threshold=1,
+                                         sopa_edge_features=[SopaEdgeFeature.ACCEPTOR_NBO_TYPE, SopaEdgeFeature.DONOR_NBO_TYPE],
+                                         edge_features=[EdgeFeature.NBO_TYPE, EdgeFeature.WIBERG_BOND_ORDER],
+                                         targets=[QmTarget.POLARISABILITY])
+
+    ggs = GraphGeneratorSettings.default(edge_types=[EdgeType.NBO_BONDING_ORBITALS])
+
+    dataset = tmQMg('/home/hkneiding/Desktop/pyg-dataset-test-dir/', ggs)
+    # dataset.clear_graph_directories()
+
+    exit()
 
     # dataset.clear_graph_directories()
     # dataset.process()
@@ -231,3 +311,4 @@ if __name__ == "__main__":
     main()
     # check_3c()
     # test_ml()
+    # extract_gaussian_data()
