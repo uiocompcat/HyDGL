@@ -14,7 +14,7 @@ class Graph:
 
     """Class for representing chemical graphs with all necessary information."""
 
-    def __init__(self, nodes: list[Node], edges: list[Edge], targets: dict = {}, graph_features: list[float] = [], id: str = None, stoichiometry: str = None):
+    def __init__(self, nodes: list[Node], edges: list[Edge], targets: dict = {}, graph_features: dict = {}, id: str = None, stoichiometry: str = None):
 
         """Constructor
 
@@ -190,6 +190,8 @@ class Graph:
                 edge_indices.append(list(reversed(edge.node_indices)))
                 edge_features.append(Tools.get_one_hot_encoded_feature_list(edge.features, edge_class_feature_dict))
                 edge_features.append(Tools.get_one_hot_encoded_feature_list(edge.features, edge_class_feature_dict))
+
+        print(edge_features)
 
         # cast to pytorch tensor
         edge_indices = torch.tensor(edge_indices, dtype=torch.long)

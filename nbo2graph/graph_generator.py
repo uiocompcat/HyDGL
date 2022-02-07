@@ -905,7 +905,7 @@ class GraphGenerator:
             print('Bond determination mode not recognised. Defaulting to Wiberg')
             return qm_data.wiberg_bond_order_matrix
 
-    def _get_graph_features(self, qm_data: QmData) -> list:
+    def _get_graph_features(self, qm_data: QmData) -> dict:
 
         """Function to return the requested graph features.
 
@@ -914,20 +914,20 @@ class GraphGenerator:
         """
 
         # return variable
-        graph_feature_list = []
+        graph_feature_dict = {}
 
         for i in range(len(self._settings.graph_features)):
 
             if self._settings.graph_features[i] == GraphFeature.N_ATOMS:
-                graph_feature_list.append(qm_data.n_atoms)
+                graph_feature_dict['n_atoms'] = qm_data.n_atoms
             elif self._settings.graph_features[i] == GraphFeature.MOLECULAR_MASS:
-                graph_feature_list.append(qm_data.molecular_mass)
+                graph_feature_dict['molecular_mass'] = qm_data.molecular_mass
             elif self._settings.graph_features[i] == GraphFeature.CHARGE:
-                graph_feature_list.append(qm_data.charge)
+                graph_feature_dict['charge'] = qm_data.charge
             else:
                 warnings.warn('Could not find target' + str(self._settings.graph_features[i]) + '.')
 
-        return graph_feature_list
+        return graph_feature_dict
 
     def _get_targets(self, qm_data: QmData) -> list[float]:
 

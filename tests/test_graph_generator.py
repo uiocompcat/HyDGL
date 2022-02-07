@@ -998,18 +998,24 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             [GraphFeature.MOLECULAR_MASS],
-            [580.92867]
+            {'molecular_mass': 580.92867}
         ],
 
         [
             [GraphFeature.N_ATOMS],
-            [47]
+            {'n_atoms': 47}
         ],
 
         [
             [GraphFeature.CHARGE],
-            [1]
+            {'charge': 1}
         ],
+
+        [
+            [],
+            {}
+        ],
+
     ])
     def test_get_graph_features(self, graph_features, expected):
 

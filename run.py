@@ -78,7 +78,7 @@ def main():
 
     nx.write_gml(graph.get_networkx_graph_object(), '/home/hkneiding/Desktop/test.gml')
 
-    graph.get_pytorch_data_object()
+    graph.get_pytorch_data_object({0: ['BD', '3C', 'None']})
 
     exit()
     # nx_h2o_graph = nx.MultiGraph()
