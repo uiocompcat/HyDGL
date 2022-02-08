@@ -1,7 +1,6 @@
 import warnings
 from statistics import mean
 from nbo2graph.enums.edge_type import EdgeType
-from nbo2graph.enums.orbital_occupation_type import OrbitalOccupationType
 from nbo2graph.enums.sopa_edge_feature import SopaEdgeFeature
 from nbo2graph.nbo_data_point import NboDataPoint
 from nbo2graph.enums.nbo_type import NboType
@@ -357,20 +356,20 @@ class GraphGenerator:
         if EdgeFeature.BOND_ORBITAL_MAX in self._settings.edge_features and len(self._settings.bond_orbital_indices) > 0:
 
             if bond_atom_indices in bond_3c_atom_indices:
-                edge_features['bond_orbital_max'] = self._get_maximum_energy_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_BOND)
+                edge_features = edge_features | self._get_maximum_energy_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_BOND)
             elif bond_atom_indices in bond_pair_atom_indices:
-                edge_features['bond_orbital_max'] = self._get_maximum_energy_nbo(qm_data, bond_atom_indices, NboType.BOND)
+                edge_features = edge_features | self._get_maximum_energy_nbo(qm_data, bond_atom_indices, NboType.BOND)
             else:
-                edge_features['bond_orbital_max'] = [0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.BOND_ORBITAL)
+                edge_features = edge_features | self._get_default_nbo(qm_data, NboType.BOND)
 
         if EdgeFeature.BOND_ORBITAL_AVERAGE in self._settings.edge_features and len(self._settings.bond_orbital_indices) > 0:
 
             if bond_atom_indices in bond_3c_atom_indices:
-                edge_features['bond_orbital_average'] = self._get_average_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_BOND)
+                edge_features = edge_features | self._get_average_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_BOND)
             elif bond_atom_indices in bond_pair_atom_indices:
-                edge_features['bond_orbital_average'] = self._get_average_nbo(qm_data, bond_atom_indices, NboType.BOND)
+                edge_features = edge_features | self._get_average_nbo(qm_data, bond_atom_indices, NboType.BOND)
             else:
-                edge_features['bond_orbital_average'] = [0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.BOND_ORBITAL)
+                edge_features = edge_features | self._get_default_nbo(qm_data, NboType.BOND)
 
         if EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features:
 
@@ -391,30 +390,50 @@ class GraphGenerator:
         if EdgeFeature.ANTIBOND_ORBITAL_MIN in self._settings.edge_features and len(self._settings.antibond_orbital_indices) > 0:
 
             if bond_atom_indices in bond_3c_atom_indices:
-                edge_features['antibond_orbital_min'] = self._get_minimum_energy_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_ANTIBOND)
+                edge_features = edge_features | self._get_minimum_energy_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_ANTIBOND)
             elif bond_atom_indices in bond_pair_atom_indices:
-                edge_features['antibond_orbital_min'] = self._get_minimum_energy_nbo(qm_data, bond_atom_indices, NboType.ANTIBOND)
+                edge_features = edge_features | self._get_minimum_energy_nbo(qm_data, bond_atom_indices, NboType.ANTIBOND)
             else:
-                edge_features['antibond_orbital_min'] = [0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.ANTIBOND_ORBITAL)
+                edge_features = edge_features | self._get_default_nbo(qm_data, NboType.ANTIBOND)
 
         if EdgeFeature.ANTIBOND_ORBITAL_AVERAGE in self._settings.edge_features and len(self._settings.antibond_orbital_indices) > 0:
 
             if bond_atom_indices in bond_3c_atom_indices:
-                edge_features['antibond_orbital_average'] = self._get_average_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_ANTIBOND)
+                edge_features = edge_features | self._get_average_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_ANTIBOND)
             elif bond_atom_indices in bond_pair_atom_indices:
-                edge_features['antibond_orbital_average'] = self._get_average_nbo(qm_data, bond_atom_indices, NboType.ANTIBOND)
+                edge_features = edge_features | self._get_average_nbo(qm_data, bond_atom_indices, NboType.ANTIBOND)
             else:
-                edge_features['antibond_orbital_average'] = [0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.ANTIBOND_ORBITAL)
+                edge_features = edge_features | self._get_default_nbo(qm_data, NboType.ANTIBOND)
 
         return edge_features
 
-    def _get_minimum_energy_nbo(self, qm_data: QmData, atom_indices: list, nbo_type: NboType):
+    def _get_minimum_energy_nbo(self, qm_data: QmData, atom_indices: list, nbo_type: NboType) -> dict:
+
+        """Gets a dict of the minimum energy NBO entry.
+
+        Returns:
+            dict: The NBO data dict.
+        """
+
         return self._get_extremum_energy_nbo(qm_data, atom_indices, nbo_type, min)
 
-    def _get_maximum_energy_nbo(self, qm_data: QmData, atom_indices: list, nbo_type: NboType):
+    def _get_maximum_energy_nbo(self, qm_data: QmData, atom_indices: list, nbo_type: NboType) -> dict:
+
+        """Gets a dict of the maximum energy NBO entry.
+
+        Returns:
+            dict: The NBO data dict.
+        """
+
         return self._get_extremum_energy_nbo(qm_data, atom_indices, nbo_type, max)
 
-    def _get_extremum_energy_nbo(self, qm_data: QmData, atom_indices: list, nbo_type: NboType, extremum_operator):
+    def _get_extremum_energy_nbo(self, qm_data: QmData, atom_indices: list, nbo_type: NboType, extremum_operator) -> dict:
+
+        """Gets a dict of the extremum energy NBO entry.
+
+        Returns:
+            dict: The NBO data dict.
+        """
 
         # resolve nbo type
         nbo_data = qm_data.get_nbo_data_by_type(nbo_type)
@@ -422,32 +441,42 @@ class GraphGenerator:
         nbo_energies = [x.energy for x in nbo_data]
 
         # return variable
-        nbo_features = []
+        nbo_features = {}
+        # base name to setup dict
+        base_name = str(nbo_type).split('.')[1].lower().replace('three_center_', '') + '_' + extremum_operator.__name__
 
+        # energies
         energies = [x.energy for x in nbo_data if x.contains_atom_indices(atom_indices)]
-        # energies = [x.energy for x in nbo_data if x.atom_indices == atom_indices]
 
         # select index of the extremum energy
         selected_index = nbo_energies.index(extremum_operator(energies))
 
         # append data (total length = 2 + number of orbital occupancies)
-        nbo_features.append(nbo_data[selected_index].energy)
-        nbo_features.append(nbo_data[selected_index].occupation)
+        nbo_features[base_name + '_energy'] = nbo_data[selected_index].energy
+        nbo_features[base_name + '_occupation'] = nbo_data[selected_index].occupation
 
         # get values for orbital symmetries of energy extremum
-        oribtal_symmetries = [nbo_data[selected_index].orbital_occupations[k] for k in nbo_orbital_indices]
-        nbo_features.extend(oribtal_symmetries)
+        for k in nbo_orbital_indices:
+            nbo_features[base_name + '_' + str(k)] = nbo_data[selected_index].orbital_occupations[k]
 
         return nbo_features
 
-    def _get_average_nbo(self, qm_data: QmData, atom_indices: list, nbo_type: NboType):
+    def _get_average_nbo(self, qm_data: QmData, atom_indices: list, nbo_type: NboType) -> dict:
+
+        """Gets a dict of the average NBO entry.
+
+        Returns:
+            dict: The NBO data dict.
+        """
 
         # resolve nbo type
         nbo_data = qm_data.get_nbo_data_by_type(nbo_type)
         nbo_orbital_indices = self._settings.get_nbo_orbital_indices_by_type(nbo_type)
 
         # return variable
-        nbo_features = []
+        nbo_features = {}
+        # base name to setup dict
+        base_name = str(nbo_type).split('.')[1].lower().replace('three_center_', '') + '_average'
 
         # get list of all energies of this NBO
         energies = [x.energy for x in nbo_data if x.contains_atom_indices(atom_indices)]
@@ -456,13 +485,40 @@ class GraphGenerator:
         # get list of symmetry values of different lone pairs for this NBO
         symmetries = [x.orbital_occupations for x in nbo_data if x.contains_atom_indices(atom_indices)]
 
-        # append average values for energies and occupations
-        nbo_features.append(mean(energies))
-        nbo_features.append(mean(occupations))
+        # append data (total length = 2 + number of orbital occupancies)
+        nbo_features[base_name + '_energy'] = mean(energies)
+        nbo_features[base_name + '_occupation'] = mean(occupations)
 
-        # get average values for orbital symmetries
-        oribtal_symmetries = [mean(x) for x in [[y[k] for y in symmetries] for k in nbo_orbital_indices]]
-        nbo_features.extend(oribtal_symmetries)
+        # get values for orbital symmetries of energy extremum
+        for k in nbo_orbital_indices:
+            nbo_features[base_name + '_' + str(k)] = mean([x[k] for x in symmetries])
+
+        return nbo_features
+
+    def _get_default_nbo(self, qm_data: QmData, nbo_type: NboType) -> dict:
+
+        """Gets a dict of the default NBO entry.
+
+        Returns:
+            dict: The NBO data dict.
+        """
+
+        # resolve nbo type
+        nbo_orbital_indices = self._settings.get_nbo_orbital_indices_by_type(nbo_type)
+
+        # return variable
+        nbo_features = {}
+        # base name to setup dict
+        base_name = str(nbo_type).split('.')[1].lower().replace('three_center_', '') + '_default'
+
+        nbo_features[base_name + '_energy'] = 0.0
+        nbo_features[base_name + '_occupation'] = 0.0
+
+        symmetries = self._get_default_orbital_occupations(qm_data, nbo_type)
+
+        # get values for orbital symmetries of energy extremum
+        for k in nbo_orbital_indices:
+            nbo_features[base_name + '_' + str(k)] = symmetries[k]
 
         return nbo_features
 
@@ -498,7 +554,7 @@ class GraphGenerator:
 
         return edge_features
 
-    def _get_default_orbital_occupations(self, qm_data: QmData, orbital_occupation_type: OrbitalOccupationType):
+    def _get_default_orbital_occupations(self, qm_data: QmData, nbo_type: NboType):
 
         """Returns the default values for occupations used when no NBO data for a specific edge is available. The orbital
            occupancies are used as specified in the settings.
@@ -507,15 +563,15 @@ class GraphGenerator:
             list[float]: The default orbital occupations.
         """
 
-        if orbital_occupation_type == OrbitalOccupationType.BOND_ORBITAL:
+        if nbo_type == NboType.BOND or nbo_type == NboType.THREE_CENTER_BOND:
             average_occupations = self._get_average_orbital_occupations(qm_data.bond_pair_data)
             return [average_occupations[i] for i in self._settings.bond_orbital_indices]
-        elif orbital_occupation_type == OrbitalOccupationType.ANTIBOND_ORBITAL:
+        elif nbo_type == NboType.ANTIBOND or nbo_type == NboType.THREE_CENTER_ANTIBOND or nbo_type == NboType.THREE_CENTER_NONBOND:
             average_occupations = self._get_average_orbital_occupations(qm_data.antibond_pair_data)
             return [average_occupations[i] for i in self._settings.antibond_orbital_indices]
-        elif orbital_occupation_type == OrbitalOccupationType.LONE_PAIR:
+        elif nbo_type == NboType.LONE_PAIR:
             return len(self._settings.lone_pair_orbital_indices) * [0.0]
-        elif orbital_occupation_type == OrbitalOccupationType.LONE_VACANCY:
+        elif nbo_type == NboType.LONE_VACANCY:
             return len(self._settings.lone_vacancy_orbital_indices) * [0.0]
 
     def _get_average_orbital_occupations(self, nbo_data: list[NboDataPoint]):
@@ -663,15 +719,15 @@ class GraphGenerator:
 
         if NodeFeature.LONE_PAIR_MAX in self._settings.node_features and len(self._settings.lone_pair_orbital_indices) > 0:
             if i in lone_pair_atom_indices:
-                node_features['lone_pair_max'] = self._get_maximum_energy_nbo(qm_data, [i], NboType.LONE_PAIR)
+                node_features = node_features | self._get_maximum_energy_nbo(qm_data, [i], NboType.LONE_PAIR)
             else:
-                node_features['lone_pair_max'] = [0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.LONE_PAIR)
+                node_features = node_features | self._get_default_nbo(qm_data, NboType.LONE_PAIR)
 
         if NodeFeature.LONE_PAIR_AVERAGE in self._settings.node_features and len(self._settings.lone_pair_orbital_indices) > 0:
             if i in lone_pair_atom_indices:
-                node_features['lone_pair_average'] = self._get_average_nbo(qm_data, [i], NboType.LONE_PAIR)
+                node_features = node_features | self._get_average_nbo(qm_data, [i], NboType.LONE_PAIR)
             else:
-                node_features['lone_pair_average'] = [0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.LONE_PAIR)
+                node_features = node_features | self._get_default_nbo(qm_data, NboType.LONE_PAIR)
 
         # add number of lone vacancies if requested
         if NodeFeature.LONE_VACANCY_MIN in self._settings.node_features or \
@@ -692,15 +748,15 @@ class GraphGenerator:
 
         if NodeFeature.LONE_VACANCY_MIN in self._settings.node_features and len(self._settings.lone_vacancy_orbital_indices) > 0:
             if i in lone_vacancy_atom_indices:
-                node_features['lone_vacancy_min'] = self._get_minimum_energy_nbo(qm_data, [i], NboType.LONE_VACANCY)
+                node_features = node_features | self._get_minimum_energy_nbo(qm_data, [i], NboType.LONE_VACANCY)
             else:
-                node_features['lone_vacancy_min'] = [0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.LONE_VACANCY)
+                node_features = node_features | self._get_default_nbo(qm_data, NboType.LONE_VACANCY)
 
         if NodeFeature.LONE_VACANCY_AVERAGE in self._settings.node_features and len(self._settings.lone_vacancy_orbital_indices) > 0:
             if i in lone_vacancy_atom_indices:
-                node_features['lone_vacancy_average'] = self._get_average_nbo(qm_data, [i], NboType.LONE_VACANCY)
+                node_features = node_features | self._get_average_nbo(qm_data, [i], NboType.LONE_VACANCY)
             else:
-                node_features['lone_vacancy_average'] = [0.0, 0.0] + self._get_default_orbital_occupations(qm_data, OrbitalOccupationType.LONE_VACANCY)
+                node_features = node_features | self._get_default_nbo(qm_data, NboType.LONE_VACANCY)
 
         # add implicit hydrogens
         if NodeFeature.BOUND_HYDROGEN_COUNT in self._settings.node_features:
