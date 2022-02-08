@@ -685,8 +685,8 @@ class GraphGenerator:
             node_features['natural_electron_population_total'] = sum(qm_data.natural_electron_population[i])
 
         # add natural electron configuration (requested orbital occupancies)
-        if len(self._settings.natural_orbital_configuration_indices) > 0:
-            node_features['natural_electron_configuration'] = [qm_data.natural_electron_configuration[i][k] for k in self._settings.natural_orbital_configuration_indices]
+        for k in self._settings.natural_orbital_configuration_indices:
+            node_features['natural_electron_configuration_' + str(k)] = qm_data.natural_electron_configuration[i][k]
 
         # add bond order totals
 

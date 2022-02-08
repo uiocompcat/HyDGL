@@ -371,62 +371,6 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             TEST_FILE_LALMER,
-            HydrogenMode.EXPLICIT,
-            BondOrderType.WIBERG,
-            [NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_F],
-            [
-                Node(features={'natural_electron_configuration': [0.31, 0.01, 9.98, 0.0]}),
-                Node(features={'natural_electron_configuration': [1.75, 5.21, 0.01, 0.0]}),
-                Node(features={'natural_electron_configuration': [1.37, 4.13, 0.01, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.97, 3.01, 0.01, 0.0]}),
-                Node(features={'natural_electron_configuration': [1.65, 3.82, 0.03, 0.0]}),
-                Node(features={'natural_electron_configuration': [1.10, 3.32, 0.01, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.91, 2.92, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [1.13, 3.53, 0.01, 0.0]}),
-                Node(features={'natural_electron_configuration': [1.34, 4.14, 0.01, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.89, 2.94, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [1.00, 3.2, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [1.00, 3.13, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [1.00, 3.2, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.89, 2.91, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [1.34, 4.13, 0.01, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.89, 2.94, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [1.00, 3.2, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [1.00, 3.13, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [1.00, 3.2, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.89, 2.92, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [1.37, 4.14, 0.02, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.96, 3.01, 0.01, 0.0]}),
-                Node(features={'natural_electron_configuration': [1.65, 3.82, 0.03, 0.0]}),
-                Node(features={'natural_electron_configuration': [1.10, 3.31, 0.01, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.91, 2.91, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [1.13, 3.53, 0.01, 0.0]}),
-                Node(features={'natural_electron_configuration': [1.25, 3.08, 0.3, 0.01]}),
-                Node(features={'natural_electron_configuration': [1.89, 5.01, 0.02, 0.0]}),
-                Node(features={'natural_electron_configuration': [1.89, 4.96, 0.02, 0.0]}),
-                Node(features={'natural_electron_configuration': [1.87, 4.85, 0.02, 0.0]}),
-                Node(features={'natural_electron_configuration': [1.87, 4.82, 0.02, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.5, 0.0, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.72, 0.0, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.5, 0.0, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.75, 0.0, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.73, 0.0, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.75, 0.0, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.76, 0.0, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.76, 0.0, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.72, 0.0, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.76, 0.0, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.75, 0.0, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.75, 0.0, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.77, 0.0, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.73, 0.0, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.76, 0.0, 0.0, 0.0]}),
-                Node(features={'natural_electron_configuration': [0.76, 0.0, 0.0, 0.0]})
-            ]
-        ],
-
-        [
-            TEST_FILE_LALMER,
             HydrogenMode.OMIT,
             BondOrderType.WIBERG,
             [NodeFeature.LONE_PAIR_MAX, NodeFeature.LONE_PAIR_S, NodeFeature.LONE_PAIR_P, NodeFeature.LONE_PAIR_D, NodeFeature.LONE_PAIR_F],
@@ -681,6 +625,34 @@ class TestGraphGenerator(unittest.TestCase):
                 'lone_vacancy_min_2': 0.9984,
                 'lone_vacancy_min_3': 0.0
             }, position=[-1.339211, 0.079206, -0.361021], label='Ir')
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            HydrogenMode.EXPLICIT,
+            BondOrderType.WIBERG,
+            [NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_F],
+            0,
+            Node(features={
+                'natural_electron_configuration_0': 0.31,
+                'natural_electron_configuration_1': 0.01,
+                'natural_electron_configuration_2': 9.98,
+                'natural_electron_configuration_3': 0.0
+            }, position=[-0.106076, -0.278587, -0.332310], label='Cd')
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            HydrogenMode.EXPLICIT,
+            BondOrderType.WIBERG,
+            [NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_F],
+            3,
+            Node(features={
+                'natural_electron_configuration_0': 0.97,
+                'natural_electron_configuration_1': 3.01,
+                'natural_electron_configuration_2': 0.01,
+                'natural_electron_configuration_3': 0.0
+            }, position=[-3.291283, -0.056813, -0.234670], label='C')
         ],
 
     ])
