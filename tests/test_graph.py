@@ -344,7 +344,7 @@ class TestGraph(unittest.TestCase):
             {
                 'graph': nx.MultiGraph(),
                 'id': 'TestGraph',
-                'targets': {'a': 12.34, 'b': 23.45, 'c': 34.56},
+                'targets': {'target_a': 12.34, 'target_b': 23.45, 'target_c': 34.56},
                 'nodes': [(0, {'feature_0': 0, 'feature_1': 1}), (1, {'feature_0': 1, 'feature_1': 0})],
                 'edges': [(0, 1, {'feature_0': -2, 'feature_1': 2})]
             },
@@ -359,7 +359,7 @@ class TestGraph(unittest.TestCase):
             {
                 'graph': nx.MultiDiGraph(),
                 'id': 'TestGraph',
-                'targets': {'a': 12.34, 'b': 23.45, 'c': 34.56},
+                'targets': {'target_a': 12.34, 'target_b': 23.45, 'target_c': 34.56},
                 'nodes': [(0, {'feature_0': 0, 'feature_1': 1}), (1, {'feature_0': 1, 'feature_1': 0})],
                 'edges': [(0, 1, {'feature_0': -2, 'feature_1': 2})]
             },

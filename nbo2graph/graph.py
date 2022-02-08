@@ -157,18 +157,19 @@ class Graph:
 
         # add nodes
         for i, node in enumerate(self.nodes):
-            nx_graph.add_nodes_from([(i, node.features)])
+            nx_graph.add_nodes_from([(i, {f'feature_{k}': v for k, v in node.features.items()})])
 
         # add edges
         for edge in self.edges:
-            nx_graph.add_edges_from([(edge.node_indices[0], edge.node_indices[1], edge.features)])
+            nx_graph.add_edges_from([(edge.node_indices[0], edge.node_indices[1], {f'feature_{k}': v for k, v in edge.features.items()})])
 
         # add graph features
-        # TODO
+        for key in self.graph_features.keys():
+            nx_graph.graph['feature_' + key] = self.graph_features[key]
 
         # add targets
         for key in self.targets.keys():
-            nx_graph.graph[key] = self.targets[key]
+            nx_graph.graph['target_' + key] = self.targets[key]
 
         return nx_graph
 

@@ -15,7 +15,7 @@ class Edge:
         if type(features) == list:
             self._features = {}
             for i, feature in enumerate(features):
-                self._features['feature_' + str(i)] = feature
+                self._features[str(i)] = feature
         else:
             self._features = features
 
