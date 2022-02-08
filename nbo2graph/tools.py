@@ -1,7 +1,7 @@
 class Tools:
 
     @staticmethod
-    def get_one_hot_encoded_feature_list(feature_list: list, class_feature_dict: dict):
+    def get_one_hot_encoded_feature_list(feature_dict: dict, class_feature_dict: dict):
 
         """Gets the one-hot encoding of a given feature list according to a given dict.
 
@@ -11,12 +11,12 @@ class Tools:
 
         one_hot_encoded_feature_list = []
 
-        for i in range(len(feature_list)):
+        for key in feature_dict.keys():
 
-            if i in class_feature_dict.keys():
-                one_hot_encoded_feature_list.append(Tools.get_one_hot_encoding(len(class_feature_dict[i]), class_feature_dict[i].index(feature_list[i])))
+            if key in class_feature_dict.keys():
+                one_hot_encoded_feature_list.append(Tools.get_one_hot_encoding(len(class_feature_dict[key]), class_feature_dict[key].index(feature_dict[key])))
             else:
-                one_hot_encoded_feature_list.append(feature_list[i])
+                one_hot_encoded_feature_list.append(feature_dict[key])
 
         return Tools.flatten_list(one_hot_encoded_feature_list)
 
