@@ -256,10 +256,10 @@ class TestGraph(unittest.TestCase):
         [
             Graph(
                 [Node(features=[0]), Node(features=[1]), Node(features=[3]), Node(features=[-2]), Node(features=[0])],
-                [Edge([0, 1], features=['A']), Edge([0, 2], features=['B']), Edge([0, 3], features=['A'], is_directed=True), Edge([3, 2], features=['C'], is_directed=True), Edge([2, 4], features=['D'])],
+                [Edge([0, 1], features={'test_feature': 'A'}), Edge([0, 2], features={'test_feature': 'B'}), Edge([0, 3], features={'test_feature': 'A'}, is_directed=True), Edge([3, 2], features={'test_feature': 'C'}, is_directed=True), Edge([2, 4], features={'test_feature': 'D'})],
                 targets={'a': 12.34}
             ),
-            {0: ['B', 'A', 'C', 'D']},
+            {'test_feature': ['B', 'A', 'C', 'D']},
             Data(
                 x=torch.tensor([[0], [1], [3], [-2], [0]], dtype=torch.float),
                 edge_index=torch.tensor([[0, 1, 0, 2, 0, 3, 2, 4],

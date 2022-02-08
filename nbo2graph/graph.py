@@ -188,21 +188,20 @@ class Graph:
             # if directed add only once
             if edge.is_directed:
                 edge_indices.append(edge.node_indices)
-                edge_features.append(Tools.get_one_hot_encoded_feature_list(edge.feature_list, edge_class_feature_dict))
+                edge_features.append(Tools.get_one_hot_encoded_feature_list(edge.features, edge_class_feature_dict))
             # if undirected add twice to account for both directions
             else:
                 edge_indices.append(edge.node_indices)
                 edge_indices.append(list(reversed(edge.node_indices)))
-                edge_features.append(Tools.get_one_hot_encoded_feature_list(edge.feature_list, edge_class_feature_dict))
-                edge_features.append(Tools.get_one_hot_encoded_feature_list(edge.feature_list, edge_class_feature_dict))
-
-        print(edge_features)
+                edge_features.append(Tools.get_one_hot_encoded_feature_list(edge.features, edge_class_feature_dict))
+                edge_features.append(Tools.get_one_hot_encoded_feature_list(edge.features, edge_class_feature_dict))
 
         # cast to pytorch tensor
         edge_indices = torch.tensor(edge_indices, dtype=torch.long)
         edge_features = torch.tensor(edge_features, dtype=torch.float)
 
         # set up pytorch object for nodes
+        print(self.nodes_feature_list_list)
         node_features = torch.tensor(self.nodes_feature_list_list, dtype=torch.float)
 
         # set up pytorch object for graph level targets / labels
