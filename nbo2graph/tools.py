@@ -115,3 +115,22 @@ class Tools:
                 distance_matrix[j][i] = distance
 
         return distance_matrix
+
+    @staticmethod
+    def min_max_scale(value: float, min_value: float, max_value: float) -> float:
+
+        """Min-max scales a value according to given extremum values
+
+        Raises:
+            ValueError: If the given value is lower than the minimum value or higher than the maximum value.
+
+        Returns:
+            float: The scaled value.
+        """
+
+        if min_value > value:
+            raise ValueError('Minimum value cannot be larger than current value.')
+        if max_value < value:
+            raise ValueError('Maximum value cannot be lower than current value.')
+
+        return (value - min_value) / (max_value - min_value)

@@ -166,7 +166,6 @@ class TestTools(unittest.TestCase):
     ])
     def test_calculate_distance_matrix(self, points, expected):
 
-        print(Tools.calculate_distance_matrix(points))
         Utils.assert_are_almost_equal(Tools.calculate_distance_matrix(points), expected)
 
     @parameterized.expand([
@@ -180,3 +179,51 @@ class TestTools(unittest.TestCase):
     def test_calculate_distance_matrix_with_invalid_input(self, points, expected_error):
 
         self.assertRaises(expected_error, Tools.calculate_distance_matrix, points)
+
+    @parameterized.expand([
+
+        [
+            2,
+            2,
+            4,
+            0.0
+        ],
+
+        [
+            3,
+            2,
+            4,
+            0.5
+        ],
+
+        [
+            4.27,
+            3.14,
+            10.99,
+            0.14394904459
+        ],
+
+    ])
+    def test_min_max_scale(self, value, min_value, max_value, expected):
+
+        Utils.assert_are_almost_equal(Tools.min_max_scale(value, min_value, max_value), expected)
+
+    @parameterized.expand([
+
+        [
+            1,
+            2,
+            4,
+            ValueError
+        ],
+
+        [
+            5,
+            2,
+            4,
+            ValueError
+        ],
+    ])
+    def test_min_max_scale_with_invalid_input(self, value, min_value, max_value, expected_error):
+
+        self.assertRaises(expected_error, Tools.min_max_scale, value, min_value, max_value)
