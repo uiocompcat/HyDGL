@@ -279,7 +279,8 @@ class GraphGenerator:
             if hydride_bond not in adjacency_list and list(reversed(hydride_bond)) not in adjacency_list:
                 adjacency_list.append(hydride_bond)
 
-        return adjacency_list
+        set_list = [list(item) for item in set(tuple(atom_indices) for atom_indices in adjacency_list)]
+        return list(sorted(set_list))
 
     def _get_edge_features(self, bond_atom_indices: list[int], qm_data: QmData) -> list[float]:
 

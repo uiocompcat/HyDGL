@@ -1184,11 +1184,11 @@ class TestGraphGenerator(unittest.TestCase):
             1,
             1,
             [
-                [2, 3], [2, 16], [3, 5], [5, 6], [5, 17], [6, 7], [7, 8],
+                [1, 0], [2, 3], [2, 16], [3, 5], [5, 6], [5, 17], [6, 7], [7, 8],
                 [7, 16], [8, 10], [10, 12], [12, 14], [14, 16], [17, 18],
                 [17, 26], [18, 20], [20, 22], [22, 24], [24, 26], [28, 29],
                 [29, 30], [29, 34], [30, 32], [32, 33], [32, 38], [42, 43],
-                [43, 44], [43, 48], [44, 46], [46, 47], [46, 52], [1, 0]
+                [43, 44], [43, 48], [44, 46], [46, 47], [46, 52]
             ]
         ],
 
@@ -1767,6 +1767,7 @@ class TestGraphGenerator(unittest.TestCase):
         [
             TEST_FILE_OREDIA,
             [
+                Edge([1, 0], features=[]),
                 Edge([2, 3], features=[]),
                 Edge([2, 11], features=[]),
                 Edge([3, 4], features=[]),
@@ -1796,8 +1797,7 @@ class TestGraphGenerator(unittest.TestCase):
                 Edge([26, 30], features=[]),
                 Edge([27, 28], features=[]),
                 Edge([28, 29], features=[]),
-                Edge([28, 31], features=[]),
-                Edge([1, 0], features=[])
+                Edge([28, 31], features=[])
             ]
         ],
 
