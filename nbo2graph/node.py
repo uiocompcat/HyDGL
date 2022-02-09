@@ -1,4 +1,7 @@
-class Node:
+from nbo2graph.graph_element import GraphElement
+
+
+class Node(GraphElement):
 
     """Class for representing a node in a graph."""
 
@@ -12,20 +15,10 @@ class Node:
             label (string): Label of the node.
         """
 
-        if type(features) == list:
-            self._features = {}
-            for i, feature in enumerate(features):
-                self._features[str(i)] = feature
-        else:
-            self._features = features
+        super().__init__(features)
 
         self._position = position
         self._label = label
-
-    @property
-    def features(self):
-        """Getter for features"""
-        return self._features
 
     @property
     def position(self):
@@ -36,8 +29,3 @@ class Node:
     def label(self):
         """Getter for label"""
         return self._label
-
-    @property
-    def feature_list(self):
-        """Getter for a list of features."""
-        return [self._features[key] for key in self._features.keys()]
