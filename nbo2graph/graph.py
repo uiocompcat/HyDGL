@@ -139,7 +139,7 @@ class Graph:
 
     def get_networkx_graph_object(self) -> nx.Graph:
 
-        """Generates a networkx graph object..
+        """Generates a networkx graph object.
 
         Returns:
             networkx.Graph: networkx graph object.
@@ -173,7 +173,7 @@ class Graph:
 
         return nx_graph
 
-    def get_pytorch_data_object(self, edge_class_feature_dict={}) -> Data:
+    def get_pytorch_data_object(self, node_class_feature_dict={}, edge_class_feature_dict={}) -> Data:
 
         """Generates a pytorch data object ready to use for learning/visualisation.
 
@@ -181,6 +181,12 @@ class Graph:
             torch_geometric.data.Data: Pytorch data object containing nodes, edges and edge features.
         """
 
+        # get list of node features
+        node_features = []
+        for node in self.nodes:
+            node_features.append(Tools.get_one_hot_encoded_feature_list(node.features, node_class_feature_dict))
+
+        # get adjacency list and list of corresponding edge features
         edge_indices = []
         edge_features = []
         for edge in self.edges:
@@ -196,18 +202,15 @@ class Graph:
                 edge_features.append(Tools.get_one_hot_encoded_feature_list(edge.features, edge_class_feature_dict))
                 edge_features.append(Tools.get_one_hot_encoded_feature_list(edge.features, edge_class_feature_dict))
 
-        # cast to pytorch tensor
-        edge_indices = torch.tensor(edge_indices, dtype=torch.long)
-        edge_features = torch.tensor(edge_features, dtype=torch.float)
-
-        # set up pytorch object for nodes
-        print(self.nodes_feature_list_list)
-        node_features = torch.tensor(self.nodes_feature_list_list, dtype=torch.float)
-
-        # set up pytorch object for graph level targets / labels
+        # get list of targets
         targets = []
         for key in self.targets.keys():
             targets.append(self.targets[key])
+
+        # cast to pytorch tensors
+        node_features = torch.tensor(node_features, dtype=torch.float)
+        edge_indices = torch.tensor(edge_indices, dtype=torch.long)
+        edge_features = torch.tensor(edge_features, dtype=torch.float)
         targets = torch.tensor(targets, dtype=torch.float)
 
         # set up full pytorch data object
