@@ -188,7 +188,7 @@ class GraphGeneratorSettings:
                    hydrogen_mode=HydrogenMode.OMIT,
                    hydrogen_count_threshold=DEFAULT_HYDROGEN_COUNT_THRESHOLD,
                    sopa_edge_features=None,
-                   graph_features=[],
+                   graph_features=[GraphFeature.CHARGE, GraphFeature.MOLECULAR_MASS, GraphFeature.N_ATOMS],
                    targets=targets,
                    sopa_resolution_mode=None,
                    sopa_interaction_threshold=None,
