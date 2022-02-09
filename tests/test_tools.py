@@ -92,6 +92,33 @@ class TestTools(unittest.TestCase):
         [
             {'feature_a': 1.5, 'feature_b': 'A', 'feature_c': 5, 'feature_d': 7.123, 'feature_e': 'fC'},
             {'feature_b': ['A', 'B', 'C'], 'feature_e': ['gC', 'fC', 'dC']},
+            {'feature_a': 1.5, 'feature_b': [1, 0, 0], 'feature_c': 5, 'feature_d': 7.123, 'feature_e': [0, 1, 0]}
+        ],
+
+        [
+            {'feature_a': 1.5, 'feature_b': 'A', 'feature_c': 5, 'feature_d': 7.123, 'feature_e': 'fC'},
+            {'feature_b': ['A'], 'feature_e': ['gC', 'dC', 'fC']},
+            {'feature_a': 1.5, 'feature_b': [], 'feature_c': 5, 'feature_d': 7.123, 'feature_e': [0, 0, 1]}
+        ],
+
+        [
+            {'feature_a': 1.5, 'feature_c': 5, 'feature_d': 7.123, 'feature_e': 1.21},
+            {},
+            {'feature_a': 1.5, 'feature_c': 5, 'feature_d': 7.123, 'feature_e': 1.21},
+        ],
+
+    ])
+    def test_get_one_hot_encoded_feature_dict(self, feature_list, class_feature_dict, expected):
+
+        result = Tools.get_one_hot_encoded_feature_dict(feature_list, class_feature_dict)
+        print(result)
+        Utils.assert_are_almost_equal(result, expected)
+
+    @parameterized.expand([
+
+        [
+            {'feature_a': 1.5, 'feature_b': 'A', 'feature_c': 5, 'feature_d': 7.123, 'feature_e': 'fC'},
+            {'feature_b': ['A', 'B', 'C'], 'feature_e': ['gC', 'fC', 'dC']},
             [1.5, 1, 0, 0, 5, 7.123, 0, 1, 0]
         ],
 

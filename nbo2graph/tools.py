@@ -1,6 +1,26 @@
 class Tools:
 
     @staticmethod
+    def get_one_hot_encoded_feature_dict(feature_dict: dict, class_feature_dict: dict) -> dict:
+
+        """Gets the one-hot encoding of a given feature list according to a given dict.
+
+        Returns:
+            dict: Dict of features.
+        """
+
+        one_hot_encoded_feature_dict = {}
+
+        for key in feature_dict.keys():
+
+            if key in class_feature_dict.keys():
+                one_hot_encoded_feature_dict[key] = (Tools.get_one_hot_encoding(len(class_feature_dict[key]), class_feature_dict[key].index(feature_dict[key])))
+            else:
+                one_hot_encoded_feature_dict[key] = (feature_dict[key])
+
+        return one_hot_encoded_feature_dict
+
+    @staticmethod
     def get_one_hot_encoded_feature_list(feature_dict: dict, class_feature_dict: dict):
 
         """Gets the one-hot encoding of a given feature list according to a given dict.
@@ -9,16 +29,9 @@ class Tools:
             list[float]: The one-hot encoded feature list.
         """
 
-        one_hot_encoded_feature_list = []
+        one_hot_encoded_feature_dict = Tools.get_one_hot_encoded_feature_dict(feature_dict, class_feature_dict)
 
-        for key in feature_dict.keys():
-
-            if key in class_feature_dict.keys():
-                one_hot_encoded_feature_list.append(Tools.get_one_hot_encoding(len(class_feature_dict[key]), class_feature_dict[key].index(feature_dict[key])))
-            else:
-                one_hot_encoded_feature_list.append(feature_dict[key])
-
-        return Tools.flatten_list(one_hot_encoded_feature_list)
+        return Tools.flatten_list([one_hot_encoded_feature_dict[key] for key in one_hot_encoded_feature_dict.keys()])
 
     @staticmethod
     def get_one_hot_encoding(n_classes: int, class_number: int):
