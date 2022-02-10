@@ -6,6 +6,7 @@ from nbo2graph.edge import Edge
 from nbo2graph.enums.bond_order_type import BondOrderType
 from nbo2graph.enums.edge_feature import EdgeFeature
 from nbo2graph.enums.edge_type import EdgeType
+from nbo2graph.enums.graph_feature import GraphFeature
 from nbo2graph.enums.hydrogen_mode import HydrogenMode
 from nbo2graph.enums.node_feature import NodeFeature
 from nbo2graph.enums.qm_target import QmTarget
@@ -17,6 +18,8 @@ from nbo2graph.node import Node
 from nbo2graph.graph_generator_settings import GraphGeneratorSettings
 from nbo2graph.qm_data import QmData
 # from nbo2graph.datasets.tmQMg import tmQMg
+from time import sleep
+
 
 from scripts.data_parser import DataParser
 from scripts.tmQMg import tmQMg
@@ -39,7 +42,7 @@ def main():
     ggs = GraphGeneratorSettings.default(edge_types=[EdgeType.NBO_BONDING_ORBITALS], hydrogen_mode=HydrogenMode.EXPLICIT,
                                          edge_features=[
                                              EdgeFeature.NBO_TYPE,
-                                             EdgeFeature.BOND_ORBITAL_MAX,
+                                             EdgeFeature.BOND_ORBITAL_AVERAGE,
                                              EdgeFeature.ANTIBOND_ORBITAL_MIN,
                                              EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE,
                                              EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE,
@@ -69,21 +72,20 @@ def main():
                                             #  NodeFeature.LONE_VACANCY_D
                                         ],
                                          targets=[QmTarget.SVP_HOMO_LUMO_GAP],
+                                         graph_features=[GraphFeature.MOLECULAR_MASS],
                                          bond_threshold_metal=0.05)
 
-    # ggs = GraphGeneratorSettings.natQ2([QmTarget.SVP_HOMO_LUMO_GAP])
+    ggs = GraphGeneratorSettings.natQ2([QmTarget.SVP_HOMO_LUMO_GAP])
 
     gg = GraphGenerator(settings=ggs)
     graph = gg.generate_graph(qm_data_object)
-    subgraphs = graph.get_disjoint_sub_graphs()
-
-    print(graph.edges[0].features)
+    # graph.visualise()
 
     nx.write_gml(graph.get_networkx_graph_object(), '/home/hkneiding/Desktop/test.gml')
 
-    graph.get_pytorch_data_object({0: ['BD', '3C', 'None']})
-
-    graph.visualise()
+    pyg = graph.get_pytorch_data_object(edge_class_feature_dict={'nbo_type': ['BD', '3C', 'None']})
+    print(pyg['edge_attr'][0])
+    # graph.visualise()
 
     exit()
     # nx_h2o_graph = nx.MultiGraph()
@@ -204,12 +206,13 @@ def test_ml():
                                          edge_features=[EdgeFeature.NBO_TYPE, EdgeFeature.WIBERG_BOND_ORDER],
                                          targets=[QmTarget.POLARISABILITY])
 
-    ggs = GraphGeneratorSettings.default(edge_types=[EdgeType.NBO_BONDING_ORBITALS])
+    ggs = GraphGeneratorSettings.natQ2(targets=[QmTarget.POLARISABILITY])
 
-    dataset = tmQMg('/home/hkneiding/Desktop/pyg-dataset-test-dir/', ggs)
+    dataset = tmQMg(root='/home/hkneiding/Desktop/pyg-dataset-test-dir/run1/', raw_dir='/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/', settings=ggs)
     # dataset.clear_graph_directories()
 
-    exit()
+    # exit()
+
 
     # dataset.clear_graph_directories()
     # dataset.process()
@@ -244,7 +247,7 @@ def test_ml():
             super().__init__()
             self.lin0 = torch.nn.Linear(dataset.num_features, dim)
 
-            nn = Sequential(Linear(12, 128), ReLU(), Linear(128, dim * dim))
+            nn = Sequential(Linear(16, 128), ReLU(), Linear(128, dim * dim))
             self.conv = NNConv(dim, dim, nn, aggr='mean')
             self.gru = GRU(dim, dim)
 
@@ -313,7 +316,7 @@ def test_ml():
 # - - - entry point - - - #
 if __name__ == "__main__":
     # extract_tmqm()
-    main()
+    # main()
     # check_3c()
-    # test_ml()
+    test_ml()
     # extract_gaussian_data()
