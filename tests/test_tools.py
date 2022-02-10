@@ -76,6 +76,25 @@ class TestTools(unittest.TestCase):
     @parameterized.expand([
 
         [
+            {'a': 1, 'b': 0.2, 'c': 'class', 'd': 1.154, 'e': 0},
+            ['c']
+        ],
+
+        [
+            {'a': 1, 'b': 0.2, 'c': 12, 'd': 1.154, 'e': 0},
+            []
+        ],
+
+    ])
+    def test_get_class_feature_keys(self, feature_dict, expected):
+
+        result = Tools.get_class_feature_keys(feature_dict)
+
+        self.assertEqual(result, expected)
+
+    @parameterized.expand([
+
+        [
             [1.5, 'A', 5, 7.123, 7., 'fC', 53, 1.21],
             [1, 5]
         ],

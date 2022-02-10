@@ -55,6 +55,24 @@ class Tools:
         return [1 if x == class_number else 0 for x in list(range(n_classes))]
 
     @staticmethod
+    def get_class_feature_keys(feature_dict):
+
+        """Takes a feature dict a determines at which keys non-numerical class features are used.
+
+        Returns:
+            list[str]: A list with keys which correspond to non-numerical class features.
+        """
+
+        class_feature_keys = []
+
+        # get indices of features that are not numeric and need to be one-hot encoded
+        for key in feature_dict.keys():
+            if not type(feature_dict[key]) == int and not type(feature_dict[key]) == float:
+                class_feature_keys.append(key)
+
+        return class_feature_keys
+
+    @staticmethod
     def get_class_feature_indices(feature_list):
 
         """Takes a feature list a determines at which positions non-numerical class features are used.
