@@ -141,6 +141,9 @@ class Tools:
             float: The scaled value.
         """
 
+        if type(value) == str:
+            return value
+
         if min_value > value:
             raise ValueError('Minimum value cannot be larger than current value.')
         if max_value < value:

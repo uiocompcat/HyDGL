@@ -230,6 +230,13 @@ class TestTools(unittest.TestCase):
             0.14394904459
         ],
 
+        [
+            'test',
+            3.14,
+            10.99,
+            'test'
+        ],
+
     ])
     def test_min_max_scale(self, value, min_value, max_value, expected):
 
