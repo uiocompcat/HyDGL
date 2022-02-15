@@ -361,7 +361,7 @@ class GraphGenerator:
             elif bond_atom_indices in bond_pair_atom_indices:
                 edge_features = edge_features | self._get_maximum_energy_nbo(qm_data, bond_atom_indices, NboType.BOND)
             else:
-                edge_features = edge_features | self._get_default_nbo(qm_data, NboType.BOND)
+                edge_features = edge_features | self._get_default_nbo(qm_data, NboType.BOND, feature_name='max')
 
         if EdgeFeature.BOND_ORBITAL_AVERAGE in self._settings.edge_features and len(self._settings.bond_orbital_indices) > 0:
 
@@ -370,7 +370,7 @@ class GraphGenerator:
             elif bond_atom_indices in bond_pair_atom_indices:
                 edge_features = edge_features | self._get_average_nbo(qm_data, bond_atom_indices, NboType.BOND)
             else:
-                edge_features = edge_features | self._get_default_nbo(qm_data, NboType.BOND)
+                edge_features = edge_features | self._get_default_nbo(qm_data, NboType.BOND, feature_name='average')
 
         if EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features:
 
@@ -395,7 +395,7 @@ class GraphGenerator:
             elif bond_atom_indices in bond_pair_atom_indices:
                 edge_features = edge_features | self._get_minimum_energy_nbo(qm_data, bond_atom_indices, NboType.ANTIBOND)
             else:
-                edge_features = edge_features | self._get_default_nbo(qm_data, NboType.ANTIBOND)
+                edge_features = edge_features | self._get_default_nbo(qm_data, NboType.ANTIBOND, feature_name='min')
 
         if EdgeFeature.ANTIBOND_ORBITAL_AVERAGE in self._settings.edge_features and len(self._settings.antibond_orbital_indices) > 0:
 
@@ -404,7 +404,7 @@ class GraphGenerator:
             elif bond_atom_indices in bond_pair_atom_indices:
                 edge_features = edge_features | self._get_average_nbo(qm_data, bond_atom_indices, NboType.ANTIBOND)
             else:
-                edge_features = edge_features | self._get_default_nbo(qm_data, NboType.ANTIBOND)
+                edge_features = edge_features | self._get_default_nbo(qm_data, NboType.ANTIBOND, feature_name='average')
 
         return edge_features
 
@@ -496,7 +496,7 @@ class GraphGenerator:
 
         return nbo_features
 
-    def _get_default_nbo(self, qm_data: QmData, nbo_type: NboType) -> dict:
+    def _get_default_nbo(self, qm_data: QmData, nbo_type: NboType, feature_name: str = 'default') -> dict:
 
         """Gets a dict of the default NBO entry.
 
@@ -510,7 +510,7 @@ class GraphGenerator:
         # return variable
         nbo_features = {}
         # base name to setup dict
-        base_name = str(nbo_type).split('.')[1].lower().replace('three_center_', '') + '_default'
+        base_name = str(nbo_type).split('.')[1].lower().replace('three_center_', '') + '_' + feature_name
 
         nbo_features[base_name + '_energy'] = 0.0
         nbo_features[base_name + '_occupation'] = 0.0
@@ -722,13 +722,13 @@ class GraphGenerator:
             if i in lone_pair_atom_indices:
                 node_features = node_features | self._get_maximum_energy_nbo(qm_data, [i], NboType.LONE_PAIR)
             else:
-                node_features = node_features | self._get_default_nbo(qm_data, NboType.LONE_PAIR)
+                node_features = node_features | self._get_default_nbo(qm_data, NboType.LONE_PAIR, feature_name='max')
 
         if NodeFeature.LONE_PAIR_AVERAGE in self._settings.node_features and len(self._settings.lone_pair_orbital_indices) > 0:
             if i in lone_pair_atom_indices:
                 node_features = node_features | self._get_average_nbo(qm_data, [i], NboType.LONE_PAIR)
             else:
-                node_features = node_features | self._get_default_nbo(qm_data, NboType.LONE_PAIR)
+                node_features = node_features | self._get_default_nbo(qm_data, NboType.LONE_PAIR, feature_name='average')
 
         # add number of lone vacancies if requested
         if NodeFeature.LONE_VACANCY_MIN in self._settings.node_features or \
@@ -751,13 +751,13 @@ class GraphGenerator:
             if i in lone_vacancy_atom_indices:
                 node_features = node_features | self._get_minimum_energy_nbo(qm_data, [i], NboType.LONE_VACANCY)
             else:
-                node_features = node_features | self._get_default_nbo(qm_data, NboType.LONE_VACANCY)
+                node_features = node_features | self._get_default_nbo(qm_data, NboType.LONE_VACANCY, feature_name='min')
 
         if NodeFeature.LONE_VACANCY_AVERAGE in self._settings.node_features and len(self._settings.lone_vacancy_orbital_indices) > 0:
             if i in lone_vacancy_atom_indices:
                 node_features = node_features | self._get_average_nbo(qm_data, [i], NboType.LONE_VACANCY)
             else:
-                node_features = node_features | self._get_default_nbo(qm_data, NboType.LONE_VACANCY)
+                node_features = node_features | self._get_default_nbo(qm_data, NboType.LONE_VACANCY, feature_name='average')
 
         # add implicit hydrogens
         if NodeFeature.BOUND_HYDROGEN_COUNT in self._settings.node_features:
