@@ -3,7 +3,7 @@ from nbo2graph.tools import Tools
 
 class GraphElement:
 
-    """Abstract class for elements of a graph."""
+    """Base class for elements of a graph."""
 
     def __init__(self, features: dict = {}):
 
