@@ -440,14 +440,6 @@ class Graph:
 
             import plotly.graph_objects as go
 
-            # set up node label and feature lists
-            node_features = self.nodes_feature_dict_list
-            node_labels = self.nodes_labels_list
-
-            # set up edge index and feature lists
-            edge_indices = self.edges_indices_list  # + [list(reversed(x)) for x in self.edges_indices_list]
-            edge_features = self.edges_feature_dict_list  # * 2
-
             # get 3d positions
             position_dict = self.get_node_position_dict()
 
@@ -463,7 +455,7 @@ class Graph:
             xtp, ytp, ztp = [], [], []
 
             # need to fill these with all of the coordinates
-            for edge in edge_indices:
+            for edge in self.edges_indices_list:
 
                 # format: [beginning, ending, None]
                 x_coords = [position_dict[edge[0]][0], position_dict[edge[1]][0], None]
@@ -479,7 +471,8 @@ class Graph:
                 ztp.append(0.5 * (position_dict[edge[0]][2] + position_dict[edge[1]][2]))
 
             # get desc text for nodes
-            text = [f'{x[0]} | {x[1]}' for x in zip(node_labels, node_features)]
+            text = [f'{x[0]}' for x in self.nodes_labels_list]
+            # text = [f'{x[0]} | {x[1]}' for x in zip(self.nodes_labels_list, self.nodes_feature_dict_list)]
             # create a trace for the nodes
             trace_nodes = go.Scatter3d(
                 name='Nodes',
@@ -488,14 +481,15 @@ class Graph:
                 z=z_nodes,
                 mode='markers',
                 marker=dict(symbol='circle',
-                            size=[ElementLookUpTable.get_element_format_size(element) for element in node_labels],
-                            color=[ElementLookUpTable.get_element_format_colour(element) for element in node_labels]),
+                            size=[ElementLookUpTable.get_element_format_size(element) for element in self.nodes_labels_list],
+                            color=[ElementLookUpTable.get_element_format_colour(element) for element in self.nodes_labels_list]),
                 text=text,
                 hoverinfo='text'
             )
 
             # get desc text for edges
-            text = [f'{x[0]} | {x[1]}' for x in zip(edge_indices, edge_features)]
+            text = [f'{x}' for x in self.edges_indices_list]
+            # text = [f'{x[0]} | {x[1]}' for x in zip(self.edges_indices_list, self.edges_feature_dict_list)]
             # create edge text
             trace_weights = go.Scatter3d(x=xtp, y=ytp, z=ztp,
                                          mode='markers',
