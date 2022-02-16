@@ -1,7 +1,10 @@
 import os
 import pickle
+import pandas as pd
 import numpy as np
 from sklearn.cluster import k_means
+from tqdm import tqdm
+import dask.dataframe as dd
 from nbo2graph.edge import Edge
 from nbo2graph.enums.bond_order_type import BondOrderType
 from nbo2graph.enums.edge_feature import EdgeFeature
@@ -198,6 +201,41 @@ def extract_gaussian_data():
             print(raw_file)
 
 
+def extract_gaussian_data_to_pandas():
+
+    raw_file_path = '/home/hkneiding/Documents/UiO/Data/tmQMg/raw/'
+    extracted_file_path = '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/'
+
+    raw_files = [file for file in os.listdir(raw_file_path)]
+
+    dicts = []
+    counter = 0
+    threshold = 9999
+    partition_number = 0
+    for raw_file in tqdm(raw_files):
+
+        try:
+            qm_data_dict = DataParser(raw_file_path + raw_file).parse()
+            dicts.append(qm_data_dict)
+
+            if counter == threshold:
+
+                df = pd.DataFrame(dicts)
+                df.to_pickle(extracted_file_path + '/' + 'tmQMg-partion-' + str(partition_number) + '.pickle')
+
+                counter = 0
+                dicts = []
+                partition_number += 1
+            else:
+                counter += 1
+
+        except Exception as e:
+            print(e)
+
+    df = pd.DataFrame(dicts)
+    df.to_pickle(extracted_file_path + '/' + 'tmQMg-partion-' + str(partition_number) + '.pickle')
+
+
 def test_ml():
 
     ggs = GraphGeneratorSettings.default(edge_types=[EdgeType.SOPA],
@@ -226,9 +264,10 @@ def test_ml():
     from torch_geometric.loader import DataLoader
     from torch_geometric.nn import NNConv, Set2Set
 
-    test_dataset = dataset[:100]
-    val_dataset = dataset[100:200]
-    train_dataset = dataset[200:]
+
+    test_dataset = dataset[:5000]
+    val_dataset = dataset[5000:10000]
+    train_dataset = dataset[10000:]
     test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
     val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False)
     train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
@@ -313,10 +352,26 @@ def test_ml():
               f'Val MAE: {val_error:.7f}, Test MAE: {test_error:.7f}')
 
 
+def read_extracted_data():
+
+    extracted_file_path = '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/'
+    
+
+    df = FileHandler.read_binary_file(extracted_file_path + 'tmQMg-partion-0.pickle')
+    exit()
+    ddf = dd.from_pandas(df, npartitions=10)
+
+    df = FileHandler.read_binary_file(extracted_file_path + 'tmQMg-partion-1.pickle')
+    ddf.append(df)
+
+
+
 # - - - entry point - - - #
 if __name__ == "__main__":
     # extract_tmqm()
     # main()
     # check_3c()
-    test_ml()
-    # extract_gaussian_data()
+    #test_ml()
+    #extract_gaussian_data()
+    extract_gaussian_data_to_pandas()
+    #read_extracted_data()
