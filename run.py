@@ -1,3 +1,4 @@
+from inspect import getargs
 import os
 import pickle
 import pandas as pd
@@ -22,6 +23,7 @@ from nbo2graph.graph_generator_settings import GraphGeneratorSettings
 from nbo2graph.qm_data import QmData
 # from nbo2graph.datasets.tmQMg import tmQMg
 from time import sleep
+from nbo2graph.tools import Tools
 
 
 from scripts.data_parser import DataParser
@@ -184,7 +186,6 @@ def get_number_connected_graphs(qm_data_list):
 
     print(n_connected_graphs)
 
-
 def extract_gaussian_data():
 
     raw_file_path = '/home/hkneiding/Documents/UiO/Data/tmQMg/raw/'
@@ -200,178 +201,39 @@ def extract_gaussian_data():
         except ValueError:
             print(raw_file)
 
+def get_disconnected_graphs(ggs: GraphGeneratorSettings):
 
-def extract_gaussian_data_to_pandas():
+    # directory that holds the extracted raw data
+    ext_data_dir = '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/'
 
-    raw_file_path = '/home/hkneiding/Documents/UiO/Data/tmQMg/raw/'
-    extracted_file_path = '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/'
+    # list of all files
+    files = [x for x in os.listdir(ext_data_dir)]
+    # specify graph generator
+    gg = GraphGenerator(ggs)
 
-    raw_files = [file for file in os.listdir(raw_file_path)]
+    # iterate through files, build graphs and check for connectivity
+    for file in tqdm(files):
 
-    dicts = []
-    counter = 0
-    threshold = 9999
-    partition_number = 0
-    for raw_file in tqdm(raw_files):
+        # skip files that are not in JSON format
+        if file.split('.')[-1] != 'json':
+            continue
 
-        try:
-            qm_data_dict = DataParser(raw_file_path + raw_file).parse()
-            dicts.append(qm_data_dict)
+        # get QmData object
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(ext_data_dir + file))
+        # build graph
+        graph = gg.generate_graph(qm_data)
 
-            if counter == threshold:
-
-                df = pd.DataFrame(dicts)
-                df.to_pickle(extracted_file_path + '/' + 'tmQMg-partion-' + str(partition_number) + '.pickle')
-
-                counter = 0
-                dicts = []
-                partition_number += 1
-            else:
-                counter += 1
-
-        except Exception as e:
-            print(e)
-
-    df = pd.DataFrame(dicts)
-    df.to_pickle(extracted_file_path + '/' + 'tmQMg-partion-' + str(partition_number) + '.pickle')
-
-
-def test_ml():
-
-    ggs = GraphGeneratorSettings.default(edge_types=[EdgeType.SOPA],
-                                         sopa_interaction_threshold=1,
-                                         sopa_edge_features=[SopaEdgeFeature.ACCEPTOR_NBO_TYPE, SopaEdgeFeature.DONOR_NBO_TYPE],
-                                         edge_features=[EdgeFeature.NBO_TYPE, EdgeFeature.WIBERG_BOND_ORDER],
-                                         targets=[QmTarget.POLARISABILITY])
-
-    ggs = GraphGeneratorSettings.natQ2(targets=[QmTarget.POLARISABILITY])
-
-    dataset = tmQMg(root='/home/hkneiding/Desktop/pyg-dataset-test-dir/run1/', raw_dir='/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/', settings=ggs)
-    # dataset.clear_graph_directories()
-
-    # exit()
-
-
-    # dataset.clear_graph_directories()
-    # dataset.process()
-
-    # print(dataset[0].is_undirected())
-
-    import torch
-    import torch.nn.functional as F
-    from torch.nn import GRU, Linear, ReLU, Sequential
-
-    from torch_geometric.loader import DataLoader
-    from torch_geometric.nn import NNConv, Set2Set
-
-
-    test_dataset = dataset[:5000]
-    val_dataset = dataset[5000:10000]
-    train_dataset = dataset[10000:]
-    test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
-    val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False)
-    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-
-    dim = 64
-
-    # # Normalize targets to mean = 0 and std = 1.
-    # mean = dataset.data.y.mean(dim=0, keepdim=True)
-    # std = dataset.data.y.std(dim=0, keepdim=True)
-    # dataset.data.y = (dataset.data.y - mean) / std
-    # mean, std = mean[:].item(), std[:].item()
-    std = 1
-
-    class Net(torch.nn.Module):
-        def __init__(self):
-            super().__init__()
-            self.lin0 = torch.nn.Linear(dataset.num_features, dim)
-
-            nn = Sequential(Linear(16, 128), ReLU(), Linear(128, dim * dim))
-            self.conv = NNConv(dim, dim, nn, aggr='mean')
-            self.gru = GRU(dim, dim)
-
-            self.set2set = Set2Set(dim, processing_steps=3)
-            self.lin1 = torch.nn.Linear(2 * dim, dim)
-            self.lin2 = torch.nn.Linear(dim, 1)
-
-        def forward(self, data):
-            out = F.relu(self.lin0(data.x))
-            h = out.unsqueeze(0)
-
-            for i in range(3):
-                m = F.relu(self.conv(out, data.edge_index, data.edge_attr))
-                out, h = self.gru(m.unsqueeze(0), h)
-                out = out.squeeze(0)
-
-            out = self.set2set(out, data.batch)
-            out = F.relu(self.lin1(out))
-            out = self.lin2(out)
-            return out.view(-1)
-
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model = Net().to(device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min',
-                                                           factor=0.7, patience=5,
-                                                           min_lr=0.00001)
-
-    def train(epoch):
-        model.train()
-        loss_all = 0
-
-        for data in train_loader:
-            data = data.to(device)
-            optimizer.zero_grad()
-            loss = F.mse_loss(model(data), data.y)
-            loss.backward()
-            loss_all += loss.item() * data.num_graphs
-            optimizer.step()
-        return loss_all / len(train_loader.dataset)
-
-    def test(loader):
-        model.eval()
-        error = 0
-
-        for data in loader:
-            data = data.to(device)
-            error += (model(data) * std - data.y * std).abs().sum().item()  # MAE
-        return error / len(loader.dataset)
-
-    best_val_error = None
-    for epoch in range(1, 301):
-        lr = scheduler.optimizer.param_groups[0]['lr']
-        loss = train(epoch)
-        val_error = test(val_loader)
-        scheduler.step(val_error)
-
-        if best_val_error is None or val_error <= best_val_error:
-            test_error = test(test_loader)
-            best_val_error = val_error
-
-        print(f'Epoch: {epoch:03d}, LR: {lr:7f}, Loss: {loss:.7f}, '
-              f'Val MAE: {val_error:.7f}, Test MAE: {test_error:.7f}')
-
-
-def read_extracted_data():
-
-    extracted_file_path = '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/'
-    
-
-    df = FileHandler.read_binary_file(extracted_file_path + 'tmQMg-partion-0.pickle')
-    exit()
-    ddf = dd.from_pandas(df, npartitions=10)
-
-    df = FileHandler.read_binary_file(extracted_file_path + 'tmQMg-partion-1.pickle')
-    ddf.append(df)
-
+        # check connectivity
+        if not graph.is_connected():
+            tqdm.write(file)
 
 
 # - - - entry point - - - #
 if __name__ == "__main__":
-    # extract_tmqm()
     # main()
-    # check_3c()
-    #test_ml()
     #extract_gaussian_data()
-    extract_gaussian_data_to_pandas()
+    #extract_gaussian_data_to_pandas()
     #read_extracted_data()
+
+    ggs = GraphGeneratorSettings.default(edge_types=[EdgeType.BOND_ORDER_METAL, EdgeType.BOND_ORDER_NON_METAL], bond_threshold=0.1, bond_threshold_metal=0.05)
+    get_disconnected_graphs(ggs)
