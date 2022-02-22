@@ -4,7 +4,7 @@ from operator import add
 
 class DataParser:
 
-    """Class for reading relevant data from Gaussian output files."""
+    """Class for reading relevant data from Gaussian output files into python dictionaries."""
 
     def __init__(self, file_path):
 
