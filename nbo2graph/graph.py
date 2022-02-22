@@ -471,7 +471,7 @@ class Graph:
                 ztp.append(0.5 * (position_dict[edge[0]][2] + position_dict[edge[1]][2]))
 
             # get desc text for nodes
-            text = [f'{x[0]}' for x in self.nodes_labels_list]
+            text = [f'{x}' for x in self.nodes_labels_list]
             # text = [f'{x[0]} | {x[1]}' for x in zip(self.nodes_labels_list, self.nodes_feature_dict_list)]
             # create a trace for the nodes
             trace_nodes = go.Scatter3d(
