@@ -12,39 +12,47 @@ from nbo2graph.tools import Tools
 
 
 class tmQMg(Dataset):
-    def __init__(self, root: str, raw_dir: str, settings: GraphGeneratorSettings, transform=None, pre_transform=None, pre_filter=None):
+    def __init__(self, root: str, raw_dir: str, settings: GraphGeneratorSettings, exclude: list[str] = []):
 
         # if root path does not exist create folder
         if not os.path.isdir(root):
             os.makedirs(root, exist_ok=True)
 
-        # set up graph generator
-        self._graph_generator = GraphGenerator(settings)
-
-        # directory to get raw dat from
+        # directory to get raw data from
         self._raw_dir = raw_dir
 
+        # file extensions
         self._raw_file_extension = '.json'
         self._graph_object_file_extension = '.graph'
         self._pytorch_graph_file_extension = '.pt'
 
-        super().__init__(root, transform, pre_transform, pre_filter)
+        # set up variable for file names
+        self._files_names = None
+        # list of files to exclude
+        self._files_to_exclude = exclude
 
-        self.process_()
+        # set up graph generator
+        self._graph_generator = GraphGenerator(settings)
+
+        # matrices to store all corresponding features
+        self._graph_node_features = []
+        self._graph_edge_features = []
+
+        # start super class
+        super().__init__(root)
 
     @property
     def file_names(self):
-        # random 500 file names
-        return ['LALMER', 'ICUMEY', 'VIRBEF', 'OGOBIV', 'RIVPUH', 'FIFCAB', 'DICTUE', 'LOGZIS', 'KUNBOK', 'VUSSUZ', 'TERJIK', 'UKASUU', 'LEZYOG', 'AGOHUZ', 'XIRFIP', 'AKUGIX', 'HINNEX', 'RACGUZ', 'TEXSUM', 'KELLUJ', 'FIVWIQ', 'SADXON', 'FERQOJ', 'VULFEN', 'VIGXOZ', 'VIHWEQ', 'QELDIU', 'WANNAB', 'EPIKIY', 'CAWLER', 'QARPUW', 'KELFEN', 'TIGXOY', 'HISJOI', 'GETWEI', 'KEQGIZ', 'KEJVEA', 'UFOYOE', 'MIDKUF', 'HESHAP', 'JEXZES', 'SUJPAO', 'FEFDUP', 'GEQXUW', 'TUDXIZ', 'DONCER', 'MAXNII', 'UNOPUJ', 'IPORUB', 'YATMAJ', 'SIXFAG', 'NANTUT', 'NIYBAY', 'HONDIZ', 'OZILEQ', 'CAXVED', 'SUFHOQ', 'MEHGIR', 'KILXEK', 'QIWKEN', 'FOBBUU', 'FAVSOM', 'DOQZIT', 'OREDIA', 'TITZEE', 'FEDJAA', 'QITXIC', 'JONNUY', 'MIVJEG', 'VEZGUD', 'YESXAW', 'XEFSOR', 'VUDYIC', 'SIZDOW', 'ENCYCO', 'MOQREQ', 'WABLAM', 'HORCIC', 'XAQFOK', 'FUYREY', 'EQURAL', 'PIBYOO', 'SOWMAV', 'TIHCAO', 'LOMWOB', 'TOCVAI', 'DMSCCR', 'AQAVIZ', 'NEVKII', 'QELVIM', 'UROPUN', 'CIRVOO', 'PIBQOJ', 'WIHLEE', 'UCEBOT', 'RIVZUU', 'HIKKIY', 'POTVOJ', 'ZUJHAP', 'LITWUJ', 'CIXGIA', 'ADOCII', 'BIGRAL', 'CIDZEX', 'OXEBUP', 'GIRCIW', 'JECBOJ', 'WAKGAT', 'REWMEO', 'FITLUQ', 'JOWBII', 'HUXSOK', 'MADWIZ', 'EMUQAG', 'QAHBAC', 'FAVTUR', 'BOYQAH', 'YIWTAC', 'QIWNIU', 'WADGUE', 'XIFBOG', 'LUZSUV', 'YEDGUM', 'VEGKIC', 'MAKGIO', 'VOWDAO', 'IVAPIG', 'SIYQOJ', 'QEZQER', 'RIDJEU', 'WEDBIQ', 'ZESHEN', 'FIJFEL', 'POYMAS', 'UHALEV', 'NEVNIO', 'ETESON', 'POJFEA', 'BINCOQ', 'RISCEE', 'BITHUH', 'BCNFEC', 'DAZTOO', 'LARYOS', 'EZURUN', 'SIKZOE', 'BOJHUF', 'CUQPIP', 'SEMXAL', 'QAYZAR', 'MACZEW', 'POTNEU', 'DOGJIT', 'FEFYUL', 'QACKIP', 'ZOJROI', 'GAKQIV', 'XEYNAS', 'QIRYEW', 'TUNKET', 'GATMAP', 'USUXOX', 'YAVLAL', 'GEHJOS', 'MODXEL', 'ATEPUL', 'WAPMEH', 'QEBPAR', 'UDOFAW', 'WUCXUP', 'COMSPW', 'GUPDOM', 'BENDOO', 'JUHPAF', 'CIMWED', 'VONVAX', 'RIDNEZ', 'ITUVEA', 'FIVCAP', 'KOBBEJ', 'QOFTIO', 'IXEZOB', 'GASNOF', 'WEJFUN', 'NOBBAJ', 'HEXFOH', 'AKILAJ', 'OYOPEY', 'EGIBEB', 'UXUQAG', 'SUMBIN', 'APICUY', 'COCSET', 'NEDKOZ', 'NIBHEO', 'SIRLEM', 'GAYRIJ', 'CETZIN', 'WUGVOJ', 'GIRVAH', 'MESDIA', 'TIBQUR', 'TADLOZ', 'SASGOL', 'HOKCEQ', 'MECKAH', 'YOGCIG', 'UMATOR', 'YOWWAK', 'DAZRUU', 'XUYCAV', 'ROLMUB', 'NIVPUG', 'NOSZIE', 'TBPCFE', 'DUMJIE', 'BAQROB', 'AFUXOP', 'WELJUS', 'FOTXOD', 'ZIFVUH', 'VEYTAX', 'OYIDIL', 'DITFUI', 'RAYHIK', 'ROGGUP', 'XEJSEK', 'CEMSEU', 'ATOPII', 'XOGCUU', 'OFAHOS', 'REBDEI', 'ZOCCAV', 'MALWAZ', 'ZUJHIX', 'ZOHQOE', 'SOTWAA', 'FOSHIG', 'WURFAS', 'FUNKOP', 'KEWROT', 'SIWFAG', 'HUPNAI', 'KEBGUU', 'EKEDIJ', 'MAQPIG', 'URUGUL', 'GEPKIW', 'SUPYIN', 'KIMLOH', 'BEZVOT', 'NECJUC', 'PIZGOV', 'IGATUF', 'QABYAV', 'FIPFEQ', 'KIBMAK', 'EHEBIE', 'SEPZOC', 'VUYXUJ', 'LEGXEA', 'OAMECO', 'KEJMES', 'KULGIH', 'UDARUP', 'INEQAU', 'KIJSUS', 'SANRUV', 'LOKPEH', 'COCXAU', 'ZEGVIQ', 'CMEEAM', 'WALZIU', 'MIFVIH', 'VOVRAZ', 'BOTZUI', 'QOZBOY', 'ROBYAJ', 'PUNFIN', 'HECCEX', 'LETTOW', 'OTEVOZ', 'MHPYCR', 'WILHOR', 'VIVKIV', 'VIJWAO', 'LEJPEW', 'FENVEA', 'AHASAF', 'NEFXOM', 'QOGBEU', 'LETXEQ', 'WEFLOI', 'MIRDUN', 'SEBTUO', 'WIRHOU', 'HIGQIX', 'FACGUN', 'LADVIY', 'ROLTES', 'GIWNEH', 'MIVBEZ', 'MIYWIA', 'PALZOS', 'LEYZAT', 'QEFSEB', 'FIPTED', 'UFIZAM', 'REFRAV', 'KUNWIB', 'SETPOX', 'HOSWAP', 'LIMZOY', 'JIPTIO', 'VIKZEW', 'ZEJVER', 'VASJOO', 'IGEBEB', 'OKEZOU', 'MUPFAE', 'SUYXAN', 'JIPJAU', 'SULYED', 'WEHLIH', 'YIDGAW', 'CAGBAQ', 'ZAVROG', 'GIYMAC', 'GEFWUM', 'LIPMAY', 'GORMOP', 'ROQRAT', 'TIVNUJ', 'HUDYAG', 'DODNAL', 'MARWEK', 'SAKHUJ', 'GAWYIM', 'HEVDOB', 'PIKBOB', 'UVOFUI', 'VUDKEM', 'YODMUB', 'UCUSIX', 'RISLIR', 'RERQUA', 'TATTEO', 'JIRBAN', 'REVPAL', 'QOXKOF', 'ZOQFOA', 'MAXQUX', 'DOSXAN', 'JOFTIK', 'KUCWUC', 'KAYBIV', 'SEQGIH', 'TAGHAK', 'QONHEG', 'OGATOI', 'XUQWOX', 'VOWXAG', 'BEKPUC', 'GOGPEA', 'GUVFAG', 'PUJWUM', 'VALKAV', 'SELSIL', 'UGOHOO', 'KASKAQ', 'NIBCIM', 'RITRIY', 'UTIXAY', 'XOTVAD', 'GOYVIB', 'KUNQOA', 'VEMWOA', 'JATBEL', 'LAMDUY', 'EMAZID', 'TULGUC', 'BULYEM', 'FIQCUF', 'AFICIC', 'VORCIR', 'HELGEK', 'VEZGEO', 'MEBXUN', 'UQAFUO', 'ZUYHEG', 'FUZFIQ', 'YOJNUG', 'FANLIP', 'PEQCUK', 'VEQLEI', 'VUWMAB', 'LAZQIP', 'PEZFUY', 'BABQUR', 'JUPPOZ', 'SIYLES', 'XOTLOJ', 'BOJMAQ', 'AQENIV', 'MAJBAC', 'LUYXAE', 'ROJLUX', 'LAXCOF', 'JOTJOR', 'QAYCEB', 'PALTAX', 'TUYPIM', 'UQAMEF', 'KICYAW', 'HUVSUN', 'YOSYEM', 'USONUN', 'EWISOS', 'REWHIK', 'OMEBEN', 'UDOVAM', 'EMULON', 'PUFQUC', 'UCEDOX', 'IFEGEH', 'TIKWAN', 'YEMVER', 'SIHTOT', 'COZFIH', 'MAMSAU', 'ETACEH', 'ZOCBEY', 'YEBXOV', 'YEBYAI', 'EZARAA', 'WUXCOI', 'ZIWPAW', 'YEKCOH', 'BAKBEV', 'GIQWEK', 'TIYNAT', 'IMAKOX', 'UJADAK', 'XUBKUB', 'TEXDOS', 'XAJWOX', 'QUJXEZ', 'TIFTUX', 'PUDPAF', 'ZIRJOZ', 'JAQPAS', 'QOPWIB', 'MASLEA', 'BUZQUK', 'CODYOK', 'AXIBAK', 'SUVYUF', 'JURGUY', 'LAQVEH', 'XOBFIF', 'OGEYAC', 'EPIMEW', 'JOKVOX', 'MUKHUX', 'CAFROQ', 'XIDGUO', 'SIMXIX', 'KAMSUM', 'TUMPEY', 'MECCEF', 'VIKRAJ', 'ALINEP', 'UYOVUA', 'QIJREI', 'ZITYOQ', 'VAWCEE', 'VOVDIV', 'SIJJUT', 'ZOLSOI', 'CEGKEH', 'GIDPAM', 'QAKBOT', 'FOCJIR', 'YEZBEK', 'BERQEV', 'ZAXXUR', 'BOVBOG', 'YILQAO', 'HETMUO', 'PEYGEI', 'ISITEL', 'XELDIE', 'BUKYUC', 'LOPDEC', 'JOCKAO', 'JOJZAK', 'QAQGEX', 'QUCBIB']
-        # TODO: full tmQMg dataset
+        
+        # if not defined get raw file names and exclude specified files
+        if self._files_names is None:
+            self._files_names = [file_name for file_name in list(filter(None, FileHandler.read_file(self.raw_dir + 'names').split('\n'))) if not file_name in self._files_to_exclude]
+        
+        return self._files_names
 
     @property
     def raw_dir(self):
         return self._raw_dir
-
-    @property
-    def scaled_pytorch_geometric_dir(self):
-        return self.root + '/pyg_scaled'
 
     @property
     def pytorch_geometric_dir(self):
@@ -62,6 +70,14 @@ class tmQMg(Dataset):
     def processed_file_names(self):
         return 'data'
 
+    @property
+    def graph_node_features(self):
+        return self._graph_node_features
+
+    @property
+    def graph_edge_features(self):
+        return self._graph_edge_features
+
     def download(self):
 
         """Function to download raw data."""
@@ -73,7 +89,7 @@ class tmQMg(Dataset):
 
         """Getter for the number of processed pytorch graphs."""
 
-        return len(self.file_names)
+        return len(self.graphs)
 
     def get(self, idx):
 
@@ -81,10 +97,7 @@ class tmQMg(Dataset):
 
         return self.graphs[idx]
 
-        data = torch.load(self.processed_dir + '/' + self.file_names[idx] + '.pt')
-        return data
-
-    def process_(self):
+    def process(self):
 
         print('')
 
@@ -92,35 +105,7 @@ class tmQMg(Dataset):
         self.build_graph_objects()
 
         print('Building pytorch graphs..')
-        self.build_pytorch_graphs()
-
-        print('Scaling features')
-        self.standard_scale_pytorch_graphs()
-
-        # update in memory graphs
-        # self.graphs = [torch.load(self.pytorch_geometric_dir + '/' + file_name + '.pt') for file_name in self.file_names]
-        self.graphs = [torch.load(self.scaled_pytorch_geometric_dir + '/' + file_name + '.pt') for file_name in self.file_names]
-
-    def get_full_feature_matrices(self, graphs: list):
-
-        """Gets the node and edge features of all graphs in terms of two matrices."""
-
-        node_feature_matrix = None
-        edge_feature_matrix = None
-
-        for graph in graphs:
-
-            if node_feature_matrix is None:
-                node_feature_matrix = graph['x'].detach().numpy()
-            else:
-                node_feature_matrix = np.concatenate((node_feature_matrix, graph['x'].detach().numpy()), axis=0)
-
-            if edge_feature_matrix is None:
-                edge_feature_matrix = graph['edge_attr'].detach().numpy()
-            else:
-                edge_feature_matrix = np.concatenate((edge_feature_matrix, graph['edge_attr'].detach().numpy()), axis=0)
-
-        return node_feature_matrix, edge_feature_matrix
+        self.graphs = self.build_pytorch_graphs()
 
     def get_class_feature_dicts(self):
 
@@ -195,51 +180,35 @@ class tmQMg(Dataset):
 
     def build_pytorch_graphs(self):
 
-        """Builds pytorch graphs from previously built grah objects."""
+        """Builds pytorch graphs from previously built graph objects."""
 
         # create pytorch directory if it does not exist
         if not os.path.isdir(self.pytorch_geometric_dir):
             os.mkdir(self.pytorch_geometric_dir)
 
+        graphs = []
+
         # get dict for one-hot edge encoding of edges
         node_class_feature_dict, edge_class_feature_dict = self.get_class_feature_dicts()
 
-        pytorch_graph_files = [file for file in os.listdir(self.pytorch_geometric_dir)]
         for file_name in tqdm(self.file_names):
 
-            # if pytorch graph is not built yet
-            if file_name + self._pytorch_graph_file_extension not in pytorch_graph_files:
-                # read graph object
-                graph_object = FileHandler.read_binary_file(self.graph_object_dir + '/' + file_name + self._graph_object_file_extension)
-                # get pytorch graph
-                graph = graph_object.get_pytorch_data_object(node_class_feature_dict=node_class_feature_dict, edge_class_feature_dict=edge_class_feature_dict)
-                # write to file
-                torch.save(graph, self.pytorch_geometric_dir + '/' + file_name + self._pytorch_graph_file_extension)
+            # read graph object
+            graph_object = FileHandler.read_binary_file(self.graph_object_dir + '/' + file_name + self._graph_object_file_extension)
+            # skip graph if it is disconnected
+            if not graph_object.is_connected():
+                continue
 
-    def standard_scale_pytorch_graphs(self):
-
-        """Scales pytorch graphs using the StandardScaler."""
-
-        # create pytorch directory if it does not exist
-        if not os.path.isdir(self.scaled_pytorch_geometric_dir):
-            os.mkdir(self.scaled_pytorch_geometric_dir)
-
-        # get graphs
-        graphs = [torch.load(self.pytorch_geometric_dir + '/' + file_name + '.pt') for file_name in self.file_names]
-        node_feature_matrix, edge_feature_matrix = self.get_full_feature_matrices(graphs)
-
-        node_feature_stds = np.std(node_feature_matrix, axis=0)
-        node_feature_means = np.mean(node_feature_matrix, axis=0)
-
-        edge_feature_stds = np.std(edge_feature_matrix, axis=0)
-        edge_feature_means = np.mean(edge_feature_matrix, axis=0)
-
-        for i, graph in enumerate(tqdm(graphs)):
-            # scale features
-            graph['x'] = (graph['x'] - node_feature_means) / node_feature_stds
-            graph['edge_attr'] = (graph['edge_attr'] - edge_feature_means) / edge_feature_stds
+            # get pytorch graph
+            graph = graph_object.get_pytorch_data_object(node_class_feature_dict=node_class_feature_dict, edge_class_feature_dict=edge_class_feature_dict)
+            graphs.append(graph)
             # write to file
-            torch.save(graph, self.scaled_pytorch_geometric_dir + '/' + self.file_names[i] + self._pytorch_graph_file_extension)
+            torch.save(graph, self.pytorch_geometric_dir + '/' + file_name + self._pytorch_graph_file_extension)
+
+            self._graph_node_features.append(graph['x'].detach().numpy())
+            self._graph_edge_features.append(graph['edge_attr'].detach().numpy())
+
+        return graphs
 
     def clear_directories(self):
 
