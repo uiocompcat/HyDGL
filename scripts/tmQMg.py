@@ -1,14 +1,13 @@
 import os
 import torch
-import numpy as np
-from torch_geometric.data import Dataset
 from tqdm import tqdm
+from torch_geometric.data import Dataset
 
+from nbo2graph.tools import Tools
+from nbo2graph.qm_data import QmData
+from nbo2graph.file_handler import FileHandler
 from nbo2graph.graph_generator import GraphGenerator
 from nbo2graph.graph_generator_settings import GraphGeneratorSettings
-from nbo2graph.file_handler import FileHandler
-from nbo2graph.qm_data import QmData
-from nbo2graph.tools import Tools
 
 
 class tmQMg(Dataset):
