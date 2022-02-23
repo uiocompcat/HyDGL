@@ -233,7 +233,8 @@ class TestGraph(unittest.TestCase):
                 edge_index=torch.tensor([[0, 1, 0, 2, 0, 3, 2, 3, 2, 4],
                                          [1, 0, 2, 0, 3, 0, 3, 2, 4, 2]], dtype=torch.long),
                 edge_attr=torch.tensor([[-2.], [-2.], [3.], [3.], [4.], [4.], [1.], [1.], [10.], [10.]], dtype=torch.float),
-                y=torch.tensor([12.34], dtype=torch.float)
+                y=torch.tensor([12.34], dtype=torch.float),
+                num_nodes=5
             )
         ],
 
@@ -249,7 +250,8 @@ class TestGraph(unittest.TestCase):
                 edge_index=torch.tensor([[0, 1, 0, 2, 0, 3, 2, 4],
                                          [1, 0, 2, 0, 3, 2, 4, 2]], dtype=torch.long),
                 edge_attr=torch.tensor([[-2.], [-2.], [3.], [3.], [4.], [1.], [10.], [10.]], dtype=torch.float),
-                y=torch.tensor([12.34], dtype=torch.float)
+                y=torch.tensor([12.34], dtype=torch.float),
+                num_nodes=5
             )
         ],
 
@@ -265,7 +267,8 @@ class TestGraph(unittest.TestCase):
                 edge_index=torch.tensor([[0, 1, 0, 2, 0, 3, 2, 4],
                                          [1, 0, 2, 0, 3, 2, 4, 2]], dtype=torch.long),
                 edge_attr=torch.tensor([[0, 1, 0, 0], [0, 1, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1], [0, 0, 0, 1]], dtype=torch.float),
-                y=torch.tensor([12.34], dtype=torch.float)
+                y=torch.tensor([12.34], dtype=torch.float),
+                num_nodes=5
             )
         ],
 
@@ -276,7 +279,10 @@ class TestGraph(unittest.TestCase):
         self.assertEqual(len(result.keys), len(expected.keys))
 
         for key in result.keys:
-            self.assertTrue(torch.equal(result[key], expected[key]))
+            if key == 'num_nodes':
+                self.assertTrue(result[key] == expected[key])
+            else:
+                self.assertTrue(torch.equal(result[key], expected[key]))
 
     @parameterized.expand([
 

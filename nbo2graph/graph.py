@@ -213,7 +213,7 @@ class Graph:
         targets = torch.tensor(targets, dtype=torch.float)
 
         # set up full pytorch data object
-        data = Data(x=node_features, edge_index=edge_indices.t().contiguous(), edge_attr=edge_features, y=targets)
+        data = Data(x=node_features, edge_index=edge_indices.t().contiguous(), edge_attr=edge_features, y=targets, num_nodes=len(self.nodes))
 
         return data
 
