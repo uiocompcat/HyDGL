@@ -42,11 +42,11 @@ class tmQMg(Dataset):
 
     @property
     def file_names(self):
-        
+
         # if not defined get raw file names and exclude specified files
         if self._files_names is None:
-            self._files_names = [file_name for file_name in list(filter(None, FileHandler.read_file(self.raw_dir + 'names').split('\n'))) if not file_name in self._files_to_exclude]
-        
+            self._files_names = [file_name for file_name in list(filter(None, FileHandler.read_file(self.raw_dir + 'names').split('\n'))) if file_name not in self._files_to_exclude]
+
         return self._files_names
 
     @property
