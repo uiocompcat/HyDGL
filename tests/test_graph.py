@@ -371,6 +371,21 @@ class TestGraph(unittest.TestCase):
             },
         ],
 
+        [
+            Graph(
+                [Node(features=[0, 1], position=[0, 1, 2], label='A'), Node(features=[1, 0], position=[3, 4, 5], label='B')],
+                [Edge([0, 1], features=[-2, 2], is_directed=True)],
+                targets={'a': 12.34, 'b': 23.45, 'c': 34.56}, id='TestGraph'
+            ),
+            {
+                'graph': nx.MultiDiGraph(),
+                'id': 'TestGraph',
+                'targets': {'target_a': 12.34, 'target_b': 23.45, 'target_c': 34.56},
+                'nodes': [(0, {'feature_0': 0, 'feature_1': 1, 'node_label': 'A', 'node_position': [0, 1, 2]}), (1, {'feature_0': 1, 'feature_1': 0, 'node_label': 'B', 'node_position': [3, 4, 5]})],
+                'edges': [(0, 1, {'feature_0': -2, 'feature_1': 2})]
+            },
+        ],
+
     ])
     def test_get_networkx_graph_object(self, graph, expected):
 
@@ -417,6 +432,14 @@ class TestGraph(unittest.TestCase):
                 targets={'some_target': 1.2},
                 graph_features={'graph_feature': 2, 'graph_feature_1': 'type'},
                 id='testgraph'
+            ),
+        ],
+
+        [
+            Graph(
+                [Node(label='A', position=[0, 1, 2]), Node(label='B', position=[3, 4, 5]), Node(label='C', position=[6, 7, 8])],
+                [Edge([0, 1]), Edge([1, 2])],
+                targets={}, id='testgraph'
             ),
         ],
 

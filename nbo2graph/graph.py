@@ -74,12 +74,19 @@ class Graph:
         # iterate through nodes
         for node in nx_graph.nodes.data():
             node_features = {}
+            node_label = None
+            node_position = None
             # iterate through node keys
             for node_feature_key in node[1].keys():
                 # if feature key is found add to feature dict
                 if node_feature_key.startswith('feature_'):
                     node_features[node_feature_key[len('feature_'):]] = node[1][node_feature_key]
-            nodes.append(Node(features=node_features))
+                if node_feature_key == 'node_label':
+                    node_label = node[1][node_feature_key]
+                if node_feature_key == 'node_position':
+                    node_position = node[1][node_feature_key]
+
+            nodes.append(Node(features=node_features, label=node_label, position=node_position))
 
         # iterate through edges
         for edge in nx_graph.edges.data():
@@ -89,7 +96,7 @@ class Graph:
                 # if feature key is found add to feature dict
                 if edge_feature_key.startswith('feature_'):
                     edge_features[edge_feature_key[len('feature_'):]] = edge[2][edge_feature_key]
-            edges.append(Edge([edge[0], edge[1]], features=edge_features, is_directed=nx.is_directed(nx_graph)))
+            edges.append(Edge([int(edge[0]), int(edge[1])], features=edge_features, is_directed=nx.is_directed(nx_graph)))
 
         return cls(nodes=nodes, edges=edges, targets=targets, graph_features=graph_features, id=id)
 
@@ -215,7 +222,13 @@ class Graph:
 
         # add nodes
         for i, node in enumerate(self.nodes):
+            # add features
             nx_graph.add_nodes_from([(i, {f'feature_{k}': v for k, v in node.features.items()})])
+            # add miscellaneous data
+            if node.label is not None:
+                nx_graph.nodes[i]['node_label'] = node.label
+            if node.position is not None:
+                nx_graph.nodes[i]['node_position'] = node.position
 
         # add edges
         for edge in self.edges:
