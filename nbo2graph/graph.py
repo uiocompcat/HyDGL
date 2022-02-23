@@ -34,6 +34,65 @@ class Graph:
         self._targets = targets
         self._graph_features = graph_features
 
+    @classmethod
+    def from_networkx(cls, nx_graph):
+
+        """Alternative way of initialising the Graph object via networkx.
+
+        Returns:
+            _type_: The Graph object.
+        """
+
+        # graph elements
+        id = None
+        nodes = []
+        edges = []
+        targets = {}
+        graph_features = {}
+
+        graph_level_keys = nx_graph.graph.keys()
+
+        # obrain id
+        if 'id' in graph_level_keys:
+            id = nx_graph.graph['id']
+
+        # The following obtains feature and target lists for the graph, nodes and edges.
+        # The 'target_' and 'feature_' prefixes are removed before adding them to the
+        # respective dicts.
+
+        # iterate through graph level keys
+        for key in graph_level_keys:
+
+            # if feature key add to graph features
+            if key.startswith('feature_'):
+                graph_features[key[len('feature_'):]] = nx_graph.graph[key]
+
+            # if target key add to targets
+            if key.startswith('target_'):
+                targets[key[len('target_'):]] = nx_graph.graph[key]
+
+        # iterate through nodes
+        for node in nx_graph.nodes.data():
+            node_features = {}
+            # iterate through node keys
+            for node_feature_key in node[1].keys():
+                # if feature key is found add to feature dict
+                if node_feature_key.startswith('feature_'):
+                    node_features[node_feature_key[len('feature_'):]] = node[1][node_feature_key]
+            nodes.append(Node(features=node_features))
+
+        # iterate through edges
+        for edge in nx_graph.edges.data():
+            edge_features = {}
+            # iterate through edge keys
+            for edge_feature_key in edge[2].keys():
+                # if feature key is found add to feature dict
+                if edge_feature_key.startswith('feature_'):
+                    edge_features[edge_feature_key[len('feature_'):]] = edge[2][edge_feature_key]
+            edges.append(Edge([edge[0], edge[1]], features=edge_features, is_directed=nx.is_directed(nx_graph)))
+
+        return cls(nodes=nodes, edges=edges, targets=targets, graph_features=graph_features, id=id)
+
     def __str__(self):
 
         out = 'Graph Info:\n\n'

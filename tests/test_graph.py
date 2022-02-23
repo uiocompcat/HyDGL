@@ -407,3 +407,38 @@ class TestGraph(unittest.TestCase):
     def test_get_networkx_graph_object_with_invalid_data(self, graph, expected_exception):
 
         Utils.tc.assertRaises(expected_exception, graph.get_networkx_graph_object)
+
+    @parameterized.expand([
+
+        [
+            Graph(
+                [Node(features={'node_feature': 1}), Node(features={'node_feature': 2}), Node(features={'node_feature': 3})],
+                [Edge([0, 1], features={'edge_feature': 1}), Edge([1, 2], features={'edge_feature': 1})],
+                targets={'some_target': 1.2},
+                graph_features={'graph_feature': 2, 'graph_feature_1': 'type'},
+                id='testgraph'
+            ),
+        ],
+
+        [
+            Graph(
+                [Node(), Node(), Node()],
+                [Edge([0, 1]), Edge([1, 2])],
+                targets={}, id='testgraph'
+            ),
+        ],
+
+        [
+            Graph(
+                [Node(), Node(), Node()],
+                [Edge([0, 1], is_directed=True), Edge([1, 2], is_directed=True)],
+                targets={}, id='testgraph'
+            ),
+        ],
+
+    ])
+    def test_from_networkx(self, graph):
+
+        nx_graph = graph.get_networkx_graph_object()
+        result = Graph.from_networkx(nx_graph)
+        Utils.assert_are_almost_equal(result, graph)
