@@ -40,6 +40,7 @@ class Net(torch.nn.Module):
         out = self.lin2(out)
         return out.view(-1)
 
+
 def main():
 
     ggs = GraphGeneratorSettings.natQ2(targets=[QmTarget.POLARISABILITY])
@@ -52,9 +53,9 @@ def main():
     shuffled_indices = np.random.permutation(len(dataset))
 
     # assign indices to train, val and test sets
-    test_indices = shuffled_indices[:5000]
-    val_indices = shuffled_indices[5000:10000]
-    train_indices = shuffled_indices[10000:]
+    test_indices = shuffled_indices[:round(0.1 * len(dataset))]
+    val_indices = shuffled_indices[round(0.1 * len(dataset)):round(0.2 * len(dataset))]
+    train_indices = shuffled_indices[round(0.2 * len(dataset)):]
 
     # build node and edge feature matrices for the training data points
     train_node_feature_matrix = []
@@ -66,11 +67,17 @@ def main():
     train_edge_feature_matrix = np.array(train_edge_feature_matrix)
 
     # get train means and standard deviations for node features
-    train_node_feature_means = np.mean(train_node_feature_matrix[train_indices], axis=0)
-    train_node_feature_stds = np.std(train_node_feature_matrix[train_indices], axis=0)
+    train_node_feature_means = np.mean(train_node_feature_matrix, axis=0)
+    train_node_feature_stds = np.std(train_node_feature_matrix, axis=0)
     # get train means and standard deviations for edge features
-    train_edge_feature_means = np.mean(train_edge_feature_matrix[train_indices], axis=0)
-    train_edge_feature_stds = np.std(train_edge_feature_matrix[train_indices], axis=0)
+    train_edge_feature_means = np.mean(train_edge_feature_matrix, axis=0)
+    train_edge_feature_stds = np.std(train_edge_feature_matrix, axis=0)
+
+    if len(np.where(train_node_feature_stds == 0)[0]) > 0:
+        print('There are node features with standard deviation 0 within the training set.')
+
+    if len(np.where(train_edge_feature_stds == 0)[0]) > 0:
+        print('There are edge features with standard deviation 0 within the training set.')
 
     # scale node and edge features according to train means and standard deviations
     for graph in dataset:
@@ -86,7 +93,6 @@ def main():
     test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
     val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False)
     train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-
 
     # TRAINING
 
@@ -116,7 +122,7 @@ def main():
 
         for data in loader:
             data = data.to(device)
-            error += (model(data) - data.y ).abs().sum().item()  # MAE
+            error += (model(data) - data.y).abs().sum().item()  # MAE
         return error / len(loader.dataset)
 
     best_val_error = None
