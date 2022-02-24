@@ -7,6 +7,7 @@ class QmTarget(Enum):
 
     # POLARISABILITY
     POLARISABILITY = auto()
+    NORMALISED_POLARISABILITY = auto()
 
     # dispersion energy
     SVP_DISPERSION_ENERGY = auto()

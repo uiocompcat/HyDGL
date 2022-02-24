@@ -922,6 +922,12 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             TEST_FILE_LALMER,
+            [QmTarget.NORMALISED_POLARISABILITY],
+            {'normalised_polarisability': 334.01 / 288}
+        ],
+
+        [
+            TEST_FILE_LALMER,
             [QmTarget.SVP_DISPERSION_ENERGY],
             {'svp_dispersion_energy': -0.0815876275}
         ],

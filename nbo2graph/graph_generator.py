@@ -1054,6 +1054,8 @@ class GraphGenerator:
                 target_dict['homo_lumo_gap_delta'] = qm_data.homo_lumo_gap_delta
             elif self._settings.targets[i] == QmTarget.POLARISABILITY:
                 target_dict['polarisability'] = qm_data.polarisability
+            elif self._settings.targets[i] == QmTarget.NORMALISED_POLARISABILITY:
+                target_dict['normalised_polarisability'] = qm_data.polarisability / (sum(qm_data.atomic_numbers) - qm_data.charge)
             else:
                 warnings.warn('Could not find target' + str(self._settings.targets[i]) + '.')
 
