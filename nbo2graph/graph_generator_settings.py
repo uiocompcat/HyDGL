@@ -190,7 +190,7 @@ class GraphGeneratorSettings:
                    bond_threshold_metal=0.05,
                    hydrogen_mode=HydrogenMode.OMIT,
                    hydrogen_count_threshold=DEFAULT_HYDROGEN_COUNT_THRESHOLD,
-                   sopa_edge_features=None,
+                   sopa_edge_features=[],
                    graph_features=[GraphFeature.CHARGE, GraphFeature.MOLECULAR_MASS, GraphFeature.N_ATOMS],
                    targets=targets,
                    sopa_resolution_mode=None,
