@@ -2662,7 +2662,7 @@ class TestGraphGenerator(unittest.TestCase):
         [
             [[1.1], [1.5, 1.2, 1.9], [1.2, 1.2], [1.5, 2.3]],
             SopaResolutionMode.MAX,
-            [[1.1], [1.9], [1.2], [2.3]]
+            [[1.1], [1.9], [1.2, 1.2], [2.3]]
         ],
 
     ])
@@ -2679,12 +2679,46 @@ class TestGraphGenerator(unittest.TestCase):
     @parameterized.expand([
 
         [
+            [[1.1], [1.5, 1.2, 1.9], [1.2, 1.2], [1.5, 2.3]],
+            [[[1, 2]], [[3, 4], [5, 6], [7, 8]], [[9, 10], [11, 12]], [[13, 14], [15, 16]]],
+            SopaResolutionMode.FULL,
+            [[[1, 2]], [[3, 4], [5, 6], [7, 8]], [[9, 10], [11, 12]], [[13, 14], [15, 16]]]
+        ],
+
+        [
+            [[1.1], [1.5, 1.2, 1.9], [1.2, 1.2], [1.5, 2.3]],
+            [[[1, 2]], [[3, 4], [5, 6], [7, 8]], [[9, 10], [11, 12]], [[13, 14], [15, 16]]],
+            SopaResolutionMode.MIN_MAX,
+            [[[1, 2]], [[5, 6], [7, 8]], [[9, 10], [11, 12]], [[13, 14], [15, 16]]]
+        ],
+
+        [
+            [[1.1], [1.5, 1.2, 1.9], [1.2, 1.2], [1.5, 2.3]],
+            [[[1, 2]], [[3, 4], [5, 6], [7, 8]], [[9, 10], [11, 12]], [[13, 14], [15, 16]]],
+            SopaResolutionMode.MAX,
+            [[[1, 2]], [[7, 8]], [[9, 10], [11, 12]], [[15, 16]]]
+        ],
+
+    ])
+    def test_resolve_nbo_ids(self, stabilisation_energies, nbo_ids, sopa_resolution_mode, expected):
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings.default(sopa_resolution_mode=sopa_resolution_mode))
+
+        # get result
+        result = gg._resolve_nbo_ids(stabilisation_energies, nbo_ids, sopa_resolution_mode)
+        print(result)
+        Utils.assert_are_almost_equal(result, expected, places=5)
+
+    @parameterized.expand([
+
+        [
             TEST_FILE_LALMER,
             1,
             (
                 [[1, 0], [2, 0], [8, 0], [14, 0], [20, 0], [27, 0], [28, 0], [29, 0], [30, 0]],
                 [[0.58, 15.10], [25.68], [22.74], [21.99], [23.34], [7.2, 0.28, 16.63], [6.79, 0.19, 12.43], [0.33], [0.2]],
-                [['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV']]
+                [[[52, 131], [53, 131]], [[54, 131]], [[57, 131]], [[58, 131]], [[59, 131]], [[62, 131], [63, 131], [64, 131]], [[65, 131], [66, 131], [67, 131]], [[68, 131]], [[71, 131]]]
             )
         ],
 
@@ -2694,7 +2728,7 @@ class TestGraphGenerator(unittest.TestCase):
             (
                 [[0, 33], [1, 0], [1, 0], [2, 0], [8, 0], [14, 0], [20, 0], [27, 0], [28, 0], [29, 0], [30, 0]],
                 [[0.12], [0.58, 15.10], [1.58, 1.32], [25.68], [22.74], [21.99], [23.34], [7.2, 0.28, 16.63], [6.79, 0.19, 12.43], [0.33], [0.2]],
-                [['LP', 'BD*'], ['LP', 'LV'], ['BD', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV'], ['LP', 'LV']]
+                [[[49, 133]], [[52, 131], [53, 131]], [[74, 131], [75, 131]], [[54, 131]], [[57, 131]], [[58, 131]], [[59, 131]], [[62, 131], [63, 131], [64, 131]], [[65, 131], [66, 131], [67, 131]], [[68, 131]], [[71, 131]]]
             )
         ],
 
@@ -2774,6 +2808,71 @@ class TestGraphGenerator(unittest.TestCase):
 
         # get result
         result = gg._get_sopa_edges(qm_data)
+        print(result)
+
+        Utils.assert_are_almost_equal(result, expected, places=5)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_LALMER,
+            [47, 174],
+            [SopaEdgeFeature.DONOR_NBO_TYPE, SopaEdgeFeature.ACCEPTOR_NBO_TYPE],
+            {
+                'donor_nbo_type': 'LP',
+                'acceptor_nbo_type': 'BD*'
+            }
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [47, 174],
+            [SopaEdgeFeature.DONOR_NBO_ENERGY, SopaEdgeFeature.ACCEPTOR_NBO_ENERGY],
+            {
+                'donor_nbo_energy': -0.62879,
+                'acceptor_nbo_energy': -0.14622
+            }
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [47, 174],
+            [SopaEdgeFeature.DONOR_NBO_OCCUPATION, SopaEdgeFeature.ACCEPTOR_NBO_OCCUPATION],
+            {
+                'donor_nbo_occupation': 1.99777,
+                'acceptor_nbo_occupation': 0.47792
+            }
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [47, 174],
+            [SopaEdgeFeature.DONOR_NBO_S_SYMMETRY, SopaEdgeFeature.DONOR_NBO_P_SYMMETRY, SopaEdgeFeature.DONOR_NBO_D_SYMMETRY,
+             SopaEdgeFeature.DONOR_NBO_F_SYMMETRY, SopaEdgeFeature.ACCEPTOR_NBO_S_SYMMETRY, SopaEdgeFeature.ACCEPTOR_NBO_P_SYMMETRY,
+             SopaEdgeFeature.ACCEPTOR_NBO_D_SYMMETRY, SopaEdgeFeature.ACCEPTOR_NBO_F_SYMMETRY],
+            {
+                'donor_nbo_0': 0.0005,
+                'donor_nbo_1': 0.0,
+                'donor_nbo_2': 0.9995,
+                'donor_nbo_3': 0.0,
+                'acceptor_nbo_0': 0.0,
+                'acceptor_nbo_1': 0.99835,
+                'acceptor_nbo_2': 0.00125,
+                'acceptor_nbo_3': 0.0004
+            }
+        ],
+
+    ])
+    def test_get_sopa_edge_features(self, file_path, nbo_ids, sopa_edge_features, expected):
+
+        # load data
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings.default(sopa_edge_features=sopa_edge_features))
+
+        # get result
+        result = gg._get_sopa_edge_features(qm_data, [0], nbo_ids)
         print(result)
 
         Utils.assert_are_almost_equal(result, expected, places=5)

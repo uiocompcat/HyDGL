@@ -96,6 +96,9 @@ class GraphGeneratorSettings:
         self.bond_orbital_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationType.BOND_ORBITAL)
         self.antibond_orbital_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationType.ANTIBOND_ORBITAL)
 
+        self.donor_orbital_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationType.DONOR)
+        self.acceptor_orbital_indices = self._get_orbtials_to_extract_indices(OrbitalOccupationType.ACCEPTOR)
+
     def __eq__(self, other):
 
         """Equality interface that allows comparison between objects for unit testing"""
@@ -287,6 +290,24 @@ class GraphGeneratorSettings:
             if EdgeFeature.ANTIBOND_ORBITAL_DATA_D in self.edge_features:
                 orbital_indices.append(2)
             if EdgeFeature.ANTIBOND_ORBITAL_DATA_F in self.edge_features:
+                orbital_indices.append(3)
+        elif mode == OrbitalOccupationType.DONOR:
+            if SopaEdgeFeature.DONOR_NBO_S_SYMMETRY in self.sopa_edge_features:
+                orbital_indices.append(0)
+            if SopaEdgeFeature.DONOR_NBO_P_SYMMETRY in self.sopa_edge_features:
+                orbital_indices.append(1)
+            if SopaEdgeFeature.DONOR_NBO_D_SYMMETRY in self.sopa_edge_features:
+                orbital_indices.append(2)
+            if SopaEdgeFeature.DONOR_NBO_F_SYMMETRY in self.sopa_edge_features:
+                orbital_indices.append(3)
+        elif mode == OrbitalOccupationType.ACCEPTOR:
+            if SopaEdgeFeature.ACCEPTOR_NBO_S_SYMMETRY in self.sopa_edge_features:
+                orbital_indices.append(0)
+            if SopaEdgeFeature.ACCEPTOR_NBO_P_SYMMETRY in self.sopa_edge_features:
+                orbital_indices.append(1)
+            if SopaEdgeFeature.ACCEPTOR_NBO_D_SYMMETRY in self.sopa_edge_features:
+                orbital_indices.append(2)
+            if SopaEdgeFeature.ACCEPTOR_NBO_F_SYMMETRY in self.sopa_edge_features:
                 orbital_indices.append(3)
 
         return orbital_indices

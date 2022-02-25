@@ -11,3 +11,6 @@ class OrbitalOccupationType(Enum):
     LONE_VACANCY = auto()
     BOND_ORBITAL = auto()
     ANTIBOND_ORBITAL = auto()
+
+    DONOR = auto()
+    ACCEPTOR = auto()

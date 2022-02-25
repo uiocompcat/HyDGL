@@ -523,8 +523,7 @@ class GraphGenerator:
 
         return nbo_features
 
-    def _get_sopa_edge_features(self, bond_atom_indices: list[int], qm_data: QmData, atom_indices_list: list[list[int]],
-                                stabilisation_energies: list[list[float]], nbo_types: list[list[str]]) -> list[float]:
+    def _get_sopa_edge_features(self, qm_data: QmData, stabilisation_energies: list[list[float]], nbo_ids) -> list[float]:
 
         """Gets the SOPA edge features for given atom indices according to specification.
 
@@ -535,23 +534,48 @@ class GraphGenerator:
         # obtain SOPA adjacency list and associated stabilisation energies and NBO types
         # atom_indices_list, stabilisation_energies, nbo_types = self._get_sopa_adjacency_list(qm_data)
 
-        # get index of bond in SOPA data
-        i = atom_indices_list.index(bond_atom_indices)
+        print(nbo_ids)
+        print(stabilisation_energies)
+
+        # get donor and acceptor NBO data points
+        donor_nbo = self._get_nbo_from_nbo_id(qm_data, nbo_ids[0])
+        acceptor_nbo = self._get_nbo_from_nbo_id(qm_data, nbo_ids[1])
 
         # setup edge_features
         edge_features = {}
 
+        # stabilisation energy features
         if SopaEdgeFeature.STABILISATION_ENERGY_MAX in self._settings.sopa_edge_features:
-            edge_features['stabilisation_energy_max'] = self._resolve_stabilisation_energies(stabilisation_energies, SopaResolutionMode.MAX)[i][0]
+            edge_features['stabilisation_energy_max'] = max(stabilisation_energies)
 
         if SopaEdgeFeature.STABILISATION_ENERGY_AVERAGE in self._settings.sopa_edge_features:
-            edge_features['stabilisation_energy_average'] = self._resolve_stabilisation_energies(stabilisation_energies, SopaResolutionMode.AVERAGE)[i][0]
+            edge_features['stabilisation_energy_average'] = mean(stabilisation_energies)
 
+        # donor features
         if SopaEdgeFeature.DONOR_NBO_TYPE in self._settings.sopa_edge_features:
-            edge_features['donor_nbo_type'] = nbo_types[i][0]
+            edge_features['donor_nbo_type'] = donor_nbo.nbo_type
 
+        if SopaEdgeFeature.DONOR_NBO_ENERGY in self._settings.sopa_edge_features:
+            edge_features['donor_nbo_energy'] = donor_nbo.energy
+
+        if SopaEdgeFeature.DONOR_NBO_OCCUPATION in self._settings.sopa_edge_features:
+            edge_features['donor_nbo_occupation'] = donor_nbo.occupation
+
+        for k in self._settings.donor_orbital_indices:
+            edge_features['donor_nbo_' + str(k)] = donor_nbo.orbital_occupations[k]
+
+        # acceptor features
         if SopaEdgeFeature.ACCEPTOR_NBO_TYPE in self._settings.sopa_edge_features:
-            edge_features['acceptor_nbo_type'] = nbo_types[i][1]
+            edge_features['acceptor_nbo_type'] = acceptor_nbo.nbo_type
+
+        if SopaEdgeFeature.ACCEPTOR_NBO_ENERGY in self._settings.sopa_edge_features:
+            edge_features['acceptor_nbo_energy'] = acceptor_nbo.energy
+
+        if SopaEdgeFeature.ACCEPTOR_NBO_OCCUPATION in self._settings.sopa_edge_features:
+            edge_features['acceptor_nbo_occupation'] = acceptor_nbo.occupation
+
+        for k in self._settings.acceptor_orbital_indices:
+            edge_features['acceptor_nbo_' + str(k)] = acceptor_nbo.orbital_occupations[k]
 
         return edge_features
 
@@ -1239,6 +1263,7 @@ class GraphGenerator:
         atom_indices_list = []
         stabilisation_energies = []
         nbo_types = []
+        nbo_ids = []
         for i in range(len(qm_data.sopa_data)):
 
             # skip if nbo type is not one of: LP, LV, BD, BD*
@@ -1274,29 +1299,37 @@ class GraphGenerator:
                         atom_indices_list.append(selected_atom_indices)
                         stabilisation_energies.append([qm_data.sopa_data[i][1][0]])
                         nbo_types.append([donor_nbo_type, acceptor_nbo_type])
+                        nbo_ids.append([[qm_data.sopa_data[i][0][0], qm_data.sopa_data[i][0][1]]])
                     else:
                         # find all occurrences of atom_indices pairs
                         list_indices = [i for i, x in enumerate(atom_indices_list) if x == selected_atom_indices]
 
-                        # find the correct index for this set of NBO types
+                        # iterate through all entries with the same atom indices pairs
                         correct_list_index = None
                         for list_index in list_indices:
+                            # if there is an entry that corresponds to the same type of donor-acceptor interaction
+                            # set correct index to append to.
                             if nbo_types[list_index] == [donor_nbo_type, acceptor_nbo_type]:
                                 correct_list_index = list_index
                                 break
 
+                        # if there does not exist an interaction between these kinds of NBOs make a new entry
                         if correct_list_index is None:
                             atom_indices_list.append(selected_atom_indices)
                             stabilisation_energies.append([qm_data.sopa_data[i][1][0]])
                             nbo_types.append([donor_nbo_type, acceptor_nbo_type])
+                            nbo_ids.append([[qm_data.sopa_data[i][0][0], qm_data.sopa_data[i][0][1]]])
+                        # otherwise append to the existing entry
                         else:
-                            stabilisation_energies[list_index].append(qm_data.sopa_data[i][1][0])
+                            stabilisation_energies[correct_list_index].append(qm_data.sopa_data[i][1][0])
+                            nbo_ids[correct_list_index].append([qm_data.sopa_data[i][0][0], qm_data.sopa_data[i][0][1]])
 
         # make sure that lists have the same length
         assert len(atom_indices_list) == len(stabilisation_energies)
         assert len(atom_indices_list) == len(nbo_types)
+        assert len(atom_indices_list) == len(nbo_ids)
 
-        return atom_indices_list, stabilisation_energies, nbo_types
+        return atom_indices_list, stabilisation_energies, nbo_ids
 
     def _get_sopa_edges(self, qm_data: QmData) -> list[Edge]:
 
@@ -1307,20 +1340,21 @@ class GraphGenerator:
         """
 
         # obtain SOPA adjacency list and associated stabilisation energies and NBO types
-        atom_indices_list, stabilisation_energies, nbo_types = self._get_sopa_adjacency_list(qm_data)
-        # format stabilisation energies according to specification
-        reslolved_stabilisation_energies = self._resolve_stabilisation_energies(stabilisation_energies, self._settings.sopa_resolution_mode)
+        atom_indices_list, stabilisation_energies, nbo_ids = self._get_sopa_adjacency_list(qm_data)
+        # format nbo_ids and stabilisation energies according to specification
+        resolved_nbo_ids = self._resolve_nbo_ids(stabilisation_energies, nbo_ids, self._settings.sopa_resolution_mode)
+        resolved_stabilisation_energies = self._resolve_stabilisation_energies(stabilisation_energies, self._settings.sopa_resolution_mode)
 
         edges = []
         for i in range(len(atom_indices_list)):
-            for j in range(len(reslolved_stabilisation_energies[i])):
+            for j in range(len(resolved_stabilisation_energies[i])):
 
                 # skip if stabilisation energy is less than specified interaction threshold
-                if reslolved_stabilisation_energies[i][j] < self._settings.sopa_interaction_threshold:
+                if resolved_stabilisation_energies[i][j] < self._settings.sopa_interaction_threshold:
                     continue
 
                 # set up feature list with stabilisation energy and NBO types
-                features = self._get_sopa_edge_features(atom_indices_list[i], qm_data, atom_indices_list, stabilisation_energies, nbo_types)
+                features = self._get_sopa_edge_features(qm_data, stabilisation_energies[i], resolved_nbo_ids[i][j])
                 # add additional features
                 features = features | self._get_edge_features(atom_indices_list[i], qm_data)
 
@@ -1328,7 +1362,44 @@ class GraphGenerator:
 
         return edges
 
-    def _resolve_stabilisation_energies(self, stabilisation_energies, mode):
+    def _resolve_nbo_ids(self, stabilisation_energies: list[list[float]], nbo_ids: list[list[int]], mode: SopaResolutionMode) -> list[list[int]]:
+
+        """Helper function to resolve a list of NBO ids based on the stabilisation energies and according to the SOPA mode specification.
+
+        Returns:
+            list[list[float]]: List of lists containing the stabilisation energies.
+        """
+
+        resolved_nbo_ids = []
+
+        # keeps all individual stabilisation energies
+        if mode == SopaResolutionMode.FULL:
+            return nbo_ids
+        # averages over stabilisation energies belonging to the same atom pair
+        elif mode == SopaResolutionMode.AVERAGE:
+            raise ValueError('Cannot average-resolve NBO IDs.')
+        # uses the minimum and maximum values of stabilisation energies belonging to the same atom pair
+        elif mode == SopaResolutionMode.MIN_MAX:
+            for i in range(len(stabilisation_energies)):
+                if len(stabilisation_energies[i]) == 1:
+                    resolved_nbo_ids.append(nbo_ids[i])
+                else:
+                    # get lists of indices in case the max or min value are degenerate
+                    min_indices = [j for j, x in enumerate(stabilisation_energies[i]) if x == min(stabilisation_energies[i])]
+                    max_indices = [j for j, x in enumerate(stabilisation_energies[i]) if x == max(stabilisation_energies[i])]
+                    unique_indices = list(set(min_indices + max_indices))
+                    min_max_energy_nbo_ids = [nbo_ids[i][idx] for idx in unique_indices]
+                    resolved_nbo_ids.append(min_max_energy_nbo_ids)
+        # uses the maximum value of stabilisation energies belonging to the same atom pair
+        elif mode == SopaResolutionMode.MAX:
+            for i in range(len(stabilisation_energies)):
+                max_indices = [j for j, x in enumerate(stabilisation_energies[i]) if x == max(stabilisation_energies[i])]
+                max_energy_nbo_ids = [nbo_ids[i][idx] for idx in max_indices]
+                resolved_nbo_ids.append(max_energy_nbo_ids)
+
+        return resolved_nbo_ids
+
+    def _resolve_stabilisation_energies(self, stabilisation_energies: list[list[float]], mode: SopaResolutionMode) -> list[list[float]]:
 
         """Helper function to resolve a list of stabilisation energies according to the SOPA mode specification.
 
@@ -1351,10 +1422,17 @@ class GraphGenerator:
                 if len(stabilisation_energies[i]) == 1:
                     resolved_stabilisation_energies.append(stabilisation_energies[i])
                 else:
-                    resolved_stabilisation_energies.append([min(stabilisation_energies[i]), max(stabilisation_energies[i])])
+                    # get lists of indices in case the max or min value are degenerate
+                    min_indices = [j for j, x in enumerate(stabilisation_energies[i]) if x == min(stabilisation_energies[i])]
+                    max_indices = [j for j, x in enumerate(stabilisation_energies[i]) if x == max(stabilisation_energies[i])]
+                    unique_indices = list(set(min_indices + max_indices))
+                    min_max_energies = [stabilisation_energies[i][idx] for idx in unique_indices]
+                    resolved_stabilisation_energies.append(min_max_energies)
         # uses the maximum value of stabilisation energies belonging to the same atom pair
         elif mode == SopaResolutionMode.MAX:
             for i in range(len(stabilisation_energies)):
-                resolved_stabilisation_energies.append([max(stabilisation_energies[i])])
+                max_indices = [j for j, x in enumerate(stabilisation_energies[i]) if x == max(stabilisation_energies[i])]
+                max_energies = [stabilisation_energies[i][idx] for idx in max_indices]
+                resolved_stabilisation_energies.append(max_energies)
 
         return resolved_stabilisation_energies

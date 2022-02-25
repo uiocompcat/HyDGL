@@ -35,56 +35,34 @@ import networkx as nx
 
 def main():
 
+    nx_graph = nx.read_gml('/home/hkneiding/Desktop/ACIFEA.gml')
+
+    graph = Graph.from_networkx(nx_graph)
+
+    graph.visualise()
+
+    exit()
+
     # setup target directory path
     path = '/home/hkneiding/Documents/UiO/Data/tmQMg/raw/'
-    file_name = 'ZUYHEG'
+    file_name = 'ACIFEA'
     qm_data = DataParser(path + file_name + '.log').parse()
 
     # FileHandler.write_dict_to_json_file('/home/hkneiding/Desktop/' + file_name + '.json', qm_data)
 
     qm_data_object = QmData.from_dict(qm_data)
 
-    ggs = GraphGeneratorSettings.default(edge_types=[EdgeType.NBO_BONDING_ORBITALS], hydrogen_mode=HydrogenMode.EXPLICIT,
-                                         edge_features=[
-                                             EdgeFeature.NBO_TYPE,
-                                             EdgeFeature.BOND_ORBITAL_AVERAGE,
-                                             EdgeFeature.ANTIBOND_ORBITAL_MIN,
-                                             EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE,
-                                             EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE,
-                                             EdgeFeature.BOND_ORBITAL_DATA_S,
-                                             EdgeFeature.BOND_ORBITAL_DATA_P,
-                                             EdgeFeature.BOND_ORBITAL_DATA_D,
-                                             EdgeFeature.ANTIBOND_ORBITAL_DATA_S,
-                                             EdgeFeature.ANTIBOND_ORBITAL_DATA_P,
-                                             EdgeFeature.ANTIBOND_ORBITAL_DATA_D
-                                            ],
-                                         node_features=[
-                                             NodeFeature.ATOMIC_NUMBER,
-                                            #  NodeFeature.NATURAL_ATOMIC_CHARGE,
-                                            #  NodeFeature.NATURAL_ELECTRON_POPULATION_VALENCE,
-                                            #  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S,
-                                            #  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P,
-                                            #  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D,
-                                            #  NodeFeature.LONE_PAIR_MAX,
-                                            #  NodeFeature.LONE_VACANCY_MIN,
-                                            #  NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE,
-                                            #  NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE,
-                                            #  NodeFeature.LONE_PAIR_S,
-                                            #  NodeFeature.LONE_PAIR_P,
-                                            #  NodeFeature.LONE_PAIR_D,
-                                            #  NodeFeature.LONE_VACANCY_S,
-                                            #  NodeFeature.LONE_VACANCY_P,
-                                            #  NodeFeature.LONE_VACANCY_D
-                                        ],
-                                         targets=[QmTarget.SVP_HOMO_LUMO_GAP],
-                                         graph_features=[GraphFeature.MOLECULAR_MASS],
-                                         bond_threshold_metal=0.05)
-
     ggs = GraphGeneratorSettings.natQ2([QmTarget.SVP_HOMO_LUMO_GAP])
 
     gg = GraphGenerator(settings=ggs)
     graph = gg.generate_graph(qm_data_object)
+    nx.write_gml(graph.get_networkx_graph_object(), '/home/hkneiding/Desktop/' + file_name + '.gml')
+
     # graph.visualise()
+
+    # nx_graph = graph.get_networkx_graph_object()
+    # print(nx_graph.nodes.data())
+    exit()
 
     nx.write_gml(graph.get_networkx_graph_object(), '/home/hkneiding/Desktop/test.gml')
 
@@ -230,7 +208,7 @@ def get_disconnected_graphs(ggs: GraphGeneratorSettings):
 
 # - - - entry point - - - #
 if __name__ == "__main__":
-    # main()
+    main()
     #extract_gaussian_data()
     #extract_gaussian_data_to_pandas()
     #read_extracted_data()
