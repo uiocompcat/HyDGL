@@ -194,6 +194,45 @@ class GraphGeneratorSettings:
                    sopa_interaction_threshold=None,
                    sopa_contribution_threshold=None)
 
+    @classmethod
+    def natQ3(cls, targets):
+
+        return cls(node_features=[NodeFeature.ATOMIC_NUMBER,
+                                  NodeFeature.NATURAL_ATOMIC_CHARGE,
+                                  NodeFeature.NATURAL_ELECTRON_POPULATION_VALENCE,
+                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S,
+                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P,
+                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D,
+                                  NodeFeature.LONE_PAIR_MAX,
+                                  NodeFeature.LONE_VACANCY_MIN,
+                                  NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE,
+                                  NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE,
+                                  NodeFeature.LONE_PAIR_S,
+                                  NodeFeature.LONE_PAIR_P,
+                                  NodeFeature.LONE_PAIR_D,
+                                  NodeFeature.LONE_VACANCY_S,
+                                  NodeFeature.LONE_VACANCY_P,
+                                  NodeFeature.LONE_VACANCY_D,
+                                  NodeFeature.BOUND_HYDROGEN_COUNT],
+                   edge_features=[EdgeFeature.NLMO_BOND_ORDER],
+                   edge_types=[EdgeType.SOPA],
+                   bond_order_mode=BondOrderType.WIBERG,
+                   bond_threshold=DEFAULT_BOND_THRESHOLD,
+                   bond_threshold_metal=0.05,
+                   hydrogen_mode=HydrogenMode.OMIT,
+                   hydrogen_count_threshold=DEFAULT_HYDROGEN_COUNT_THRESHOLD,
+                   sopa_edge_features=[SopaEdgeFeature.DONOR_NBO_TYPE,
+                                       SopaEdgeFeature.ACCEPTOR_NBO_TYPE,
+                                       SopaEdgeFeature.STABILISATION_ENERGY_MAX,
+                                       SopaEdgeFeature.STABILISATION_ENERGY_AVERAGE],
+                   graph_features=[GraphFeature.CHARGE,
+                                   GraphFeature.MOLECULAR_MASS,
+                                   GraphFeature.N_ATOMS],
+                   targets=targets,
+                   sopa_resolution_mode=SopaResolutionMode.MAX,
+                   sopa_interaction_threshold=1,
+                   sopa_contribution_threshold=0)
+
     def _get_orbtials_to_extract_indices(self, mode: OrbitalOccupationType):
 
         """Helper function to parse information about which orbitals occupancies to use as node/edge features.
