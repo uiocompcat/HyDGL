@@ -2,6 +2,7 @@ import unittest
 from parameterized import parameterized
 from nbo2graph.enums.nbo_type import NboType
 from nbo2graph.file_handler import FileHandler
+from nbo2graph.nbo_data_point import NboDataPoint
 
 from nbo2graph.node import Node
 from nbo2graph.edge import Edge
@@ -2515,6 +2516,40 @@ class TestGraphGenerator(unittest.TestCase):
         result = gg._get_atom_indices_from_nbo_id(qm_data, nbo_id)
 
         self.assertEqual(result, expected)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_LALMER,
+            1,
+            None
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            47,
+            NboDataPoint(nbo_id=47,
+                         nbo_type='LP',
+                         atom_indices=[0],
+                         energy=-0.62879,
+                         occupation=1.99777,
+                         orbital_occupations=[0.0005, 0.0, 0.9995, 0.0],
+                         contributions=[1])
+        ],
+
+    ])
+    def test_get_nbo_from_nbo_id(self, file_path, nbo_id, expected):
+
+        # load data
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings.default())
+
+        # get result
+        result = gg._get_nbo_from_nbo_id(qm_data, nbo_id)
+
+        Utils.assert_are_almost_equal(result, expected)
 
     @parameterized.expand([
 

@@ -1212,6 +1212,20 @@ class GraphGenerator:
             raise ValueError()
         return qm_data.nbo_data[nbo_list_index].nbo_type
 
+    def _get_nbo_from_nbo_id(self, qm_data: QmData, nbo_id: int) -> NboDataPoint:
+
+        """Gets the data of a NBO from an ID.
+
+        Returns:
+            NboDataPoint: The NBO data.
+        """
+
+        for nbo_data_point in qm_data.nbo_data:
+            if nbo_data_point.nbo_id == nbo_id:
+                return nbo_data_point
+
+        return None
+
     def _get_sopa_adjacency_list(self, qm_data: QmData) -> list[list[int]]:
 
         """Gets an adjacency list based on SOPA data. Also returns list of associated stabilisation energies and NBO types.
