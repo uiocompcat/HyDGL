@@ -22,10 +22,10 @@ class NodeFeature(Enum):
     NATURAL_ELECTRON_POPULATION_RYDBERG = auto()
     NATURAL_ELECTRON_POPULATION_TOTAL = auto()
 
-    NATURAL_ELECTRON_CONFIGURATION_S = auto()
-    NATURAL_ELECTRON_CONFIGURATION_P = auto()
-    NATURAL_ELECTRON_CONFIGURATION_D = auto()
-    NATURAL_ELECTRON_CONFIGURATION_F = auto()
+    NATURAL_ELECTRON_CONFIGURATION_S_SYMMETRY = auto()
+    NATURAL_ELECTRON_CONFIGURATION_P_SYMMETRY = auto()
+    NATURAL_ELECTRON_CONFIGURATION_D_SYMMETRY = auto()
+    NATURAL_ELECTRON_CONFIGURATION_F_SYMMETRY = auto()
 
     # lone pairs
     LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE = auto()
@@ -33,10 +33,10 @@ class NodeFeature(Enum):
     LONE_PAIR_MAX = auto()
     LONE_PAIR_AVERAGE = auto()
 
-    LONE_PAIR_S = auto()
-    LONE_PAIR_P = auto()
-    LONE_PAIR_D = auto()
-    LONE_PAIR_F = auto()
+    LONE_PAIR_S_SYMMETRY = auto()
+    LONE_PAIR_P_SYMMETRY = auto()
+    LONE_PAIR_D_SYMMETRY = auto()
+    LONE_PAIR_F_SYMMETRY = auto()
 
     # lone vacancies
     LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE = auto()
@@ -44,7 +44,7 @@ class NodeFeature(Enum):
     LONE_VACANCY_MIN = auto()
     LONE_VACANCY_AVERAGE = auto()
 
-    LONE_VACANCY_S = auto()
-    LONE_VACANCY_P = auto()
-    LONE_VACANCY_D = auto()
-    LONE_VACANCY_F = auto()
+    LONE_VACANCY_S_SYMMETRY = auto()
+    LONE_VACANCY_P_SYMMETRY = auto()
+    LONE_VACANCY_D_SYMMETRY = auto()
+    LONE_VACANCY_F_SYMMETRY = auto()

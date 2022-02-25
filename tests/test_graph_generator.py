@@ -374,7 +374,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             HydrogenMode.OMIT,
             BondOrderType.WIBERG,
-            [NodeFeature.LONE_PAIR_MAX, NodeFeature.LONE_PAIR_S, NodeFeature.LONE_PAIR_P, NodeFeature.LONE_PAIR_D, NodeFeature.LONE_PAIR_F],
+            [NodeFeature.LONE_PAIR_MAX, NodeFeature.LONE_PAIR_S_SYMMETRY, NodeFeature.LONE_PAIR_P_SYMMETRY, NodeFeature.LONE_PAIR_D_SYMMETRY, NodeFeature.LONE_PAIR_F_SYMMETRY],
             [
                 Node(features={'n_lone_pairs': 5, 'lone_pair_max_energy': -0.62573, 'lone_pair_max_occupation': 1.99593, 'lone_pair_max_0': 0.0001, 'lone_pair_max_1': 0.0, 'lone_pair_max_2': 0.9998, 'lone_pair_max_3': 0.0}),
                 Node(features={'n_lone_pairs': 2, 'lone_pair_max_energy': -0.56001, 'lone_pair_max_occupation': 1.99619, 'lone_pair_max_0': 0.1619, 'lone_pair_max_1': 0.8369, 'lone_pair_max_2': 0.0011, 'lone_pair_max_3': 0.0}),
@@ -547,7 +547,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             HydrogenMode.OMIT,
             BondOrderType.NLMO,
-            [NodeFeature.LONE_PAIR_AVERAGE, NodeFeature.LONE_PAIR_S, NodeFeature.LONE_PAIR_P, NodeFeature.LONE_PAIR_D, NodeFeature.LONE_PAIR_F],
+            [NodeFeature.LONE_PAIR_AVERAGE, NodeFeature.LONE_PAIR_S_SYMMETRY, NodeFeature.LONE_PAIR_P_SYMMETRY, NodeFeature.LONE_PAIR_D_SYMMETRY, NodeFeature.LONE_PAIR_F_SYMMETRY],
             0,
             Node(features={
                 'n_lone_pairs': 5,
@@ -564,7 +564,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             HydrogenMode.OMIT,
             BondOrderType.NLMO,
-            [NodeFeature.LONE_VACANCY_AVERAGE, NodeFeature.LONE_VACANCY_S, NodeFeature.LONE_VACANCY_P, NodeFeature.LONE_VACANCY_D, NodeFeature.LONE_VACANCY_F],
+            [NodeFeature.LONE_VACANCY_AVERAGE, NodeFeature.LONE_VACANCY_S_SYMMETRY, NodeFeature.LONE_VACANCY_P_SYMMETRY, NodeFeature.LONE_VACANCY_D_SYMMETRY, NodeFeature.LONE_VACANCY_F_SYMMETRY],
             0,
             Node(features={
                 'n_lone_vacancies': 1,
@@ -581,7 +581,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             HydrogenMode.OMIT,
             BondOrderType.NLMO,
-            [NodeFeature.LONE_VACANCY_MIN, NodeFeature.LONE_VACANCY_S, NodeFeature.LONE_VACANCY_P, NodeFeature.LONE_VACANCY_D, NodeFeature.LONE_VACANCY_F],
+            [NodeFeature.LONE_VACANCY_MIN, NodeFeature.LONE_VACANCY_S_SYMMETRY, NodeFeature.LONE_VACANCY_P_SYMMETRY, NodeFeature.LONE_VACANCY_D_SYMMETRY, NodeFeature.LONE_VACANCY_F_SYMMETRY],
             0,
             Node(features={
                 'n_lone_vacancies': 1,
@@ -598,7 +598,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_OREDIA,
             HydrogenMode.OMIT,
             BondOrderType.NLMO,
-            [NodeFeature.LONE_VACANCY_AVERAGE, NodeFeature.LONE_VACANCY_S, NodeFeature.LONE_VACANCY_P, NodeFeature.LONE_VACANCY_D, NodeFeature.LONE_VACANCY_F],
+            [NodeFeature.LONE_VACANCY_AVERAGE, NodeFeature.LONE_VACANCY_S_SYMMETRY, NodeFeature.LONE_VACANCY_P_SYMMETRY, NodeFeature.LONE_VACANCY_D_SYMMETRY, NodeFeature.LONE_VACANCY_F_SYMMETRY],
             0,
             Node(features={
                 'n_lone_vacancies': 2,
@@ -615,7 +615,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_OREDIA,
             HydrogenMode.OMIT,
             BondOrderType.NLMO,
-            [NodeFeature.LONE_VACANCY_MIN, NodeFeature.LONE_VACANCY_S, NodeFeature.LONE_VACANCY_P, NodeFeature.LONE_VACANCY_D, NodeFeature.LONE_VACANCY_F],
+            [NodeFeature.LONE_VACANCY_MIN, NodeFeature.LONE_VACANCY_S_SYMMETRY, NodeFeature.LONE_VACANCY_P_SYMMETRY, NodeFeature.LONE_VACANCY_D_SYMMETRY, NodeFeature.LONE_VACANCY_F_SYMMETRY],
             0,
             Node(features={
                 'n_lone_vacancies': 2,
@@ -632,7 +632,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             HydrogenMode.EXPLICIT,
             BondOrderType.WIBERG,
-            [NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_F],
+            [NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S_SYMMETRY, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P_SYMMETRY, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D_SYMMETRY, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_F_SYMMETRY],
             0,
             Node(features={
                 'natural_electron_configuration_0': 0.31,
@@ -646,7 +646,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             HydrogenMode.EXPLICIT,
             BondOrderType.WIBERG,
-            [NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_F],
+            [NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S_SYMMETRY, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P_SYMMETRY, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D_SYMMETRY, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_F_SYMMETRY],
             3,
             Node(features={
                 'natural_electron_configuration_0': 0.97,
@@ -1271,7 +1271,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             [15, 21],
-            [EdgeFeature.BOND_ORBITAL_MAX, EdgeFeature.BOND_DISTANCE, EdgeFeature.BOND_ORBITAL_DATA_S],
+            [EdgeFeature.BOND_ORBITAL_MAX, EdgeFeature.BOND_DISTANCE, EdgeFeature.BOND_ORBITAL_S_SYMMETRY],
             Edge([15, 21], features={
                 'bond_distance': 1.468893,
                 'n_bn': 1,
@@ -1283,7 +1283,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             [15, 21],
-            [EdgeFeature.BOND_ORBITAL_AVERAGE, EdgeFeature.BOND_DISTANCE, EdgeFeature.BOND_ORBITAL_DATA_S],
+            [EdgeFeature.BOND_ORBITAL_AVERAGE, EdgeFeature.BOND_DISTANCE, EdgeFeature.BOND_ORBITAL_S_SYMMETRY],
             Edge([15, 21], features={
                 'bond_distance': 1.468893,
                 'n_bn': 1,
@@ -1295,7 +1295,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             [2, 3],
-            [EdgeFeature.BOND_ORBITAL_MAX, EdgeFeature.BOND_ORBITAL_DATA_S, EdgeFeature.BOND_ORBITAL_DATA_P, EdgeFeature.BOND_ORBITAL_DATA_D, EdgeFeature.  BOND_ORBITAL_DATA_F],
+            [EdgeFeature.BOND_ORBITAL_MAX, EdgeFeature.BOND_ORBITAL_S_SYMMETRY, EdgeFeature.BOND_ORBITAL_P_SYMMETRY, EdgeFeature.BOND_ORBITAL_D_SYMMETRY, EdgeFeature.  BOND_ORBITAL_F_SYMMETRY],
             Edge([2, 3], features={
                 'n_bn': 2,
                 'bond_max_energy': -0.47335,
@@ -1309,7 +1309,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             [2, 3],
-            [EdgeFeature.BOND_ORBITAL_AVERAGE, EdgeFeature.BOND_ORBITAL_DATA_S, EdgeFeature.BOND_ORBITAL_DATA_P, EdgeFeature.BOND_ORBITAL_DATA_D, EdgeFeature.  BOND_ORBITAL_DATA_F],
+            [EdgeFeature.BOND_ORBITAL_AVERAGE, EdgeFeature.BOND_ORBITAL_S_SYMMETRY, EdgeFeature.BOND_ORBITAL_P_SYMMETRY, EdgeFeature.BOND_ORBITAL_D_SYMMETRY, EdgeFeature.  BOND_ORBITAL_F_SYMMETRY],
             Edge([2, 3], features={
                 'n_bn': 2,
                 'bond_average_energy': -0.68039,
@@ -1323,7 +1323,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             [2, 3],
-            [EdgeFeature.ANTIBOND_ORBITAL_MIN, EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_P, EdgeFeature.ANTIBOND_ORBITAL_DATA_D, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
+            [EdgeFeature.ANTIBOND_ORBITAL_MIN, EdgeFeature.ANTIBOND_ORBITAL_S_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_P_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_D_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_F_SYMMETRY],
             Edge([2, 3], features={
                 'n_bn': 2,
                 'antibond_min_energy': -0.15285,
@@ -1337,7 +1337,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             [2, 3],
-            [EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_P, EdgeFeature.ANTIBOND_ORBITAL_DATA_D, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
+            [EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_S_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_P_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_D_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_F_SYMMETRY],
             Edge([2, 3], features={
                 'n_bn': 2,
                 'antibond_average_energy': 0.110375,
@@ -1351,7 +1351,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             [2, 3],
-            [EdgeFeature.ANTIBOND_ORBITAL_MIN, EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_P, EdgeFeature.ANTIBOND_ORBITAL_DATA_D, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
+            [EdgeFeature.ANTIBOND_ORBITAL_MIN, EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_S_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_P_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_D_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_F_SYMMETRY],
             Edge([2, 3], features={
                 'n_bn': 2,
                 'antibond_min_energy': -0.15285,
@@ -1371,7 +1371,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             [0, 4],
-            [EdgeFeature.BOND_ORBITAL_AVERAGE, EdgeFeature.BOND_ORBITAL_DATA_S, EdgeFeature.BOND_ORBITAL_DATA_P, EdgeFeature.BOND_ORBITAL_DATA_D, EdgeFeature.BOND_ORBITAL_DATA_F],
+            [EdgeFeature.BOND_ORBITAL_AVERAGE, EdgeFeature.BOND_ORBITAL_S_SYMMETRY, EdgeFeature.BOND_ORBITAL_P_SYMMETRY, EdgeFeature.BOND_ORBITAL_D_SYMMETRY, EdgeFeature.BOND_ORBITAL_F_SYMMETRY],
             Edge([0, 4], features={
                 'n_bn': 0,
                 'bond_average_energy': 0.0,
@@ -1385,7 +1385,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             [0, 5],
-            [EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_P, EdgeFeature.ANTIBOND_ORBITAL_DATA_D, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
+            [EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_S_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_P_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_D_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_F_SYMMETRY],
             Edge([0, 5], features={
                 'n_bn': 0,
                 'antibond_average_energy': 0.0,
@@ -1489,7 +1489,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_ZUYHEG,
             [3, 7],
             [EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE, EdgeFeature.BOND_ORBITAL_AVERAGE, EdgeFeature.BOND_ORBITAL_MAX,
-             EdgeFeature.BOND_ORBITAL_DATA_S, EdgeFeature.BOND_ORBITAL_DATA_P, EdgeFeature.BOND_ORBITAL_DATA_D, EdgeFeature.BOND_ORBITAL_DATA_F],
+             EdgeFeature.BOND_ORBITAL_S_SYMMETRY, EdgeFeature.BOND_ORBITAL_P_SYMMETRY, EdgeFeature.BOND_ORBITAL_D_SYMMETRY, EdgeFeature.BOND_ORBITAL_F_SYMMETRY],
             {
                 'n_bn': 1,
                 'bond_energy_min_max_difference': 0.0,
@@ -1512,7 +1512,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_ZUYHEG,
             [7, 8],
             [EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE, EdgeFeature.BOND_ORBITAL_AVERAGE, EdgeFeature.BOND_ORBITAL_MAX,
-             EdgeFeature.BOND_ORBITAL_DATA_S, EdgeFeature.BOND_ORBITAL_DATA_P, EdgeFeature.BOND_ORBITAL_DATA_D, EdgeFeature.BOND_ORBITAL_DATA_F],
+             EdgeFeature.BOND_ORBITAL_S_SYMMETRY, EdgeFeature.BOND_ORBITAL_P_SYMMETRY, EdgeFeature.BOND_ORBITAL_D_SYMMETRY, EdgeFeature.BOND_ORBITAL_F_SYMMETRY],
             {
                 'n_bn': 1,
                 'bond_energy_min_max_difference': 0.0,
@@ -1535,7 +1535,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_ZUYHEG,
             [8, 9],
             [EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE, EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_MIN,
-             EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_P, EdgeFeature.ANTIBOND_ORBITAL_DATA_D, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
+             EdgeFeature.ANTIBOND_ORBITAL_S_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_P_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_D_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_F_SYMMETRY],
             {
                 'n_bn': 1,
                 'antibond_energy_min_max_difference': 0.0,
@@ -1558,7 +1558,7 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_ZUYHEG,
             [9, 11],
             [EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE, EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_MIN,
-             EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_P, EdgeFeature.ANTIBOND_ORBITAL_DATA_D, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
+             EdgeFeature.ANTIBOND_ORBITAL_S_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_P_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_D_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_F_SYMMETRY],
             {
                 'n_bn': 1,
                 'antibond_energy_min_max_difference': 0.0,
@@ -2906,7 +2906,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             TEST_FILE_LALMER,
-            [NodeFeature.LONE_PAIR_S, NodeFeature.LONE_PAIR_P],
+            [NodeFeature.LONE_PAIR_S_SYMMETRY, NodeFeature.LONE_PAIR_P_SYMMETRY],
             [],
             NboType.LONE_PAIR,
             [0.0, 0.0],
@@ -2914,7 +2914,7 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             TEST_FILE_LALMER,
-            [NodeFeature.LONE_VACANCY_P, NodeFeature.LONE_VACANCY_F],
+            [NodeFeature.LONE_VACANCY_P_SYMMETRY, NodeFeature.LONE_VACANCY_F_SYMMETRY],
             [],
             NboType.LONE_VACANCY,
             [0.0, 0.0],
@@ -2923,7 +2923,7 @@ class TestGraphGenerator(unittest.TestCase):
         [
             TEST_FILE_LALMER,
             [],
-            [EdgeFeature.BOND_ORBITAL_DATA_S, EdgeFeature.BOND_ORBITAL_DATA_P, EdgeFeature.BOND_ORBITAL_DATA_D],
+            [EdgeFeature.BOND_ORBITAL_S_SYMMETRY, EdgeFeature.BOND_ORBITAL_P_SYMMETRY, EdgeFeature.BOND_ORBITAL_D_SYMMETRY],
             NboType.BOND,
             [0.3458798245614035, 0.6517228070175439, 0.0020701754385964913],
         ],
@@ -2931,7 +2931,7 @@ class TestGraphGenerator(unittest.TestCase):
         [
             TEST_FILE_LALMER,
             [],
-            [EdgeFeature.BOND_ORBITAL_DATA_S, EdgeFeature.BOND_ORBITAL_DATA_P, EdgeFeature.BOND_ORBITAL_DATA_D],
+            [EdgeFeature.BOND_ORBITAL_S_SYMMETRY, EdgeFeature.BOND_ORBITAL_P_SYMMETRY, EdgeFeature.BOND_ORBITAL_D_SYMMETRY],
             NboType.THREE_CENTER_BOND,
             [0.3458798245614035, 0.6517228070175439, 0.0020701754385964913],
         ],
@@ -2940,7 +2940,7 @@ class TestGraphGenerator(unittest.TestCase):
         [
             TEST_FILE_LALMER,
             [],
-            [EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
+            [EdgeFeature.ANTIBOND_ORBITAL_S_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_F_SYMMETRY],
             NboType.ANTIBOND,
             [0.3458798245614035, 0.0003280701754385965],
         ],
@@ -2948,7 +2948,7 @@ class TestGraphGenerator(unittest.TestCase):
         [
             TEST_FILE_LALMER,
             [],
-            [EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
+            [EdgeFeature.ANTIBOND_ORBITAL_S_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_F_SYMMETRY],
             NboType.THREE_CENTER_ANTIBOND,
             [0.3458798245614035, 0.0003280701754385965],
         ],
@@ -2956,7 +2956,7 @@ class TestGraphGenerator(unittest.TestCase):
         [
             TEST_FILE_LALMER,
             [],
-            [EdgeFeature.ANTIBOND_ORBITAL_DATA_S, EdgeFeature.ANTIBOND_ORBITAL_DATA_F],
+            [EdgeFeature.ANTIBOND_ORBITAL_S_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_F_SYMMETRY],
             NboType.THREE_CENTER_NONBOND,
             [0.3458798245614035, 0.0003280701754385965],
         ],

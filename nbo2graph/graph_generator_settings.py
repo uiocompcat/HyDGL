@@ -159,31 +159,31 @@ class GraphGeneratorSettings:
         return cls(node_features=[NodeFeature.ATOMIC_NUMBER,
                                   NodeFeature.NATURAL_ATOMIC_CHARGE,
                                   NodeFeature.NATURAL_ELECTRON_POPULATION_VALENCE,
-                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S,
-                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P,
-                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D,
+                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S_SYMMETRY,
+                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P_SYMMETRY,
+                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D_SYMMETRY,
                                   NodeFeature.LONE_PAIR_MAX,
                                   NodeFeature.LONE_VACANCY_MIN,
                                   NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE,
                                   NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE,
-                                  NodeFeature.LONE_PAIR_S,
-                                  NodeFeature.LONE_PAIR_P,
-                                  NodeFeature.LONE_PAIR_D,
-                                  NodeFeature.LONE_VACANCY_S,
-                                  NodeFeature.LONE_VACANCY_P,
-                                  NodeFeature.LONE_VACANCY_D,
+                                  NodeFeature.LONE_PAIR_S_SYMMETRY,
+                                  NodeFeature.LONE_PAIR_P_SYMMETRY,
+                                  NodeFeature.LONE_PAIR_D_SYMMETRY,
+                                  NodeFeature.LONE_VACANCY_S_SYMMETRY,
+                                  NodeFeature.LONE_VACANCY_P_SYMMETRY,
+                                  NodeFeature.LONE_VACANCY_D_SYMMETRY,
                                   NodeFeature.BOUND_HYDROGEN_COUNT],
                    edge_features=[EdgeFeature.NBO_TYPE,
                                   EdgeFeature.BOND_ORBITAL_MAX,
                                   EdgeFeature.ANTIBOND_ORBITAL_MIN,
                                   EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE,
                                   EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE,
-                                  EdgeFeature.BOND_ORBITAL_DATA_S,
-                                  EdgeFeature.BOND_ORBITAL_DATA_P,
-                                  EdgeFeature.BOND_ORBITAL_DATA_D,
-                                  EdgeFeature.ANTIBOND_ORBITAL_DATA_S,
-                                  EdgeFeature.ANTIBOND_ORBITAL_DATA_P,
-                                  EdgeFeature.ANTIBOND_ORBITAL_DATA_D],
+                                  EdgeFeature.BOND_ORBITAL_S_SYMMETRY,
+                                  EdgeFeature.BOND_ORBITAL_P_SYMMETRY,
+                                  EdgeFeature.BOND_ORBITAL_D_SYMMETRY,
+                                  EdgeFeature.ANTIBOND_ORBITAL_S_SYMMETRY,
+                                  EdgeFeature.ANTIBOND_ORBITAL_P_SYMMETRY,
+                                  EdgeFeature.ANTIBOND_ORBITAL_D_SYMMETRY],
                    edge_types=[EdgeType.NBO_BONDING_ORBITALS, EdgeType.BOND_ORDER_METAL],
                    bond_order_mode=BondOrderType.WIBERG,
                    bond_threshold=DEFAULT_BOND_THRESHOLD,
@@ -203,19 +203,19 @@ class GraphGeneratorSettings:
         return cls(node_features=[NodeFeature.ATOMIC_NUMBER,
                                   NodeFeature.NATURAL_ATOMIC_CHARGE,
                                   NodeFeature.NATURAL_ELECTRON_POPULATION_VALENCE,
-                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S,
-                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P,
-                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D,
+                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S_SYMMETRY,
+                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P_SYMMETRY,
+                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D_SYMMETRY,
                                   NodeFeature.LONE_PAIR_MAX,
                                   NodeFeature.LONE_VACANCY_MIN,
                                   NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE,
                                   NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE,
-                                  NodeFeature.LONE_PAIR_S,
-                                  NodeFeature.LONE_PAIR_P,
-                                  NodeFeature.LONE_PAIR_D,
-                                  NodeFeature.LONE_VACANCY_S,
-                                  NodeFeature.LONE_VACANCY_P,
-                                  NodeFeature.LONE_VACANCY_D,
+                                  NodeFeature.LONE_PAIR_S_SYMMETRY,
+                                  NodeFeature.LONE_PAIR_P_SYMMETRY,
+                                  NodeFeature.LONE_PAIR_D_SYMMETRY,
+                                  NodeFeature.LONE_VACANCY_S_SYMMETRY,
+                                  NodeFeature.LONE_VACANCY_P_SYMMETRY,
+                                  NodeFeature.LONE_VACANCY_D_SYMMETRY,
                                   NodeFeature.BOUND_HYDROGEN_COUNT],
                    edge_features=[EdgeFeature.NLMO_BOND_ORDER],
                    edge_types=[EdgeType.SOPA],
@@ -247,49 +247,49 @@ class GraphGeneratorSettings:
         orbital_indices = []
 
         if mode == OrbitalOccupationType.LONE_PAIR:
-            if NodeFeature.LONE_PAIR_S in self.node_features:
+            if NodeFeature.LONE_PAIR_S_SYMMETRY in self.node_features:
                 orbital_indices.append(0)
-            if NodeFeature.LONE_PAIR_P in self.node_features:
+            if NodeFeature.LONE_PAIR_P_SYMMETRY in self.node_features:
                 orbital_indices.append(1)
-            if NodeFeature.LONE_PAIR_D in self.node_features:
+            if NodeFeature.LONE_PAIR_D_SYMMETRY in self.node_features:
                 orbital_indices.append(2)
-            if NodeFeature.LONE_PAIR_F in self.node_features:
+            if NodeFeature.LONE_PAIR_F_SYMMETRY in self.node_features:
                 orbital_indices.append(3)
         elif mode == OrbitalOccupationType.LONE_VACANCY:
-            if NodeFeature.LONE_VACANCY_S in self.node_features:
+            if NodeFeature.LONE_VACANCY_S_SYMMETRY in self.node_features:
                 orbital_indices.append(0)
-            if NodeFeature.LONE_VACANCY_P in self.node_features:
+            if NodeFeature.LONE_VACANCY_P_SYMMETRY in self.node_features:
                 orbital_indices.append(1)
-            if NodeFeature.LONE_VACANCY_D in self.node_features:
+            if NodeFeature.LONE_VACANCY_D_SYMMETRY in self.node_features:
                 orbital_indices.append(2)
-            if NodeFeature.LONE_VACANCY_F in self.node_features:
+            if NodeFeature.LONE_VACANCY_F_SYMMETRY in self.node_features:
                 orbital_indices.append(3)
         elif mode == OrbitalOccupationType.NATURAL_ELECTRON_CONFIGURATION:
-            if NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S in self.node_features:
+            if NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S_SYMMETRY in self.node_features:
                 orbital_indices.append(0)
-            if NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P in self.node_features:
+            if NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P_SYMMETRY in self.node_features:
                 orbital_indices.append(1)
-            if NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D in self.node_features:
+            if NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D_SYMMETRY in self.node_features:
                 orbital_indices.append(2)
-            if NodeFeature.NATURAL_ELECTRON_CONFIGURATION_F in self.node_features:
+            if NodeFeature.NATURAL_ELECTRON_CONFIGURATION_F_SYMMETRY in self.node_features:
                 orbital_indices.append(3)
         elif mode == OrbitalOccupationType.BOND_ORBITAL:
-            if EdgeFeature.BOND_ORBITAL_DATA_S in self.edge_features:
+            if EdgeFeature.BOND_ORBITAL_S_SYMMETRY in self.edge_features:
                 orbital_indices.append(0)
-            if EdgeFeature.BOND_ORBITAL_DATA_P in self.edge_features:
+            if EdgeFeature.BOND_ORBITAL_P_SYMMETRY in self.edge_features:
                 orbital_indices.append(1)
-            if EdgeFeature.BOND_ORBITAL_DATA_D in self.edge_features:
+            if EdgeFeature.BOND_ORBITAL_D_SYMMETRY in self.edge_features:
                 orbital_indices.append(2)
-            if EdgeFeature.BOND_ORBITAL_DATA_F in self.edge_features:
+            if EdgeFeature.BOND_ORBITAL_F_SYMMETRY in self.edge_features:
                 orbital_indices.append(3)
         elif mode == OrbitalOccupationType.ANTIBOND_ORBITAL:
-            if EdgeFeature.ANTIBOND_ORBITAL_DATA_S in self.edge_features:
+            if EdgeFeature.ANTIBOND_ORBITAL_S_SYMMETRY in self.edge_features:
                 orbital_indices.append(0)
-            if EdgeFeature.ANTIBOND_ORBITAL_DATA_P in self.edge_features:
+            if EdgeFeature.ANTIBOND_ORBITAL_P_SYMMETRY in self.edge_features:
                 orbital_indices.append(1)
-            if EdgeFeature.ANTIBOND_ORBITAL_DATA_D in self.edge_features:
+            if EdgeFeature.ANTIBOND_ORBITAL_D_SYMMETRY in self.edge_features:
                 orbital_indices.append(2)
-            if EdgeFeature.ANTIBOND_ORBITAL_DATA_F in self.edge_features:
+            if EdgeFeature.ANTIBOND_ORBITAL_F_SYMMETRY in self.edge_features:
                 orbital_indices.append(3)
         elif mode == OrbitalOccupationType.DONOR:
             if SopaEdgeFeature.DONOR_NBO_S_SYMMETRY in self.sopa_edge_features:

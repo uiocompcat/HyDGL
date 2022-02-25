@@ -22,10 +22,10 @@ class EdgeFeature(Enum):
     BOND_ORBITAL_MAX = auto()
     BOND_ORBITAL_AVERAGE = auto()
 
-    BOND_ORBITAL_DATA_S = auto()
-    BOND_ORBITAL_DATA_P = auto()
-    BOND_ORBITAL_DATA_D = auto()
-    BOND_ORBITAL_DATA_F = auto()
+    BOND_ORBITAL_S_SYMMETRY = auto()
+    BOND_ORBITAL_P_SYMMETRY = auto()
+    BOND_ORBITAL_D_SYMMETRY = auto()
+    BOND_ORBITAL_F_SYMMETRY = auto()
 
     # NBO data antibonding
     ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE = auto()
@@ -33,7 +33,7 @@ class EdgeFeature(Enum):
     ANTIBOND_ORBITAL_MIN = auto()
     ANTIBOND_ORBITAL_AVERAGE = auto()
 
-    ANTIBOND_ORBITAL_DATA_S = auto()
-    ANTIBOND_ORBITAL_DATA_P = auto()
-    ANTIBOND_ORBITAL_DATA_D = auto()
-    ANTIBOND_ORBITAL_DATA_F = auto()
+    ANTIBOND_ORBITAL_S_SYMMETRY = auto()
+    ANTIBOND_ORBITAL_P_SYMMETRY = auto()
+    ANTIBOND_ORBITAL_D_SYMMETRY = auto()
+    ANTIBOND_ORBITAL_F_SYMMETRY = auto()
