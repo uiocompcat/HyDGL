@@ -558,6 +558,9 @@ class GraphGenerator:
         if SopaEdgeFeature.DONOR_NBO_ENERGY in self._settings.sopa_edge_features:
             edge_features['donor_nbo_energy'] = donor_nbo.energy
 
+        if SopaEdgeFeature.DONOR_MIN_MAX_ENERGY_GAP in self._settings.sopa_edge_features:
+            edge_features['donor_min_max_energy_gap'] = 0
+
         if SopaEdgeFeature.DONOR_NBO_OCCUPATION in self._settings.sopa_edge_features:
             edge_features['donor_nbo_occupation'] = donor_nbo.occupation
 
@@ -570,6 +573,9 @@ class GraphGenerator:
 
         if SopaEdgeFeature.ACCEPTOR_NBO_ENERGY in self._settings.sopa_edge_features:
             edge_features['acceptor_nbo_energy'] = acceptor_nbo.energy
+
+        if SopaEdgeFeature.ACCEPTOR_MIN_MAX_ENERGY_GAP in self._settings.sopa_edge_features:
+            edge_features['acceptor_min_max_energy_gap'] = 0
 
         if SopaEdgeFeature.ACCEPTOR_NBO_OCCUPATION in self._settings.sopa_edge_features:
             edge_features['acceptor_nbo_occupation'] = acceptor_nbo.occupation
@@ -1390,12 +1396,18 @@ class GraphGenerator:
                     unique_indices = list(set(min_indices + max_indices))
                     min_max_energy_nbo_ids = [nbo_ids[i][idx] for idx in unique_indices]
                     resolved_nbo_ids.append(min_max_energy_nbo_ids)
-        # uses the maximum value of stabilisation energies belonging to the same atom pair
+        # gets the NBO IDs corresponding to maximum value of stabilisation energies belonging to the same atom pair
         elif mode == SopaResolutionMode.MAX:
             for i in range(len(stabilisation_energies)):
                 max_indices = [j for j, x in enumerate(stabilisation_energies[i]) if x == max(stabilisation_energies[i])]
                 max_energy_nbo_ids = [nbo_ids[i][idx] for idx in max_indices]
                 resolved_nbo_ids.append(max_energy_nbo_ids)
+        # gets the NBO IDs corresponding to the minimum value of stabilisation energies belonging to the same atom pair
+        elif mode == SopaResolutionMode.MIN:
+            for i in range(len(stabilisation_energies)):
+                min_indices = [j for j, x in enumerate(stabilisation_energies[i]) if x == min(stabilisation_energies[i])]
+                min_energy_nbo_ids = [nbo_ids[i][idx] for idx in min_indices]
+                resolved_nbo_ids.append(min_energy_nbo_ids)
 
         return resolved_nbo_ids
 
@@ -1434,5 +1446,11 @@ class GraphGenerator:
                 max_indices = [j for j, x in enumerate(stabilisation_energies[i]) if x == max(stabilisation_energies[i])]
                 max_energies = [stabilisation_energies[i][idx] for idx in max_indices]
                 resolved_stabilisation_energies.append(max_energies)
+        # uses the minimum value of stabilisation energies belonging to the same atom pair
+        elif mode == SopaResolutionMode.MIN:
+            for i in range(len(stabilisation_energies)):
+                min_indices = [j for j, x in enumerate(stabilisation_energies[i]) if x == min(stabilisation_energies[i])]
+                min_energies = [stabilisation_energies[i][idx] for idx in min_indices]
+                resolved_stabilisation_energies.append(min_energies)
 
         return resolved_stabilisation_energies

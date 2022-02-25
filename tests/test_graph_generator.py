@@ -2665,6 +2665,12 @@ class TestGraphGenerator(unittest.TestCase):
             [[1.1], [1.9], [1.2, 1.2], [2.3]]
         ],
 
+        [
+            [[1.1], [1.5, 1.2, 1.9], [1.2, 1.2], [1.5, 2.3]],
+            SopaResolutionMode.MIN,
+            [[1.1], [1.2], [1.2, 1.2], [1.5]]
+        ],
+
     ])
     def test_resolve_stabilisation_energies(self, stabilisation_energies, sopa_resolution_mode, expected):
 
@@ -2697,6 +2703,13 @@ class TestGraphGenerator(unittest.TestCase):
             [[[1, 2]], [[3, 4], [5, 6], [7, 8]], [[9, 10], [11, 12]], [[13, 14], [15, 16]]],
             SopaResolutionMode.MAX,
             [[[1, 2]], [[7, 8]], [[9, 10], [11, 12]], [[15, 16]]]
+        ],
+
+        [
+            [[1.1], [1.5, 1.2, 1.9], [1.2, 1.2], [1.5, 2.3]],
+            [[[1, 2]], [[3, 4], [5, 6], [7, 8]], [[9, 10], [11, 12]], [[13, 14], [15, 16]]],
+            SopaResolutionMode.MIN,
+            [[[1, 2]], [[5, 6]], [[9, 10], [11, 12]], [[13, 14]]]
         ],
 
     ])

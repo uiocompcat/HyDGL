@@ -7,5 +7,6 @@ class SopaResolutionMode(Enum):
 
     FULL = auto()
     MAX = auto()
+    MIN = auto()
     MIN_MAX = auto()
     AVERAGE = auto()
