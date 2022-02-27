@@ -1341,7 +1341,7 @@ class GraphGenerator:
         if SopaEdgeFeature.DONOR_NBO_ENERGY in self._settings.sopa_edge_features:
             edge_features['donor_nbo_energy'] = donor_nbo.energy
 
-        if SopaEdgeFeature.DONOR_MIN_MAX_ENERGY_GAP in self._settings.sopa_edge_features:
+        if SopaEdgeFeature.DONOR_NBO_MIN_MAX_ENERGY_GAP in self._settings.sopa_edge_features:
             same_type_donor_nbo_energies = [self._get_nbo_from_nbo_id(qm_data, same_type_nbo_id[0]).energy for same_type_nbo_id in same_type_nbo_ids]
             edge_features['donor_min_max_energy_gap'] = max(same_type_donor_nbo_energies) - min(same_type_donor_nbo_energies)
 
@@ -1358,7 +1358,7 @@ class GraphGenerator:
         if SopaEdgeFeature.ACCEPTOR_NBO_ENERGY in self._settings.sopa_edge_features:
             edge_features['acceptor_nbo_energy'] = acceptor_nbo.energy
 
-        if SopaEdgeFeature.ACCEPTOR_MIN_MAX_ENERGY_GAP in self._settings.sopa_edge_features:
+        if SopaEdgeFeature.ACCEPTOR_NBO_MIN_MAX_ENERGY_GAP in self._settings.sopa_edge_features:
             same_type_acceptor_nbo_energies = [self._get_nbo_from_nbo_id(qm_data, same_type_nbo_id[1]).energy for same_type_nbo_id in same_type_nbo_ids]
             edge_features['acceptor_min_max_energy_gap'] = max(same_type_acceptor_nbo_energies) - min(same_type_acceptor_nbo_energies)
 

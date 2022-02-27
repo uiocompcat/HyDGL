@@ -2888,7 +2888,7 @@ class TestGraphGenerator(unittest.TestCase):
             [47, 174],
             [[1]],
             [[47, 174]],
-            [SopaEdgeFeature.DONOR_MIN_MAX_ENERGY_GAP, SopaEdgeFeature.ACCEPTOR_MIN_MAX_ENERGY_GAP],
+            [SopaEdgeFeature.DONOR_NBO_MIN_MAX_ENERGY_GAP, SopaEdgeFeature.ACCEPTOR_NBO_MIN_MAX_ENERGY_GAP],
             {
                 'donor_min_max_energy_gap': 0.0,
                 'acceptor_min_max_energy_gap': 0.0
@@ -2900,7 +2900,7 @@ class TestGraphGenerator(unittest.TestCase):
             [47, 174],
             [[1]],
             [[47, 174], [49, 173], [51, 175]],
-            [SopaEdgeFeature.DONOR_MIN_MAX_ENERGY_GAP, SopaEdgeFeature.ACCEPTOR_MIN_MAX_ENERGY_GAP],
+            [SopaEdgeFeature.DONOR_NBO_MIN_MAX_ENERGY_GAP, SopaEdgeFeature.ACCEPTOR_NBO_MIN_MAX_ENERGY_GAP],
             {
                 'donor_min_max_energy_gap': max([-0.62879, -0.62774, -0.62573]) - min([-0.62879, -0.62774, -0.62573]),
                 'acceptor_min_max_energy_gap': max([0.37953, -0.14622, 0.34256]) - min([0.37953, -0.14622, 0.34256])
