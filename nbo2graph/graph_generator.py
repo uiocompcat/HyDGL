@@ -1317,9 +1317,6 @@ class GraphGenerator:
         # obtain SOPA adjacency list and associated stabilisation energies and NBO types
         # atom_indices_list, stabilisation_energies, nbo_types = self._get_sopa_adjacency_list(qm_data)
 
-        print(nbo_ids)
-        print(same_type_nbo_ids)
-
         # get donor and acceptor NBO data points
         donor_nbo = self._get_nbo_from_nbo_id(qm_data, nbo_ids[0])
         acceptor_nbo = self._get_nbo_from_nbo_id(qm_data, nbo_ids[1])
@@ -1343,7 +1340,7 @@ class GraphGenerator:
 
         if SopaEdgeFeature.DONOR_NBO_MIN_MAX_ENERGY_GAP in self._settings.sopa_edge_features:
             same_type_donor_nbo_energies = [self._get_nbo_from_nbo_id(qm_data, same_type_nbo_id[0]).energy for same_type_nbo_id in same_type_nbo_ids]
-            edge_features['donor_min_max_energy_gap'] = max(same_type_donor_nbo_energies) - min(same_type_donor_nbo_energies)
+            edge_features['donor_nbo_min_max_energy_gap'] = max(same_type_donor_nbo_energies) - min(same_type_donor_nbo_energies)
 
         if SopaEdgeFeature.DONOR_NBO_OCCUPATION in self._settings.sopa_edge_features:
             edge_features['donor_nbo_occupation'] = donor_nbo.occupation
@@ -1360,7 +1357,7 @@ class GraphGenerator:
 
         if SopaEdgeFeature.ACCEPTOR_NBO_MIN_MAX_ENERGY_GAP in self._settings.sopa_edge_features:
             same_type_acceptor_nbo_energies = [self._get_nbo_from_nbo_id(qm_data, same_type_nbo_id[1]).energy for same_type_nbo_id in same_type_nbo_ids]
-            edge_features['acceptor_min_max_energy_gap'] = max(same_type_acceptor_nbo_energies) - min(same_type_acceptor_nbo_energies)
+            edge_features['acceptor_nbo_min_max_energy_gap'] = max(same_type_acceptor_nbo_energies) - min(same_type_acceptor_nbo_energies)
 
         if SopaEdgeFeature.ACCEPTOR_NBO_OCCUPATION in self._settings.sopa_edge_features:
             edge_features['acceptor_nbo_occupation'] = acceptor_nbo.occupation
