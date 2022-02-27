@@ -523,68 +523,6 @@ class GraphGenerator:
 
         return nbo_features
 
-    def _get_sopa_edge_features(self, qm_data: QmData, stabilisation_energies: list[list[float]], nbo_ids) -> list[float]:
-
-        """Gets the SOPA edge features for given atom indices according to specification.
-
-        Returns:
-            list[float]: A list of SOPA edge features.
-        """
-
-        # obtain SOPA adjacency list and associated stabilisation energies and NBO types
-        # atom_indices_list, stabilisation_energies, nbo_types = self._get_sopa_adjacency_list(qm_data)
-
-        print(nbo_ids)
-        print(stabilisation_energies)
-
-        # get donor and acceptor NBO data points
-        donor_nbo = self._get_nbo_from_nbo_id(qm_data, nbo_ids[0])
-        acceptor_nbo = self._get_nbo_from_nbo_id(qm_data, nbo_ids[1])
-
-        # setup edge_features
-        edge_features = {}
-
-        # stabilisation energy features
-        if SopaEdgeFeature.STABILISATION_ENERGY_MAX in self._settings.sopa_edge_features:
-            edge_features['stabilisation_energy_max'] = max(stabilisation_energies)
-
-        if SopaEdgeFeature.STABILISATION_ENERGY_AVERAGE in self._settings.sopa_edge_features:
-            edge_features['stabilisation_energy_average'] = mean(stabilisation_energies)
-
-        # donor features
-        if SopaEdgeFeature.DONOR_NBO_TYPE in self._settings.sopa_edge_features:
-            edge_features['donor_nbo_type'] = donor_nbo.nbo_type
-
-        if SopaEdgeFeature.DONOR_NBO_ENERGY in self._settings.sopa_edge_features:
-            edge_features['donor_nbo_energy'] = donor_nbo.energy
-
-        if SopaEdgeFeature.DONOR_MIN_MAX_ENERGY_GAP in self._settings.sopa_edge_features:
-            edge_features['donor_min_max_energy_gap'] = 0
-
-        if SopaEdgeFeature.DONOR_NBO_OCCUPATION in self._settings.sopa_edge_features:
-            edge_features['donor_nbo_occupation'] = donor_nbo.occupation
-
-        for k in self._settings.donor_orbital_indices:
-            edge_features['donor_nbo_' + str(k)] = donor_nbo.orbital_occupations[k]
-
-        # acceptor features
-        if SopaEdgeFeature.ACCEPTOR_NBO_TYPE in self._settings.sopa_edge_features:
-            edge_features['acceptor_nbo_type'] = acceptor_nbo.nbo_type
-
-        if SopaEdgeFeature.ACCEPTOR_NBO_ENERGY in self._settings.sopa_edge_features:
-            edge_features['acceptor_nbo_energy'] = acceptor_nbo.energy
-
-        if SopaEdgeFeature.ACCEPTOR_MIN_MAX_ENERGY_GAP in self._settings.sopa_edge_features:
-            edge_features['acceptor_min_max_energy_gap'] = 0
-
-        if SopaEdgeFeature.ACCEPTOR_NBO_OCCUPATION in self._settings.sopa_edge_features:
-            edge_features['acceptor_nbo_occupation'] = acceptor_nbo.occupation
-
-        for k in self._settings.acceptor_orbital_indices:
-            edge_features['acceptor_nbo_' + str(k)] = acceptor_nbo.orbital_occupations[k]
-
-        return edge_features
-
     def _get_default_orbital_occupations(self, qm_data: QmData, nbo_type: NboType):
 
         """Returns the default values for occupations used when no NBO data for a specific edge is available. The orbital
@@ -1360,13 +1298,77 @@ class GraphGenerator:
                     continue
 
                 # set up feature list with stabilisation energy and NBO types
-                features = self._get_sopa_edge_features(qm_data, stabilisation_energies[i], resolved_nbo_ids[i][j])
+                features = self._get_sopa_edge_features(qm_data, stabilisation_energies[i], nbo_ids[i], resolved_nbo_ids[i][j])
                 # add additional features
                 features = features | self._get_edge_features(atom_indices_list[i], qm_data)
 
                 edges.append(Edge(atom_indices_list[i], features=features, is_directed=True))
 
         return edges
+
+    def _get_sopa_edge_features(self, qm_data: QmData, stabilisation_energies: list[list[float]], same_type_nbo_ids: list[list[int]], nbo_ids: list[list[int]]) -> list[float]:
+
+        """Gets the SOPA edge features for given atom indices according to specification.
+
+        Returns:
+            list[float]: A list of SOPA edge features.
+        """
+
+        # obtain SOPA adjacency list and associated stabilisation energies and NBO types
+        # atom_indices_list, stabilisation_energies, nbo_types = self._get_sopa_adjacency_list(qm_data)
+
+        print(nbo_ids)
+        print(same_type_nbo_ids)
+
+        # get donor and acceptor NBO data points
+        donor_nbo = self._get_nbo_from_nbo_id(qm_data, nbo_ids[0])
+        acceptor_nbo = self._get_nbo_from_nbo_id(qm_data, nbo_ids[1])
+
+        # setup edge_features
+        edge_features = {}
+
+        # stabilisation energy features
+        if SopaEdgeFeature.STABILISATION_ENERGY_MAX in self._settings.sopa_edge_features:
+            edge_features['stabilisation_energy_max'] = max(stabilisation_energies)
+
+        if SopaEdgeFeature.STABILISATION_ENERGY_AVERAGE in self._settings.sopa_edge_features:
+            edge_features['stabilisation_energy_average'] = mean(stabilisation_energies)
+
+        # donor features
+        if SopaEdgeFeature.DONOR_NBO_TYPE in self._settings.sopa_edge_features:
+            edge_features['donor_nbo_type'] = donor_nbo.nbo_type
+
+        if SopaEdgeFeature.DONOR_NBO_ENERGY in self._settings.sopa_edge_features:
+            edge_features['donor_nbo_energy'] = donor_nbo.energy
+
+        if SopaEdgeFeature.DONOR_MIN_MAX_ENERGY_GAP in self._settings.sopa_edge_features:
+            same_type_donor_nbo_energies = [self._get_nbo_from_nbo_id(qm_data, same_type_nbo_id[0]).energy for same_type_nbo_id in same_type_nbo_ids]
+            edge_features['donor_min_max_energy_gap'] = max(same_type_donor_nbo_energies) - min(same_type_donor_nbo_energies)
+
+        if SopaEdgeFeature.DONOR_NBO_OCCUPATION in self._settings.sopa_edge_features:
+            edge_features['donor_nbo_occupation'] = donor_nbo.occupation
+
+        for k in self._settings.donor_orbital_indices:
+            edge_features['donor_nbo_' + str(k)] = donor_nbo.orbital_occupations[k]
+
+        # acceptor features
+        if SopaEdgeFeature.ACCEPTOR_NBO_TYPE in self._settings.sopa_edge_features:
+            edge_features['acceptor_nbo_type'] = acceptor_nbo.nbo_type
+
+        if SopaEdgeFeature.ACCEPTOR_NBO_ENERGY in self._settings.sopa_edge_features:
+            edge_features['acceptor_nbo_energy'] = acceptor_nbo.energy
+
+        if SopaEdgeFeature.ACCEPTOR_MIN_MAX_ENERGY_GAP in self._settings.sopa_edge_features:
+            same_type_acceptor_nbo_energies = [self._get_nbo_from_nbo_id(qm_data, same_type_nbo_id[1]).energy for same_type_nbo_id in same_type_nbo_ids]
+            edge_features['acceptor_min_max_energy_gap'] = max(same_type_acceptor_nbo_energies) - min(same_type_acceptor_nbo_energies)
+
+        if SopaEdgeFeature.ACCEPTOR_NBO_OCCUPATION in self._settings.sopa_edge_features:
+            edge_features['acceptor_nbo_occupation'] = acceptor_nbo.occupation
+
+        for k in self._settings.acceptor_orbital_indices:
+            edge_features['acceptor_nbo_' + str(k)] = acceptor_nbo.orbital_occupations[k]
+
+        return edge_features
 
     def _resolve_nbo_ids(self, stabilisation_energies: list[list[float]], nbo_ids: list[list[int]], mode: SopaResolutionMode) -> list[list[int]]:
 

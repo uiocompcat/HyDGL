@@ -2830,6 +2830,8 @@ class TestGraphGenerator(unittest.TestCase):
         [
             TEST_FILE_LALMER,
             [47, 174],
+            [[1]],
+            [[47, 174]],
             [SopaEdgeFeature.DONOR_NBO_TYPE, SopaEdgeFeature.ACCEPTOR_NBO_TYPE],
             {
                 'donor_nbo_type': 'LP',
@@ -2840,6 +2842,8 @@ class TestGraphGenerator(unittest.TestCase):
         [
             TEST_FILE_LALMER,
             [47, 174],
+            [[1]],
+            [[47, 174]],
             [SopaEdgeFeature.DONOR_NBO_ENERGY, SopaEdgeFeature.ACCEPTOR_NBO_ENERGY],
             {
                 'donor_nbo_energy': -0.62879,
@@ -2850,6 +2854,8 @@ class TestGraphGenerator(unittest.TestCase):
         [
             TEST_FILE_LALMER,
             [47, 174],
+            [[1]],
+            [[47, 174]],
             [SopaEdgeFeature.DONOR_NBO_OCCUPATION, SopaEdgeFeature.ACCEPTOR_NBO_OCCUPATION],
             {
                 'donor_nbo_occupation': 1.99777,
@@ -2860,6 +2866,8 @@ class TestGraphGenerator(unittest.TestCase):
         [
             TEST_FILE_LALMER,
             [47, 174],
+            [[1]],
+            [[47, 174]],
             [SopaEdgeFeature.DONOR_NBO_S_SYMMETRY, SopaEdgeFeature.DONOR_NBO_P_SYMMETRY, SopaEdgeFeature.DONOR_NBO_D_SYMMETRY,
              SopaEdgeFeature.DONOR_NBO_F_SYMMETRY, SopaEdgeFeature.ACCEPTOR_NBO_S_SYMMETRY, SopaEdgeFeature.ACCEPTOR_NBO_P_SYMMETRY,
              SopaEdgeFeature.ACCEPTOR_NBO_D_SYMMETRY, SopaEdgeFeature.ACCEPTOR_NBO_F_SYMMETRY],
@@ -2875,8 +2883,32 @@ class TestGraphGenerator(unittest.TestCase):
             }
         ],
 
+        [
+            TEST_FILE_LALMER,
+            [47, 174],
+            [[1]],
+            [[47, 174]],
+            [SopaEdgeFeature.DONOR_MIN_MAX_ENERGY_GAP, SopaEdgeFeature.ACCEPTOR_MIN_MAX_ENERGY_GAP],
+            {
+                'donor_min_max_energy_gap': 0.0,
+                'acceptor_min_max_energy_gap': 0.0
+            }
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            [47, 174],
+            [[1]],
+            [[47, 174], [49, 173], [51, 175]],
+            [SopaEdgeFeature.DONOR_MIN_MAX_ENERGY_GAP, SopaEdgeFeature.ACCEPTOR_MIN_MAX_ENERGY_GAP],
+            {
+                'donor_min_max_energy_gap': max([-0.62879, -0.62774, -0.62573]) - min([-0.62879, -0.62774, -0.62573]),
+                'acceptor_min_max_energy_gap': max([0.37953, -0.14622, 0.34256]) - min([0.37953, -0.14622, 0.34256])
+            }
+        ],
+
     ])
-    def test_get_sopa_edge_features(self, file_path, nbo_ids, sopa_edge_features, expected):
+    def test_get_sopa_edge_features(self, file_path, nbo_ids, stabilisation_energies, same_type_nbo_ids, sopa_edge_features, expected):
 
         # load data
         qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
@@ -2885,7 +2917,7 @@ class TestGraphGenerator(unittest.TestCase):
         gg = GraphGenerator(GraphGeneratorSettings.default(sopa_edge_features=sopa_edge_features))
 
         # get result
-        result = gg._get_sopa_edge_features(qm_data, [0], nbo_ids)
+        result = gg._get_sopa_edge_features(qm_data, stabilisation_energies, same_type_nbo_ids, nbo_ids)
         print(result)
 
         Utils.assert_are_almost_equal(result, expected, places=5)
