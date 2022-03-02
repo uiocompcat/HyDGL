@@ -11,18 +11,20 @@ from nbo2graph.graph_generator_settings import GraphGeneratorSettings
 
 
 # specify your own network here
-class Net(torch.nn.Module):
-    def __init__(self):
+class GilmerNet(torch.nn.Module):
+
+    def __init__(self, n_node_features, n_edge_features, dim=64, set2set_steps=3, n_atom_jumps=3):
         super().__init__()
 
-        dim = 64
-        self.lin0 = torch.nn.Linear(21, dim)
+        self.n_atom_jumps = n_atom_jumps
 
-        nn = Sequential(Linear(16, 128), ReLU(), Linear(128, dim * dim))
+        self.lin0 = torch.nn.Linear(n_node_features, dim)
+
+        nn = Sequential(Linear(n_edge_features, 128), ReLU(), Linear(128, dim * dim))
         self.conv = NNConv(dim, dim, nn, aggr='mean')
         self.gru = GRU(dim, dim)
 
-        self.set2set = Set2Set(dim, processing_steps=3)
+        self.set2set = Set2Set(dim, processing_steps=set2set_steps)
         self.lin1 = torch.nn.Linear(2 * dim, dim)
         self.lin2 = torch.nn.Linear(dim, 1)
 
@@ -30,7 +32,7 @@ class Net(torch.nn.Module):
         out = F.relu(self.lin0(data.x))
         h = out.unsqueeze(0)
 
-        for i in range(3):
+        for i in range(self.n_atom_jumps):
             m = F.relu(self.conv(out, data.edge_index, data.edge_attr))
             out, h = self.gru(m.unsqueeze(0), h)
             out = out.squeeze(0)
@@ -39,6 +41,61 @@ class Net(torch.nn.Module):
         out = F.relu(self.lin1(out))
         out = self.lin2(out)
         return out.view(-1)
+
+
+class Trainer():
+
+    def __init__(self, model, optimizer, scheduler=None):
+
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+        self.model = model.to(self.device)
+        self.optimizer = optimizer
+        self.scheduler = scheduler
+
+    def train(self, train_loader):
+        self.model.train()
+        loss_all = 0
+
+        for data in train_loader:
+            data = data.to(self.device)
+            self.optimizer.zero_grad()
+            loss = F.mse_loss(self.model(data), data.y)
+            loss.backward()
+            loss_all += loss.item() * data.num_graphs
+            self.optimizer.step()
+        return loss_all / len(train_loader.dataset)
+
+    def test(self, loader):
+        self.model.eval()
+        error = 0
+
+        for data in loader:
+            data = data.to(self.device)
+            error += (self.model(data) - data.y).abs().sum().item()  # MAE
+        return error / len(loader.dataset)
+
+    def run(self, train_loader, val_loader, test_loader):
+        best_val_error = None
+        for epoch in range(1, 301):
+
+            # get learning rate from scheduler
+            if self.scheduler is not None:
+                lr = self.scheduler.optimizer.param_groups[0]['lr']
+
+            loss = self.train(train_loader)
+            val_error = self.test(val_loader)
+
+            # learning rate scheduler step
+            if self.scheduler is not None:
+                self.scheduler.step(val_error)
+
+            if best_val_error is None or val_error <= best_val_error:
+                test_error = self.test(test_loader)
+                best_val_error = val_error
+
+            print(f'Epoch: {epoch:03d}, LR: {lr:7f}, Loss: {loss:.7f}, '
+                  f'Val MAE: {val_error:.7f}, Test MAE: {test_error:.7f}')
 
 
 def main():
@@ -96,48 +153,13 @@ def main():
 
     # TRAINING
 
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model = Net().to(device)
+    model = GilmerNet(21, 16)
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min',
                                                            factor=0.7, patience=5,
                                                            min_lr=0.00001)
 
-    def train(epoch):
-        model.train()
-        loss_all = 0
-
-        for data in train_loader:
-            data = data.to(device)
-            optimizer.zero_grad()
-            loss = F.mse_loss(model(data), data.y)
-            loss.backward()
-            loss_all += loss.item() * data.num_graphs
-            optimizer.step()
-        return loss_all / len(train_loader.dataset)
-
-    def test(loader):
-        model.eval()
-        error = 0
-
-        for data in loader:
-            data = data.to(device)
-            error += (model(data) - data.y).abs().sum().item()  # MAE
-        return error / len(loader.dataset)
-
-    best_val_error = None
-    for epoch in range(1, 301):
-        lr = scheduler.optimizer.param_groups[0]['lr']
-        loss = train(epoch)
-        val_error = test(val_loader)
-        scheduler.step(val_error)
-
-        if best_val_error is None or val_error <= best_val_error:
-            test_error = test(test_loader)
-            best_val_error = val_error
-
-        print(f'Epoch: {epoch:03d}, LR: {lr:7f}, Loss: {loss:.7f}, '
-              f'Val MAE: {val_error:.7f}, Test MAE: {test_error:.7f}')
+    Trainer(model, optimizer, scheduler).run(train_loader, val_loader, test_loader)
 
 
 # - - - entry point - - - #
