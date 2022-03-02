@@ -75,9 +75,12 @@ class Trainer():
             error += (self.model(data) - data.y).abs().sum().item()  # MAE
         return error / len(loader.dataset)
 
-    def run(self, train_loader, val_loader, test_loader):
+    def run(self, train_loader, val_loader, test_loader, n_epochs=300):
+
+        output = ''
+
         best_val_error = None
-        for epoch in range(1, 301):
+        for epoch in range(1, n_epochs + 1):
 
             # get learning rate from scheduler
             if self.scheduler is not None:
@@ -94,8 +97,12 @@ class Trainer():
                 test_error = self.test(test_loader)
                 best_val_error = val_error
 
-            print(f'Epoch: {epoch:03d}, LR: {lr:7f}, Loss: {loss:.7f}, '
-                  f'Val MAE: {val_error:.7f}, Test MAE: {test_error:.7f}')
+            output += f'Epoch: {epoch:03d}, LR: {lr:7f}, Loss: {loss:.7f}, 'f'Val MAE: {val_error:.7f}, Test MAE: {test_error:.7f}'
+
+            # print(f'Epoch: {epoch:03d}, LR: {lr:7f}, Loss: {loss:.7f}, '
+            #       f'Val MAE: {val_error:.7f}, Test MAE: {test_error:.7f}')
+
+        return output
 
 
 def main():
@@ -159,7 +166,10 @@ def main():
                                                            factor=0.7, patience=5,
                                                            min_lr=0.00001)
 
-    Trainer(model, optimizer, scheduler).run(train_loader, val_loader, test_loader)
+    output = Trainer(model, optimizer, scheduler).run(train_loader, val_loader, test_loader, n_epochs=3000)
+
+    with open('out_ml1.log', 'w') as fh:
+        fh.write(output)
 
 
 # - - - entry point - - - #
