@@ -273,6 +273,11 @@ class Graph:
                 edge_features.append(edge.get_one_hot_encoded_feature_list(edge_class_feature_dict))
                 edge_features.append(edge.get_one_hot_encoded_feature_list(edge_class_feature_dict))
 
+        # get list of graph features
+        graph_features = []
+        for key in self.graph_features.keys():
+            graph_features.append(self.graph_features[key])
+
         # get list of targets
         targets = []
         for key in self.targets.keys():
@@ -282,10 +287,11 @@ class Graph:
         node_features = torch.tensor(node_features, dtype=torch.float)
         edge_indices = torch.tensor(edge_indices, dtype=torch.long)
         edge_features = torch.tensor(edge_features, dtype=torch.float)
+        graph_features = torch.tensor(graph_features, dtype=torch.float)
         targets = torch.tensor(targets, dtype=torch.float)
 
         # set up full pytorch data object
-        data = Data(x=node_features, edge_index=edge_indices.t().contiguous(), edge_attr=edge_features, y=targets, num_nodes=len(self.nodes))
+        data = Data(x=node_features, edge_index=edge_indices.t().contiguous(), edge_attr=edge_features, y=targets, num_nodes=len(self.nodes), graph_attr=graph_features)
 
         return data
 

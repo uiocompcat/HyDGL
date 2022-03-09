@@ -234,7 +234,8 @@ class TestGraph(unittest.TestCase):
                                          [1, 0, 2, 0, 3, 0, 3, 2, 4, 2]], dtype=torch.long),
                 edge_attr=torch.tensor([[-2.], [-2.], [3.], [3.], [4.], [4.], [1.], [1.], [10.], [10.]], dtype=torch.float),
                 y=torch.tensor([12.34], dtype=torch.float),
-                num_nodes=5
+                num_nodes=5,
+                graph_attr=torch.tensor([], dtype=torch.float)
             )
         ],
 
@@ -251,7 +252,8 @@ class TestGraph(unittest.TestCase):
                                          [1, 0, 2, 0, 3, 2, 4, 2]], dtype=torch.long),
                 edge_attr=torch.tensor([[-2.], [-2.], [3.], [3.], [4.], [1.], [10.], [10.]], dtype=torch.float),
                 y=torch.tensor([12.34], dtype=torch.float),
-                num_nodes=5
+                num_nodes=5,
+                graph_attr=torch.tensor([], dtype=torch.float)
             )
         ],
 
@@ -259,7 +261,7 @@ class TestGraph(unittest.TestCase):
             Graph(
                 [Node(features=[0]), Node(features=[1]), Node(features=[3]), Node(features=[-2]), Node(features=[0])],
                 [Edge([0, 1], features={'test_feature': 'A'}), Edge([0, 2], features={'test_feature': 'B'}), Edge([0, 3], features={'test_feature': 'A'}, is_directed=True), Edge([3, 2], features={'test_feature': 'C'}, is_directed=True), Edge([2, 4], features={'test_feature': 'D'})],
-                targets={'a': 12.34}
+                targets={'a': 12.34}, graph_features={'gr': 1.35}
             ),
             {'test_feature': ['B', 'A', 'C', 'D']},
             Data(
@@ -268,7 +270,8 @@ class TestGraph(unittest.TestCase):
                                          [1, 0, 2, 0, 3, 2, 4, 2]], dtype=torch.long),
                 edge_attr=torch.tensor([[0, 1, 0, 0], [0, 1, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1], [0, 0, 0, 1]], dtype=torch.float),
                 y=torch.tensor([12.34], dtype=torch.float),
-                num_nodes=5
+                num_nodes=5,
+                graph_attr=torch.tensor([1.35], dtype=torch.float)
             )
         ],
 
@@ -277,6 +280,8 @@ class TestGraph(unittest.TestCase):
 
         result = graph.get_pytorch_data_object(edge_class_feature_dict=edge_class_feature_dict)
         self.assertEqual(len(result.keys), len(expected.keys))
+
+        print(result['graph_attr'])
 
         for key in result.keys:
             if key == 'num_nodes':
