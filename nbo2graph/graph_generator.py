@@ -945,6 +945,8 @@ class GraphGenerator:
 
             if self._settings.graph_features[i] == GraphFeature.N_ATOMS:
                 graph_feature_dict['n_atoms'] = qm_data.n_atoms
+            elif self._settings.graph_features[i] == GraphFeature.N_ELECTRONS:
+                graph_feature_dict['n_electrons'] = sum(qm_data.atomic_numbers) - qm_data.charge
             elif self._settings.graph_features[i] == GraphFeature.MOLECULAR_MASS:
                 graph_feature_dict['molecular_mass'] = qm_data.molecular_mass
             elif self._settings.graph_features[i] == GraphFeature.CHARGE:

@@ -835,30 +835,46 @@ class TestGraphGenerator(unittest.TestCase):
     @parameterized.expand([
 
         [
+            TEST_FILE_LALMER,
             [GraphFeature.MOLECULAR_MASS],
             {'molecular_mass': 580.92867}
         ],
 
         [
+            TEST_FILE_LALMER,
             [GraphFeature.N_ATOMS],
             {'n_atoms': 47}
         ],
 
         [
+            TEST_FILE_LALMER,
+            [GraphFeature.N_ELECTRONS],
+            {'n_electrons': 288}
+        ],
+
+        [
+            TEST_FILE_OREDIA,
+            [GraphFeature.N_ELECTRONS],
+            {'n_electrons': 292}
+        ],
+
+        [
+            TEST_FILE_LALMER,
             [GraphFeature.CHARGE],
             {'charge': 1}
         ],
 
         [
+            TEST_FILE_LALMER,
             [],
             {}
         ],
 
     ])
-    def test_get_graph_features(self, graph_features, expected):
+    def test_get_graph_features(self, file_path, graph_features, expected):
 
         # load data
-        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(TEST_FILE_LALMER))
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator settings
         ggs = GraphGeneratorSettings.default(graph_features=graph_features)
