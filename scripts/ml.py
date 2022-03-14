@@ -115,7 +115,7 @@ class Trainer():
             # calculate MAE
             # recover real physical values if target means and standard deviations are given
             if target_means is not None and target_stds is not None:
-                error += ((self.model(data) - data.y).abs().detach().numpy() * target_stds + target_means).sum().item()
+                error += (np.abs((self.model(data).cpu().detach().numpy() * target_stds + target_means) - (data.y.cpu().detach().numpy() * target_stds + target_means))).sum().item()
             else:
                 error += (self.model(data) - data.y).abs().sum().item()
         return error / len(loader.dataset)
@@ -178,8 +178,7 @@ def main():
     for idx in train_indices:
         # train_node_feature_matrix.extend(dataset.graph_node_features[idx])
         train_node_feature_matrix.extend(dataset[idx]['x'].detach().numpy())
-
-        train_edge_feature_matrix.extend(dataset.graph_edge_features[idx])
+        train_edge_feature_matrix.extend(dataset[idx]['edge_attr'].detach().numpy())
         train_graph_feature_matrix.append(dataset[idx]['graph_attr'].detach().numpy())
     train_node_feature_matrix = np.array(train_node_feature_matrix)
     train_edge_feature_matrix = np.array(train_edge_feature_matrix)
@@ -235,94 +234,6 @@ def main():
     ################################
 
 
-def group_ten_only():
-
-    ggs = GraphGeneratorSettings.natQ2(targets=[QmTarget.POLARISABILITY])
-
-    with open('/home/hkneiding/Downloads/outliers_polarizability.pickle', 'rb') as fh:
-        outliers = pickle.load(fh)
-
-    with open('/home/hkneiding/Downloads/not_group_10_csd_codes.pickle', 'rb') as fh:
-        not_group_ten_csd_codes = pickle.load(fh)
-
-    exclude = list(set(outliers + not_group_ten_csd_codes))
-
-    dataset = tmQMg(root='/home/hkneiding/Desktop/pyg-dataset-test-dir/run1/', raw_dir='/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/', settings=ggs, exclude=exclude)
-    print('Using ' + str(len(dataset)) + ' data points.')
-    np.random.seed(2022)
-
-    # get a random permutation of indices
-    shuffled_indices = np.random.permutation(len(dataset))
-
-    # assign indices to train, val and test sets
-    test_indices = shuffled_indices[:round(0.1 * len(dataset))]
-    val_indices = shuffled_indices[round(0.1 * len(dataset)):round(0.2 * len(dataset))]
-    train_indices = shuffled_indices[round(0.2 * len(dataset)):]
-
-    # build node and edge feature matrices for the training data points
-    train_node_feature_matrix = []
-    train_edge_feature_matrix = []
-    train_graph_feature_matrix = []
-    for idx in train_indices:
-        # train_node_feature_matrix.extend(dataset.graph_node_features[idx])
-        train_node_feature_matrix.extend(dataset[idx]['x'].detach().numpy())
-
-        train_edge_feature_matrix.extend(dataset.graph_edge_features[idx])
-        train_graph_feature_matrix.append(dataset[idx]['graph_attr'].detach().numpy())
-    train_node_feature_matrix = np.array(train_node_feature_matrix)
-    train_edge_feature_matrix = np.array(train_edge_feature_matrix)
-    train_graph_feature_matrix = np.array(train_graph_feature_matrix)
-
-    # get train means and standard deviations for node features
-    train_node_feature_means = np.mean(train_node_feature_matrix, axis=0)
-    train_node_feature_stds = np.std(train_node_feature_matrix, axis=0)
-    # get train means and standard deviations for edge features
-    train_edge_feature_means = np.mean(train_edge_feature_matrix, axis=0)
-    train_edge_feature_stds = np.std(train_edge_feature_matrix, axis=0)
-    # get train means and standard deviations for graph features
-    train_graph_feature_means = np.mean(train_graph_feature_matrix, axis=0)
-    train_graph_feature_stds = np.std(train_graph_feature_matrix, axis=0)
-
-    if len(np.where(train_node_feature_stds == 0)[0]) > 0:
-        print('There are node features with standard deviation 0 within the training set.')
-
-    if len(np.where(train_edge_feature_stds == 0)[0]) > 0:
-        print('There are edge features with standard deviation 0 within the training set.')
-
-    if len(np.where(train_graph_feature_stds == 0)[0]) > 0:
-        print('There are graph features with standard deviation 0 within the training set.')
-
-    # scale graph, node and edge features according to train means and standard deviations
-    for graph in dataset:
-        graph['x'] = (graph['x'] - train_node_feature_means) / train_node_feature_stds
-        graph['edge_attr'] = (graph['edge_attr'] - train_edge_feature_means) / train_edge_feature_stds
-        graph['graph_attr'] = (graph['graph_attr'] - train_graph_feature_means) / train_graph_feature_stds
-
-    # set up data sets
-    test_dataset = dataset[test_indices]
-    val_dataset = dataset[val_indices]
-    train_dataset = dataset[train_indices]
-
-    # set up dataloaders
-    test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
-    val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False)
-
-    # TRAINING
-
-    ################################
-    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-    model = GilmerNet(21, 16)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min',
-                                                           factor=0.7, patience=5,
-                                                           min_lr=0.00001)
-    output = Trainer(model, optimizer, scheduler).run(train_loader, val_loader, test_loader, n_epochs=300)
-
-    with open('out_ml_pol_group_ten.log', 'w') as fh:
-        fh.write(output)
-    ################################
-
-
 def target_scaling():
 
     ggs = GraphGeneratorSettings.natQ2(targets=[QmTarget.POLARISABILITY])
@@ -351,7 +262,8 @@ def target_scaling():
         # train_node_feature_matrix.extend(dataset.graph_node_features[idx])
         train_node_feature_matrix.extend(dataset[idx]['x'].detach().numpy())
 
-        train_edge_feature_matrix.extend(dataset.graph_edge_features[idx])
+        train_edge_feature_matrix.extend(dataset[idx]['edge_attr'].detach().numpy())
+        # train_edge_feature_matrix.extend(dataset.graph_edge_features[idx])
         train_graph_feature_matrix.append(dataset[idx]['graph_attr'].detach().numpy())
 
         train_target_matrix.append(dataset[idx]['y'].detach().numpy())
@@ -415,186 +327,7 @@ def target_scaling():
     ################################
 
 
-def group_ten_neutral_only():
-
-    ggs = GraphGeneratorSettings.natQ2(targets=[QmTarget.POLARISABILITY])
-
-    with open('/home/hkneiding/Downloads/outliers_polarizability.pickle', 'rb') as fh:
-        outliers = pickle.load(fh)
-
-    with open('/home/hkneiding/Downloads/not_group_10_neutral_csd_codes.pickle', 'rb') as fh:
-        exclude_csd_codes = pickle.load(fh)
-
-    exclude = list(set(outliers + exclude_csd_codes))
-
-    dataset = tmQMg(root='/home/hkneiding/Desktop/pyg-dataset-test-dir/run1/', raw_dir='/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/', settings=ggs, exclude=exclude)
-    print('Using ' + str(len(dataset)) + ' data points.')
-    np.random.seed(2022)
-
-    # get a random permutation of indices
-    shuffled_indices = np.random.permutation(len(dataset))
-
-    # assign indices to train, val and test sets
-    test_indices = shuffled_indices[:round(0.1 * len(dataset))]
-    val_indices = shuffled_indices[round(0.1 * len(dataset)):round(0.2 * len(dataset))]
-    train_indices = shuffled_indices[round(0.2 * len(dataset)):]
-
-    # build node and edge feature matrices for the training data points
-    train_node_feature_matrix = []
-    train_edge_feature_matrix = []
-    train_graph_feature_matrix = []
-    for idx in train_indices:
-        # train_node_feature_matrix.extend(dataset.graph_node_features[idx])
-        train_node_feature_matrix.extend(dataset[idx]['x'].detach().numpy())
-
-        train_edge_feature_matrix.extend(dataset.graph_edge_features[idx])
-        train_graph_feature_matrix.append(dataset[idx]['graph_attr'].detach().numpy())
-    train_node_feature_matrix = np.array(train_node_feature_matrix)
-    train_edge_feature_matrix = np.array(train_edge_feature_matrix)
-    train_graph_feature_matrix = np.array(train_graph_feature_matrix)
-
-    # get train means and standard deviations for node features
-    train_node_feature_means = np.mean(train_node_feature_matrix, axis=0)
-    train_node_feature_stds = np.std(train_node_feature_matrix, axis=0)
-    # get train means and standard deviations for edge features
-    train_edge_feature_means = np.mean(train_edge_feature_matrix, axis=0)
-    train_edge_feature_stds = np.std(train_edge_feature_matrix, axis=0)
-    # get train means and standard deviations for graph features
-    train_graph_feature_means = np.mean(train_graph_feature_matrix, axis=0)
-    train_graph_feature_stds = np.std(train_graph_feature_matrix, axis=0)
-
-    if len(np.where(train_node_feature_stds == 0)[0]) > 0:
-        print('There are node features with standard deviation 0 within the training set.')
-
-    if len(np.where(train_edge_feature_stds == 0)[0]) > 0:
-        print('There are edge features with standard deviation 0 within the training set.')
-
-    if len(np.where(train_graph_feature_stds == 0)[0]) > 0:
-        print('There are graph features with standard deviation 0 within the training set.')
-
-    # scale graph, node and edge features according to train means and standard deviations
-    for graph in dataset:
-        graph['x'] = (graph['x'] - train_node_feature_means) / train_node_feature_stds
-        graph['edge_attr'] = (graph['edge_attr'] - train_edge_feature_means) / train_edge_feature_stds
-        graph['graph_attr'] = (graph['graph_attr'] - train_graph_feature_means) / train_graph_feature_stds
-
-    # set up data sets
-    test_dataset = dataset[test_indices]
-    val_dataset = dataset[val_indices]
-    train_dataset = dataset[train_indices]
-
-    # set up dataloaders
-    test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
-    val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False)
-
-    # TRAINING
-
-    ################################
-    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-    model = GilmerNet(21, 16)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min',
-                                                           factor=0.7, patience=5,
-                                                           min_lr=0.00001)
-    output = Trainer(model, optimizer, scheduler).run(train_loader, val_loader, test_loader, n_epochs=300)
-
-    with open('out_ml_pol_group_ten_neutral.log', 'w') as fh:
-        fh.write(output)
-    ################################
-
-
-def neutral_only():
-
-    ggs = GraphGeneratorSettings.natQ2(targets=[QmTarget.POLARISABILITY])
-
-    with open('/home/hkneiding/Downloads/outliers_polarizability.pickle', 'rb') as fh:
-        outliers = pickle.load(fh)
-
-    with open('/home/hkneiding/Downloads/not_neutral_csd_codes.pickle', 'rb') as fh:
-        exclude_csd_codes = pickle.load(fh)
-
-    exclude = list(set(outliers + exclude_csd_codes))
-
-    dataset = tmQMg(root='/home/hkneiding/Desktop/pyg-dataset-test-dir/run1/', raw_dir='/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/', settings=ggs, exclude=exclude)
-    print('Using ' + str(len(dataset)) + ' data points.')
-    np.random.seed(2022)
-
-    # get a random permutation of indices
-    shuffled_indices = np.random.permutation(len(dataset))
-
-    # assign indices to train, val and test sets
-    test_indices = shuffled_indices[:round(0.1 * len(dataset))]
-    val_indices = shuffled_indices[round(0.1 * len(dataset)):round(0.2 * len(dataset))]
-    train_indices = shuffled_indices[round(0.2 * len(dataset)):]
-
-    # build node and edge feature matrices for the training data points
-    train_node_feature_matrix = []
-    train_edge_feature_matrix = []
-    train_graph_feature_matrix = []
-    for idx in train_indices:
-        # train_node_feature_matrix.extend(dataset.graph_node_features[idx])
-        train_node_feature_matrix.extend(dataset[idx]['x'].detach().numpy())
-
-        train_edge_feature_matrix.extend(dataset.graph_edge_features[idx])
-        train_graph_feature_matrix.append(dataset[idx]['graph_attr'].detach().numpy())
-    train_node_feature_matrix = np.array(train_node_feature_matrix)
-    train_edge_feature_matrix = np.array(train_edge_feature_matrix)
-    train_graph_feature_matrix = np.array(train_graph_feature_matrix)
-
-    # get train means and standard deviations for node features
-    train_node_feature_means = np.mean(train_node_feature_matrix, axis=0)
-    train_node_feature_stds = np.std(train_node_feature_matrix, axis=0)
-    # get train means and standard deviations for edge features
-    train_edge_feature_means = np.mean(train_edge_feature_matrix, axis=0)
-    train_edge_feature_stds = np.std(train_edge_feature_matrix, axis=0)
-    # get train means and standard deviations for graph features
-    train_graph_feature_means = np.mean(train_graph_feature_matrix, axis=0)
-    train_graph_feature_stds = np.std(train_graph_feature_matrix, axis=0)
-
-    if len(np.where(train_node_feature_stds == 0)[0]) > 0:
-        print('There are node features with standard deviation 0 within the training set.')
-
-    if len(np.where(train_edge_feature_stds == 0)[0]) > 0:
-        print('There are edge features with standard deviation 0 within the training set.')
-
-    if len(np.where(train_graph_feature_stds == 0)[0]) > 0:
-        print('There are graph features with standard deviation 0 within the training set.')
-
-    # scale graph, node and edge features according to train means and standard deviations
-    for graph in dataset:
-        graph['x'] = (graph['x'] - train_node_feature_means) / train_node_feature_stds
-        graph['edge_attr'] = (graph['edge_attr'] - train_edge_feature_means) / train_edge_feature_stds
-        graph['graph_attr'] = (graph['graph_attr'] - train_graph_feature_means) / train_graph_feature_stds
-
-    # set up data sets
-    test_dataset = dataset[test_indices]
-    val_dataset = dataset[val_indices]
-    train_dataset = dataset[train_indices]
-
-    # set up dataloaders
-    test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
-    val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False)
-
-    # TRAINING
-
-    ################################
-    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-    model = GilmerNet(21, 16)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min',
-                                                           factor=0.7, patience=5,
-                                                           min_lr=0.00001)
-    output = Trainer(model, optimizer, scheduler).run(train_loader, val_loader, test_loader, n_epochs=300)
-
-    with open('out_ml_pol_neutral.log', 'w') as fh:
-        fh.write(output)
-    ################################
-
-
 # - - - entry point - - - #
 if __name__ == "__main__":
-    neutral_only()
-    group_ten_neutral_only()
-    group_ten_only()
     target_scaling()
     main()

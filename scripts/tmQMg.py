@@ -11,6 +11,7 @@ from nbo2graph.graph_generator_settings import GraphGeneratorSettings
 
 
 class tmQMg(Dataset):
+
     def __init__(self, root: str, raw_dir: str, settings: GraphGeneratorSettings, exclude: list[str] = []):
 
         # if root path does not exist create folder
@@ -32,10 +33,6 @@ class tmQMg(Dataset):
 
         # set up graph generator
         self._graph_generator = GraphGenerator(settings)
-
-        # matrices to store all corresponding features
-        self._graph_node_features = []
-        self._graph_edge_features = []
 
         # start super class
         super().__init__(root)
@@ -68,14 +65,6 @@ class tmQMg(Dataset):
     @property
     def processed_file_names(self):
         return 'data'
-
-    @property
-    def graph_node_features(self):
-        return self._graph_node_features
-
-    @property
-    def graph_edge_features(self):
-        return self._graph_edge_features
 
     def download(self):
 
@@ -203,9 +192,6 @@ class tmQMg(Dataset):
             graphs.append(graph)
             # write to file
             torch.save(graph, self.pytorch_geometric_dir + '/' + file_name + self._pytorch_graph_file_extension)
-
-            self._graph_node_features.append(graph['x'].detach().numpy())
-            self._graph_edge_features.append(graph['edge_attr'].detach().numpy())
 
         return graphs
 
