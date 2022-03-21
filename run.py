@@ -35,30 +35,21 @@ import networkx as nx
 
 def main():
 
-    nx_graph = nx.read_gml('/home/hkneiding/Desktop/ACIFEA.gml')
-
-    graph = Graph.from_networkx(nx_graph)
-
-    graph.visualise()
-
-    exit()
-
     # setup target directory path
     path = '/home/hkneiding/Documents/UiO/Data/tmQMg/raw/'
-    file_name = 'ACIFEA'
+    file_name = 'OREDIA'
     qm_data = DataParser(path + file_name + '.log').parse()
 
     # FileHandler.write_dict_to_json_file('/home/hkneiding/Desktop/' + file_name + '.json', qm_data)
 
     qm_data_object = QmData.from_dict(qm_data)
-
     ggs = GraphGeneratorSettings.natQ2([QmTarget.SVP_HOMO_LUMO_GAP])
-
     gg = GraphGenerator(settings=ggs)
     graph = gg.generate_graph(qm_data_object)
     nx.write_gml(graph.get_networkx_graph_object(), '/home/hkneiding/Desktop/' + file_name + '.gml')
 
-    # graph.visualise()
+    exit()
+    graph.visualise()
 
     # nx_graph = graph.get_networkx_graph_object()
     # print(nx_graph.nodes.data())
