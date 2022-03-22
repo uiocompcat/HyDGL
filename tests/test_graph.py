@@ -235,7 +235,8 @@ class TestGraph(unittest.TestCase):
                 edge_attr=torch.tensor([[-2.], [-2.], [3.], [3.], [4.], [4.], [1.], [1.], [10.], [10.]], dtype=torch.float),
                 y=torch.tensor([12.34], dtype=torch.float),
                 num_nodes=5,
-                graph_attr=torch.tensor([], dtype=torch.float)
+                graph_attr=torch.tensor([], dtype=torch.float),
+                id=None
             )
         ],
 
@@ -253,7 +254,8 @@ class TestGraph(unittest.TestCase):
                 edge_attr=torch.tensor([[-2.], [-2.], [3.], [3.], [4.], [1.], [10.], [10.]], dtype=torch.float),
                 y=torch.tensor([12.34], dtype=torch.float),
                 num_nodes=5,
-                graph_attr=torch.tensor([], dtype=torch.float)
+                graph_attr=torch.tensor([], dtype=torch.float),
+                id=None
             )
         ],
 
@@ -271,7 +273,7 @@ class TestGraph(unittest.TestCase):
                 edge_attr=torch.tensor([[0, 1, 0, 0], [0, 1, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1], [0, 0, 0, 1]], dtype=torch.float),
                 y=torch.tensor([12.34], dtype=torch.float),
                 num_nodes=5,
-                graph_attr=torch.tensor([1.35], dtype=torch.float)
+                graph_attr=torch.tensor([1.35], dtype=torch.float),
             )
         ],
 
