@@ -68,12 +68,14 @@ class GraphGenerator:
         # get targets
         targets = self._get_targets(qm_data)
 
+        # get meta_data
+        meta_data = self._get_meta_data(qm_data)
+
         return Graph(nodes,
                      edges,
                      targets=targets,
                      graph_features=graph_features,
-                     id=qm_data.id,
-                     stoichiometry=qm_data.stoichiometry)
+                     meta_data=meta_data)
 
     # deprecated
     def _get_node_labels(self, qm_data: QmData) -> list[str]:
@@ -1455,3 +1457,20 @@ class GraphGenerator:
                 resolved_stabilisation_energies.append(min_energies)
 
         return resolved_stabilisation_energies
+
+    def _get_meta_data(self, qm_data: QmData):
+
+        for atomic_number in qm_data.atomic_numbers:
+            if atomic_number in ElementLookUpTable.transition_metal_atomic_numbers:
+                metal_center_element = ElementLookUpTable.get_element_identifier(atomic_number)
+
+        meta_data = {
+            'id': qm_data.id,
+            'n_atoms': qm_data.n_atoms,
+            'n_electrons': (sum(qm_data.atomic_numbers) - qm_data.charge),
+            'metal_center_element': metal_center_element,
+            'metal_center_group': ElementLookUpTable.atom_format_dict[metal_center_element]['group'],
+            'metal_center_period': ElementLookUpTable.atom_format_dict[metal_center_element]['period']
+        }
+
+        return meta_data

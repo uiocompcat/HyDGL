@@ -3034,3 +3034,30 @@ class TestGraphGenerator(unittest.TestCase):
         result = gg._get_default_orbital_occupations(qm_data, nbo_type)
 
         Utils.assert_are_almost_equal(result, expected)
+
+    @parameterized.expand([
+
+        [
+            TEST_FILE_LALMER,
+            {
+                'id': 'LALMER',
+                'n_atoms': 47,
+                'n_electrons': 288,
+                'metal_center_element': 'Cd',
+                'metal_center_group': 12,
+                'metal_center_period': 5
+            }
+        ],
+
+    ])
+    def test_get_meta_data(self, file_path, expected):
+
+        # load data
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
+
+        # set up graph generator (default values)
+        gg = GraphGenerator(GraphGeneratorSettings.default())
+
+        result = gg._get_meta_data(qm_data)
+
+        Utils.assert_are_almost_equal(result, expected)
