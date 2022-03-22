@@ -16,13 +16,13 @@ class TestGraph(unittest.TestCase):
 
         [
             Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
-                  [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0]), Edge([2, 4], features=[0])], id='TestGraph'),
+                  [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0]), Edge([2, 4], features=[0])], meta_data={'id': 'TestGraph'}),
             True
         ],
 
         [
             Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
-                  [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0])], id='TestGraph'),
+                  [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0])], meta_data={'id': 'TestGraph'}),
             False
         ],
 
@@ -35,10 +35,10 @@ class TestGraph(unittest.TestCase):
 
         [
             Graph([Node(features=[0]), Node(features=[1]), Node(features=[2])],
-                  [Edge([0, 1], features=[3])], id='TestGraph'),
+                  [Edge([0, 1], features=[3])], meta_data={'id': 'TestGraph'}),
             [
-                Graph([Node(features=[0]), Node(features=[1])], [Edge([0, 1], features=[3])], id='TestGraph-subgraph-0'),
-                Graph([Node(features=[2])], edges=[], id='TestGraph-subgraph-1'),
+                Graph([Node(features=[0]), Node(features=[1])], [Edge([0, 1], features=[3])], meta_data={'id': 'TestGraph-subgraph-0'}),
+                Graph([Node(features=[2])], edges=[], meta_data={'id': 'TestGraph-subgraph-1'}),
             ]
         ],
 
@@ -52,13 +52,13 @@ class TestGraph(unittest.TestCase):
 
         [
             Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
-                  [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0]), Edge([2, 4], features=[0])], id='TestGraph'),
+                  [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0]), Edge([2, 4], features=[0])], meta_data={'id': 'TestGraph'}),
             [[0, 1, 2, 3, 4]]
         ],
 
         [
             Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
-                  [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0])], id='TestGraph'),
+                  [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0])], meta_data={'id': 'TestGraph'}),
             [[0, 1, 2, 3], [4]]
         ],
 
@@ -335,7 +335,7 @@ class TestGraph(unittest.TestCase):
             Graph(
                 [Node(), Node()],
                 [Edge([0, 1])],
-                targets={}, id='TestGraph'
+                targets={}, meta_data={'id': 'TestGraph'}
             ),
             {
                 'graph': nx.MultiGraph(),
@@ -350,7 +350,7 @@ class TestGraph(unittest.TestCase):
             Graph(
                 [Node(features=[0, 1]), Node(features=[1, 0])],
                 [Edge([0, 1], features=[-2, 2])],
-                targets={'a': 12.34, 'b': 23.45, 'c': 34.56}, id='TestGraph'
+                targets={'a': 12.34, 'b': 23.45, 'c': 34.56}, meta_data={'id': 'TestGraph'}
             ),
             {
                 'graph': nx.MultiGraph(),
@@ -365,7 +365,7 @@ class TestGraph(unittest.TestCase):
             Graph(
                 [Node(features=[0, 1]), Node(features=[1, 0])],
                 [Edge([0, 1], features=[-2, 2], is_directed=True)],
-                targets={'a': 12.34, 'b': 23.45, 'c': 34.56}, id='TestGraph'
+                targets={'a': 12.34, 'b': 23.45, 'c': 34.56}, meta_data={'id': 'TestGraph'}
             ),
             {
                 'graph': nx.MultiDiGraph(),
@@ -380,7 +380,7 @@ class TestGraph(unittest.TestCase):
             Graph(
                 [Node(features=[0, 1], position=[0, 1, 2], label='A'), Node(features=[1, 0], position=[3, 4, 5], label='B')],
                 [Edge([0, 1], features=[-2, 2], is_directed=True)],
-                targets={'a': 12.34, 'b': 23.45, 'c': 34.56}, id='TestGraph'
+                targets={'a': 12.34, 'b': 23.45, 'c': 34.56}, meta_data={'id': 'TestGraph'}
             ),
             {
                 'graph': nx.MultiDiGraph(),
@@ -436,7 +436,7 @@ class TestGraph(unittest.TestCase):
                 [Edge([0, 1], features={'edge_feature': 1}), Edge([1, 2], features={'edge_feature': 1})],
                 targets={'some_target': 1.2},
                 graph_features={'graph_feature': 2, 'graph_feature_1': 'type'},
-                id='testgraph'
+                meta_data={'id': 'TestGraph'}
             ),
         ],
 
@@ -444,7 +444,7 @@ class TestGraph(unittest.TestCase):
             Graph(
                 [Node(label='A', position=[0, 1, 2]), Node(label='B', position=[3, 4, 5]), Node(label='C', position=[6, 7, 8])],
                 [Edge([0, 1]), Edge([1, 2])],
-                targets={}, id='testgraph'
+                targets={}, meta_data={'id': 'TestGraph'}
             ),
         ],
 
@@ -452,7 +452,7 @@ class TestGraph(unittest.TestCase):
             Graph(
                 [Node(), Node(), Node()],
                 [Edge([0, 1]), Edge([1, 2])],
-                targets={}, id='testgraph'
+                targets={}, meta_data={'id': 'TestGraph'}
             ),
         ],
 
@@ -460,7 +460,7 @@ class TestGraph(unittest.TestCase):
             Graph(
                 [Node(), Node(), Node()],
                 [Edge([0, 1], is_directed=True), Edge([1, 2], is_directed=True)],
-                targets={}, id='testgraph'
+                targets={}, meta_data={'id': 'TestGraph'}
             ),
         ],
 

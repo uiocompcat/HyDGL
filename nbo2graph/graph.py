@@ -13,21 +13,19 @@ class Graph:
 
     """Class for representing chemical graphs with all necessary information."""
 
-    def __init__(self, nodes: list[Node], edges: list[Edge], targets: dict = {}, graph_features: dict = {}, id: str = None, stoichiometry: str = None):
+    def __init__(self, nodes: list[Node], edges: list[Edge], targets: dict = {}, graph_features: dict = {}, meta_data: dict = {'id': None}):
 
         """Constructor
 
         Args:
-            id (string): Identifier inferred from the file name.
-            stoichiometry (string): Stoichiometry of the molecule.
+            metadata (dict): Meta data of the graph.
             nodes (list[list[floats]]): List of node feature vectors.
             edges (list[list[int], list[float]]): List with individual sublists for connected node indices as well as edge features.
             targets (list[float]): List of targets/labels associated to graph (e.g. HOMO-LUMO gap).
             graph_features (list): List of graph level features.
         """
 
-        self._id = id
-        self._stoichiometry = stoichiometry
+        self._meta_data = meta_data
 
         self._nodes = nodes
         self._edges = edges
@@ -98,32 +96,15 @@ class Graph:
                     edge_features[edge_feature_key[len('feature_'):]] = edge[2][edge_feature_key]
             edges.append(Edge([int(edge[0]), int(edge[1])], features=edge_features, is_directed=nx.is_directed(nx_graph)))
 
-        return cls(nodes=nodes, edges=edges, targets=targets, graph_features=graph_features, id=id)
-
-    def __str__(self):
-
-        out = 'Graph Info:\n\n'
-        out += f'ID: {self.id}\nStoichiometry: {self.stoichiometry}\n\n'
-        out += f'Number of nodes: {len(self.nodes)}\n'
-        out += f'Number of edges: {len(self.edges)}\n\n'
-
-        return out
+        return cls(nodes=nodes, edges=edges, targets=targets, graph_features=graph_features, meta_data={'id': id})
 
     @property
     def id(self):
         """Getter for id."""
 
-        if self._id is None:
-            warnings.warn('Graph ID not set.')
-        return self._id
-
-    @property
-    def stoichiometry(self):
-        """Getter for stoichiometry."""
-
-        if self._stoichiometry is None:
-            warnings.warn('Graph ID not set.')
-        return self._stoichiometry
+        if 'id' in self._meta_data:
+            return self._meta_data['id']
+        return None
 
     @property
     def nodes(self):
@@ -382,7 +363,7 @@ class Graph:
                 edges.append(Edge(edge_indices, features=self.edges[idx].features))
 
             # set graph
-            graph = Graph(nodes, edges, id=str(self.id) + '-subgraph-' + str(i))
+            graph = Graph(nodes, edges, meta_data={'id': str(self.id) + '-subgraph-' + str(i)})
             # append to list
             subgraphs.append(graph)
 
