@@ -107,6 +107,11 @@ class Graph:
         return None
 
     @property
+    def meta_data(self):
+        """Getter for meta data."""
+        return self._meta_data
+
+    @property
     def nodes(self):
         """Getter for nodes."""
         return self._nodes
@@ -272,7 +277,13 @@ class Graph:
         targets = torch.tensor(targets, dtype=torch.float)
 
         # set up full pytorch data object
-        data = Data(x=node_features, edge_index=edge_indices.t().contiguous(), edge_attr=edge_features, y=targets, num_nodes=len(self.nodes), graph_attr=graph_features, id=self._meta_data['id'])
+        data = Data(
+            x=node_features,
+            edge_index=edge_indices.t().contiguous(),
+            edge_attr=edge_features, y=targets, num_nodes=len(self.nodes),
+            graph_attr=graph_features,
+            id=self._meta_data['id']
+        )
 
         return data
 
