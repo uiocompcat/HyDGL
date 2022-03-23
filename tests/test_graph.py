@@ -263,7 +263,7 @@ class TestGraph(unittest.TestCase):
             Graph(
                 [Node(features=[0]), Node(features=[1]), Node(features=[3]), Node(features=[-2]), Node(features=[0])],
                 [Edge([0, 1], features={'test_feature': 'A'}), Edge([0, 2], features={'test_feature': 'B'}), Edge([0, 3], features={'test_feature': 'A'}, is_directed=True), Edge([3, 2], features={'test_feature': 'C'}, is_directed=True), Edge([2, 4], features={'test_feature': 'D'})],
-                targets={'a': 12.34}, graph_features={'gr': 1.35}
+                targets={'a': 12.34}, graph_features={'gr': 1.35}, meta_data={'id': 'test-id'}
             ),
             {'test_feature': ['B', 'A', 'C', 'D']},
             Data(
@@ -274,6 +274,7 @@ class TestGraph(unittest.TestCase):
                 y=torch.tensor([12.34], dtype=torch.float),
                 num_nodes=5,
                 graph_attr=torch.tensor([1.35], dtype=torch.float),
+                id="test-id"
             )
         ],
 
@@ -283,10 +284,8 @@ class TestGraph(unittest.TestCase):
         result = graph.get_pytorch_data_object(edge_class_feature_dict=edge_class_feature_dict)
         self.assertEqual(len(result.keys), len(expected.keys))
 
-        print(result['graph_attr'])
-
         for key in result.keys:
-            if key == 'num_nodes':
+            if key == 'num_nodes' or key == 'id':
                 self.assertTrue(result[key] == expected[key])
             else:
                 self.assertTrue(torch.equal(result[key], expected[key]))
