@@ -51,6 +51,9 @@ class Trainer():
 
     def run(self, train_loader, val_loader, test_loader, n_epochs=300, target_means=None, target_stds=None):
 
+        # set up dict to store training trajectories
+        traj = {'lr': [], 'loss': [], 'train_error': [], 'val_error': [], 'test_error': []}
+
         best_val_error = None
         for epoch in range(1, n_epochs + 1):
 
@@ -80,4 +83,11 @@ class Trainer():
             wandb.log({'val_error': val_error}, step=epoch)
             wandb.log({'test_error': test_error}, step=epoch)
 
+            traj['lr'].append(lr)
+            traj['loss'].append(loss)
+            traj['train_error'].append(train_error)
+            traj['val_error'].append(val_error)
+            traj['test_error'].append(test_error)
+
+        wandb.log({'traj': traj})
         return self.model
