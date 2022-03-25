@@ -1,5 +1,7 @@
 import os
 import torch
+import scipy
+import numpy as np
 from tqdm import tqdm
 from torch_geometric.data import Dataset
 
@@ -67,22 +69,16 @@ class tmQMg(Dataset):
         return 'data'
 
     def download(self):
-
         """Function to download raw data."""
-
         print('Trying to download..')
         raise NotImplementedError('Download function is not implemented.')
 
     def len(self):
-
         """Getter for the number of processed pytorch graphs."""
-
         return len(self.graphs)
 
     def get(self, idx):
-
         """Accessor for processed pytorch graphs."""
-
         return self.graphs[idx]
 
     def process(self):
@@ -93,7 +89,10 @@ class tmQMg(Dataset):
         self.build_graph_objects()
 
         print('Building pytorch graphs..')
-        self.graphs = self.build_pytorch_graphs()
+        self.build_pytorch_graphs()
+
+        print('Loading pytorch graphs..')
+        self.graphs = self.get_built_pytorch_graphs()
 
     def get_class_feature_dicts(self):
 
@@ -174,26 +173,63 @@ class tmQMg(Dataset):
         if not os.path.isdir(self.pytorch_geometric_dir):
             os.mkdir(self.pytorch_geometric_dir)
 
-        graphs = []
-
         # get dict for one-hot edge encoding of edges
         node_class_feature_dict, edge_class_feature_dict = self.get_class_feature_dicts()
+
+        pytorch_graph_files = [file for file in os.listdir(self.pytorch_geometric_dir)]
+        for file_name in tqdm(self.file_names):
+
+            if file_name + self._pytorch_graph_file_extension not in pytorch_graph_files:
+                # read graph object
+                graph_object = FileHandler.read_binary_file(self.graph_object_dir + '/' + file_name + self._graph_object_file_extension)
+                # get pytorch graph
+                graph = graph_object.get_pytorch_data_object(node_class_feature_dict=node_class_feature_dict, edge_class_feature_dict=edge_class_feature_dict)
+                # write to file
+                torch.save(graph, self.pytorch_geometric_dir + '/' + file_name + self._pytorch_graph_file_extension)
+
+    def get_built_pytorch_graphs(self, skip_disconnected: bool = True):
+
+        """Loads the pytorch graphs from pytorch directory.
+
+        Returns:
+            list[pyg.Data]: A list of pytorch geometric graphs.
+        """
+        graphs = []
+        for file_name in tqdm(self.file_names):
+
+            graph = torch.load(self.pytorch_geometric_dir + '/' + file_name + self._pytorch_graph_file_extension)
+
+            if skip_disconnected:
+                # build adjacency matrix from edge index
+                adjacency_list = graph.edge_index.detach().numpy().reshape((-1, 2))
+                adjacency_matrix = np.zeros((graph.num_nodes, graph.num_nodes))
+                for edge in adjacency_list:
+                    adjacency_matrix[edge[0], edge[1]] = 1
+                # check the number of subgraphs
+                if scipy.sparse.csgraph.connected_components(adjacency_matrix)[0] != 1:
+                    continue
+
+            graphs.append(graph)
+
+        return graphs
+
+    def get_meta_data_dict(self):
+
+        """Returns a dict of graphs meta data.
+
+        Returns:
+            dict: A dict containing the meta data for all graphs.
+        """
+
+        meta_data_dict = {}
 
         for file_name in tqdm(self.file_names):
 
             # read graph object
             graph_object = FileHandler.read_binary_file(self.graph_object_dir + '/' + file_name + self._graph_object_file_extension)
-            # skip graph if it is disconnected
-            if not graph_object.is_connected():
-                continue
+            meta_data_dict[file_name] = graph_object.meta_data
 
-            # get pytorch graph
-            graph = graph_object.get_pytorch_data_object(node_class_feature_dict=node_class_feature_dict, edge_class_feature_dict=edge_class_feature_dict)
-            graphs.append(graph)
-            # write to file
-            torch.save(graph, self.pytorch_geometric_dir + '/' + file_name + self._pytorch_graph_file_extension)
-
-        return graphs
+        return meta_data_dict
 
     def clear_directories(self):
 
