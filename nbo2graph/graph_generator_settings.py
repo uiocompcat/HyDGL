@@ -198,6 +198,78 @@ class GraphGeneratorSettings:
                    sopa_contribution_threshold=None)
 
     @classmethod
+    def natQ2extended(cls, targets):
+
+        return cls(node_features=[NodeFeature.ATOMIC_NUMBER,
+                                  NodeFeature.NATURAL_ATOMIC_CHARGE,
+                                  NodeFeature.NATURAL_ELECTRON_POPULATION_VALENCE,
+                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S_SYMMETRY,
+                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P_SYMMETRY,
+                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D_SYMMETRY,
+                                  NodeFeature.LONE_PAIR_MAX,
+                                  NodeFeature.LONE_VACANCY_MIN,
+                                  NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE,
+                                  NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE,
+                                  NodeFeature.LONE_PAIR_S_SYMMETRY,
+                                  NodeFeature.LONE_PAIR_P_SYMMETRY,
+                                  NodeFeature.LONE_PAIR_D_SYMMETRY,
+                                  NodeFeature.LONE_VACANCY_S_SYMMETRY,
+                                  NodeFeature.LONE_VACANCY_P_SYMMETRY,
+                                  NodeFeature.LONE_VACANCY_D_SYMMETRY,
+                                  NodeFeature.BOUND_HYDROGEN_COUNT],
+                   edge_features=[EdgeFeature.BOND_DISTANCE,
+                                  EdgeFeature.NBO_TYPE,
+                                  EdgeFeature.BOND_ORBITAL_MAX,
+                                  EdgeFeature.ANTIBOND_ORBITAL_MIN,
+                                  EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE,
+                                  EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE,
+                                  EdgeFeature.BOND_ORBITAL_S_SYMMETRY,
+                                  EdgeFeature.BOND_ORBITAL_P_SYMMETRY,
+                                  EdgeFeature.BOND_ORBITAL_D_SYMMETRY,
+                                  EdgeFeature.ANTIBOND_ORBITAL_S_SYMMETRY,
+                                  EdgeFeature.ANTIBOND_ORBITAL_P_SYMMETRY,
+                                  EdgeFeature.ANTIBOND_ORBITAL_D_SYMMETRY],
+                   edge_types=[EdgeType.NBO_BONDING_ORBITALS, EdgeType.BOND_ORDER_METAL],
+                   bond_order_mode=BondOrderType.WIBERG,
+                   bond_threshold=DEFAULT_BOND_THRESHOLD,
+                   bond_threshold_metal=0.05,
+                   hydrogen_mode=HydrogenMode.EXPLICIT,
+                   hydrogen_count_threshold=DEFAULT_HYDROGEN_COUNT_THRESHOLD,
+                   sopa_edge_features=[],
+                   graph_features=[GraphFeature.CHARGE, GraphFeature.MOLECULAR_MASS, GraphFeature.N_ATOMS, GraphFeature.N_ELECTRONS],
+                   targets=targets,
+                   sopa_resolution_mode=None,
+                   sopa_interaction_threshold=None,
+                   sopa_contribution_threshold=None)
+
+    @classmethod
+    def natQ2reduced(cls, targets):
+
+        return cls(node_features=[NodeFeature.ATOMIC_NUMBER,
+                                  NodeFeature.NATURAL_ATOMIC_CHARGE,
+                                  NodeFeature.NATURAL_ELECTRON_POPULATION_VALENCE,
+                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S_SYMMETRY,
+                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P_SYMMETRY,
+                                  NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D_SYMMETRY,
+                                  NodeFeature.LONE_PAIR_MAX,
+                                  NodeFeature.LONE_VACANCY_MIN,
+                                  NodeFeature.BOUND_HYDROGEN_COUNT],
+                   edge_features=[EdgeFeature.BOND_DISTANCE,
+                                  EdgeFeature.WIBERG_BOND_ORDER],
+                   edge_types=[EdgeType.NBO_BONDING_ORBITALS, EdgeType.BOND_ORDER_METAL],
+                   bond_order_mode=BondOrderType.WIBERG,
+                   bond_threshold=DEFAULT_BOND_THRESHOLD,
+                   bond_threshold_metal=0.05,
+                   hydrogen_mode=HydrogenMode.OMIT,
+                   hydrogen_count_threshold=DEFAULT_HYDROGEN_COUNT_THRESHOLD,
+                   sopa_edge_features=[],
+                   graph_features=[GraphFeature.CHARGE, GraphFeature.MOLECULAR_MASS, GraphFeature.N_ATOMS, GraphFeature.N_ELECTRONS],
+                   targets=targets,
+                   sopa_resolution_mode=None,
+                   sopa_interaction_threshold=None,
+                   sopa_contribution_threshold=None)
+
+    @classmethod
     def natQ3(cls, targets):
 
         return cls(node_features=[NodeFeature.ATOMIC_NUMBER,
