@@ -34,6 +34,7 @@ class Trainer():
         return loss_all / len(train_loader.dataset)
 
     def _test(self, loader, target_means=None, target_stds=None):
+
         self._model.eval()
         error = 0
 
@@ -48,6 +49,21 @@ class Trainer():
                 error += (self._model(data) - data.y).abs().sum().item()
 
         return error / len(loader.dataset)
+
+    def predict(self, loader, target_means=None, target_stds=None):
+
+        self._model.eval()
+        predictions = []
+
+        for data in loader:
+            data = data.to(self.device)
+
+            if target_means is not None and target_stds is not None:
+                predictions.extend(self.model(data).cpu().detach().numpy().tolist())
+            else:
+                predictions.extend(self.model(data).cpu().detach().numpy().tolist())
+
+        return predictions
 
     def run(self, train_loader, val_loader, test_loader, n_epochs=300, target_means=None, target_stds=None):
 
