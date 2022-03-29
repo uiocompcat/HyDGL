@@ -85,13 +85,10 @@ class tmQMg(Dataset):
 
         print('')
 
-        print('Building graph objects..')
         self.build_graph_objects()
 
-        print('Building pytorch graphs..')
         self.build_pytorch_graphs()
 
-        print('Loading pytorch graphs..')
         self.graphs = self.get_built_pytorch_graphs()
 
     def get_class_feature_dicts(self):
@@ -149,6 +146,8 @@ class tmQMg(Dataset):
 
         """Builds graph objects from previously extracted QmData."""
 
+        print('Building graph objects..')
+
         # create graph_object directory if it does not exist
         if not os.path.isdir(self.graph_object_dir):
             os.mkdir(self.graph_object_dir)
@@ -168,6 +167,8 @@ class tmQMg(Dataset):
     def build_pytorch_graphs(self):
 
         """Builds pytorch graphs from previously built graph objects."""
+
+        print('Building pytorch graphs..')
 
         # create pytorch directory if it does not exist
         if not os.path.isdir(self.pytorch_geometric_dir):
@@ -194,6 +195,9 @@ class tmQMg(Dataset):
         Returns:
             list[pyg.Data]: A list of pytorch geometric graphs.
         """
+
+        print('Loading pytorch graphs..')
+
         graphs = []
         for file_name in tqdm(self.file_names):
 
@@ -220,6 +224,8 @@ class tmQMg(Dataset):
         Returns:
             dict: A dict containing the meta data for all graphs.
         """
+
+        print('Getting meta data dict..')
 
         meta_data_dict = {}
 
