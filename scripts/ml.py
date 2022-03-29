@@ -2,7 +2,6 @@ import pickle
 import torch
 from torch_geometric.loader import DataLoader
 import wandb
-import numpy as np
 
 from tmQMg import tmQMg
 from nbo2graph.enums.qm_target import QmTarget
@@ -10,7 +9,7 @@ from nbo2graph.graph_generator_settings import GraphGeneratorSettings
 from nets import GilmerNet
 from trainer import Trainer
 from tools import get_feature_matrix_dict, get_feature_means_from_feature_matrix_dict, get_feature_stds_from_feature_matrix_dict, set_global_seed, standard_scale_dataset
-from plot import plot_metal_center_group_histogram, plot_correlation, plot_error_by_metal_center_group, wandb_plot_error_by_metal_center_group, wandb_plot_metal_center_group_histogram
+from plot import plot_metal_center_group_histogram, plot_correlation, plot_error_by_metal_center_group, wandb_plot_error_by_metal_center_group
 
 
 def run_ml(hyper_param: dict, wandb_project_name: str = 'tmQMg-natQgraph2', wandb_entity: str = 'hkneiding'):
@@ -81,8 +80,10 @@ def run_ml(hyper_param: dict, wandb_project_name: str = 'tmQMg-natQgraph2', wand
     plot_correlation(predicted_values, true_values, file_path=tmp_file_path)
     wandb.log({'Test set prediction correlation': wandb.Image(tmp_file_path)})
 
-    wandb.log({"test_set_error_by_metal": wandb_plot_error_by_metal_center_group(predicted_values, true_values, metal_center_groups)})
+    plot_error_by_metal_center_group(predicted_values, true_values, metal_center_groups, file_path=tmp_file_path)
+    wandb.log({'Test set error by metal center group': wandb.Image(tmp_file_path)})
 
+    wandb.log({"test_set_error_by_metal": wandb_plot_error_by_metal_center_group(predicted_values, true_values, metal_center_groups)})
 
     # end run
     wandb.finish(exit_code=0)
@@ -100,7 +101,7 @@ def run_base():
             'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run1/',
             'raw_dir': '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/',
             'val_set_size': 0.1,
-            'test_set_size': 0.8,
+            'test_set_size': 0.1,
             'graph_representation': GraphGeneratorSettings.natQ2,
             'targets': [QmTarget.POLARISABILITY],
             'outliers': outliers
