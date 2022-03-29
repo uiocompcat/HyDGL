@@ -145,7 +145,7 @@ def run_reduced():
         'name': 'reduced',
         'data': {
             'dataset': tmQMg,
-            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run1/',
+            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run2/',
             'raw_dir': '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/',
             'val_set_size': 0.1,
             'test_set_size': 0.1,
@@ -199,7 +199,7 @@ def run_extended():
         'name': 'extended',
         'data': {
             'dataset': tmQMg,
-            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run1/',
+            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run3/',
             'raw_dir': '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/',
             'val_set_size': 0.1,
             'test_set_size': 0.1,
