@@ -58,14 +58,14 @@ def run_ml(hyper_param: dict, wandb_project_name: str = 'tmQMg-natQgraph2', wand
     scheduler = hyper_param['scheduler']['method'](optimizer, **hyper_param['scheduler']['parameters'])
 
     # run
-    trained_model = Trainer(model, optimizer, scheduler).run(train_loader, val_loader, test_loader, n_epochs=hyper_param['n_epochs'], target_means=train_target_means, target_stds=train_target_stds)
+    trainer = Trainer(model, optimizer, scheduler)
+    trained_model = trainer.run(train_loader, val_loader, test_loader, n_epochs=hyper_param['n_epochs'], target_means=train_target_means, target_stds=train_target_stds)
 
     # get test set predictions and ground truths
-    predicted_values = []
+    predicted_values = trainer.predict(test_loader, train_target_means, train_target_stds)
     true_values = []
     metal_center_groups = []
     for batch in test_loader:
-        predicted_values.extend(trained_model(batch).cpu().detach().numpy().tolist())
         true_values.extend(batch.y.cpu().detach().numpy().tolist())
         metal_center_groups.extend([meta_data_dict[id]['metal_center_group'] for id in batch.id])
 
