@@ -2,6 +2,7 @@ import pickle
 import torch
 from torch_geometric.loader import DataLoader
 import wandb
+import numpy as np
 
 from tmQMg import tmQMg
 from nbo2graph.enums.qm_target import QmTarget
@@ -9,7 +10,7 @@ from nbo2graph.graph_generator_settings import GraphGeneratorSettings
 from nets import GilmerNet
 from trainer import Trainer
 from tools import get_feature_matrix_dict, get_feature_means_from_feature_matrix_dict, get_feature_stds_from_feature_matrix_dict, set_global_seed, standard_scale_dataset
-from plot import plot_metal_center_group_histogram, plot_correlation, plot_error_by_metal_center_group
+from plot import plot_metal_center_group_histogram, plot_correlation, plot_error_by_metal_center_group, wandb_plot_error_by_metal_center_group, wandb_plot_metal_center_group_histogram
 
 
 def run_ml(hyper_param: dict, wandb_project_name: str = 'tmQMg-natQgraph2', wandb_entity: str = 'hkneiding'):
@@ -66,17 +67,22 @@ def run_ml(hyper_param: dict, wandb_project_name: str = 'tmQMg-natQgraph2', wand
     true_values = []
     metal_center_groups = []
     for batch in test_loader:
-        true_values.extend(batch.y.cpu().detach().numpy().tolist())
+        true_values.extend((batch.y.cpu().detach().numpy() * train_target_stds + train_target_means).tolist())
         metal_center_groups.extend([meta_data_dict[id]['metal_center_group'] for id in batch.id])
 
     # log plots
-    wandb.log({'Training set metal center group histogram': plot_metal_center_group_histogram(sets[0], meta_data_dict)})
-    wandb.log({'Validation set metal center group histogram': plot_metal_center_group_histogram(sets[1], meta_data_dict)})
-    wandb.log({'Test set metal center group histogram': plot_metal_center_group_histogram(sets[2], meta_data_dict)})
+    # wandb.log({'Training set metal center group histogram': plot_metal_center_group_histogram(sets[0], sets[1], sets[2], meta_data_dict)})
 
-    wandb.log({'Test set prediction correlation': plot_correlation(predicted_values, true_values)})
+    tmp_file_path = '/tmp/image.png'
 
-    wandb.log({'Test set error by metal center group': plot_error_by_metal_center_group(predicted_values, true_values, metal_center_groups)})
+    plot_metal_center_group_histogram(sets[0], sets[1], sets[2], meta_data_dict, file_path=tmp_file_path)
+    wandb.log({'Metal center group distribution among sets': wandb.Image(tmp_file_path)})
+
+    plot_correlation(predicted_values, true_values, file_path=tmp_file_path)
+    wandb.log({'Test set prediction correlation': wandb.Image(tmp_file_path)})
+
+    wandb.log({"test_set_error_by_metal": wandb_plot_error_by_metal_center_group(predicted_values, true_values, metal_center_groups)})
+
 
     # end run
     wandb.finish(exit_code=0)
@@ -94,7 +100,7 @@ def run_base():
             'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run1/',
             'raw_dir': '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/',
             'val_set_size': 0.1,
-            'test_set_size': 0.1,
+            'test_set_size': 0.8,
             'graph_representation': GraphGeneratorSettings.natQ2,
             'targets': [QmTarget.POLARISABILITY],
             'outliers': outliers
@@ -129,7 +135,7 @@ def run_base():
             'features_to_scale': ['x', 'edge_attr', 'graph_attr', 'y']
         },
         'batch_size': 32,
-        'n_epochs': 300,
+        'n_epochs': 3,
         'seed': 2022
     }
 
@@ -246,6 +252,11 @@ def run_extended():
 
 # - - - entry point - - - #
 if __name__ == "__main__":
+
+    # api = wandb.Api()
+    # run = api.run("hkneiding/tmQMg-natQgraph2/17j02lpm")
+
     run_base()
+    exit()
     run_reduced()
     run_extended()
