@@ -59,7 +59,7 @@ class Trainer():
             data = data.to(self.device)
 
             if target_means is not None and target_stds is not None:
-                predictions.extend(self.model(data).cpu().detach().numpy().tolist())
+                predictions.extend((self.model(data).cpu().detach().numpy() * target_stds + target_means).tolist())
             else:
                 predictions.extend(self.model(data).cpu().detach().numpy().tolist())
 
