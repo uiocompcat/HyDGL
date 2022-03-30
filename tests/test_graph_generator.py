@@ -564,6 +564,20 @@ class TestGraphGenerator(unittest.TestCase):
             TEST_FILE_LALMER,
             HydrogenMode.OMIT,
             BondOrderType.NLMO,
+            [NodeFeature.LONE_PAIR_AVERAGE],
+            0,
+            Node(features={
+                'n_lone_pairs': 5,
+                'lone_pair_average_energy': -0.627936,
+                'lone_pair_average_occupation': 1.996892,
+            }, position=[-0.106076, -0.278587, -0.332310], label='Cd')
+        ],
+
+
+        [
+            TEST_FILE_LALMER,
+            HydrogenMode.OMIT,
+            BondOrderType.NLMO,
             [NodeFeature.LONE_VACANCY_AVERAGE, NodeFeature.LONE_VACANCY_S_SYMMETRY, NodeFeature.LONE_VACANCY_P_SYMMETRY, NodeFeature.LONE_VACANCY_D_SYMMETRY, NodeFeature.LONE_VACANCY_F_SYMMETRY],
             0,
             Node(features={
@@ -625,6 +639,19 @@ class TestGraphGenerator(unittest.TestCase):
                 'lone_vacancy_min_1': 0.0001,
                 'lone_vacancy_min_2': 0.9984,
                 'lone_vacancy_min_3': 0.0
+            }, position=[-1.339211, 0.079206, -0.361021], label='Ir')
+        ],
+
+        [
+            TEST_FILE_OREDIA,
+            HydrogenMode.OMIT,
+            BondOrderType.NLMO,
+            [NodeFeature.LONE_VACANCY_MIN],
+            0,
+            Node(features={
+                'n_lone_vacancies': 2,
+                'lone_vacancy_min_energy': -0.16639,
+                'lone_vacancy_min_occupation': 0.76906,
             }, position=[-1.339211, 0.079206, -0.361021], label='Ir')
         ],
 
@@ -1526,6 +1553,20 @@ class TestGraphGenerator(unittest.TestCase):
 
         [
             TEST_FILE_ZUYHEG,
+            [3, 7],
+            [EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE, EdgeFeature.BOND_ORBITAL_AVERAGE, EdgeFeature.BOND_ORBITAL_MAX],
+            {
+                'n_bn': 1,
+                'bond_energy_min_max_difference': 0.0,
+                'bond_average_energy': -0.41717,
+                'bond_average_occupation': 1.76966,
+                'bond_max_energy': -0.41717,
+                'bond_max_occupation': 1.76966,
+            }
+        ],
+
+        [
+            TEST_FILE_ZUYHEG,
             [7, 8],
             [EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE, EdgeFeature.BOND_ORBITAL_AVERAGE, EdgeFeature.BOND_ORBITAL_MAX,
              EdgeFeature.BOND_ORBITAL_S_SYMMETRY, EdgeFeature.BOND_ORBITAL_P_SYMMETRY, EdgeFeature.BOND_ORBITAL_D_SYMMETRY, EdgeFeature.BOND_ORBITAL_F_SYMMETRY],
@@ -1567,6 +1608,20 @@ class TestGraphGenerator(unittest.TestCase):
                 'antibond_min_1': 0.6507333333333333,
                 'antibond_min_2': 0.005166666666666666,
                 'antibond_min_3': 0.00036666666666666667
+            }
+        ],
+
+        [
+            TEST_FILE_ZUYHEG,
+            [8, 9],
+            [EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE, EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_MIN],
+            {
+                'n_bn': 1,
+                'antibond_energy_min_max_difference': 0.0,
+                'antibond_average_energy': 0.27167,
+                'antibond_average_occupation': 0.11428,
+                'antibond_min_energy': 0.27167,
+                'antibond_min_occupation': 0.11428,
             }
         ],
 

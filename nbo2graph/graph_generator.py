@@ -356,7 +356,7 @@ class GraphGenerator:
             else:
                 edge_features['bond_energy_min_max_difference'] = 0.0
 
-        if EdgeFeature.BOND_ORBITAL_MAX in self._settings.edge_features and len(self._settings.bond_orbital_indices) > 0:
+        if EdgeFeature.BOND_ORBITAL_MAX in self._settings.edge_features and len(self._settings.bond_orbital_indices) >= 0:
 
             if bond_atom_indices in bond_3c_atom_indices:
                 edge_features = edge_features | self._get_maximum_energy_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_BOND)
@@ -365,7 +365,7 @@ class GraphGenerator:
             else:
                 edge_features = edge_features | self._get_default_nbo(qm_data, NboType.BOND, feature_name='max')
 
-        if EdgeFeature.BOND_ORBITAL_AVERAGE in self._settings.edge_features and len(self._settings.bond_orbital_indices) > 0:
+        if EdgeFeature.BOND_ORBITAL_AVERAGE in self._settings.edge_features and len(self._settings.bond_orbital_indices) >= 0:
 
             if bond_atom_indices in bond_3c_atom_indices:
                 edge_features = edge_features | self._get_average_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_BOND)
@@ -390,7 +390,7 @@ class GraphGenerator:
             else:
                 edge_features['antibond_energy_min_max_difference'] = 0.0
 
-        if EdgeFeature.ANTIBOND_ORBITAL_MIN in self._settings.edge_features and len(self._settings.antibond_orbital_indices) > 0:
+        if EdgeFeature.ANTIBOND_ORBITAL_MIN in self._settings.edge_features and len(self._settings.antibond_orbital_indices) >= 0:
 
             if bond_atom_indices in bond_3c_atom_indices:
                 edge_features = edge_features | self._get_minimum_energy_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_ANTIBOND)
@@ -399,7 +399,7 @@ class GraphGenerator:
             else:
                 edge_features = edge_features | self._get_default_nbo(qm_data, NboType.ANTIBOND, feature_name='min')
 
-        if EdgeFeature.ANTIBOND_ORBITAL_AVERAGE in self._settings.edge_features and len(self._settings.antibond_orbital_indices) > 0:
+        if EdgeFeature.ANTIBOND_ORBITAL_AVERAGE in self._settings.edge_features and len(self._settings.antibond_orbital_indices) >= 0:
 
             if bond_atom_indices in bond_3c_atom_indices:
                 edge_features = edge_features | self._get_average_nbo(qm_data, bond_atom_indices, NboType.THREE_CENTER_ANTIBOND)
@@ -688,13 +688,13 @@ class GraphGenerator:
             else:
                 node_features['lone_pair_energy_min_max_difference'] = 0.0
 
-        if NodeFeature.LONE_PAIR_MAX in self._settings.node_features and len(self._settings.lone_pair_orbital_indices) > 0:
+        if NodeFeature.LONE_PAIR_MAX in self._settings.node_features and len(self._settings.lone_pair_orbital_indices) >= 0:
             if i in lone_pair_atom_indices:
                 node_features = node_features | self._get_maximum_energy_nbo(qm_data, [i], NboType.LONE_PAIR)
             else:
                 node_features = node_features | self._get_default_nbo(qm_data, NboType.LONE_PAIR, feature_name='max')
 
-        if NodeFeature.LONE_PAIR_AVERAGE in self._settings.node_features and len(self._settings.lone_pair_orbital_indices) > 0:
+        if NodeFeature.LONE_PAIR_AVERAGE in self._settings.node_features and len(self._settings.lone_pair_orbital_indices) >= 0:
             if i in lone_pair_atom_indices:
                 node_features = node_features | self._get_average_nbo(qm_data, [i], NboType.LONE_PAIR)
             else:
@@ -717,13 +717,13 @@ class GraphGenerator:
             else:
                 node_features['lone_vacancy_energy_min_max_difference'] = 0.0
 
-        if NodeFeature.LONE_VACANCY_MIN in self._settings.node_features and len(self._settings.lone_vacancy_orbital_indices) > 0:
+        if NodeFeature.LONE_VACANCY_MIN in self._settings.node_features and len(self._settings.lone_vacancy_orbital_indices) >= 0:
             if i in lone_vacancy_atom_indices:
                 node_features = node_features | self._get_minimum_energy_nbo(qm_data, [i], NboType.LONE_VACANCY)
             else:
                 node_features = node_features | self._get_default_nbo(qm_data, NboType.LONE_VACANCY, feature_name='min')
 
-        if NodeFeature.LONE_VACANCY_AVERAGE in self._settings.node_features and len(self._settings.lone_vacancy_orbital_indices) > 0:
+        if NodeFeature.LONE_VACANCY_AVERAGE in self._settings.node_features and len(self._settings.lone_vacancy_orbital_indices) >= 0:
             if i in lone_vacancy_atom_indices:
                 node_features = node_features | self._get_average_nbo(qm_data, [i], NboType.LONE_VACANCY)
             else:
