@@ -111,7 +111,7 @@ def run_base():
             'method': GilmerNet,
             'parameters': {
                 'n_node_features': 21,
-                'n_edge_features': 16
+                'n_edge_features': 17
             }
         },
         'optimizer': {
@@ -136,7 +136,7 @@ def run_base():
             'features_to_scale': ['x', 'edge_attr', 'graph_attr', 'y']
         },
         'batch_size': 32,
-        'n_epochs': 3,
+        'n_epochs': 300,
         'seed': 2022
     }
 
@@ -219,7 +219,7 @@ def run_extended():
             'method': GilmerNet,
             'parameters': {
                 'n_node_features': 21,
-                'n_edge_features': 16
+                'n_edge_features': 18
             }
         },
         'optimizer': {
@@ -258,6 +258,5 @@ if __name__ == "__main__":
     # run = api.run("hkneiding/tmQMg-natQgraph2/17j02lpm")
 
     run_base()
-    exit()
-    run_reduced()
+    # run_reduced()
     run_extended()
