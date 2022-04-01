@@ -6,7 +6,7 @@ import wandb
 from tmQMg import tmQMg
 from nbo2graph.enums.qm_target import QmTarget
 from nbo2graph.graph_generator_settings import GraphGeneratorSettings
-from nets import GilmerNet
+from nets import GilmerNet, GilmerNetGraphLevelFeatures
 from trainer import Trainer
 from tools import get_feature_matrix_dict, get_feature_means_from_feature_matrix_dict, get_feature_stds_from_feature_matrix_dict, set_global_seed, standard_scale_dataset
 from plot import plot_metal_center_group_histogram, plot_correlation, plot_error_by_metal_center_group, wandb_plot_error_by_metal_center_group
@@ -62,34 +62,58 @@ def run_ml(hyper_param: dict, wandb_project_name: str = 'tmQMg-natQgraph2', wand
     trained_model = trainer.run(train_loader, val_loader, test_loader, n_epochs=hyper_param['n_epochs'], target_means=train_target_means, target_stds=train_target_stds)
 
     # get test set predictions and ground truths
-    predicted_values = trainer.predict(test_loader, train_target_means, train_target_stds)
-    true_values = []
-    metal_center_groups = []
+    train_predicted_values = []
+    train_true_values = []
+    train_metal_center_groups = []
+    for batch in train_loader:
+        train_predicted_values.extend((trained_model(batch).cpu().detach().numpy() * train_target_stds + train_target_means).tolist())
+        train_true_values.extend((batch.y.cpu().detach().numpy() * train_target_stds + train_target_means).tolist())
+        train_metal_center_groups.extend([meta_data_dict[id]['metal_center_group'] for id in batch.id])
+
+    # get test set predictions and ground truths
+    val_predicted_values = []
+    val_true_values = []
+    val_metal_center_groups = []
+    for batch in val_loader:
+        val_predicted_values.extend((trained_model(batch).cpu().detach().numpy() * train_target_stds + train_target_means).tolist())
+        val_true_values.extend((batch.y.cpu().detach().numpy() * train_target_stds + train_target_means).tolist())
+        val_metal_center_groups.extend([meta_data_dict[id]['metal_center_group'] for id in batch.id])
+
+    # get test set predictions and ground truths
+    test_predicted_values = []
+    test_true_values = []
+    test_metal_center_groups = []
     for batch in test_loader:
-        true_values.extend((batch.y.cpu().detach().numpy() * train_target_stds + train_target_means).tolist())
-        metal_center_groups.extend([meta_data_dict[id]['metal_center_group'] for id in batch.id])
+        test_predicted_values.extend((trained_model(batch).cpu().detach().numpy() * train_target_stds + train_target_means).tolist())
+        test_true_values.extend((batch.y.cpu().detach().numpy() * train_target_stds + train_target_means).tolist())
+        test_metal_center_groups.extend([meta_data_dict[id]['metal_center_group'] for id in batch.id])
 
     # log plots
-    # wandb.log({'Training set metal center group histogram': plot_metal_center_group_histogram(sets[0], sets[1], sets[2], meta_data_dict)})
 
     tmp_file_path = '/tmp/image.png'
 
     plot_metal_center_group_histogram(sets[0], sets[1], sets[2], meta_data_dict, file_path=tmp_file_path)
     wandb.log({'Metal center group distribution among sets': wandb.Image(tmp_file_path)})
 
-    plot_correlation(predicted_values, true_values, file_path=tmp_file_path)
+    plot_correlation(train_predicted_values, train_true_values, file_path=tmp_file_path)
+    wandb.log({'Training set prediction correlation': wandb.Image(tmp_file_path)})
+
+    plot_correlation(val_predicted_values, val_true_values, file_path=tmp_file_path)
+    wandb.log({'Validation set prediction correlation': wandb.Image(tmp_file_path)})
+
+    plot_correlation(test_predicted_values, test_true_values, file_path=tmp_file_path)
     wandb.log({'Test set prediction correlation': wandb.Image(tmp_file_path)})
 
-    plot_error_by_metal_center_group(predicted_values, true_values, metal_center_groups, file_path=tmp_file_path)
+    plot_error_by_metal_center_group(test_predicted_values, test_true_values, test_metal_center_groups, file_path=tmp_file_path)
     wandb.log({'Test set error by metal center group': wandb.Image(tmp_file_path)})
 
-    wandb.log({"test_set_error_by_metal": wandb_plot_error_by_metal_center_group(predicted_values, true_values, metal_center_groups)})
+    wandb.log({"test_set_error_by_metal": wandb_plot_error_by_metal_center_group(test_predicted_values, test_true_values, test_metal_center_groups)})
 
     # end run
     wandb.finish(exit_code=0)
 
 
-def run_base():
+def run_graph_feat():
 
     with open('/home/hkneiding/Downloads/outliers_polarizability.pickle', 'rb') as fh:
         outliers = pickle.load(fh)
@@ -98,74 +122,21 @@ def run_base():
         'name': 'base',
         'data': {
             'dataset': tmQMg,
-            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run1/',
+            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run4/',
             'raw_dir': '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/',
             'val_set_size': 0.1,
             'test_set_size': 0.1,
-            'graph_representation': GraphGeneratorSettings.natQ2,
+            'graph_representation': GraphGeneratorSettings.natQ2extended,
             'targets': [QmTarget.POLARISABILITY],
             'outliers': outliers
         },
         'model': {
             'name': 'GilmerNet',
-            'method': GilmerNet,
+            'method': GilmerNetGraphLevelFeatures,
             'parameters': {
                 'n_node_features': 21,
-                'n_edge_features': 17
-            }
-        },
-        'optimizer': {
-            'name': 'Adam',
-            'method': torch.optim.Adam,
-            'parameters': {
-                'lr': 0.001
-            }
-        },
-        'scheduler': {
-            'name': 'ReduceLrOnPlateau',
-            'method': torch.optim.lr_scheduler.ReduceLROnPlateau,
-            'parameters': {
-                'mode': 'min',
-                'factor': 0.7,
-                'patience': 5,
-                'min_lr': 0.00001
-            }
-        },
-        'scaling': {
-            'type': 'standard',
-            'features_to_scale': ['x', 'edge_attr', 'graph_attr', 'y']
-        },
-        'batch_size': 32,
-        'n_epochs': 300,
-        'seed': 2022
-    }
-
-    run_ml(hyper_param)
-
-
-def run_reduced():
-
-    with open('/home/hkneiding/Downloads/outliers_polarizability.pickle', 'rb') as fh:
-        outliers = pickle.load(fh)
-
-    hyper_param = {
-        'name': 'reduced',
-        'data': {
-            'dataset': tmQMg,
-            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run2/',
-            'raw_dir': '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/',
-            'val_set_size': 0.1,
-            'test_set_size': 0.1,
-            'graph_representation': GraphGeneratorSettings.natQ2reduced,
-            'targets': [QmTarget.POLARISABILITY],
-            'outliers': outliers
-        },
-        'model': {
-            'name': 'GilmerNet',
-            'method': GilmerNet,
-            'parameters': {
-                'n_node_features': 21,
-                'n_edge_features': 16
+                'n_edge_features': 18,
+                'n_graph_features': 4
             }
         },
         'optimizer': {
@@ -257,6 +228,6 @@ if __name__ == "__main__":
     # api = wandb.Api()
     # run = api.run("hkneiding/tmQMg-natQgraph2/17j02lpm")
 
-    run_base()
+    run_graph_feat()
     # run_reduced()
-    run_extended()
+    # run_extended()
