@@ -37,7 +37,7 @@ def plot_metal_center_group_histogram(train_dataset, val_dataset, test_dataset, 
 def plot_correlation(predicted_values: list, true_values: list, file_path='./image.png'):
 
     # set up canvas
-    fig, ax = plt.subplots(figsize=(8, 4))
+    fig, ax = plt.subplots(figsize=(5, 5))
     # base points
     ax.plot(predicted_values, true_values, 'bo')
     # regression line
@@ -46,7 +46,7 @@ def plot_correlation(predicted_values: list, true_values: list, file_path='./ima
     ax.plot(predicted_values, p(predicted_values), "r--")
 
     # formatting
-    ax.text(0.25, 0.9, 'R² = ' + str(calculate_r_squared(np.array(predicted_values), np.array(true_values))), size=5, color='blue', ha='center', va='center', transform=ax.transAxes)
+    ax.text(0.2, 0.9, 'R² = ' + str(np.round(calculate_r_squared(np.array(predicted_values), np.array(true_values)), decimals=3)), size=10, color='blue', ha='center', va='center', transform=ax.transAxes)
     ax.set_xlabel('Predicted values')
     ax.set_ylabel('True values')
 
