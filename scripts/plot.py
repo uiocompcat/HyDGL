@@ -43,12 +43,20 @@ def plot_correlation(predicted_values: list, true_values: list, file_path='./ima
     # regression line
     z = np.polyfit(predicted_values, true_values, 1)
     p = np.poly1d(z)
-    ax.plot(predicted_values, p(predicted_values), "r--")
+
+    # get min and max values
+    min_value = min(predicted_values + true_values)
+    max_value = max(predicted_values + true_values)
+    ax.plot([min_value, max_value], [p(min_value), p(max_value)], "r--")
 
     # formatting
     ax.text(0.2, 0.9, 'R² = ' + str(np.round(calculate_r_squared(np.array(predicted_values), np.array(true_values)), decimals=3)), size=10, color='blue', ha='center', va='center', transform=ax.transAxes)
     ax.set_xlabel('Predicted values')
     ax.set_ylabel('True values')
+
+    # set same length axis ranges with 5% margin of max value
+    ax.set_xlim([min_value - 0.05 * max_value, max_value + 0.05 * max_value])
+    ax.set_ylim([min_value - 0.05 * max_value, max_value + 0.05 * max_value])
 
     fig.savefig(file_path, format='png', dpi=300)
 
