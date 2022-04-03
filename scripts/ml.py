@@ -113,16 +113,16 @@ def run_ml(hyper_param: dict, wandb_project_name: str = 'tmQMg-natQgraph2', wand
     wandb.finish(exit_code=0)
 
 
-def run_graph_feat():
+def run_graph_feat_big():
 
     with open('/home/hkneiding/Downloads/outliers_polarizability.pickle', 'rb') as fh:
         outliers = pickle.load(fh)
 
     hyper_param = {
-        'name': 'base',
+        'name': 'graph feat big',
         'data': {
             'dataset': tmQMg,
-            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run4/',
+            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run12/',
             'raw_dir': '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/',
             'val_set_size': 0.1,
             'test_set_size': 0.1,
@@ -136,7 +136,10 @@ def run_graph_feat():
             'parameters': {
                 'n_node_features': 21,
                 'n_edge_features': 18,
-                'n_graph_features': 4
+                'n_graph_features': 4,
+                'dim': 128,
+                'set2set_steps': 4,
+                'n_atom_jumps': 4
             }
         },
         'optimizer': {
@@ -228,6 +231,6 @@ if __name__ == "__main__":
     # api = wandb.Api()
     # run = api.run("hkneiding/tmQMg-natQgraph2/17j02lpm")
 
-    run_graph_feat()
+    run_graph_feat_big()
     # run_reduced()
     # run_extended()
