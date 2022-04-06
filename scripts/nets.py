@@ -66,7 +66,7 @@ class GilmerNetGraphLevelFeatures(torch.nn.Module):
         out = self.set2set(out, data.batch)
 
         # concatenate graph features to embedding vector
-        batch_size = len(np.unique(data.batch.detach().numpy()))
+        batch_size = len(np.unique(data.batch.cpu().detach().numpy()))
         graph_attr = data.graph_attr.reshape((batch_size, -1))
         out = torch.cat((out, graph_attr), dim=1)
 

@@ -66,7 +66,7 @@ def run_ml(hyper_param: dict, wandb_project_name: str = 'tmQMg-natQgraph2', wand
     train_true_values = []
     train_metal_center_groups = []
     for batch in train_loader:
-        train_predicted_values.extend((trained_model(batch).cpu().detach().numpy() * train_target_stds + train_target_means).tolist())
+        train_predicted_values.extend(trainer.predict_batch(batch, target_means=train_target_means, target_stds=train_target_stds))
         train_true_values.extend((batch.y.cpu().detach().numpy() * train_target_stds + train_target_means).tolist())
         train_metal_center_groups.extend([meta_data_dict[id]['metal_center_group'] for id in batch.id])
 
@@ -75,7 +75,7 @@ def run_ml(hyper_param: dict, wandb_project_name: str = 'tmQMg-natQgraph2', wand
     val_true_values = []
     val_metal_center_groups = []
     for batch in val_loader:
-        val_predicted_values.extend((trained_model(batch).cpu().detach().numpy() * train_target_stds + train_target_means).tolist())
+        val_predicted_values.extend(trainer.predict_batch(batch, target_means=train_target_means, target_stds=train_target_stds))
         val_true_values.extend((batch.y.cpu().detach().numpy() * train_target_stds + train_target_means).tolist())
         val_metal_center_groups.extend([meta_data_dict[id]['metal_center_group'] for id in batch.id])
 
@@ -84,7 +84,7 @@ def run_ml(hyper_param: dict, wandb_project_name: str = 'tmQMg-natQgraph2', wand
     test_true_values = []
     test_metal_center_groups = []
     for batch in test_loader:
-        test_predicted_values.extend((trained_model(batch).cpu().detach().numpy() * train_target_stds + train_target_means).tolist())
+        test_predicted_values.extend(trainer.predict_batch(batch, target_means=train_target_means, target_stds=train_target_stds))
         test_true_values.extend((batch.y.cpu().detach().numpy() * train_target_stds + train_target_means).tolist())
         test_metal_center_groups.extend([meta_data_dict[id]['metal_center_group'] for id in batch.id])
 
@@ -119,10 +119,10 @@ def run_graph_feat_big():
         outliers = pickle.load(fh)
 
     hyper_param = {
-        'name': 'graph feat big',
+        'name': 'graph feat big+',
         'data': {
             'dataset': tmQMg,
-            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run12/',
+            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run13/',
             'raw_dir': '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/',
             'val_set_size': 0.1,
             'test_set_size': 0.1,
@@ -138,8 +138,8 @@ def run_graph_feat_big():
                 'n_edge_features': 18,
                 'n_graph_features': 4,
                 'dim': 128,
-                'set2set_steps': 4,
-                'n_atom_jumps': 4
+                'set2set_steps': 6,
+                'n_atom_jumps': 6
             }
         },
         'optimizer': {
