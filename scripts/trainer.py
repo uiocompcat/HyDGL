@@ -50,18 +50,16 @@ class Trainer():
 
         return error / len(loader.dataset)
 
-    def predict(self, loader, target_means=None, target_stds=None):
+    def predict_batch(self, data, target_means=None, target_stds=None):
 
         self._model.eval()
-        predictions = []
 
-        for data in loader:
-            data = data.to(self.device)
+        data = data.to(self.device)
 
-            if target_means is not None and target_stds is not None:
-                predictions.extend((self.model(data).cpu().detach().numpy() * target_stds + target_means).tolist())
-            else:
-                predictions.extend(self.model(data).cpu().detach().numpy().tolist())
+        if target_means is not None and target_stds is not None:
+            predictions = (self.model(data).cpu().detach().numpy() * target_stds + target_means).tolist()
+        else:
+            predictions = self.model(data).cpu().detach().numpy().tolist()
 
         return predictions
 
