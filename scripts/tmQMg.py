@@ -28,8 +28,8 @@ class tmQMg(Dataset):
         self._graph_object_file_extension = '.graph'
         self._pytorch_graph_file_extension = '.pt'
 
-        # set up variable for file names
-        self._files_names = None
+        # set dataset file names
+        self._files_names = list(filter(None, FileHandler.read_file(self.raw_dir + 'names').split('\n')))
         # list of files to exclude
         self._files_to_exclude = exclude
 
@@ -41,11 +41,6 @@ class tmQMg(Dataset):
 
     @property
     def file_names(self):
-
-        # if not defined get raw file names and exclude specified files
-        if self._files_names is None:
-            self._files_names = [file_name for file_name in list(filter(None, FileHandler.read_file(self.raw_dir + 'names').split('\n'))) if file_name not in self._files_to_exclude]
-
         return self._files_names
 
     @property
@@ -200,6 +195,10 @@ class tmQMg(Dataset):
 
         graphs = []
         for file_name in tqdm(self.file_names):
+
+            # skip if filename in exclude list
+            if file_name in self._files_to_exclude:
+                continue
 
             graph = torch.load(self.pytorch_geometric_dir + '/' + file_name + self._pytorch_graph_file_extension)
 
