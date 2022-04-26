@@ -122,7 +122,7 @@ def run():
         'name': 'layer norm test',
         'data': {
             'dataset': tmQMg,
-            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run-natq-extended/',
+            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run-natq2-extended/',
             'raw_dir': '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/',
             'val_set_size': 0.1,
             'test_set_size': 0.1,
