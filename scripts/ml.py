@@ -6,7 +6,7 @@ import wandb
 from tmQMg import tmQMg
 from nbo2graph.enums.qm_target import QmTarget
 from nbo2graph.graph_generator_settings import GraphGeneratorSettings
-from nets import GilmerNetGraphLevelFeaturesEdgeDropout
+from nets import GilmerNetGraphLevelFeaturesEdgeDropout, GilmerNetGraphLevelFeaturesLayerNorm
 from trainer import Trainer
 from tools import get_feature_matrix_dict, get_feature_means_from_feature_matrix_dict, get_feature_stds_from_feature_matrix_dict, set_global_seed, standard_scale_dataset
 from plot import plot_metal_center_group_histogram, plot_correlation, plot_error_by_metal_center_group, wandb_plot_error_by_metal_center_group
@@ -138,9 +138,68 @@ def run():
                 'n_edge_features': 18,
                 'n_graph_features': 4,
                 'dim': 128,
-                'set2set_steps': 6,
-                'n_atom_jumps': 6,
-                'dropout_rate': 0.1
+                'set2set_steps': 4,
+                'n_atom_jumps': 4,
+                'dropout_rate': 0.1,
+                'force_undirected': True
+            }
+        },
+        'optimizer': {
+            'name': 'Adam',
+            'method': torch.optim.Adam,
+            'parameters': {
+                'lr': 0.001
+            }
+        },
+        'scheduler': {
+            'name': 'ReduceLrOnPlateau',
+            'method': torch.optim.lr_scheduler.ReduceLROnPlateau,
+            'parameters': {
+                'mode': 'min',
+                'factor': 0.7,
+                'patience': 5,
+                'min_lr': 0.00001
+            }
+        },
+        'scaling': {
+            'type': 'standard',
+            'features_to_scale': ['x', 'edge_attr', 'graph_attr', 'y']
+        },
+        'batch_size': 32,
+        'n_epochs': 300,
+        'seed': 2022
+    }
+
+    run_ml(hyper_param)
+
+
+def run1():
+
+    with open('/home/hkneiding/Downloads/outliers_polarizability.pickle', 'rb') as fh:
+        outliers = pickle.load(fh)
+
+    hyper_param = {
+        'name': 'layer norm test',
+        'data': {
+            'dataset': tmQMg,
+            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run-natq2-extended/',
+            'raw_dir': '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/',
+            'val_set_size': 0.1,
+            'test_set_size': 0.1,
+            'graph_representation': GraphGeneratorSettings.natQ2extended,
+            'targets': [QmTarget.POLARISABILITY],
+            'outliers': outliers
+        },
+        'model': {
+            'name': 'GilmerNet',
+            'method': GilmerNetGraphLevelFeaturesLayerNorm,
+            'parameters': {
+                'n_node_features': 21,
+                'n_edge_features': 18,
+                'n_graph_features': 4,
+                'dim': 128,
+                'set2set_steps': 4,
+                'n_atom_jumps': 4
             }
         },
         'optimizer': {
@@ -179,3 +238,4 @@ if __name__ == "__main__":
     # run = api.run("hkneiding/tmQMg-natQgraph2/17j02lpm")
 
     run()
+    run1()

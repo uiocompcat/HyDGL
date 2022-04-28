@@ -119,7 +119,7 @@ class GilmerNetGraphLevelFeaturesLayerNorm(torch.nn.Module):
 
 class GilmerNetGraphLevelFeaturesEdgeDropout(torch.nn.Module):
 
-    def __init__(self, n_node_features, n_edge_features, n_graph_features, dim=64, set2set_steps=3, n_atom_jumps=3, aggr_function='mean', dropout_rate=0):
+    def __init__(self, n_node_features, n_edge_features, n_graph_features, dim=64, set2set_steps=3, n_atom_jumps=3, aggr_function='mean', dropout_rate=0, force_undirected=True):
         super().__init__()
 
         self.n_atom_jumps = n_atom_jumps
@@ -135,13 +135,14 @@ class GilmerNetGraphLevelFeaturesEdgeDropout(torch.nn.Module):
         self.lin2 = torch.nn.Linear(dim, 1)
 
         self.dropout_rate = dropout_rate
+        self.dropout_force_undirected = force_undirected
 
     def forward(self, data):
         out = F.relu(self.lin0(data.x))
         h = out.unsqueeze(0)
 
         for i in range(self.n_atom_jumps):
-            data.edge_index, data.edge_attr = dropout_adj(data.edge_index, data.edge_attr, p=self.dropout_rate, force_undirected=True, training=self.training)
+            data.edge_index, data.edge_attr = dropout_adj(data.edge_index, data.edge_attr, p=self.dropout_rate, force_undirected=self.dropout_force_undirected, training=self.training)
             m = F.relu(self.conv(out, data.edge_index, data.edge_attr))
             out, h = self.gru(m.unsqueeze(0), h)
             out = out.squeeze(0)
