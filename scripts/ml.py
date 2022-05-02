@@ -6,7 +6,7 @@ import wandb
 from tmQMg import tmQMg
 from nbo2graph.enums.qm_target import QmTarget
 from nbo2graph.graph_generator_settings import GraphGeneratorSettings
-from nets import GilmerNetGraphLevelFeaturesEdgeDropout, GilmerNetGraphLevelFeaturesLayerNorm
+from nets import GilmerNetGraphLevelFeaturesDropout, GilmerNetGraphLevelFeaturesEdgeDropout, GilmerNetGraphLevelFeaturesLayerNorm
 from trainer import Trainer
 from tools import get_feature_matrix_dict, get_feature_means_from_feature_matrix_dict, get_feature_stds_from_feature_matrix_dict, set_global_seed, standard_scale_dataset
 from plot import plot_metal_center_group_histogram, plot_correlation, plot_error_by_metal_center_group, wandb_plot_error_by_metal_center_group
@@ -132,7 +132,7 @@ def run():
         },
         'model': {
             'name': 'GilmerNet',
-            'method': GilmerNetGraphLevelFeaturesEdgeDropout,
+            'method': GilmerNetGraphLevelFeaturesDropout,
             'parameters': {
                 'n_node_features': 21,
                 'n_edge_features': 18,
@@ -140,8 +140,7 @@ def run():
                 'dim': 128,
                 'set2set_steps': 4,
                 'n_atom_jumps': 4,
-                'dropout_rate': 0.1,
-                'force_undirected': True
+                'dropout_rate': 0.1
             }
         },
         'optimizer': {
@@ -238,4 +237,4 @@ if __name__ == "__main__":
     # run = api.run("hkneiding/tmQMg-natQgraph2/17j02lpm")
 
     run()
-    run1()
+    # run1()
