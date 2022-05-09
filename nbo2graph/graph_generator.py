@@ -1156,7 +1156,7 @@ class GraphGenerator:
         nbo_list_index = next((i for i, item in enumerate(qm_data.nbo_data) if item.nbo_id == nbo_id), -1)
         return qm_data.nbo_data[nbo_list_index].atom_indices
 
-    def _select_atom_indices_from_nbo_id(self, qm_data: QmData, nbo_id: int) -> list[int]:
+    def _contribution_select_atom_indices_from_nbo_id(self, qm_data: QmData, nbo_id: int) -> list[int]:
 
         """Selects atom indices associated to a NBO ID based on their respective contributions.
 
@@ -1208,6 +1208,9 @@ class GraphGenerator:
             list[list[str]]: Corresponding lists of asscociated NBO types.
         """
 
+        # get list of hydride hydrogen indices
+        hydride_hydrogen_indices = self._get_hydride_hydrogen_indices(qm_data)
+
         atom_indices_list = []
         stabilisation_energies = []
         nbo_types = []
@@ -1224,17 +1227,28 @@ class GraphGenerator:
             donor_atom_indices = self._get_atom_indices_from_nbo_id(qm_data, qm_data.sopa_data[i][0][0])
             acceptor_atom_indices = self._get_atom_indices_from_nbo_id(qm_data, qm_data.sopa_data[i][0][1])
 
-            # skip if it is a hydrogen interaction unless a metal is involved
-            atom_indices_collection = donor_atom_indices + acceptor_atom_indices
-            if self._contains_hydrogen(qm_data, atom_indices_collection) and not self._contains_metal(qm_data, atom_indices_collection):
-                continue
+            # in OMIT mode skip if it is a hydrogen interaction unless a metal is involved
+            # this will skip any SOPA interaction that contains an hydrogen atom
+            if self._settings.hydrogen_mode == HydrogenMode.OMIT:
+                skip_sopa_entry = False
+                atom_indices_collection = donor_atom_indices + acceptor_atom_indices
+                # if self._contains_hydrogen(qm_data, atom_indices_collection) and not self._contains_metal(qm_data, atom_indices_collection):
+                if self._contains_hydrogen(qm_data, atom_indices_collection):
+                    # get hydrogen indices
+                    atom_indices_collection_hydrogen_indices = [idx for idx in atom_indices_collection if qm_data.atomic_numbers[idx] == 1]
+                    for hydrogen_index in atom_indices_collection_hydrogen_indices:
+                        if hydrogen_index not in hydride_hydrogen_indices:
+                            skip_sopa_entry = True
+
+                if skip_sopa_entry:
+                    continue
 
             donor_nbo_type = self._get_nbo_type_from_nbo_id(qm_data, qm_data.sopa_data[i][0][0])
             acceptor_nbo_type = self._get_nbo_type_from_nbo_id(qm_data, qm_data.sopa_data[i][0][1])
 
             # get selected atom indices involved in two nbo entries
-            donor_selected_atom_indices = self._select_atom_indices_from_nbo_id(qm_data, qm_data.sopa_data[i][0][0])
-            acceptor_selected_atom_indices = self._select_atom_indices_from_nbo_id(qm_data, qm_data.sopa_data[i][0][1])
+            donor_selected_atom_indices = self._contribution_select_atom_indices_from_nbo_id(qm_data, qm_data.sopa_data[i][0][0])
+            acceptor_selected_atom_indices = self._contribution_select_atom_indices_from_nbo_id(qm_data, qm_data.sopa_data[i][0][1])
 
             # add bond indices for each combination of indeces
             for index_a in donor_selected_atom_indices:

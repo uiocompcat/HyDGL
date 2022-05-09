@@ -2652,7 +2652,7 @@ class TestGraphGenerator(unittest.TestCase):
             []
         ],
     ])
-    def test_select_atom_indices_from_nbo_id(self, file_path, nbo_id, sopa_contribution_threshold, expected):
+    def test_contribution_select_atom_indices_from_nbo_id(self, file_path, nbo_id, sopa_contribution_threshold, expected):
 
         # load data
         qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
@@ -2661,7 +2661,7 @@ class TestGraphGenerator(unittest.TestCase):
         gg = GraphGenerator(GraphGeneratorSettings.default(sopa_contribution_threshold=sopa_contribution_threshold))
 
         # get result
-        result = gg._select_atom_indices_from_nbo_id(qm_data, nbo_id)
+        result = gg._contribution_select_atom_indices_from_nbo_id(qm_data, nbo_id)
 
         self.assertEqual(result, expected)
 
@@ -2799,6 +2799,7 @@ class TestGraphGenerator(unittest.TestCase):
         [
             TEST_FILE_LALMER,
             1,
+            HydrogenMode.EXPLICIT,
             (
                 [[1, 0], [2, 0], [8, 0], [14, 0], [20, 0], [27, 0], [28, 0], [29, 0], [30, 0]],
                 [[0.58, 15.10], [25.68], [22.74], [21.99], [23.34], [7.2, 0.28, 16.63], [6.79, 0.19, 12.43], [0.33], [0.2]],
@@ -2809,25 +2810,36 @@ class TestGraphGenerator(unittest.TestCase):
         [
             TEST_FILE_LALMER,
             0.7,
+            HydrogenMode.EXPLICIT,
             (
-                [[0, 33], [1, 0], [1, 0], [2, 0], [8, 0], [14, 0], [20, 0], [27, 0], [28, 0], [29, 0], [30, 0]],
-                [[0.12], [0.58, 15.10], [1.58, 1.32], [25.68], [22.74], [21.99], [23.34], [7.2, 0.28, 16.63], [6.79, 0.19, 12.43], [0.33], [0.2]],
-                [[[49, 133]], [[52, 131], [53, 131]], [[74, 131], [75, 131]], [[54, 131]], [[57, 131]], [[58, 131]], [[59, 131]], [[62, 131], [63, 131], [64, 131]], [[65, 131], [66, 131], [67, 131]], [[68, 131]], [[71, 131]]]
+                [[0, 33], [1, 0], [1, 0], [2, 0], [8, 0], [14, 0], [20, 0], [20, 33], [27, 0], [28, 0], [29, 0], [30, 0]],
+                [[0.12], [0.58, 15.10], [1.58, 1.32], [25.68], [22.74], [21.99], [23.34], [0.11], [7.2, 0.28, 16.63], [6.79, 0.19, 12.43], [0.33], [0.2]],
+                [[[49, 133]], [[52, 131], [53, 131]], [[74, 131], [75, 131]], [[54, 131]], [[57, 131]], [[58, 131]], [[59, 131]], [[59, 133]], [[62, 131], [63, 131], [64, 131]], [[65, 131], [66, 131], [67, 131]], [[68, 131]], [[71, 131]]]
+            )
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            0.7,
+            HydrogenMode.OMIT,
+            (
+                [[1, 0], [2, 0], [8, 0], [14, 0], [20, 0], [27, 0], [28, 0], [29, 0], [30, 0]],
+                [[0.58, 15.10], [25.68], [22.74], [21.99], [23.34], [7.2, 0.28, 16.63], [6.79, 0.19, 12.43], [0.33], [0.2]],
+                [[[52, 131], [53, 131]], [[54, 131]], [[57, 131]], [[58, 131]], [[59, 131]], [[62, 131], [63, 131], [64, 131]], [[65, 131], [66, 131], [67, 131]], [[68, 131]], [[71, 131]]]
             )
         ],
 
     ])
-    def test_get_sopa_adjacency_list(self, file_path, sopa_contribution_threshold, expected):
+    def test_get_sopa_adjacency_list(self, file_path, sopa_contribution_threshold, hydrogen_mode, expected):
 
         # load data
         qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(file_path))
 
         # set up graph generator (default values)
-        gg = GraphGenerator(GraphGeneratorSettings.default(sopa_contribution_threshold=sopa_contribution_threshold))
+        gg = GraphGenerator(GraphGeneratorSettings.default(hydrogen_mode=hydrogen_mode, sopa_contribution_threshold=sopa_contribution_threshold))
 
         # get result
         result = gg._get_sopa_adjacency_list(qm_data)
-
         Utils.assert_are_almost_equal(result, expected, places=5)
 
     @parameterized.expand([
