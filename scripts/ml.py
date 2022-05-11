@@ -135,7 +135,7 @@ def run():
             'method': GilmerNetGraphLevelFeatures,
             'parameters': {
                 'n_node_features': 21,
-                'n_edge_features': 23,
+                'n_edge_features': 24,
                 'n_graph_features': 4,
                 'dim': 128,
                 'set2set_steps': 4,
@@ -193,7 +193,7 @@ def run1():
             'method': GilmerNetGraphLevelFeatures,
             'parameters': {
                 'n_node_features': 21,
-                'n_edge_features': 23,
+                'n_edge_features': 24,
                 'n_graph_features': 4,
                 'dim': 128,
                 'set2set_steps': 4,
@@ -251,7 +251,7 @@ def run2():
             'method': GilmerNetGraphLevelFeatures,
             'parameters': {
                 'n_node_features': 21,
-                'n_edge_features': 23,
+                'n_edge_features': 24,
                 'n_graph_features': 4,
                 'dim': 128,
                 'set2set_steps': 4,
