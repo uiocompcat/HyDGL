@@ -34,6 +34,19 @@ def plot_metal_center_group_histogram(train_dataset, val_dataset, test_dataset, 
     fig.savefig(file_path, format='png', dpi=300)
 
 
+def plot_target_histogram(train_true_values, val_true_values, test_true_values, file_path='./image.png'):
+
+    fig, ax = plt.subplots(figsize=(8, 4))
+    ax.hist(train_true_values, label='Train', alpha=0.5)
+    ax.hist(val_true_values, label='Val', alpha=0.5,)
+    ax.hist(test_true_values, label='Test', alpha=0.5,)
+    ax.set_xlabel('Target value')
+    ax.set_ylabel('Frequency')
+    ax.legend()
+
+    fig.savefig(file_path, format='png', dpi=300)
+
+
 def plot_correlation(predicted_values: list, true_values: list, file_path='./image.png'):
 
     # set up canvas

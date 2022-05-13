@@ -9,7 +9,7 @@ from nbo2graph.graph_generator_settings import GraphGeneratorSettings
 from nets import GilmerNetGraphLevelFeatures, GilmerNetGraphLevelFeaturesDropout, GilmerNetGraphLevelFeaturesEdgeDropout, GilmerNetGraphLevelFeaturesLayerNorm
 from trainer import Trainer
 from tools import get_feature_matrix_dict, get_feature_means_from_feature_matrix_dict, get_feature_stds_from_feature_matrix_dict, set_global_seed, standard_scale_dataset
-from plot import plot_metal_center_group_histogram, plot_correlation, plot_error_by_metal_center_group, wandb_plot_error_by_metal_center_group
+from plot import plot_metal_center_group_histogram, plot_correlation, plot_error_by_metal_center_group, plot_target_histogram, wandb_plot_error_by_metal_center_group
 
 
 def run_ml(hyper_param: dict, wandb_project_name: str = 'tmQMg-natQgraph2', wandb_entity: str = 'hkneiding'):
@@ -103,6 +103,9 @@ def run_ml(hyper_param: dict, wandb_project_name: str = 'tmQMg-natQgraph2', wand
 
     plot_correlation(test_predicted_values, test_true_values, file_path=tmp_file_path)
     wandb.log({'Test set prediction correlation': wandb.Image(tmp_file_path)})
+
+    plot_target_histogram(train_true_values, val_true_values, test_true_values, file_path=tmp_file_path)
+    wandb.log({'Target value distributions': wandb.Image(tmp_file_path)})
 
     plot_error_by_metal_center_group(test_predicted_values, test_true_values, test_metal_center_groups, file_path=tmp_file_path)
     wandb.log({'Test set error by metal center group': wandb.Image(tmp_file_path)})
