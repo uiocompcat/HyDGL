@@ -140,7 +140,7 @@ def run():
                 'n_node_features': 21,
                 'n_edge_features': 26,
                 'n_graph_features': 4,
-                'dim': 128,
+                'dim': 32,
                 'set2set_steps': 4,
                 'n_atom_jumps': 4
             }
