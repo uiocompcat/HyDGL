@@ -209,7 +209,7 @@ class tmQMg(Dataset):
                 for edge in adjacency_list:
                     adjacency_matrix[edge[0], edge[1]] = 1
                 # check the number of subgraphs
-                if scipy.sparse.csgraph.connected_components(adjacency_matrix)[0] != 1:
+                if scipy.sparse.csgraph.connected_components(adjacency_matrix, connection='weak')[0] != 1:
                     continue
 
             graphs.append(graph)
