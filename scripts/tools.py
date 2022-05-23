@@ -61,16 +61,8 @@ def standard_scale_dataset(dataset, feature_matrix_dict: dict):
         feature_stds[feature_key] = np.std(feature_matrix_dict[feature_key], axis=0)
 
     for data in dataset:
-
         for feature_key in feature_matrix_dict.keys():
-
-            # delete features for which std is 0.
-            # (since this means that the feature is constant for all dat points.)
-            if feature_stds[feature_key] == 0:
-                print('Encounter zero STD in feature: ' + feature_key + '. Removing from feature dict.')
-                data.pop(feature_key)
-            else:
-                data[feature_key] = (data[feature_key] - feature_means[feature_key]) / feature_stds[feature_key]
+            data[feature_key] = (data[feature_key] - feature_means[feature_key]) / feature_stds[feature_key]
 
     return dataset
 
