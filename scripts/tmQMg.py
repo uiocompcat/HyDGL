@@ -204,7 +204,7 @@ class tmQMg(Dataset):
 
             if skip_disconnected:
                 # build adjacency matrix from edge index
-                adjacency_list = graph.edge_index.detach().numpy().reshape((-1, 2))
+                adjacency_list = graph.edge_index.detach().numpy().T
                 adjacency_matrix = np.zeros((graph.num_nodes, graph.num_nodes))
                 for edge in adjacency_list:
                     adjacency_matrix[edge[0], edge[1]] = 1
