@@ -2,6 +2,7 @@ import pickle
 import torch
 from torch_geometric.loader import DataLoader
 import wandb
+import pandas as pd
 
 from tmQMg import tmQMg
 from nbo2graph.enums.qm_target import QmTarget
@@ -64,29 +65,52 @@ def run_ml(hyper_param: dict, wandb_project_name: str = 'tmQMg-natQgraph2', wand
     # get test set predictions and ground truths
     train_predicted_values = []
     train_true_values = []
+    train_ids = []
     train_metal_center_groups = []
     for batch in train_loader:
         train_predicted_values.extend(trainer.predict_batch(batch, target_means=train_target_means, target_stds=train_target_stds))
         train_true_values.extend((batch.y.cpu().detach().numpy() * train_target_stds + train_target_means).tolist())
+        train_ids.extend(batch.id)
         train_metal_center_groups.extend([meta_data_dict[id]['metal_center_group'] for id in batch.id])
 
     # get test set predictions and ground truths
     val_predicted_values = []
     val_true_values = []
+    val_ids = []
     val_metal_center_groups = []
     for batch in val_loader:
         val_predicted_values.extend(trainer.predict_batch(batch, target_means=train_target_means, target_stds=train_target_stds))
         val_true_values.extend((batch.y.cpu().detach().numpy() * train_target_stds + train_target_means).tolist())
+        val_ids.extend(batch.id)
         val_metal_center_groups.extend([meta_data_dict[id]['metal_center_group'] for id in batch.id])
 
     # get test set predictions and ground truths
     test_predicted_values = []
     test_true_values = []
+    test_ids = []
     test_metal_center_groups = []
     for batch in test_loader:
         test_predicted_values.extend(trainer.predict_batch(batch, target_means=train_target_means, target_stds=train_target_stds))
         test_true_values.extend((batch.y.cpu().detach().numpy() * train_target_stds + train_target_means).tolist())
+        test_ids.extend(batch.id)
         test_metal_center_groups.extend([meta_data_dict[id]['metal_center_group'] for id in batch.id])
+
+    # log predictions
+
+    train_df = pd.DataFrame({'id': train_ids,
+                             'predicted': train_predicted_values,
+                             'truth': train_true_values})
+    wandb.log({"train-predictions": wandb.Table(dataframe=train_df)})
+
+    val_df = pd.DataFrame({'id': val_ids,
+                           'predicted': val_predicted_values,
+                           'truth': val_true_values})
+    wandb.log({"val-predictions": wandb.Table(dataframe=val_df)})
+
+    test_df = pd.DataFrame({'id': test_ids,
+                            'predicted': test_predicted_values,
+                            'truth': test_true_values})
+    wandb.log({"test-predictions": wandb.Table(dataframe=test_df)})
 
     # log plots
 
@@ -138,7 +162,7 @@ def run():
             'method': GilmerNetGraphLevelFeatures,
             'parameters': {
                 'n_node_features': 21,
-                'n_edge_features': 26,
+                'n_edge_features': 24,
                 'n_graph_features': 4,
                 'dim': 32,
                 'set2set_steps': 4,
@@ -167,7 +191,7 @@ def run():
             'features_to_scale': ['x', 'edge_attr', 'graph_attr', 'y']
         },
         'batch_size': 32,
-        'n_epochs': 300,
+        'n_epochs': 1,
         'seed': 2022
     }
 
@@ -297,5 +321,5 @@ if __name__ == "__main__":
     # run = api.run("hkneiding/tmQMg-natQgraph2/17j02lpm")
 
     run()
-    run1()
-    run2()
+    # run1()
+    # run2()
