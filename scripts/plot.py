@@ -1,6 +1,7 @@
-import numpy as np
-import matplotlib.pyplot as plt
 import wandb
+import numpy as np
+from scipy.interpolate import interpn
+import matplotlib.pyplot as plt
 
 from tools import calculate_r_squared
 
@@ -49,17 +50,35 @@ def plot_target_histogram(train_true_values, val_true_values, test_true_values, 
 
 def plot_correlation(predicted_values: list, true_values: list, file_path='./image.png'):
 
+    # cast lists to arrays
+    predicted_values = np.array(predicted_values)
+    true_values = np.array(true_values)
+
     # set up canvas
     fig, ax = plt.subplots(figsize=(5, 5))
-    # base points
-    ax.plot(predicted_values, true_values, 'bo')
+
+    # taken from https://stackoverflow.com/questions/20105364/how-can-i-make-a-scatter-plot-colored-by-density-in-matplotlib/53865762#53865762
+    # get interpolated point densities
+    data, x_e, y_e = np.histogram2d(predicted_values, true_values, bins=20, density=True)
+    z = interpn((0.5 * (x_e[1:] + x_e[:-1]), 0.5 * (y_e[1:] + y_e[:-1])), data, np.vstack([predicted_values, true_values]).T, method="splinef2d", bounds_error=False)
+
+    # To be sure to plot all data
+    z[np.where(np.isnan(z))] = 0.0
+
+    # sort the points by density, so that the densest points are plotted last
+    idx = z.argsort()
+    predicted_values, true_values, z = predicted_values[idx], true_values[idx], z[idx]
+
+    # set base points with density coloring
+    ax.scatter(predicted_values, true_values, c=z)
+
+    # get min and max values
+    min_value = min(predicted_values)
+    max_value = max(predicted_values)
+
     # regression line
     z = np.polyfit(predicted_values, true_values, 1)
     p = np.poly1d(z)
-
-    # get min and max values
-    min_value = min(predicted_values + true_values)
-    max_value = max(predicted_values + true_values)
     ax.plot([min_value, max_value], [p(min_value), p(max_value)], "r--")
 
     # formatting
