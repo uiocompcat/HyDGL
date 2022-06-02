@@ -70,7 +70,7 @@ def plot_correlation(predicted_values: list, true_values: list, file_path='./ima
     predicted_values, true_values, z = predicted_values[idx], true_values[idx], z[idx]
 
     # set base points with density coloring
-    ax.scatter(predicted_values, true_values, c=z)
+    ax.scatter(predicted_values, true_values, c=z, cmap='Blues')
 
     # get min and max values
     min_value = min(predicted_values)
