@@ -26,6 +26,7 @@ class Trainer():
         for data in train_loader:
             data = data.to(self.device)
             self._optimizer.zero_grad()
+            # TODO: could implement gradient accumulation here
             loss = F.mse_loss(self._model(data), data.y)
             loss.backward()
             loss_all += loss.item() * data.num_graphs
