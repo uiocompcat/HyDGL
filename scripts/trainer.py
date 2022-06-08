@@ -3,16 +3,20 @@ import torch
 import torch.nn.functional as F
 import wandb
 
+from torch_geometric.data.batch import Batch
+
 
 class Trainer():
 
-    def __init__(self, model, optimizer, scheduler=None):
+    def __init__(self, model, optimizer, scheduler=None, gradient_accumulation_splits=1):
 
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
         self._model = model.to(self.device)
         self._optimizer = optimizer
         self._scheduler = scheduler
+
+        self._gradient_accumulation_splits = gradient_accumulation_splits
 
     @property
     def model(self):
@@ -23,28 +27,41 @@ class Trainer():
         self._model.train()
         loss_all = 0
 
-        for data in train_loader:
-            data = data.to(self.device)
+        for batch in train_loader:
+
             self._optimizer.zero_grad()
-            # TODO: could implement gradient accumulation here
-            loss = F.mse_loss(self._model(data), data.y)
-            loss.backward()
-            loss_all += loss.item() * data.num_graphs
+            # gradient accumulation here
+            for batch_split in self._split_batch(batch, self._gradient_accumulation_splits):
+                batch_split = batch_split.to(self.device)
+                loss = F.mse_loss(self._model(batch_split), batch_split.y)
+                loss.backward()
+                loss_all += loss.item() * batch_split.num_graphs
+
             self._optimizer.step()
 
         return loss_all / len(train_loader.dataset)
+
+    def _split_batch(self, batch, n_splits):
+
+        split_size = int(np.ceil(len(batch[:]) / n_splits))
+
+        split_batches = []
+        for i in range(n_splits):
+            split_batches.append(Batch.from_data_list(batch[i * split_size:(i + 1) * split_size]))
+
+        return split_batches
 
     def _mae(self, loader, target_means=0, target_stds=1):
 
         self._model.eval()
         errors = []
 
-        for data in loader:
-            data = data.to(self.device)
+        for batch in loader:
+            batch = batch.to(self.device)
 
             # calculate MAE
             # recover real physical values if target means and standard deviations are given
-            errors.extend((np.abs((self._model(data).cpu().detach().numpy() * target_stds + target_means) - (data.y.cpu().detach().numpy() * target_stds + target_means))).tolist())
+            errors.extend((np.abs((self._model(batch).cpu().detach().numpy() * target_stds + target_means) - (batch.y.cpu().detach().numpy() * target_stds + target_means))).tolist())
 
         return np.mean(errors)
 
@@ -53,12 +70,12 @@ class Trainer():
         self._model.eval()
         errors = []
 
-        for data in loader:
-            data = data.to(self.device)
+        for batch in loader:
+            batch = batch.to(self.device)
 
             # calculate MAE
             # recover real physical values if target means and standard deviations are given
-            errors.extend((np.abs((self._model(data).cpu().detach().numpy() * target_stds + target_means) - (data.y.cpu().detach().numpy() * target_stds + target_means))).tolist())
+            errors.extend((np.abs((self._model(batch).cpu().detach().numpy() * target_stds + target_means) - (batch.y.cpu().detach().numpy() * target_stds + target_means))).tolist())
 
         return np.median(errors)
 
@@ -67,12 +84,12 @@ class Trainer():
         self._model.eval()
         errors = []
 
-        for data in loader:
-            data = data.to(self.device)
+        for batch in loader:
+            batch = batch.to(self.device)
 
             # calculate MAE
             # recover real physical values if target means and standard deviations are given
-            errors.extend((np.abs((self._model(data).cpu().detach().numpy() * target_stds + target_means) - (data.y.cpu().detach().numpy() * target_stds + target_means))).tolist())
+            errors.extend((np.abs((self._model(batch).cpu().detach().numpy() * target_stds + target_means) - (batch.y.cpu().detach().numpy() * target_stds + target_means))).tolist())
 
         return np.sqrt(np.mean(np.power(errors, 2)))
 
@@ -82,13 +99,13 @@ class Trainer():
         targets = []
         predictions = []
 
-        for data in loader:
-            data = data.to(self.device)
+        for batch in loader:
+            batch = batch.to(self.device)
 
             # calculate MAE
             # recover real physical values if target means and standard deviations are given
-            predictions.extend((self._model(data).cpu().detach().numpy() * target_stds + target_means).tolist())
-            targets.extend((data.y.cpu().detach().numpy() * target_stds + target_means).tolist())
+            predictions.extend((self._model(batch).cpu().detach().numpy() * target_stds + target_means).tolist())
+            targets.extend((batch.y.cpu().detach().numpy() * target_stds + target_means).tolist())
 
         # cast to np arrays
         predictions = np.array(predictions)
@@ -97,16 +114,16 @@ class Trainer():
         target_mean = np.mean(targets)
         return 1 - (np.sum(np.power(targets - predictions, 2)) / np.sum(np.power(targets - target_mean, 2)))
 
-    def predict_batch(self, data, target_means=None, target_stds=None):
+    def predict_batch(self, batch, target_means=None, target_stds=None):
 
         self._model.eval()
 
-        data = data.to(self.device)
+        batch = batch.to(self.device)
 
         if target_means is not None and target_stds is not None:
-            predictions = (self.model(data).cpu().detach().numpy() * target_stds + target_means).tolist()
+            predictions = (self.model(batch).cpu().detach().numpy() * target_stds + target_means).tolist()
         else:
-            predictions = self.model(data).cpu().detach().numpy().tolist()
+            predictions = self.model(batch).cpu().detach().numpy().tolist()
 
         return predictions
 

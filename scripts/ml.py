@@ -59,7 +59,7 @@ def run_ml(hyper_param: dict, wandb_project_name: str = 'tmQMg-natQgraph2', wand
     scheduler = hyper_param['scheduler']['method'](optimizer, **hyper_param['scheduler']['parameters'])
 
     # run
-    trainer = Trainer(model, optimizer, scheduler)
+    trainer = Trainer(model, optimizer, scheduler, gradient_accumulation_splits=hyper_param['gradient_accumulation_splits'])
     trained_model = trainer.run(train_loader, val_loader, test_loader, n_epochs=hyper_param['n_epochs'], target_means=train_target_means, target_stds=train_target_stds)
 
     # get test set predictions and ground truths
@@ -149,11 +149,11 @@ def run():
         'name': 'layer norm test',
         'data': {
             'dataset': tmQMg,
-            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run-natq3-pol/',
+            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run-natq2-pol/',
             'raw_dir': '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/',
             'val_set_size': 0.1,
             'test_set_size': 0.1,
-            'graph_representation': GraphGeneratorSettings.natQ3,
+            'graph_representation': GraphGeneratorSettings.natQ2,
             'targets': [QmTarget.POLARISABILITY],
             'outliers': outliers
         },
@@ -162,7 +162,7 @@ def run():
             'method': GilmerNetGraphLevelFeatures,
             'parameters': {
                 'n_node_features': 21,
-                'n_edge_features': 24,
+                'n_edge_features': 17,
                 'n_graph_features': 4,
                 'dim': 32,
                 'set2set_steps': 4,
@@ -191,7 +191,8 @@ def run():
             'features_to_scale': ['x', 'edge_attr', 'graph_attr', 'y']
         },
         'batch_size': 32,
-        'n_epochs': 1,
+        'gradient_accumulation_splits': 1,
+        'n_epochs': 3,
         'seed': 2022
     }
 
@@ -249,6 +250,7 @@ def run1():
             'features_to_scale': ['x', 'edge_attr', 'graph_attr', 'y']
         },
         'batch_size': 32,
+        'gradient_accumulation_splits': 1,
         'n_epochs': 300,
         'seed': 2022
     }
@@ -307,6 +309,7 @@ def run2():
             'features_to_scale': ['x', 'edge_attr', 'graph_attr', 'y']
         },
         'batch_size': 32,
+        'gradient_accumulation_splits': 1,
         'n_epochs': 300,
         'seed': 2022
     }
