@@ -30,7 +30,7 @@ class Trainer():
         for batch in train_loader:
 
             self._optimizer.zero_grad()
-            # gradient accumulation here
+            # gradient accumulation
             for batch_split in self._split_batch(batch, self._gradient_accumulation_splits):
                 batch_split = batch_split.to(self.device)
                 loss = F.mse_loss(self._model(batch_split), batch_split.y)
@@ -57,11 +57,12 @@ class Trainer():
         errors = []
 
         for batch in loader:
-            batch = batch.to(self.device)
+            for batch_split in self._split_batch(batch, self._gradient_accumulation_splits):
+                batch_split = batch_split.to(self.device)
 
-            # calculate MAE
-            # recover real physical values if target means and standard deviations are given
-            errors.extend((np.abs((self._model(batch).cpu().detach().numpy() * target_stds + target_means) - (batch.y.cpu().detach().numpy() * target_stds + target_means))).tolist())
+                # calculate MAE
+                # recover real physical values if target means and standard deviations are given
+                errors.extend((np.abs((self._model(batch_split).cpu().detach().numpy() * target_stds + target_means) - (batch_split.y.cpu().detach().numpy() * target_stds + target_means))).tolist())
 
         return np.mean(errors)
 
@@ -71,11 +72,12 @@ class Trainer():
         errors = []
 
         for batch in loader:
-            batch = batch.to(self.device)
+            for batch_split in self._split_batch(batch, self._gradient_accumulation_splits):
+                batch_split = batch_split.to(self.device)
 
-            # calculate MAE
-            # recover real physical values if target means and standard deviations are given
-            errors.extend((np.abs((self._model(batch).cpu().detach().numpy() * target_stds + target_means) - (batch.y.cpu().detach().numpy() * target_stds + target_means))).tolist())
+                # calculate median
+                # recover real physical values if target means and standard deviations are given
+                errors.extend((np.abs((self._model(batch_split).cpu().detach().numpy() * target_stds + target_means) - (batch_split.y.cpu().detach().numpy() * target_stds + target_means))).tolist())
 
         return np.median(errors)
 
@@ -85,11 +87,12 @@ class Trainer():
         errors = []
 
         for batch in loader:
-            batch = batch.to(self.device)
+            for batch_split in self._split_batch(batch, self._gradient_accumulation_splits):
+                batch_split = batch_split.to(self.device)
 
-            # calculate MAE
-            # recover real physical values if target means and standard deviations are given
-            errors.extend((np.abs((self._model(batch).cpu().detach().numpy() * target_stds + target_means) - (batch.y.cpu().detach().numpy() * target_stds + target_means))).tolist())
+                # calculate RMSE
+                # recover real physical values if target means and standard deviations are given
+                errors.extend((np.abs((self._model(batch_split).cpu().detach().numpy() * target_stds + target_means) - (batch_split.y.cpu().detach().numpy() * target_stds + target_means))).tolist())
 
         return np.sqrt(np.mean(np.power(errors, 2)))
 
@@ -100,12 +103,13 @@ class Trainer():
         predictions = []
 
         for batch in loader:
-            batch = batch.to(self.device)
+            for batch_split in self._split_batch(batch, self._gradient_accumulation_splits):
+                batch_split = batch_split.to(self.device)
 
-            # calculate MAE
-            # recover real physical values if target means and standard deviations are given
-            predictions.extend((self._model(batch).cpu().detach().numpy() * target_stds + target_means).tolist())
-            targets.extend((batch.y.cpu().detach().numpy() * target_stds + target_means).tolist())
+                # calculate R^2
+                # recover real physical values if target means and standard deviations are given
+                predictions.extend((self._model(batch_split).cpu().detach().numpy() * target_stds + target_means).tolist())
+                targets.extend((batch_split.y.cpu().detach().numpy() * target_stds + target_means).tolist())
 
         # cast to np arrays
         predictions = np.array(predictions)
