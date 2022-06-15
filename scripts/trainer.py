@@ -118,16 +118,16 @@ class Trainer():
         target_mean = np.mean(targets)
         return 1 - (np.sum(np.power(targets - predictions, 2)) / np.sum(np.power(targets - target_mean, 2)))
 
-    def predict_batch(self, batch, target_means=None, target_stds=None):
+    def predict_batch(self, batch, target_means=0, target_stds=1):
+
+        predictions = []
 
         self._model.eval()
+        for batch_split in self._split_batch(batch, self._gradient_accumulation_splits):
+            batch_split = batch_split.to(self.device)
 
-        batch = batch.to(self.device)
-
-        if target_means is not None and target_stds is not None:
-            predictions = (self.model(batch).cpu().detach().numpy() * target_stds + target_means).tolist()
-        else:
-            predictions = self.model(batch).cpu().detach().numpy().tolist()
+            # get predictions for batch
+            predictions.extend((self.model(batch_split).cpu().detach().numpy() * target_stds + target_means).tolist())
 
         return predictions
 
