@@ -143,7 +143,11 @@ def main():
     #     graph.visualise()
 
 
-def get_number_connected_graphs(qm_data_list):
+def get_number_connected_graphs():
+
+    # directory that holds the extracted raw data
+    ext_data_dir = '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/'
+    files = [x for x in os.listdir(ext_data_dir) if x.split('.')[-1] == 'json']
 
     # get settings
     settings = GraphGeneratorSettings.default(edge_types=[EdgeType.BOND_ORDER_METAL, EdgeType.NBO_BONDING_ORBITALS], bond_order_mode=BondOrderType.WIBERG)
@@ -161,7 +165,13 @@ def get_number_connected_graphs(qm_data_list):
         gg = GraphGenerator(settings)
 
         # generate graphs with appropriate settings
-        graphs = [gg.generate_graph(qm_data) for qm_data in qm_data_list]
+        graphs = []
+
+        for file in tqdm(files):
+
+            # get QmData object
+            qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(ext_data_dir + file))
+            graphs.append(gg.generate_graph(qm_data))
 
         n_connected_graphs = 0
         # determine the number of connected graphs
@@ -234,25 +244,24 @@ def show_molecule():
 # - - - entry point - - - #
 if __name__ == "__main__":
 
-    # directory that holds the extracted raw data
-    ext_data_dir = '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/'
 
-    # list of all files
-    files = [x for x in os.listdir(ext_data_dir)]
+
+    # # list of all files
+    # files = [x for x in os.listdir(ext_data_dir)]
     
-    qm_data_list = []
-    # iterate through files, build graphs and check for connectivity
-    for file in tqdm(files):
+    # qm_data_list = []
+    # # iterate through files, build graphs and check for connectivity
+    # for file in tqdm(files):
 
-        # skip files that are not in JSON format
-        if file.split('.')[-1] != 'json':
-            continue
+    #     # skip files that are not in JSON format
+    #     if file.split('.')[-1] != 'json':
+    #         continue
 
-        # get QmData object
-        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(ext_data_dir + file))
-        qm_data_list.append(qm_data)
+    #     # get QmData object
+    #     qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(ext_data_dir + file))
+    #     qm_data_list.append(qm_data)
 
-    get_number_connected_graphs(qm_data_list)
+    get_number_connected_graphs()
     # show_molecule()
     # main()
     
