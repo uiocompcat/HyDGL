@@ -35,21 +35,37 @@ import networkx as nx
 
 def main():
 
-    # setup target directory path
+    # # setup target directory path
     path = '/home/hkneiding/Documents/UiO/Data/tmQMg/raw/'
-    file_name = 'OREDIA'
-    qm_data = DataParser(path + file_name + '.log').parse()
+    files = [file for file in os.listdir(path) if file.split('.')[-1] == 'log']
 
-    # FileHandler.write_dict_to_json_file('/home/hkneiding/Desktop/' + file_name + '.json', qm_data)
-
-    qm_data_object = QmData.from_dict(qm_data)
-    ggs = GraphGeneratorSettings.natQ2([QmTarget.SVP_HOMO_LUMO_GAP])
+    ggs = GraphGeneratorSettings.natQ3([])
     gg = GraphGenerator(settings=ggs)
-    graph = gg.generate_graph(qm_data_object)
-    nx.write_gml(graph.get_networkx_graph_object(), '/home/hkneiding/Desktop/' + file_name + '.gml')
+    for file in tqdm(files):
+        qm_data = DataParser(path + file).parse()
+        qm_data_object = QmData.from_dict(qm_data)
+
+        graph = gg.generate_graph(qm_data_object)
+
+        print(graph.edges[0].features)
+
+        exit()
+
+        if not graph.is_connected():
+            graph.visualise()
 
     exit()
-    graph.visualise()
+
+    # qm_data = DataParser('/home/hkneiding/Documents/UiO/Data/tmQMg/raw/' + 'FEYBOC.log').parse()
+    # qm_data_object = QmData.from_dict(qm_data)
+    # ggs = GraphGeneratorSettings.natQ3([QmTarget.SVP_HOMO_LUMO_GAP])
+    # gg = GraphGenerator(settings=ggs)
+    # graph = gg.generate_graph(qm_data_object)
+    # graph.visualise()
+
+    exit()
+
+    nx.write_gml(graph.get_networkx_graph_object(), '/home/hkneiding/Desktop/' + file_name + '.gml')
 
     # nx_graph = graph.get_networkx_graph_object()
     # print(nx_graph.nodes.data())
@@ -130,30 +146,32 @@ def main():
 def get_number_connected_graphs(qm_data_list):
 
     # get settings
-    settings = GraphGeneratorSettings.default(edge_types=[EdgeType.BOND_ORDER_METAL, EdgeType.BOND_ORDER_NON_METAL], bond_order_mode=BondOrderType.WIBERG)
+    settings = GraphGeneratorSettings.default(edge_types=[EdgeType.BOND_ORDER_METAL, EdgeType.NBO_BONDING_ORBITALS], bond_order_mode=BondOrderType.WIBERG)
 
     # set up thesholds
-    bond_thresholds = np.linspace(0, 0.1, 10)
+    bond_thresholds = np.linspace(0.2, 0.2, 1)
     # set up output array
-    n_connected_graphs = np.zeros(len(bond_thresholds))
+    n_connected_graphs_list = []
 
-    for i in range(len(bond_thresholds)):
+    for bond_threshold in tqdm(bond_thresholds):
 
         # set same threshold for all atom types
-        settings.bond_threshold_metal = bond_thresholds[i]
-        settings.bond_threshold = bond_thresholds[i]
+        settings.bond_threshold_metal = bond_threshold
         # set up graph generator with parameters
         gg = GraphGenerator(settings)
 
         # generate graphs with appropriate settings
         graphs = [gg.generate_graph(qm_data) for qm_data in qm_data_list]
 
+        n_connected_graphs = 0
         # determine the number of connected graphs
         for j in range(len(graphs)):
             if graphs[j].is_connected():
-                n_connected_graphs[i] += 1
+                n_connected_graphs += 1
 
-    print(n_connected_graphs)
+        n_connected_graphs_list.append(n_connected_graphs)
+
+    print(n_connected_graphs_list)
 
 def extract_gaussian_data():
 
@@ -197,12 +215,50 @@ def get_disconnected_graphs(ggs: GraphGeneratorSettings):
             tqdm.write(file)
 
 
+def show_molecule():
+
+    # symmetry failure of NBO examples: KOCTED, ZUJFEP, WAHNOK
+
+    #WEJFUN
+
+    qm_data = DataParser('/home/hkneiding/Documents/UiO/Data/tmQMg/raw/' + 'ORUHIT.log').parse()
+    qm_data_object = QmData.from_dict(qm_data)
+    ggs = GraphGeneratorSettings.natQ2([QmTarget.SVP_HOMO_LUMO_GAP])
+    gg = GraphGenerator(settings=ggs)
+    graph = gg.generate_graph(qm_data_object)
+    print(graph.is_connected())
+    graph.visualise()
+
+
+
 # - - - entry point - - - #
 if __name__ == "__main__":
-    main()
-    #extract_gaussian_data()
+
+    # directory that holds the extracted raw data
+    ext_data_dir = '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/'
+
+    # list of all files
+    files = [x for x in os.listdir(ext_data_dir)]
+    
+    qm_data_list = []
+    # iterate through files, build graphs and check for connectivity
+    for file in tqdm(files):
+
+        # skip files that are not in JSON format
+        if file.split('.')[-1] != 'json':
+            continue
+
+        # get QmData object
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(ext_data_dir + file))
+        qm_data_list.append(qm_data)
+
+    get_number_connected_graphs(qm_data_list)
+    # show_molecule()
+    # main()
+    
+    # extract_gaussian_data()
     #extract_gaussian_data_to_pandas()
     #read_extracted_data()
 
-    ggs = GraphGeneratorSettings.default(edge_types=[EdgeType.BOND_ORDER_METAL, EdgeType.BOND_ORDER_NON_METAL], bond_threshold=0.1, bond_threshold_metal=0.05)
-    get_disconnected_graphs(ggs)
+    # ggs = GraphGeneratorSettings.default(edge_types=[EdgeType.BOND_ORDER_METAL, EdgeType.BOND_ORDER_NON_METAL], bond_threshold=0.1, bond_threshold_metal=0.05)
+    # get_disconnected_graphs(ggs)
