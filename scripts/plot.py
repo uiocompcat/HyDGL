@@ -32,7 +32,7 @@ def plot_metal_center_group_histogram(train_dataset, val_dataset, test_dataset, 
     ax.set_xticks([3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
     ax.legend()
 
-    fig.savefig(file_path, format='png', dpi=300)
+    fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight')
 
 
 def plot_target_histogram(train_true_values, val_true_values, test_true_values, file_path='./image.png'):
@@ -45,7 +45,7 @@ def plot_target_histogram(train_true_values, val_true_values, test_true_values, 
     ax.set_ylabel('Frequency')
     ax.legend()
 
-    fig.savefig(file_path, format='png', dpi=300)
+    fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight')
 
 
 def plot_correlation(predicted_values: list, true_values: list, file_path='./image.png'):
@@ -90,7 +90,7 @@ def plot_correlation(predicted_values: list, true_values: list, file_path='./ima
     ax.set_xlim([min_value - 0.05 * max_value, max_value + 0.05 * max_value])
     ax.set_ylim([min_value - 0.05 * max_value, max_value + 0.05 * max_value])
 
-    fig.savefig(file_path, format='png', dpi=300)
+    fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight')
 
 
 def plot_error_by_metal_center_group(predicted_values: list, true_values: list, metal_center_groups: list, file_path='./image.png'):
@@ -106,7 +106,7 @@ def plot_error_by_metal_center_group(predicted_values: list, true_values: list, 
     ax.set_xlabel('Metal center group')
     ax.set_ylabel('Mean average deviation')
 
-    fig.savefig(file_path, format='png', dpi=300)
+    fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight')
 
 
 def wandb_plot_error_by_metal_center_group(predicted_values: list, true_values: list, metal_center_groups: list):
