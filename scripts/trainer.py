@@ -45,7 +45,7 @@ class Trainer():
 
         # immediately return original batch if n_batches is one
         if n_splits == 1:
-            return batch
+            return [batch]
 
         split_size = int(np.ceil(len(batch[:]) / n_splits))
 
