@@ -201,22 +201,22 @@ class QmData():
     @property
     def dispersion_energy_delta(self):
         """Getter for the dispersion energy SVP-TZVP delta."""
-        return abs(self.svp_dispersion_energy - self.tzvp_dispersion_energy)
+        return self.tzvp_dispersion_energy - self.svp_dispersion_energy
 
     @property
     def electronic_energy_delta(self):
         """Getter for the electronic energy SVP-TZVP delta."""
-        return abs(self.svp_electronic_energy - self.tzvp_electronic_energy)
+        return self.tzvp_electronic_energy - self.svp_electronic_energy
 
     @property
     def dipole_moment_delta(self):
         """Getter for the dipole moment SVP-TZVP delta."""
-        return abs(self.svp_dipole_moment - self.tzvp_dipole_moment)
+        return self.tzvp_dipole_moment - self.svp_dipole_moment
 
     @property
     def homo_lumo_gap_delta(self):
         """Getter for the HOMO-LUMO SVP-TZVP delta."""
-        return abs(self.svp_homo_lumo_gap - self.tzvp_homo_lumo_gap)
+        return self.tzvp_homo_lumo_gap - self.svp_homo_lumo_gap
 
     def _set_nbo_individual_lists(self):
 

@@ -931,7 +931,7 @@ class TestGraphGenerator(unittest.TestCase):
         [
             TEST_FILE_LALMER,
             [QmTarget.ELECTRONIC_ENERGY_DELTA],
-            {'electronic_energy_delta': 2.06591001000015}
+            {'electronic_energy_delta': -2.06591001000015}
         ],
 
         [
