@@ -44,10 +44,17 @@ def run_ml(hyper_param: dict, wandb_project_name: str = 'tmQMg-natQgraph2', wand
         else:
             raise ValueError('Scaling type not recognized.')
 
+    # set the size of mini batches (for gradient accumulation)
+    if hyper_param['batch_size'] % hyper_param['gradient_accumulation_splits'] == 0:
+        mini_batch_size = int(hyper_param['batch_size'] / hyper_param['gradient_accumulation_splits'])
+    else:
+        raise ValueError('Cannot divide batch of length ' + str(hyper_param['batch_size']) + ' into ' +
+                         str(hyper_param['gradient_accumulation_splits']) + 'mini-batches.')
+
     # set up dataloaders
-    train_loader = DataLoader(sets[0], batch_size=hyper_param['batch_size'], shuffle=True)
-    val_loader = DataLoader(sets[1], batch_size=hyper_param['batch_size'], shuffle=False)
-    test_loader = DataLoader(sets[2], batch_size=hyper_param['batch_size'], shuffle=False)
+    train_loader = DataLoader(sets[0], batch_size=mini_batch_size, shuffle=True)
+    val_loader = DataLoader(sets[1], batch_size=mini_batch_size, shuffle=False)
+    test_loader = DataLoader(sets[2], batch_size=mini_batch_size, shuffle=False)
 
     # obtain dictionary of meta data information
     meta_data_dict = dataset.get_meta_data_dict()
@@ -149,66 +156,7 @@ def run():
         'name': 'layer norm test',
         'data': {
             'dataset': tmQMg,
-            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run-natq2-pol/',
-            'raw_dir': '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/',
-            'val_set_size': 0.1,
-            'test_set_size': 0.1,
-            'graph_representation': GraphGeneratorSettings.natQ2,
-            'targets': [QmTarget.POLARISABILITY],
-            'outliers': outliers
-        },
-        'model': {
-            'name': 'GilmerNet',
-            'method': GilmerNetGraphLevelFeatures,
-            'parameters': {
-                'n_node_features': 21,
-                'n_edge_features': 17,
-                'n_graph_features': 4,
-                'dim': 32,
-                'set2set_steps': 4,
-                'n_atom_jumps': 4
-            }
-        },
-        'optimizer': {
-            'name': 'Adam',
-            'method': torch.optim.Adam,
-            'parameters': {
-                'lr': 0.001
-            }
-        },
-        'scheduler': {
-            'name': 'ReduceLrOnPlateau',
-            'method': torch.optim.lr_scheduler.ReduceLROnPlateau,
-            'parameters': {
-                'mode': 'min',
-                'factor': 0.7,
-                'patience': 5,
-                'min_lr': 0.00001
-            }
-        },
-        'scaling': {
-            'type': 'standard',
-            'features_to_scale': ['x', 'edge_attr', 'graph_attr', 'y']
-        },
-        'batch_size': 32,
-        'gradient_accumulation_splits': 1,
-        'n_epochs': 3,
-        'seed': 2022
-    }
-
-    run_ml(hyper_param)
-
-
-def run1():
-
-    with open('/home/hkneiding/Downloads/outliers_full.pickle', 'rb') as fh:
-        outliers = pickle.load(fh)
-
-    hyper_param = {
-        'name': 'layer norm test',
-        'data': {
-            'dataset': tmQMg,
-            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run-natq3-hlgap/',
+            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run-natq3-hlg/',
             'raw_dir': '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/',
             'val_set_size': 0.1,
             'test_set_size': 0.1,
@@ -225,7 +173,7 @@ def run1():
                 'n_graph_features': 4,
                 'dim': 128,
                 'set2set_steps': 4,
-                'n_atom_jumps': 4
+                'n_atom_jumps': 6
             }
         },
         'optimizer': {
@@ -250,29 +198,29 @@ def run1():
             'features_to_scale': ['x', 'edge_attr', 'graph_attr', 'y']
         },
         'batch_size': 32,
-        'gradient_accumulation_splits': 1,
-        'n_epochs': 300,
+        'gradient_accumulation_splits': 2,
+        'n_epochs': 150,
         'seed': 2022
     }
 
     run_ml(hyper_param)
 
 
-def run2():
+def run_natq2():
 
     with open('/home/hkneiding/Downloads/outliers_full.pickle', 'rb') as fh:
         outliers = pickle.load(fh)
 
     hyper_param = {
-        'name': 'layer norm test',
+        'name': 'NatQ2',
         'data': {
             'dataset': tmQMg,
-            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run-natq3-dipolm/',
+            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run-natq2-ddm/',
             'raw_dir': '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/',
             'val_set_size': 0.1,
             'test_set_size': 0.1,
-            'graph_representation': GraphGeneratorSettings.natQ3,
-            'targets': [QmTarget.TZVP_DIPOLE_MOMENT],
+            'graph_representation': GraphGeneratorSettings.natQ2extended,
+            'targets': [QmTarget.DIPOLE_MOMENT_DELTA],
             'outliers': outliers
         },
         'model': {
@@ -280,7 +228,7 @@ def run2():
             'method': GilmerNetGraphLevelFeatures,
             'parameters': {
                 'n_node_features': 21,
-                'n_edge_features': 26,
+                'n_edge_features': 18,
                 'n_graph_features': 4,
                 'dim': 128,
                 'set2set_steps': 4,
@@ -323,6 +271,5 @@ if __name__ == "__main__":
     # api = wandb.Api()
     # run = api.run("hkneiding/tmQMg-natQgraph2/17j02lpm")
 
-    run()
-    # run1()
-    # run2()
+    # run()
+    run_natq2()
