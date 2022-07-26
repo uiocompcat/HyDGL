@@ -1219,7 +1219,7 @@ class GraphGenerator:
         # get list of hydride hydrogen indices
         hydride_hydrogen_indices = self._get_hydride_hydrogen_indices(qm_data)
 
-        atom_indices_list = []
+        adjacency_list = []
         stabilisation_energies = []
         nbo_types = []
         nbo_ids = []
@@ -1265,14 +1265,14 @@ class GraphGenerator:
                     selected_atom_indices = [index_a, index_b]
 
                     # add selected atom indices if not already in list
-                    if selected_atom_indices not in atom_indices_list:
-                        atom_indices_list.append(selected_atom_indices)
+                    if selected_atom_indices not in adjacency_list:
+                        adjacency_list.append(selected_atom_indices)
                         stabilisation_energies.append([qm_data.sopa_data[i][1][0]])
                         nbo_types.append([donor_nbo_type, acceptor_nbo_type])
                         nbo_ids.append([[qm_data.sopa_data[i][0][0], qm_data.sopa_data[i][0][1]]])
                     else:
                         # find all occurrences of atom_indices pairs
-                        list_indices = [i for i, x in enumerate(atom_indices_list) if x == selected_atom_indices]
+                        list_indices = [i for i, x in enumerate(adjacency_list) if x == selected_atom_indices]
 
                         # iterate through all entries with the same atom indices pairs
                         correct_list_index = None
@@ -1285,7 +1285,7 @@ class GraphGenerator:
 
                         # if there does not exist an interaction between these kinds of NBOs make a new entry
                         if correct_list_index is None:
-                            atom_indices_list.append(selected_atom_indices)
+                            adjacency_list.append(selected_atom_indices)
                             stabilisation_energies.append([qm_data.sopa_data[i][1][0]])
                             nbo_types.append([donor_nbo_type, acceptor_nbo_type])
                             nbo_ids.append([[qm_data.sopa_data[i][0][0], qm_data.sopa_data[i][0][1]]])
@@ -1295,11 +1295,11 @@ class GraphGenerator:
                             nbo_ids[correct_list_index].append([qm_data.sopa_data[i][0][0], qm_data.sopa_data[i][0][1]])
 
         # make sure that lists have the same length
-        assert len(atom_indices_list) == len(stabilisation_energies)
-        assert len(atom_indices_list) == len(nbo_types)
-        assert len(atom_indices_list) == len(nbo_ids)
+        assert len(adjacency_list) == len(stabilisation_energies)
+        assert len(adjacency_list) == len(nbo_types)
+        assert len(adjacency_list) == len(nbo_ids)
 
-        return atom_indices_list, stabilisation_energies, nbo_ids
+        return adjacency_list, stabilisation_energies, nbo_ids
 
     def _get_sopa_edges(self, qm_data: QmData) -> list[Edge]:
 
@@ -1310,13 +1310,13 @@ class GraphGenerator:
         """
 
         # obtain SOPA adjacency list and associated stabilisation energies and NBO types
-        atom_indices_list, stabilisation_energies, nbo_ids = self._get_sopa_adjacency_list(qm_data)
+        adjacency_list, stabilisation_energies, nbo_ids = self._get_sopa_adjacency_list(qm_data)
         # format nbo_ids and stabilisation energies according to specification
         resolved_nbo_ids = self._resolve_nbo_ids(stabilisation_energies, nbo_ids, self._settings.sopa_resolution_mode)
         resolved_stabilisation_energies = self._resolve_stabilisation_energies(stabilisation_energies, self._settings.sopa_resolution_mode)
 
         edges = []
-        for i in range(len(atom_indices_list)):
+        for i in range(len(adjacency_list)):
             for j in range(len(resolved_stabilisation_energies[i])):
 
                 # skip if stabilisation energy is less than specified interaction threshold
@@ -1326,9 +1326,9 @@ class GraphGenerator:
                 # set up feature list with stabilisation energy and NBO types
                 features = self._get_sopa_edge_features(qm_data, stabilisation_energies[i], nbo_ids[i], resolved_nbo_ids[i][j])
                 # add additional features
-                features = features | self._get_edge_features(atom_indices_list[i], qm_data)
+                features = features | self._get_edge_features(adjacency_list[i], qm_data)
 
-                edges.append(Edge(atom_indices_list[i], features=features, is_directed=True))
+                edges.append(Edge(adjacency_list[i], features=features, is_directed=True))
 
         return edges
 
@@ -1341,7 +1341,7 @@ class GraphGenerator:
         """
 
         # obtain SOPA adjacency list and associated stabilisation energies and NBO types
-        # atom_indices_list, stabilisation_energies, nbo_types = self._get_sopa_adjacency_list(qm_data)
+        # adjacency_list, stabilisation_energies, nbo_types = self._get_sopa_adjacency_list(qm_data)
 
         # get donor and acceptor NBO data points
         donor_nbo = self._get_nbo_from_nbo_id(qm_data, nbo_ids[0])
