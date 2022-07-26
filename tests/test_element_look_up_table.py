@@ -14,8 +14,8 @@ class TestElementLookUpTable(unittest.TestCase):
         ],
 
         [
-            99,
-            'Es'
+            86,
+            'Rn'
         ],
 
     ])
@@ -32,8 +32,8 @@ class TestElementLookUpTable(unittest.TestCase):
         ],
 
         [
-            'eS',
-            99
+            'rN',
+            86
 
         ],
 

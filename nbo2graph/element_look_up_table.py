@@ -11,10 +11,7 @@ class ElementLookUpTable():
                            'Ba', 'La', 'Ce', 'Pr', 'Nd', 'Pm', 'Sm', 'Eu', 'Gd',
                            'Tb', 'Dy', 'Ho', 'Er', 'Tm', 'Yb', 'Lu', 'Hf', 'Ta',
                            'W', 'Re', 'Os', 'Ir', 'Pt', 'Au', 'Hg', 'Tl', 'Pb',
-                           'Bi', 'Po', 'At', 'Rn', 'Fr', 'Ra', 'Ac', 'Th', 'Pa',
-                           'U', 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es', 'Fm',
-                           'Md', 'No', 'Lr', 'Rf', 'Db', 'Sg', 'Bh', 'Hs', 'Mt',
-                           'Ds', 'Rg', 'Cn', 'Nh', 'Fl', 'Mc', 'Lv', 'Ts', 'Og']
+                           'Bi', 'Po', 'At', 'Rn']
 
     transition_metal_atomic_numbers = [21, 22, 23, 24, 25, 26, 27, 28, 29, 30,                          # first block
                                        39, 40, 41, 42, 43, 44, 45, 46, 47, 48,                          # second block
@@ -109,32 +106,7 @@ class ElementLookUpTable():
         'Bi': {'colour': 'gray', 'size': 30, 'group': 15, 'period': 6},
         'Po': {'colour': 'gray', 'size': 30, 'group': 16, 'period': 6},
         'At': {'colour': 'gray', 'size': 30, 'group': 17, 'period': 6},
-        'Rn': {'colour': 'gray', 'size': 30, 'group': 18, 'period': 6},
-        'Fr': {'colour': 'violet', 'size': 18, 'group': 1, 'period': 7},
-        'Ra': {'colour': 'green', 'size': 18, 'group': 2, 'period': 7},
-        'Ac': {'colour': 'gray', 'size': 30, 'group': 3, 'period': 7},
-        'Th': {'colour': 'gray', 'size': 30, 'group': None, 'period': 7},
-        'Pa': {'colour': 'gray', 'size': 30, 'group': None, 'period': 7},
-        'U': {'colour': 'gray', 'size': 30, 'group': None, 'period': 7},
-        'Np': {'colour': 'gray', 'size': 30, 'group': None, 'period': 7},
-        'Pu': {'colour': 'gray', 'size': 30, 'group': None, 'period': 7},
-        'Am': {'colour': 'gray', 'size': 30, 'group': None, 'period': 7},
-        'Cm': {'colour': 'gray', 'size': 30, 'group': None, 'period': 7},
-        'Bk': {'colour': 'gray', 'size': 30, 'group': None, 'period': 7},
-        'Cf': {'colour': 'gray', 'size': 30, 'group': None, 'period': 7},
-        'Es': {'colour': 'gray', 'size': 30, 'group': None, 'period': 7},
-        'Fm': {'colour': 'gray', 'size': 30, 'group': None, 'period': 7},
-        'Md': {'colour': 'gray', 'size': 30, 'group': None, 'period': 7},
-        'No': {'colour': 'gray', 'size': 30, 'group': None, 'period': 7},
-        'Lr': {'colour': 'gray', 'size': 30, 'group': 3, 'period': 7},
-        'Rf': {'colour': 'gray', 'size': 30, 'group': 4, 'period': 7},
-        'Db': {'colour': 'gray', 'size': 30, 'group': 5, 'period': 7},
-        'Sg': {'colour': 'gray', 'size': 30, 'group': 6, 'period': 7},
-        'Bh': {'colour': 'gray', 'size': 30, 'group': 7, 'period': 7},
-        'Hs': {'colour': 'gray', 'size': 30, 'group': 8, 'period': 7},
-        'Mt': {'colour': 'gray', 'size': 30, 'group': 9, 'period': 7},
-        'Ds': {'colour': 'gray', 'size': 30, 'group': 10, 'period': 7},
-        'Rg': {'colour': 'gray', 'size': 30, 'group': 11, 'period': 7},
+        'Rn': {'colour': 'gray', 'size': 30, 'group': 18, 'period': 6}
     }
 
     @staticmethod
@@ -194,7 +166,7 @@ class ElementLookUpTable():
         if atomic_number <= len(ElementLookUpTable.element_identifiers) and atomic_number > 0:
             return ElementLookUpTable.element_identifiers[atomic_number - 1]
         else:
-            raise ValueError('Invalid atomic number, must be in range 1-118.')
+            raise ValueError('Invalid atomic number, must be in range 1-86.')
 
     @staticmethod
     def get_atomic_number(element_identifier: str) -> int:
