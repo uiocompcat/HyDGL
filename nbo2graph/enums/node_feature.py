@@ -7,9 +7,13 @@ class NodeFeature(Enum):
 
     # basic
     ATOMIC_NUMBER = auto()
+    ELECTRONEGATIVITY = auto()
+    COVALENT_RADIUS = auto()
 
+    # bound hydrogen
     BOUND_HYDROGEN_COUNT = auto()
 
+    # bond order totals
     WIBERG_BOND_ORDER_TOTAL = auto()
     LMO_BOND_ORDER_TOTAL = auto()
     NLMO_BOND_ORDER_TOTAL = auto()

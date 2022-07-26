@@ -445,6 +445,24 @@ class TestGraphGenerator(unittest.TestCase):
         ],
 
         [
+            TEST_FILE_LALMER,
+            HydrogenMode.OMIT,
+            BondOrderType.NLMO,
+            [NodeFeature.COVALENT_RADIUS],
+            4,
+            Node(features={'covalent_radius': 1.02}, position=[-4.918379, -0.662092, -0.151817], label='S')
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            HydrogenMode.OMIT,
+            BondOrderType.NLMO,
+            [NodeFeature.ELECTRONEGATIVITY],
+            4,
+            Node(features={'electronegativity': 2.58}, position=[-4.918379, -0.662092, -0.151817], label='S')
+        ],
+
+        [
             TEST_FILE_OREDIA,
             HydrogenMode.OMIT,
             BondOrderType.NLMO,

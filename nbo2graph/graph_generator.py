@@ -638,9 +638,13 @@ class GraphGenerator:
         # set up features for node
         node_features = {}
 
-        # add atomic number
+        # add basic features
         if NodeFeature.ATOMIC_NUMBER in self._settings.node_features:
             node_features['atomic_number'] = qm_data.atomic_numbers[i]
+        if NodeFeature.COVALENT_RADIUS in self._settings.node_features:
+            node_features['covalent_radius'] = ElementLookUpTable.atom_property_dict[ElementLookUpTable.get_element_identifier(qm_data.atomic_numbers[i])]['covalent_radius']
+        if NodeFeature.ELECTRONEGATIVITY in self._settings.node_features:
+            node_features['electronegativity'] = ElementLookUpTable.atom_property_dict[ElementLookUpTable.get_element_identifier(qm_data.atomic_numbers[i])]['electronegativity']
 
         # add natural atomic charge
         if NodeFeature.NATURAL_ATOMIC_CHARGE in self._settings.node_features:
