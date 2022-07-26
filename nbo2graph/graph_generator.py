@@ -57,6 +57,18 @@ class GraphGenerator:
         if self._settings.hydrogen_mode == HydrogenMode.OMIT:
             edges = self._adjust_node_references(edges, qm_data)
 
+        # add final node degree as node feature
+        if NodeFeature.NODE_DEGREE in self._settings.node_features:
+
+            node_degrees = [0 for _ in nodes]
+
+            for edge in edges:
+                for node_index in edge.node_indices:
+                    node_degrees[node_index] += 1
+
+            for i, node in enumerate(nodes):
+                node.features['node_degree'] = node_degrees[i]
+
         # check validity of nodes
         self._validate_node_list(nodes)
         # check validity of edges

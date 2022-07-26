@@ -52,3 +52,6 @@ class NodeFeature(Enum):
     LONE_VACANCY_P_SYMMETRY = auto()
     LONE_VACANCY_D_SYMMETRY = auto()
     LONE_VACANCY_F_SYMMETRY = auto()
+
+    # graph
+    NODE_DEGREE = auto()
