@@ -154,6 +154,28 @@ class GraphGeneratorSettings:
                    sopa_contribution_threshold=sopa_contribution_threshold)
 
     @classmethod
+    def baseline(cls, targets):
+
+        return cls(node_features=[NodeFeature.ATOMIC_NUMBER,
+                                  NodeFeature.NODE_DEGREE,
+                                  NodeFeature.COVALENT_RADIUS,
+                                  NodeFeature.ELECTRONEGATIVITY],
+                   edge_features=[EdgeFeature.BOND_DISTANCE,
+                                  EdgeFeature.WIBERG_BOND_ORDER_INT],
+                   edge_types=[EdgeType.NBO_BONDING_ORBITALS, EdgeType.BOND_ORDER_METAL],
+                   bond_order_mode=BondOrderType.WIBERG,
+                   bond_threshold=DEFAULT_BOND_THRESHOLD,
+                   bond_threshold_metal=0.05,
+                   hydrogen_mode=HydrogenMode.EXPLICIT,
+                   hydrogen_count_threshold=DEFAULT_HYDROGEN_COUNT_THRESHOLD,
+                   sopa_edge_features=[],
+                   graph_features=[GraphFeature.CHARGE, GraphFeature.MOLECULAR_MASS, GraphFeature.N_ATOMS, GraphFeature.N_ELECTRONS],
+                   targets=targets,
+                   sopa_resolution_mode=None,
+                   sopa_interaction_threshold=None,
+                   sopa_contribution_threshold=None)
+
+    @classmethod
     def natQ2(cls, targets):
 
         return cls(node_features=[NodeFeature.ATOMIC_NUMBER,
