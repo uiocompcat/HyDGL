@@ -10,6 +10,11 @@ class EdgeFeature(Enum):
     LMO_BOND_ORDER = auto()
     NLMO_BOND_ORDER = auto()
 
+    # integer bond orders
+    # LMO and NLMO bond orders can be negative so that there is no clear conversion
+    # to integer bond orders
+    WIBERG_BOND_ORDER_INT = auto()
+
     # NBO type
     NBO_TYPE = auto()
 

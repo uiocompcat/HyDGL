@@ -312,6 +312,10 @@ class GraphGenerator:
         if EdgeFeature.NLMO_BOND_ORDER in self._settings.edge_features:
             edge_features['nlmo_bond_order'] = qm_data.nlmo_bond_order_matrix[bond_atom_indices[0]][bond_atom_indices[1]]
 
+        # append requested integer bond orders
+        if EdgeFeature.WIBERG_BOND_ORDER_INT in self._settings.edge_features:
+            edge_features['wiberg_bond_order_int'] = round(qm_data.wiberg_bond_order_matrix[bond_atom_indices[0]][bond_atom_indices[1]])
+
         # add bond distance as feature to edges
         if EdgeFeature.BOND_DISTANCE in self._settings.edge_features:
             edge_features['bond_distance'] = qm_data.bond_distance_matrix[bond_atom_indices[0]][bond_atom_indices[1]]

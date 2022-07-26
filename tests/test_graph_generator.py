@@ -727,6 +727,24 @@ class TestGraphGenerator(unittest.TestCase):
             HydrogenMode.EXPLICIT,
             [EdgeType.BOND_ORDER_METAL, EdgeType.BOND_ORDER_NON_METAL],
             BondOrderType.WIBERG,
+            [EdgeFeature.WIBERG_BOND_ORDER_INT],
+            1,
+            [
+                Edge([2, 3], features={'wiberg_bond_order_int': 1}), Edge([2, 6], features={'wiberg_bond_order_int': 1}), Edge([3, 4], features={'wiberg_bond_order_int': 1}), Edge([3, 9], features={'wiberg_bond_order_int': 1}),
+                Edge([4, 5], features={'wiberg_bond_order_int': 1}), Edge([5, 6], features={'wiberg_bond_order_int': 2}), Edge([6, 7], features={'wiberg_bond_order_int': 1}), Edge([8, 9], features={'wiberg_bond_order_int': 1}),
+                Edge([8, 13], features={'wiberg_bond_order_int': 1}), Edge([9, 10], features={'wiberg_bond_order_int': 1}), Edge([10, 11], features={'wiberg_bond_order_int': 1}), Edge([11, 12], features={'wiberg_bond_order_int': 1}),
+                Edge([12, 13], features={'wiberg_bond_order_int': 1}), Edge([13, 19], features={'wiberg_bond_order_int': 1}), Edge([14, 15], features={'wiberg_bond_order_int': 1}), Edge([14, 19], features={'wiberg_bond_order_int': 1}),
+                Edge([15, 16], features={'wiberg_bond_order_int': 1}), Edge([15, 21], features={'wiberg_bond_order_int': 1}), Edge([16, 17], features={'wiberg_bond_order_int': 1}), Edge([17, 18], features={'wiberg_bond_order_int': 1}),
+                Edge([18, 19], features={'wiberg_bond_order_int': 1}), Edge([20, 21], features={'wiberg_bond_order_int': 1}), Edge([20, 24], features={'wiberg_bond_order_int': 1}), Edge([21, 22], features={'wiberg_bond_order_int': 1}),
+                Edge([22, 23], features={'wiberg_bond_order_int': 1}), Edge([23, 24], features={'wiberg_bond_order_int': 2}), Edge([24, 25], features={'wiberg_bond_order_int': 1}), Edge([26, 28], features={'wiberg_bond_order_int': 1}),
+                Edge([26, 29], features={'wiberg_bond_order_int': 1}), Edge([26, 30], features={'wiberg_bond_order_int': 1})
+            ]
+        ],
+
+        [
+            HydrogenMode.EXPLICIT,
+            [EdgeType.BOND_ORDER_METAL, EdgeType.BOND_ORDER_NON_METAL],
+            BondOrderType.WIBERG,
             [EdgeFeature.BOND_DISTANCE],
             1,
             [
