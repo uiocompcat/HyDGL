@@ -21,6 +21,7 @@ from nbo2graph.graph import Graph
 from nbo2graph.node import Node
 from nbo2graph.graph_generator_settings import GraphGeneratorSettings
 from nbo2graph.qm_data import QmData
+from nbo2graph.element_look_up_table import ElementLookUpTable
 # from nbo2graph.datasets.tmQMg import tmQMg
 from time import sleep
 from nbo2graph.tools import Tools
@@ -150,7 +151,7 @@ def get_number_connected_graphs():
     files = [x for x in os.listdir(ext_data_dir) if x.split('.')[-1] == 'json']
 
     # get settings
-    settings = GraphGeneratorSettings.default(edge_types=[EdgeType.BOND_ORDER_METAL, EdgeType.NBO_BONDING_ORBITALS], bond_order_mode=BondOrderType.WIBERG)
+    settings = GraphGeneratorSettings.default(edge_types=[EdgeType.BOND_ORDER_METAL, EdgeType.NBO_BONDING_ORBITALS], bond_order_mode=BondOrderType.NLMO)
 
     # set up thesholds
     bond_thresholds = np.linspace(0.2, 0.2, 1)
@@ -198,6 +199,7 @@ def extract_gaussian_data():
         except ValueError:
             print(raw_file)
 
+
 def get_disconnected_graphs(ggs: GraphGeneratorSettings):
 
     # directory that holds the extracted raw data
@@ -225,26 +227,65 @@ def get_disconnected_graphs(ggs: GraphGeneratorSettings):
             tqdm.write(file)
 
 
+def get_edge_bond_orders(ggs: GraphGeneratorSettings):
+
+    # directory that holds the extracted raw data
+    ext_data_dir = '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/'
+
+    # list of all files
+    files = [x for x in os.listdir(ext_data_dir)]
+    # specify graph generator
+    gg = GraphGenerator(ggs)
+
+    # iterate through files, build graphs and check for connectivity
+    for file in tqdm(files):
+
+        # skip files that are not in JSON format
+        if file.split('.')[-1] != 'json':
+            continue
+
+        # get QmData object
+        qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(ext_data_dir + file))
+        # build graph
+        graph = gg.generate_graph(qm_data)
+
+        for edge in graph.edges:
+
+            bond_order = str(edge.features['wiberg_bond_order_int'])
+            bond_type = 'non_metal'
+
+            if graph.nodes[edge.node_indices[0]].features['atomic_number'] in ElementLookUpTable.transition_metal_atomic_numbers or \
+               graph.nodes[edge.node_indices[1]].features['atomic_number'] in ElementLookUpTable.transition_metal_atomic_numbers:
+
+                bond_type = 'metal'
+
+            print(bond_order + ' - ' + bond_type)
+
+
 def show_molecule():
 
     # symmetry failure of NBO examples: KOCTED, ZUJFEP, WAHNOK
 
     #WEJFUN
 
-    qm_data = DataParser('/home/hkneiding/Documents/UiO/Data/tmQMg/raw/' + 'ORUHIT.log').parse()
+    qm_data = DataParser('/home/hkneiding/Documents/UiO/Data/tmQMg/raw/' + 'LALMER.log').parse()
     qm_data_object = QmData.from_dict(qm_data)
-    ggs = GraphGeneratorSettings.natQ2([QmTarget.SVP_HOMO_LUMO_GAP])
+
+    # ggs = GraphGeneratorSettings.natQ2extended([QmTarget.SVP_HOMO_LUMO_GAP])
+    ggs = GraphGeneratorSettings.baseline([QmTarget.SVP_HOMO_LUMO_GAP])
+    
+
     gg = GraphGenerator(settings=ggs)
     graph = gg.generate_graph(qm_data_object)
     print(graph.is_connected())
     graph.visualise()
 
 
-
 # - - - entry point - - - #
 if __name__ == "__main__":
 
-
+    ggs = GraphGeneratorSettings.baseline([])
+    get_edge_bond_orders(ggs)
 
     # # list of all files
     # files = [x for x in os.listdir(ext_data_dir)]
@@ -261,9 +302,8 @@ if __name__ == "__main__":
     #     qm_data = QmData.from_dict(FileHandler.read_dict_from_json_file(ext_data_dir + file))
     #     qm_data_list.append(qm_data)
 
-    get_number_connected_graphs()
+    # get_number_connected_graphs()
     # show_molecule()
-    # main()
     
     # extract_gaussian_data()
     #extract_gaussian_data_to_pandas()
