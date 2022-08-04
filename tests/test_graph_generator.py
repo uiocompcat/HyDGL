@@ -450,7 +450,7 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.COVALENT_RADIUS],
             4,
-            Node(features={'covalent_radius': 1.02}, position=[-4.918379, -0.662092, -0.151817], label='S')
+            Node(features={'covalent_radius': 1.05}, position=[-4.918379, -0.662092, -0.151817], label='S')
         ],
 
         [
