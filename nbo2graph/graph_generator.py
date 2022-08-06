@@ -326,7 +326,18 @@ class GraphGenerator:
 
         # append requested integer bond orders
         if EdgeFeature.WIBERG_BOND_ORDER_INT in self._settings.edge_features:
-            edge_features['wiberg_bond_order_int'] = round(qm_data.wiberg_bond_order_matrix[bond_atom_indices[0]][bond_atom_indices[1]])
+
+            wiberg_index = qm_data.wiberg_bond_order_matrix[bond_atom_indices[0]][bond_atom_indices[1]]
+            bond_order_int = 0
+
+            if wiberg_index < 1.5:
+                bond_order_int = 1
+            elif wiberg_index >= 1.5 and wiberg_index < 2.25:
+                bond_order_int = 2
+            elif wiberg_index >= 2.25:
+                bond_order_int = 3
+
+            edge_features['wiberg_bond_order_int'] = bond_order_int
 
         # add bond distance as feature to edges
         if EdgeFeature.BOND_DISTANCE in self._settings.edge_features:
