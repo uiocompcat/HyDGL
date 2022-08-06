@@ -5,7 +5,6 @@ import pandas as pd
 import numpy as np
 from sklearn.cluster import k_means
 from tqdm import tqdm
-import dask.dataframe as dd
 from nbo2graph.edge import Edge
 from nbo2graph.enums.bond_order_type import BondOrderType
 from nbo2graph.enums.edge_feature import EdgeFeature
@@ -238,7 +237,7 @@ def get_edge_bond_orders(ggs: GraphGeneratorSettings):
     gg = GraphGenerator(ggs)
 
     # iterate through files, build graphs and check for connectivity
-    for file in tqdm(files):
+    for file in files:
 
         # skip files that are not in JSON format
         if file.split('.')[-1] != 'json':
