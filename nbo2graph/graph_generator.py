@@ -332,9 +332,9 @@ class GraphGenerator:
 
             if wiberg_index < 1.5:
                 bond_order_int = 1
-            elif wiberg_index >= 1.5 and wiberg_index < 2.25:
+            elif wiberg_index >= 1.5 and wiberg_index < 2.0:
                 bond_order_int = 2
-            elif wiberg_index >= 2.25:
+            elif wiberg_index >= 2.0:
                 bond_order_int = 3
 
             edge_features['wiberg_bond_order_int'] = bond_order_int
