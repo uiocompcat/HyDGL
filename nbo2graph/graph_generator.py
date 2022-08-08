@@ -330,9 +330,9 @@ class GraphGenerator:
             wiberg_index = qm_data.wiberg_bond_order_matrix[bond_atom_indices[0]][bond_atom_indices[1]]
             bond_order_int = 0
 
-            if wiberg_index < 1.5:
+            if wiberg_index < 1.43:
                 bond_order_int = 1
-            elif wiberg_index >= 1.5 and wiberg_index < 2.0:
+            elif wiberg_index >= 1.43 and wiberg_index < 2.0:
                 bond_order_int = 2
             elif wiberg_index >= 2.0:
                 bond_order_int = 3
