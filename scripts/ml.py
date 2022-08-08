@@ -18,6 +18,10 @@ def run_ml(hyper_param: dict, wandb_project_name: str = 'tmQMg-natQgraph2', wand
     # wandb.config = hyper_param
     wandb.init(config=hyper_param, project=wandb_project_name, entity=wandb_entity)
 
+    # set name
+    wandb.run.name = hyper_param['name']
+    wandb.run.save()
+
     # set seed
     set_global_seed(hyper_param['seed'])
 
