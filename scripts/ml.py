@@ -27,8 +27,7 @@ def run_ml(hyper_param: dict, wandb_project_name: str = 'tmQMg-natQgraph2', wand
 
     # setup data set
     dataset: tmQMg = hyper_param['data']['dataset'](root=hyper_param['data']['root_dir'], raw_dir=hyper_param['data']['raw_dir'], settings=hyper_param['data']['graph_representation'](targets=hyper_param['data']['targets']), exclude=hyper_param['data']['outliers'])
-    dataset.clear_graph_directories()
-
+    
     # divide into subsets
     sets = torch.utils.data.random_split(dataset, [len(dataset) - round(hyper_param['data']['val_set_size'] * len(dataset)) - round(hyper_param['data']['test_set_size'] * len(dataset)),
                                                    round(hyper_param['data']['val_set_size'] * len(dataset)),
@@ -279,7 +278,7 @@ def run_baseline(target: QmTarget):
         'name': 'Baseline - ' + target._name_,
         'data': {
             'dataset': tmQMg,
-            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run-baseline-/' + target._name_,
+            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run-baseline-' + target._name_,
             'raw_dir': '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/',
             'val_set_size': 0.1,
             'test_set_size': 0.1,
@@ -291,8 +290,8 @@ def run_baseline(target: QmTarget):
             'name': 'GilmerNet',
             'method': GilmerNetGraphLevelFeatures,
             'parameters': {
-                'n_node_features': 21,
-                'n_edge_features': 18,
+                'n_node_features': 4,
+                'n_edge_features': 2,
                 'n_graph_features': 4,
                 'dim': 128,
                 'set2set_steps': 4,
