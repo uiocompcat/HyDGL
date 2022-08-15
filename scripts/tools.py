@@ -68,11 +68,11 @@ def standard_scale_dataset(dataset, feature_matrix_dict: dict):
 
 
 def get_feature_means_from_feature_matrix_dict(feature_matrix_dict: dict, feature_key: str):
-    return np.mean(feature_matrix_dict[feature_key], axis=0)
+    return np.mean(feature_matrix_dict[feature_key], axis=0, keepdims=True)
 
 
 def get_feature_stds_from_feature_matrix_dict(feature_matrix_dict: dict, feature_key: str):
-    return np.std(feature_matrix_dict[feature_key], axis=0)
+    return np.std(feature_matrix_dict[feature_key], axis=0, keepdims=True)
 
 
 def calculate_r_squared(predictions, targets):
