@@ -2,6 +2,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 import wandb
+from tools import get_target_list
 
 
 class Trainer():
@@ -39,64 +40,22 @@ class Trainer():
 
         return loss_all / len(train_loader.dataset)
 
-    def _mae(self, loader, target_means=0, target_stds=1):
+    def _mae(self, predictions, targets):
 
-        self._model.eval()
-        errors = []
-
-        for batch in loader:
-            batch = batch.to(self.device)
-            # calculate MAE
-            # recover real physical values if target means and standard deviations are given
-            errors.extend((np.abs((self._model(batch).cpu().detach().numpy() * target_stds + target_means) - (batch.y.cpu().detach().numpy() * target_stds + target_means))).tolist())
-
+        errors = np.abs(predictions - targets)
         return np.mean(errors)
 
-    def _median(self, loader, target_means=0, target_stds=1):
+    def _median(self, predictions, targets):
 
-        self._model.eval()
-        errors = []
-
-        for batch in loader:
-            batch = batch.to(self.device)
-
-            # calculate median
-            # recover real physical values if target means and standard deviations are given
-            errors.extend((np.abs((self._model(batch).cpu().detach().numpy() * target_stds + target_means) - (batch.y.cpu().detach().numpy() * target_stds + target_means))).tolist())
-
+        errors = np.abs(predictions - targets)
         return np.median(errors)
 
-    def _rmse(self, loader, target_means=0, target_stds=1):
+    def _rmse(self, predictions, targets):
 
-        self._model.eval()
-        errors = []
-
-        for batch in loader:
-            batch = batch.to(self.device)
-
-            # calculate RMSE
-            # recover real physical values if target means and standard deviations are given
-            errors.extend((np.abs((self._model(batch).cpu().detach().numpy() * target_stds + target_means) - (batch.y.cpu().detach().numpy() * target_stds + target_means))).tolist())
-
+        errors = np.abs(predictions - targets)
         return np.sqrt(np.mean(np.power(errors, 2)))
 
-    def _r_squared(self, loader, target_means=0, target_stds=1):
-
-        self._model.eval()
-        targets = []
-        predictions = []
-
-        for batch in loader:
-            batch = batch.to(self.device)
-
-            # calculate R^2
-            # recover real physical values if target means and standard deviations are given
-            predictions.extend((self._model(batch).cpu().detach().numpy() * target_stds + target_means).tolist())
-            targets.extend((batch.y.cpu().detach().numpy() * target_stds + target_means).tolist())
-
-        # cast to np arrays
-        predictions = np.array(predictions)
-        targets = np.array(targets)
+    def _r_squared(self, predictions, targets):
 
         target_mean = np.mean(targets)
         return 1 - (np.sum(np.power(targets - predictions, 2)) / np.sum(np.power(targets - target_mean, 2)))
@@ -113,7 +72,21 @@ class Trainer():
 
         return predictions
 
-    def run(self, train_loader, val_loader, test_loader, n_epochs=300, target_means=None, target_stds=None):
+    def predict_loader(self, loader, target_means=0, target_stds=1):
+
+        predictions = []
+
+        for batch in loader:
+            predictions.extend(self.predict_batch(batch, target_means=target_means, target_stds=target_stds))
+
+        return predictions
+
+    def run(self, train_loader, train_loader_unshuffled, val_loader, test_loader, n_epochs=300, target_means=[0], target_stds=[1]):
+
+        # get targets off all sets
+        train_targets = get_target_list(train_loader_unshuffled, target_means=target_means, target_stds=target_stds)
+        val_targets = get_target_list(val_loader, target_means=target_means, target_stds=target_stds)
+        test_targets = get_target_list(test_loader, target_means=target_means, target_stds=target_stds)
 
         best_val_error = None
         for epoch in range(1, n_epochs + 1):
@@ -122,10 +95,16 @@ class Trainer():
             if self._scheduler is not None:
                 lr = self._scheduler.optimizer.param_groups[0]['lr']
 
+            # training step
             loss = self._train(train_loader)
 
-            train_error = self._mae(train_loader, target_means=target_means, target_stds=target_stds)
-            val_error = self._mae(val_loader, target_means=target_means, target_stds=target_stds)
+            # get predictions for all sets
+            train_predictions = np.array(self.predict_loader(train_loader_unshuffled, target_means=target_means, target_stds=target_stds))
+            val_predictions = np.array(self.predict_loader(val_loader, target_means=target_means, target_stds=target_stds))
+            test_predictions = np.array(self.predict_loader(test_loader, target_means=target_means, target_stds=target_stds))
+
+            train_error = self._mae(train_targets, train_predictions)
+            val_error = self._mae(val_targets, val_predictions)
 
             # learning rate scheduler step
             if self._scheduler is not None:
@@ -133,7 +112,7 @@ class Trainer():
 
             # retain early stop test error
             if best_val_error is None or val_error <= best_val_error:
-                test_error = self._mae(test_loader, target_means=target_means, target_stds=target_stds)
+                test_error = self._mae(test_targets, test_predictions)
                 best_val_error = val_error
 
             output_line = f'Epoch: {epoch:03d}, LR: {lr:7f}, Loss: {loss:.7f}, 'f'Train MAE: {train_error:.7f}, 'f'Val MAE: {val_error:.7f}, Test MAE: {test_error:.7f}'
@@ -145,20 +124,20 @@ class Trainer():
             wandb.log({'val_error': val_error}, step=epoch)
             wandb.log({'test_error': test_error}, step=epoch)
 
-            wandb.log({'train_mae': self._mae(train_loader, target_means=target_means, target_stds=target_stds)}, step=epoch)
-            wandb.log({'val_mae': self._mae(val_loader, target_means=target_means, target_stds=target_stds)}, step=epoch)
-            wandb.log({'test_mae': self._mae(test_loader, target_means=target_means, target_stds=target_stds)}, step=epoch)
+            wandb.log({'train_mae': self._mae(train_predictions, train_targets)}, step=epoch)
+            wandb.log({'val_mae': self._mae(val_predictions, val_targets)}, step=epoch)
+            wandb.log({'test_mae': self._mae(test_predictions, test_targets)}, step=epoch)
 
-            wandb.log({'train_median': self._median(train_loader, target_means=target_means, target_stds=target_stds)}, step=epoch)
-            wandb.log({'val_median': self._median(val_loader, target_means=target_means, target_stds=target_stds)}, step=epoch)
-            wandb.log({'test_median': self._median(test_loader, target_means=target_means, target_stds=target_stds)}, step=epoch)
+            wandb.log({'train_median': self._median(train_predictions, train_targets)}, step=epoch)
+            wandb.log({'val_median': self._median(val_predictions, val_targets)}, step=epoch)
+            wandb.log({'test_median': self._median(test_predictions, test_targets)}, step=epoch)
 
-            wandb.log({'train_rmse': self._rmse(train_loader, target_means=target_means, target_stds=target_stds)}, step=epoch)
-            wandb.log({'val_rmse': self._rmse(val_loader, target_means=target_means, target_stds=target_stds)}, step=epoch)
-            wandb.log({'test_rmse': self._rmse(test_loader, target_means=target_means, target_stds=target_stds)}, step=epoch)
+            wandb.log({'train_rmse': self._rmse(train_predictions, train_targets)}, step=epoch)
+            wandb.log({'val_rmse': self._rmse(val_predictions, val_targets)}, step=epoch)
+            wandb.log({'test_rmse': self._rmse(test_predictions, test_targets)}, step=epoch)
 
-            wandb.log({'train_r_squared': self._r_squared(train_loader, target_means=target_means, target_stds=target_stds)}, step=epoch)
-            wandb.log({'val_r_squared': self._r_squared(val_loader, target_means=target_means, target_stds=target_stds)}, step=epoch)
-            wandb.log({'test_r_squared': self._r_squared(test_loader, target_means=target_means, target_stds=target_stds)}, step=epoch)
+            wandb.log({'train_r_squared': self._r_squared(train_predictions, train_targets)}, step=epoch)
+            wandb.log({'val_r_squared': self._r_squared(val_predictions, val_targets)}, step=epoch)
+            wandb.log({'test_r_squared': self._r_squared(test_predictions, test_targets)}, step=epoch)
 
         return self.model
