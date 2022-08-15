@@ -1505,9 +1505,21 @@ class GraphGenerator:
 
     def _get_meta_data(self, qm_data: QmData):
 
+        # set up variable to hold the number of individual atoms
+        element_counts = {}
+
         for atomic_number in qm_data.atomic_numbers:
+
+            # increment element count by one
+            current_element = ElementLookUpTable.get_element_identifier(atomic_number)
+            if current_element in element_counts.keys():
+                element_counts[current_element] += 1
+            else:
+                element_counts[current_element] = 1
+
+            # determine center element
             if atomic_number in ElementLookUpTable.transition_metal_atomic_numbers:
-                metal_center_element = ElementLookUpTable.get_element_identifier(atomic_number)
+                metal_center_element = current_element
 
         meta_data = {
             'id': qm_data.id,
@@ -1515,7 +1527,8 @@ class GraphGenerator:
             'n_electrons': (sum(qm_data.atomic_numbers) - qm_data.charge),
             'metal_center_element': metal_center_element,
             'metal_center_group': ElementLookUpTable.atom_format_dict[metal_center_element]['group'],
-            'metal_center_period': ElementLookUpTable.atom_format_dict[metal_center_element]['period']
+            'metal_center_period': ElementLookUpTable.atom_format_dict[metal_center_element]['period'],
+            'element_counts': element_counts
         }
 
         return meta_data

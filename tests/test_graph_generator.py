@@ -3144,7 +3144,16 @@ class TestGraphGenerator(unittest.TestCase):
                 'n_electrons': 288,
                 'metal_center_element': 'Cd',
                 'metal_center_group': 12,
-                'metal_center_period': 5
+                'metal_center_period': 5,
+                'element_counts': {
+                    'Cd': 1,
+                    'O': 5,
+                    'N': 4,
+                    'C': 18,
+                    'S': 2,
+                    'Cl': 1,
+                    'H': 16
+                }
             }
         ],
 
