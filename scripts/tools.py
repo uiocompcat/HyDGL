@@ -1,5 +1,6 @@
 import random
 import torch
+from torch_geometric.loader import DataLoader
 import numpy as np
 
 
@@ -85,3 +86,23 @@ def calculate_r_squared(predictions, targets):
 
     target_mean = np.mean(targets)
     return 1 - (np.sum(np.power(targets - predictions, 2)) / np.sum(np.power(targets - target_mean, 2)))
+
+
+def get_target_list(loader: DataLoader, target_means=[0], target_stds=[1]):
+
+    """Gets the list of targets of a dataloader.
+
+    Args:
+        loader (Dataloader): The pytorch_geometric dataloader.
+        target_means (np.array): An array of target means.
+        target_stds (np.array): An array of target stds.
+
+    Returns:
+        list: The list of targets.
+    """
+
+    targets = []
+    for batch in loader:
+        targets.extend((batch.y.numpy() * target_stds + target_means).tolist())
+
+    return targets
