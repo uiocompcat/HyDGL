@@ -23,6 +23,14 @@ class Trainer():
         return self._model
 
     def _train(self, train_loader):
+
+        """Performs a full training step. Depending on the setting for gradient accumulation, performs backward pass only
+           every n batch.
+
+        Returns:
+            float: The obtained training loss.
+        """
+
         self._model.train()
         loss_all = 0
 
@@ -62,6 +70,12 @@ class Trainer():
 
     def predict_batch(self, batch, target_means=0, target_stds=1):
 
+        """Makes predictions on a given batch.
+
+        Returns:
+            list: The predictions.
+        """
+
         predictions = []
 
         self._model.eval()
@@ -73,6 +87,12 @@ class Trainer():
         return predictions
 
     def predict_loader(self, loader, target_means=0, target_stds=1):
+
+        """Makes predictions on a given dataloader.
+
+        Returns:
+            list: The predictions.
+        """
 
         predictions = []
 
