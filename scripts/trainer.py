@@ -81,7 +81,22 @@ class Trainer():
 
         return predictions
 
-    def run(self, train_loader, train_loader_unshuffled, val_loader, test_loader, n_epochs=300, target_means=[0], target_stds=[1]):
+    def run(self, train_loader, train_loader_unshuffled, val_loader, test_loader, n_epochs=300, target_means=0, target_stds=1):
+
+        """Runs a full training loop with automatic metric logging through wandb.
+
+        Args:
+            train_loader (Dataloader): The dataloader for the training points.
+            train_loader_unshuffled (Dataloader): The dataloader for the training points but unshuffled. This is used to calculate metrics on the training set.
+            val_loader (Dataloader): The dataloader for the validation points.
+            test_loader (Dataloader): The dataloader for the test points.
+            n_epochs (int): The number of epochs to perform.
+            target_means(np.array): An array of the target means from standard scaling.
+            target_stds(np.array): An array of the target stds from standard scaling.
+
+        Returns:
+            model: The trained model.
+        """
 
         # get targets off all sets
         train_targets = get_target_list(train_loader_unshuffled, target_means=target_means, target_stds=target_stds)
