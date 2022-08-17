@@ -42,6 +42,8 @@ def run_ml(hyper_param: dict, wandb_project_name: str = 'tmQMg-debug', wandb_ent
     offset_dict = None
     if hyper_param['atomic_contribution_linear_fit']:
 
+        print('Performing atomic contribution linear fit..')
+
         # set up train element count matrix and train target vector
         train_element_count_matrix = np.zeros((len(sets[0]), 86))
         train_target_vector = np.zeros(((len(sets[0]), len(sets[0][0].y))))
@@ -72,6 +74,7 @@ def run_ml(hyper_param: dict, wandb_project_name: str = 'tmQMg-debug', wandb_ent
                 offset_dict[mol.id] = offset
                 mol.y -= offset
 
+    print('Scaling targets..')
     # obtain matrices for features and targets of the train set
     train_feature_matrix_dict = tools.get_feature_matrix_dict(sets[0], hyper_param['scaling']['features_to_scale'])
     # scale all sets according to train set feature matrices
@@ -259,10 +262,10 @@ def run_natq2():
         outliers = pickle.load(fh)
 
     hyper_param = {
-        'name': 'NatQ2',
+        'name': 'NatQ2 - ' + target._name_,
         'data': {
             'dataset': tmQMg,
-            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run-natq2-ddm/',
+            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run-natq2-' + target._name_,
             'raw_dir': '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/',
             'val_set_size': 0.1,
             'test_set_size': 0.1,
@@ -319,10 +322,10 @@ def run_natq3():
         outliers = pickle.load(fh)
 
     hyper_param = {
-        'name': 'layer norm test',
+        'name': 'NatQ3 - ' + target._name_,
         'data': {
             'dataset': tmQMg,
-            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run-natq3-hlg/',
+            'root_dir': '/home/hkneiding/Desktop/pyg-dataset-test-dir/run-natq3-' + target._name_,
             'raw_dir': '/home/hkneiding/Documents/UiO/Data/tmQMg/extracted/',
             'val_set_size': 0.1,
             'test_set_size': 0.1,
@@ -380,18 +383,22 @@ if __name__ == "__main__":
     # run = api.run("hkneiding/tmQMg-natQgraph2/17j02lpm")
 
     targets = [
-        QmTarget.POLARISABILITY,
-        QmTarget.TZVP_DIPOLE_MOMENT,
-        QmTarget.TZVP_HOMO_ENERGY,
-        QmTarget.TZVP_LUMO_ENERGY,
-        QmTarget.TZVP_HOMO_LUMO_GAP,
-        QmTarget.LOWEST_VIBRATIONAL_FREQUENCY,
-        QmTarget.HIGHEST_VIBRATIONAL_FREQUENCY,
-        QmTarget.DIPOLE_MOMENT_DELTA,
-        QmTarget.HOMO_LUMO_GAP_DELTA,
-        QmTarget.DISPERSION_ENERGY_DELTA,
-        QmTarget.ELECTRONIC_ENERGY_DELTA
+        QmTarget.POLARISABILITY
     ]
 
+    # targets = [
+    #     QmTarget.POLARISABILITY,
+    #     QmTarget.TZVP_DIPOLE_MOMENT,
+    #     QmTarget.TZVP_HOMO_ENERGY,
+    #     QmTarget.TZVP_LUMO_ENERGY,
+    #     QmTarget.TZVP_HOMO_LUMO_GAP,
+    #     QmTarget.LOWEST_VIBRATIONAL_FREQUENCY,
+    #     QmTarget.HIGHEST_VIBRATIONAL_FREQUENCY,
+    #     QmTarget.DIPOLE_MOMENT_DELTA,
+    #     QmTarget.HOMO_LUMO_GAP_DELTA,
+    #     QmTarget.DISPERSION_ENERGY_DELTA,
+    #     QmTarget.ELECTRONIC_ENERGY_DELTA
+    # ]
+
     for target in targets:
-        run_baseline(target)
+        run_natq2(target)

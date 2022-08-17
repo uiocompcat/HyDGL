@@ -541,7 +541,8 @@ class Graph:
                 ztp.append(0.5 * (position_dict[edge[0]][2] + position_dict[edge[1]][2]))
 
             # get desc text for nodes
-            text = [f'{x[0]} | {x[1]}' for x in zip(list(range(len(self.nodes))), self.nodes_labels_list)]
+            # text = [f'{x[0]} | {x[1]}' for x in zip(list(range(len(self.nodes))), self.nodes_labels_list)]
+            text = [f'{x[0]} | {x[1]}' for x in zip(list(range(len(self.nodes))), [node_feature_list for node_feature_list in self.nodes_feature_list_list])]
 
             # create a trace for the nodes
             trace_nodes = go.Scatter3d(
@@ -558,7 +559,7 @@ class Graph:
             )
 
             # get desc text for edges
-            text = [f'{x}' for x in self.edges_indices_list]
+            text = [f'{x[0]} | {x[1]}' for x in zip(self.edges_indices_list, [edge_feature_list for edge_feature_list in self.edges_feature_list_list])]
 
             # create edge text
             trace_weights = go.Scatter3d(x=xtp, y=ytp, z=ztp,
