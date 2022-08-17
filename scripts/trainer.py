@@ -11,6 +11,8 @@ class Trainer():
 
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+        print('Using device ' + str(self.device) + '.')
+
         self._model = model.to(self.device)
         self._optimizer = optimizer
         self._scheduler = scheduler
