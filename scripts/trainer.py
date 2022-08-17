@@ -68,7 +68,7 @@ class Trainer():
         target_mean = np.mean(targets)
         return 1 - (np.sum(np.power(targets - predictions, 2)) / np.sum(np.power(targets - target_mean, 2)))
 
-    def predict_batch(self, batch, target_means=0, target_stds=1):
+    def predict_batch(self, batch, target_means=0, target_stds=1, target_offset_dict=None):
 
         """Makes predictions on a given batch.
 
@@ -76,17 +76,20 @@ class Trainer():
             list: The predictions.
         """
 
-        predictions = []
-
         self._model.eval()
         batch = batch.to(self.device)
 
+        # get data point specific offsets if specified
+        offset = 0
+        if target_offset_dict is not None:
+            offset = np.array([target_offset_dict[i] for i in batch.id])
+
         # get predictions for batch
-        predictions.extend((self.model(batch).cpu().detach().numpy() * target_stds + target_means).tolist())
+        predictions = (self.model(batch).cpu().detach().numpy() * target_stds + target_means + offset).tolist()
 
         return predictions
 
-    def predict_loader(self, loader, target_means=0, target_stds=1):
+    def predict_loader(self, loader, target_means=0, target_stds=1, target_offset_dict=None):
 
         """Makes predictions on a given dataloader.
 
@@ -97,11 +100,11 @@ class Trainer():
         predictions = []
 
         for batch in loader:
-            predictions.extend(self.predict_batch(batch, target_means=target_means, target_stds=target_stds))
+            predictions.extend(self.predict_batch(batch, target_means=target_means, target_stds=target_stds, target_offset_dict=target_offset_dict))
 
         return predictions
 
-    def run(self, train_loader, train_loader_unshuffled, val_loader, test_loader, n_epochs=300, target_means=0, target_stds=1):
+    def run(self, train_loader, train_loader_unshuffled, val_loader, test_loader, n_epochs=300, target_means=0, target_stds=1, target_offset_dict=None):
 
         """Runs a full training loop with automatic metric logging through wandb.
 
@@ -113,15 +116,17 @@ class Trainer():
             n_epochs (int): The number of epochs to perform.
             target_means(np.array): An array of the target means from standard scaling.
             target_stds(np.array): An array of the target stds from standard scaling.
+            target_offset_dict (dict): A dictionary that contains ID - Offset pairs that specifies offsets to be added for each individual
+                data point. These will be applied when getting targets and predictions.
 
         Returns:
             model: The trained model.
         """
 
         # get targets off all sets
-        train_targets = get_target_list(train_loader_unshuffled, target_means=target_means, target_stds=target_stds)
-        val_targets = get_target_list(val_loader, target_means=target_means, target_stds=target_stds)
-        test_targets = get_target_list(test_loader, target_means=target_means, target_stds=target_stds)
+        train_targets = get_target_list(train_loader_unshuffled, target_means=target_means, target_stds=target_stds, target_offset_dict=target_offset_dict)
+        val_targets = get_target_list(val_loader, target_means=target_means, target_stds=target_stds, target_offset_dict=target_offset_dict)
+        test_targets = get_target_list(test_loader, target_means=target_means, target_stds=target_stds, target_offset_dict=target_offset_dict)
 
         best_val_error = None
         for epoch in range(1, n_epochs + 1):
@@ -134,9 +139,9 @@ class Trainer():
             loss = self._train(train_loader)
 
             # get predictions for all sets
-            train_predictions = np.array(self.predict_loader(train_loader_unshuffled, target_means=target_means, target_stds=target_stds))
-            val_predictions = np.array(self.predict_loader(val_loader, target_means=target_means, target_stds=target_stds))
-            test_predictions = np.array(self.predict_loader(test_loader, target_means=target_means, target_stds=target_stds))
+            train_predictions = np.array(self.predict_loader(train_loader_unshuffled, target_means=target_means, target_stds=target_stds, target_offset_dict=target_offset_dict))
+            val_predictions = np.array(self.predict_loader(val_loader, target_means=target_means, target_stds=target_stds, target_offset_dict=target_offset_dict))
+            test_predictions = np.array(self.predict_loader(test_loader, target_means=target_means, target_stds=target_stds, target_offset_dict=target_offset_dict))
 
             train_error = self._mae(train_targets, train_predictions)
             val_error = self._mae(val_targets, val_predictions)
