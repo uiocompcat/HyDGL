@@ -257,7 +257,7 @@ def run_baseline(target: QmTarget):
     run_ml(hyper_param)
 
 
-def run_natq2():
+def run_natq2(target: QmTarget):
 
     with open('/home/hkneiding/Downloads/outliers_full.pickle', 'rb') as fh:
         outliers = pickle.load(fh)
@@ -271,7 +271,7 @@ def run_natq2():
             'val_set_size': 0.1,
             'test_set_size': 0.1,
             'graph_representation': GraphGeneratorSettings.natQ2extended,
-            'targets': [QmTarget.DIPOLE_MOMENT_DELTA],
+            'targets': [target],
             'outliers': outliers
         },
         'model': {
@@ -317,7 +317,7 @@ def run_natq2():
     run_ml(hyper_param)
 
 
-def run_natq3():
+def run_natq3(target: QmTarget):
 
     with open('/home/hkneiding/Downloads/outliers_full.pickle', 'rb') as fh:
         outliers = pickle.load(fh)
@@ -331,7 +331,7 @@ def run_natq3():
             'val_set_size': 0.1,
             'test_set_size': 0.1,
             'graph_representation': GraphGeneratorSettings.natQ3,
-            'targets': [QmTarget.TZVP_HOMO_LUMO_GAP],
+            'targets': [target],
             'outliers': outliers
         },
         'model': {
