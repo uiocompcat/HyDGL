@@ -1,5 +1,6 @@
 import random
 import torch
+from torch_geometric.data import Batch
 from torch_geometric.loader import DataLoader
 import numpy as np
 
@@ -88,7 +89,7 @@ def calculate_r_squared(predictions, targets):
     return 1 - (np.sum(np.power(targets - predictions, 2)) / np.sum(np.power(targets - target_mean, 2)))
 
 
-def get_target_list(loader: DataLoader, target_means=[0], target_stds=[1]):
+def get_target_list(loader: DataLoader, target_means=[0], target_stds=[1], target_offset_dict=None):
 
     """Gets the list of targets of a dataloader.
 
@@ -96,6 +97,8 @@ def get_target_list(loader: DataLoader, target_means=[0], target_stds=[1]):
         loader (Dataloader): The pytorch_geometric dataloader.
         target_means (np.array): An array of target means.
         target_stds (np.array): An array of target stds.
+        target_offset_dict (dict): A dictionary that contains ID - Offset pairs that specifies offsets to be added for each individual
+            data point.
 
     Returns:
         list: The list of targets.
@@ -103,6 +106,30 @@ def get_target_list(loader: DataLoader, target_means=[0], target_stds=[1]):
 
     targets = []
     for batch in loader:
-        targets.extend((batch.y.numpy() * target_stds + target_means).tolist())
+        targets.extend(get_target_list_from_batch(batch, target_means=target_means, target_stds=target_stds, target_offset_dict=target_offset_dict))
+
+    return targets
+
+
+def get_target_list_from_batch(batch: Batch, target_means=[0], target_stds=[1], target_offset_dict=None):
+
+    """Gets the list of targets of a batch.
+
+    Args:
+        batch (Batch): The pytorch_geometric batch.
+        target_means (np.array): An array of target means.
+        target_stds (np.array): An array of target stds.
+        target_offset_dict (dict): A dictionary that contains ID - Offset pairs that specifies offsets to be added for each individual
+            data point.
+
+    Returns:
+        list: The list of targets.
+    """
+
+    offset = 0
+    if target_offset_dict is not None:
+        offset = np.array([target_offset_dict[i] for i in batch.id])
+
+    targets = (batch.y.numpy() * target_stds + target_means + offset).tolist()
 
     return targets
