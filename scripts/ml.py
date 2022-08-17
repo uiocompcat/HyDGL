@@ -110,6 +110,7 @@ def run_ml(hyper_param: dict, wandb_project_name: str = 'tmQMg-debug', wandb_ent
 
     # run
     trainer = Trainer(model, optimizer, scheduler, gradient_accumulation_splits=hyper_param['gradient_accumulation_splits'])
+    print('Starting training..')
     trained_model = trainer.run(train_loader,
                                 train_loader_unshuffled,
                                 val_loader, test_loader,
