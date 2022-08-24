@@ -12,8 +12,10 @@ nbo2graph
 nbo2graph is a Python parser to generate descriptive graphs based on Natural Bond Orbital (NBO) data ready for use in Graph Neural Networks. In particular it provides the following features:
 
 - adaptable generation of graph representations based on quantum chemistry data
+
     - connectivity based on NBO data or bond orders
     - features (both periodic table properties and quantum chemistry based)
+    
 - export of graphs as networkx objects or pytorch_geometric graphs
 
 The package can be used for any types of molecules but is aimed at transition metal complexes, more precisely the tmQM data set.
