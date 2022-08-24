@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 from nbo2graph import __version__
 
 setup(
@@ -8,5 +8,5 @@ setup(
     url='https://github.com/hkneiding/nbo2graph',
     author='Hannes Kneiding',
     author_email='hannes.kneiding@outlook.com',
-    packages=['nbo2graph']
+    packages=find_packages(exclude=['test'])
 )
