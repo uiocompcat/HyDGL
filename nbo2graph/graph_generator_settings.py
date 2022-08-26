@@ -1,14 +1,14 @@
-from nbo2graph.enums.nbo_type import NboType
-from nbo2graph.enums.qm_target import QmTarget
-from nbo2graph.enums.node_feature import NodeFeature
-from nbo2graph.enums.edge_feature import EdgeFeature
-from nbo2graph.enums.graph_feature import GraphFeature
-from nbo2graph.enums.hydrogen_mode import HydrogenMode
-from nbo2graph.enums.sopa_resolution_mode import SopaResolutionMode
-from nbo2graph.enums.sopa_edge_feature import SopaEdgeFeature
-from nbo2graph.enums.bond_order_type import BondOrderType
-from nbo2graph.enums.edge_type import EdgeType
-from nbo2graph.enums.orbital_occupation_type import OrbitalOccupationType
+from .enums.nbo_type import NboType
+from .enums.qm_target import QmTarget
+from .enums.node_feature import NodeFeature
+from .enums.edge_feature import EdgeFeature
+from .enums.graph_feature import GraphFeature
+from .enums.hydrogen_mode import HydrogenMode
+from .enums.sopa_resolution_mode import SopaResolutionMode
+from .enums.sopa_edge_feature import SopaEdgeFeature
+from .enums.bond_order_type import BondOrderType
+from .enums.edge_type import EdgeType
+from .enums.orbital_occupation_type import OrbitalOccupationType
 
 # constants for default values
 DEFAULT_BOND_ORDER_MODE = BondOrderType.WIBERG

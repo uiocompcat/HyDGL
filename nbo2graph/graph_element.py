@@ -1,4 +1,4 @@
-from nbo2graph.tools import Tools
+from .tools import Tools
 
 
 class GraphElement:

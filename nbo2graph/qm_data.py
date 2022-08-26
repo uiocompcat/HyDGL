@@ -1,6 +1,6 @@
-from nbo2graph.nbo_data_point import NboDataPoint
-from nbo2graph.tools import Tools
-from nbo2graph.enums.nbo_type import NboType
+from .nbo_data_point import NboDataPoint
+from .tools import Tools
+from .enums.nbo_type import NboType
 
 
 class QmData():

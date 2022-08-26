@@ -4,9 +4,9 @@ import numpy as np
 import networkx as nx
 from torch_geometric.data import Data
 
-from nbo2graph.edge import Edge
-from nbo2graph.node import Node
-from nbo2graph.element_look_up_table import ElementLookUpTable
+from .edge import Edge
+from .node import Node
+from .element_look_up_table import ElementLookUpTable
 
 
 class Graph:

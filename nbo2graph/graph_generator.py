@@ -1,24 +1,24 @@
 import warnings
 from statistics import mean
 
-from nbo2graph.enums.nbo_type import NboType
-from nbo2graph.enums.edge_type import EdgeType
-from nbo2graph.nbo_data_point import NboDataPoint
-from nbo2graph.enums.sopa_edge_feature import SopaEdgeFeature
+from .enums.nbo_type import NboType
+from .enums.edge_type import EdgeType
+from .nbo_data_point import NboDataPoint
+from .enums.sopa_edge_feature import SopaEdgeFeature
 
-from nbo2graph.node import Node
-from nbo2graph.edge import Edge
-from nbo2graph.graph import Graph
-from nbo2graph.qm_data import QmData
-from nbo2graph.enums.qm_target import QmTarget
-from nbo2graph.enums.edge_feature import EdgeFeature
-from nbo2graph.enums.node_feature import NodeFeature
-from nbo2graph.enums.hydrogen_mode import HydrogenMode
-from nbo2graph.enums.graph_feature import GraphFeature
-from nbo2graph.enums.bond_order_type import BondOrderType
-from nbo2graph.element_look_up_table import ElementLookUpTable
-from nbo2graph.enums.sopa_resolution_mode import SopaResolutionMode
-from nbo2graph.graph_generator_settings import GraphGeneratorSettings
+from .node import Node
+from .edge import Edge
+from .graph import Graph
+from .qm_data import QmData
+from .enums.qm_target import QmTarget
+from .enums.edge_feature import EdgeFeature
+from .enums.node_feature import NodeFeature
+from .enums.hydrogen_mode import HydrogenMode
+from .enums.graph_feature import GraphFeature
+from .enums.bond_order_type import BondOrderType
+from .element_look_up_table import ElementLookUpTable
+from .enums.sopa_resolution_mode import SopaResolutionMode
+from .graph_generator_settings import GraphGeneratorSettings
 
 
 class GraphGenerator:

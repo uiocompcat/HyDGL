@@ -1,4 +1,4 @@
-from nbo2graph.graph_element import GraphElement
+from .graph_element import GraphElement
 
 
 class Node(GraphElement):
