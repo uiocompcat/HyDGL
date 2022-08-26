@@ -9,7 +9,7 @@ nbo2graph
     :target: https://codecov.io/gh/hkneiding/nbo2graph
 
 
-nbo2graph is a Python parser to generate descriptive graphs based on quantum chemistry data ready for use in Graph Neural Networks. In particular it provides the following features:
+``nbo2graph`` is a Python parser to generate descriptive graphs based on quantum chemistry data ready for use in Graph Neural Networks. In particular it provides the following features:
 
 - adaptable generation of graph representations based on quantum chemistry data
 
@@ -27,21 +27,23 @@ The package can be used for any types of molecules but is aimed at transition me
 Requirements
 -----------
 
-- Python 3.7 or higher
-- pytorch 1.9
-- pytorch_geometric (pyg) 2.0
-- plotly 5.0.0 or higher
+- ``pytorch``
+- ``pytorch_geometric``
+- ``plotly``
 
 How to use
 -----------
 
-After cloning this repository navigate into its root directory and run::
-    python3 setup.py install
+The package can be installed directly from this repository with ``pip``::
+    
+    pip install git+https://github.com/hkneiding/nbo2graph
+
+which installs ``nbo2graph`` as a package to your python installation or virtual environment.
 
 What is under the hood?
 -----------
 
-There are two main parts in the nbo2graph package. The first one is the GraphGenerator class that generates graphs based to specified parameters. Secondly there is the Graph class which represents a full graph in terms of nodes, edges, their respective features, graph-level features and attributes/labels. Furthemore, it includes functionality to produce object in a format ready to use with the pytorch_geometric package. The remaining classes are mainly miscellaneous helper classes and enums.\
+There are two main parts in the ``nbo2graph`` package. The first one is the ``GraphGenerator`` class that generates graphs based to specified parameters. Secondly there is the ``Graph`` class which represents a full graph in terms of nodes, edges, their respective features, graph-level features and attributes/labels. Furthemore, it includes functionality to produce object in a format ready to use with the ``pytorch_geometric`` package. The remaining classes are mainly miscellaneous helper classes and enums.\
 This general structure is displayed by the following UML diagram.
 
 .. image:: ./doc/uml.png
