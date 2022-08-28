@@ -27,6 +27,8 @@ The package can be used for any types of molecules but is aimed at transition me
 Requirements
 -----------
 
+This package requires a Python (>3.9.x) installation with the following packages:
+
 - ``pytorch``
 - ``pytorch_geometric``
 - ``plotly``
@@ -38,7 +40,13 @@ The package can be installed directly from this repository with ``pip``::
     
     pip install git+https://github.com/hkneiding/nbo2graph
 
-which installs ``nbo2graph`` as a package to your python installation or virtual environment.
+which installs ``nbo2graph`` as a library to your Python installation or virtual environment.
+
+Afterwards you can import the library with:
+
+>>> import nbo2graph
+
+A more detailed guide on the usage can be found in the `documentation <link>`_.
 
 What is under the hood?
 -----------
