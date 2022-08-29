@@ -1,1 +1,1 @@
-import .qm_target as QmTarget
+from .qm_target import QmTarget
