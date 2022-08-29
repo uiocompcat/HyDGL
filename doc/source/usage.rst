@@ -1,12 +1,15 @@
 Usage
 =====
 
-To generate graphs we need to setup a ``GraphGenerator`` object that operates based on a set of settings that correspond to a specific representation. The easiest way to do so is to use one of the implemented settings used in the `publication <>`_. In the example below we use the ``baseline`` representation. After the ``GraphGenerator`` is set up we can use it to generate graphs of molecules. For this we need to call the ``.generate_graph()`` function providing it with a dictionary of the relevant QM data. The required information and correct formatting of this dictionary is detailed in section <>.
+To generate graphs we need to setup a ``GraphGenerator`` object that operates based on a set of settings that correspond to a specific representation. The easiest way to do so is to use one of the implemented settings used in the `publication <>`_. In the example below we use the ``baseline`` representation. After the ``GraphGenerator`` is set up we can use it to generate graphs of molecules. For this we need to call the ``.generate_graph()`` function providing it with a dictionary (``qm_data_dict``) of the relevant QM data. The required information and correct formatting of this dictionary is detailed in section :doc:`input`.
 
 .. code-block:: python
    :linenos:
 
     import nbo2graph as n2g
+
+    # get the QM data dictionary for the moleulce
+    qm_data_dict = # your code for obtaining the dictionary
 
     # get the default settings for baseline graphs 
     ggs = n2g.GraphGeneratorSettings.baseline()
@@ -19,7 +22,31 @@ To generate graphs we need to setup a ``GraphGenerator`` object that operates ba
 
 Aside from ``.baseline()`` there are also ``.uNatQ()`` ``.dNatQ()`` implemented.  Their exact specifications can be found in the `publication <>`_.
 
+The above code will generate the graphs without target values for the use in machine learning applications. To include such targets we can pass a list of target identifiers to the constructor to imbue all generated graphs with these targets. For this we need to make use of the enumeration class ``QmTarget``. In the example below we use two targets, the polarisability and dipole moment.
+
+.. code-block:: python
+   :linenos:
+
+    import nbo2graph as n2g
+
+    # get the QM data dictionary for the moleulce
+    qm_data_dict = # your code for obtaining the dictionary
+
+    # set up the list of target identifiers
+    target_list = [n2g.enums.QmTarget.POLARISABILITY, 
+                   n2g.enums.QmTarget.TZVP_DIPOLE_MOMENT]
+
+    # get the default settings for baseline graphs 
+    ggs = n2g.GraphGeneratorSettings.baseline(target_list)
+    # setup the graph generator with these settings
+    gg = n2g.GraphGenerator(settings=ggs)
+    # generate a graph according to these settings using a
+    # dict of the relevant QM data of a specific molecule
+    graph = gg.generate_graph(n2g.QmData.from_dict(qm_data_dict))
+
+
 =================
 Custom graph generator settings
 =================
 
+You can also specify custom settings for graph generation.

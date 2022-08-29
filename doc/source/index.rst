@@ -25,4 +25,5 @@ Contents
 
    requirements
    installation
+   input
    usage
