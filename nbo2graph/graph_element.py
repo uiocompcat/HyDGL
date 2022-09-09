@@ -5,12 +5,14 @@ class GraphElement:
 
     """Base class for elements of a graph."""
 
-    def __init__(self, features: dict = {}):
+    def __init__(self, features: dict = {}, label: str = None, id: str = None):
 
         """Constructor
 
         Args:
             features (list[float]: List containing edge features that characterise the edge).
+            label (string): Label of the graph element.
+            id (string): Id of the graph element.
         """
 
         if type(features) == list:
@@ -20,10 +22,23 @@ class GraphElement:
         else:
             self._features = features
 
+        self._label = label
+        self._id = id
+
     @property
     def features(self):
         """Getter for features"""
         return self._features
+
+    @property
+    def label(self):
+        """Getter for label"""
+        return self._label
+
+    @property
+    def id(self):
+        """Getter for id"""
+        return self._id
 
     @property
     def feature_list(self):

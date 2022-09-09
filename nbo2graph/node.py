@@ -5,7 +5,7 @@ class Node(GraphElement):
 
     """Class for representing a node in a graph."""
 
-    def __init__(self, features: dict = {}, position: list[float] = None, label: str = None):
+    def __init__(self, features: dict = {}, position: list[float] = None, label: str = None, id: str = None):
 
         """Constructor
 
@@ -13,19 +13,14 @@ class Node(GraphElement):
             features (list[float]: List containing node features that characterise the node).
             position (list[float]): Cartesian position of the node.
             label (string): Label of the node.
+            id (string): Id of the node.
         """
 
-        super().__init__(features)
+        super().__init__(features, label=label, id=id)
 
         self._position = position
-        self._label = label
 
     @property
     def position(self):
         """Getter for position"""
         return self._position
-
-    @property
-    def label(self):
-        """Getter for label"""
-        return self._label
