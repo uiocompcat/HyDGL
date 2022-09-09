@@ -311,7 +311,7 @@ class Graph:
         """
 
         # output list
-        disjoint_sub_graphs = []
+        disjoint_sub_graphs_node_indices = []
         # contains all node indices
         not_visited_nodes = list(range(len(self.nodes)))
 
@@ -336,10 +336,10 @@ class Graph:
             not_visited_nodes = list(set(not_visited_nodes) - set(current_sub_graph_indices))
 
             # append subgraph to output list
-            disjoint_sub_graphs.append(current_sub_graph_indices)
+            disjoint_sub_graphs_node_indices.append(current_sub_graph_indices)
 
         # return disjoint sub graphs as sub lists
-        return disjoint_sub_graphs
+        return disjoint_sub_graphs_node_indices
 
     def get_disjoint_sub_graphs(self) -> list[list[int]]:
 
