@@ -441,7 +441,10 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.ATOMIC_NUMBER, NodeFeature.NLMO_BOND_ORDER_TOTAL],
             4,
-            Node(features={'atomic_number': 16, 'nlmo_bond_order_total': 1.9874}, position=[-4.918379, -0.662092, -0.151817], label='S')
+            Node(features={
+                'atomic_number': 16,
+                'nlmo_bond_order_total': 1.9874
+            }, position=[-4.918379, -0.662092, -0.151817], label='S', id='node-4')
         ],
 
         [
@@ -450,7 +453,9 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.COVALENT_RADIUS],
             4,
-            Node(features={'covalent_radius': 1.05}, position=[-4.918379, -0.662092, -0.151817], label='S')
+            Node(features={
+                'covalent_radius': 1.05
+            }, position=[-4.918379, -0.662092, -0.151817], label='S', id='node-4')
         ],
 
         [
@@ -459,7 +464,9 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.ELECTRONEGATIVITY],
             4,
-            Node(features={'electronegativity': 2.58}, position=[-4.918379, -0.662092, -0.151817], label='S')
+            Node(features={
+                'electronegativity': 2.58
+            }, position=[-4.918379, -0.662092, -0.151817], label='S', id='node-4')
         ],
 
         [
@@ -468,7 +475,9 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.BOUND_HYDROGEN_COUNT],
             0,
-            Node(features={'hydrogen_count': 0}, position=[-1.339211, 0.079206, -0.361021], label='Ir')
+            Node(features={
+                'hydrogen_count': 0
+            }, position=[-1.339211, 0.079206, -0.361021], label='Ir', id='node-0')
         ],
 
         [
@@ -477,7 +486,9 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.BOUND_HYDROGEN_COUNT],
             3,
-            Node(features={'hydrogen_count': 1}, position=[1.516895, -0.164342, -0.168083], label='C')
+            Node(features={
+                'hydrogen_count': 1
+            }, position=[1.516895, -0.164342, -0.168083], label='C', id='node-3')
         ],
 
         [
@@ -486,7 +497,9 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.NATURAL_ATOMIC_CHARGE],
             1,
-            Node(features={'natural_atomic_charge': -0.05261}, position=[-1.744384, 0.823097, -1.698982], label='H')
+            Node(features={
+                'natural_atomic_charge': -0.05261
+            }, position=[-1.744384, 0.823097, -1.698982], label='H', id='node-1')
         ],
 
         [
@@ -495,7 +508,10 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE],
             0,
-            Node(features={'n_lone_pairs': 3, 'lone_pair_energy_min_max_difference': 0.00634}, position=[-1.339211, 0.079206, -0.361021], label='Ir')
+            Node(features={
+                'n_lone_pairs': 3,
+                'lone_pair_energy_min_max_difference': 0.00634
+            }, position=[-1.339211, 0.079206, -0.361021], label='Ir', id='node-0')
         ],
 
         [
@@ -504,7 +520,10 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE],
             2,
-            Node(features={'n_lone_pairs': 1, 'lone_pair_energy_min_max_difference': 0.0}, position=[0.559518, 0.732394, -0.460712], label='N')
+            Node(features={
+                'n_lone_pairs': 1,
+                'lone_pair_energy_min_max_difference': 0.0
+            }, position=[0.559518, 0.732394, -0.460712], label='N', id='node-2')
         ],
 
         [
@@ -513,7 +532,10 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE],
             1,
-            Node(features={'n_lone_pairs': 0, 'lone_pair_energy_min_max_difference': 0.0}, position=[-1.744384, 0.823097, -1.698982], label='H')
+            Node(features={
+                'n_lone_pairs': 0,
+                'lone_pair_energy_min_max_difference': 0.0
+            }, position=[-1.744384, 0.823097, -1.698982], label='H', id='node-1')
         ],
 
         [
@@ -522,7 +544,10 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE],
             0,
-            Node(features={'n_lone_vacancies': 2, 'lone_vacancy_energy_min_max_difference': 1.18858}, position=[-1.339211, 0.079206, -0.361021], label='Ir')
+            Node(features={
+                'n_lone_vacancies': 2,
+                'lone_vacancy_energy_min_max_difference': 1.18858
+            }, position=[-1.339211, 0.079206, -0.361021], label='Ir', id='node-0')
         ],
 
         [
@@ -531,7 +556,10 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE],
             7,
-            Node(features={'n_lone_vacancies': 1, 'lone_vacancy_energy_min_max_difference': 0.0}, position=[2.376961, 2.324297, -0.765855], label='C')
+            Node(features={
+                'n_lone_vacancies': 1,
+                'lone_vacancy_energy_min_max_difference': 0.0
+            }, position=[2.376961, 2.324297, -0.765855], label='C', id='node-7')
         ],
 
         [
@@ -540,7 +568,10 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE],
             1,
-            Node(features={'n_lone_vacancies': 0, 'lone_vacancy_energy_min_max_difference': 0.0}, position=[-1.744384, 0.823097, -1.698982], label='H')
+            Node(features={
+                'n_lone_vacancies': 0,
+                'lone_vacancy_energy_min_max_difference': 0.0
+            }, position=[-1.744384, 0.823097, -1.698982], label='H', id='node-1')
         ],
 
         [
@@ -549,7 +580,12 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.LONE_PAIR_ENERGY_MIN_MAX_DIFFERENCE, NodeFeature.LONE_VACANCY_ENERGY_MIN_MAX_DIFFERENCE],
             0,
-            Node(features={'n_lone_pairs': 3, 'lone_pair_energy_min_max_difference': 0.00634, 'n_lone_vacancies': 2, 'lone_vacancy_energy_min_max_difference': 1.18858}, position=[-1.339211, 0.079206, -0.361021], label='Ir')
+            Node(features={
+                'n_lone_pairs': 3,
+                'lone_pair_energy_min_max_difference': 0.00634,
+                'n_lone_vacancies': 2,
+                'lone_vacancy_energy_min_max_difference': 1.18858
+            }, position=[-1.339211, 0.079206, -0.361021], label='Ir', id='node-0')
         ],
 
         [
@@ -558,7 +594,12 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.NLMO,
             [NodeFeature.NATURAL_ELECTRON_POPULATION_TOTAL, NodeFeature.NATURAL_ELECTRON_POPULATION_CORE, NodeFeature.NATURAL_ELECTRON_POPULATION_VALENCE, NodeFeature.NATURAL_ELECTRON_POPULATION_RYDBERG],
             0,
-            Node(features={'natural_electron_population_core': 67.99971, 'natural_electron_population_valence': 8.01992, 'natural_electron_population_rydberg': 0.03702, 'natural_electron_population_total': 76.05666}, position=[-1.339211, 0.079206, -0.361021], label='Ir')
+            Node(features={
+                'natural_electron_population_core': 67.99971,
+                'natural_electron_population_valence': 8.01992,
+                'natural_electron_population_rydberg': 0.03702,
+                'natural_electron_population_total': 76.05666
+            }, position=[-1.339211, 0.079206, -0.361021], label='Ir', id='node-0')
         ],
 
         [
@@ -575,7 +616,7 @@ class TestGraphGenerator(unittest.TestCase):
                 'lone_pair_average_1': 0.0,
                 'lone_pair_average_2': 0.99984,
                 'lone_pair_average_3': 0.0
-            }, position=[-0.106076, -0.278587, -0.332310], label='Cd')
+            }, position=[-0.106076, -0.278587, -0.332310], label='Cd', id='node-0')
         ],
 
         [
@@ -588,7 +629,7 @@ class TestGraphGenerator(unittest.TestCase):
                 'n_lone_pairs': 5,
                 'lone_pair_average_energy': -0.627936,
                 'lone_pair_average_occupation': 1.996892,
-            }, position=[-0.106076, -0.278587, -0.332310], label='Cd')
+            }, position=[-0.106076, -0.278587, -0.332310], label='Cd', id='node-0')
         ],
 
 
@@ -606,7 +647,7 @@ class TestGraphGenerator(unittest.TestCase):
                 'lone_vacancy_average_1': 0.0002,
                 'lone_vacancy_average_2': 0.001,
                 'lone_vacancy_average_3': 0.0
-            }, position=[-0.106076, -0.278587, -0.332310], label='Cd')
+            }, position=[-0.106076, -0.278587, -0.332310], label='Cd', id='node-0')
         ],
 
         [
@@ -623,7 +664,7 @@ class TestGraphGenerator(unittest.TestCase):
                 'lone_vacancy_min_1': 0.0002,
                 'lone_vacancy_min_2': 0.001,
                 'lone_vacancy_min_3': 0.0
-            }, position=[-0.106076, -0.278587, -0.332310], label='Cd')
+            }, position=[-0.106076, -0.278587, -0.332310], label='Cd', id='node-0')
         ],
 
         [
@@ -640,7 +681,7 @@ class TestGraphGenerator(unittest.TestCase):
                 'lone_vacancy_average_1': 0.0003,
                 'lone_vacancy_average_2': 0.5655,
                 'lone_vacancy_average_3': 0.00005
-            }, position=[-1.339211, 0.079206, -0.361021], label='Ir')
+            }, position=[-1.339211, 0.079206, -0.361021], label='Ir', id='node-0')
         ],
 
         [
@@ -657,7 +698,7 @@ class TestGraphGenerator(unittest.TestCase):
                 'lone_vacancy_min_1': 0.0001,
                 'lone_vacancy_min_2': 0.9984,
                 'lone_vacancy_min_3': 0.0
-            }, position=[-1.339211, 0.079206, -0.361021], label='Ir')
+            }, position=[-1.339211, 0.079206, -0.361021], label='Ir', id='node-0')
         ],
 
         [
@@ -670,7 +711,7 @@ class TestGraphGenerator(unittest.TestCase):
                 'n_lone_vacancies': 2,
                 'lone_vacancy_min_energy': -0.16639,
                 'lone_vacancy_min_occupation': 0.76906,
-            }, position=[-1.339211, 0.079206, -0.361021], label='Ir')
+            }, position=[-1.339211, 0.079206, -0.361021], label='Ir', id='node-0')
         ],
 
         [
@@ -684,7 +725,7 @@ class TestGraphGenerator(unittest.TestCase):
                 'natural_electron_configuration_1': 0.01,
                 'natural_electron_configuration_2': 9.98,
                 'natural_electron_configuration_3': 0.0
-            }, position=[-0.106076, -0.278587, -0.332310], label='Cd')
+            }, position=[-0.106076, -0.278587, -0.332310], label='Cd', id='node-0')
         ],
 
         [
@@ -698,7 +739,7 @@ class TestGraphGenerator(unittest.TestCase):
                 'natural_electron_configuration_1': 3.01,
                 'natural_electron_configuration_2': 0.01,
                 'natural_electron_configuration_3': 0.0
-            }, position=[-3.291283, -0.056813, -0.234670], label='C')
+            }, position=[-3.291283, -0.056813, -0.234670], label='C', id='node-3')
         ],
 
     ])
@@ -730,14 +771,36 @@ class TestGraphGenerator(unittest.TestCase):
             [EdgeFeature.WIBERG_BOND_ORDER],
             1,
             [
-                Edge([2, 3], features={'wiberg_bond_order': 1.4785}), Edge([2, 6], features={'wiberg_bond_order': 1.2435}), Edge([3, 4], features={'wiberg_bond_order': 1.2259}), Edge([3, 9], features={'wiberg_bond_order': 1.0752}),
-                Edge([4, 5], features={'wiberg_bond_order': 1.2267}), Edge([5, 6], features={'wiberg_bond_order': 1.5581}), Edge([6, 7], features={'wiberg_bond_order': 1.0438}), Edge([8, 9], features={'wiberg_bond_order': 1.3553}),
-                Edge([8, 13], features={'wiberg_bond_order': 1.3698}), Edge([9, 10], features={'wiberg_bond_order': 1.3595}), Edge([10, 11], features={'wiberg_bond_order': 1.4483}), Edge([11, 12], features={'wiberg_bond_order': 1.4358}),
-                Edge([12, 13], features={'wiberg_bond_order': 1.3751}), Edge([13, 19], features={'wiberg_bond_order': 1.0384}), Edge([14, 15], features={'wiberg_bond_order': 1.3568}), Edge([14, 19], features={'wiberg_bond_order': 1.3691}),
-                Edge([15, 16], features={'wiberg_bond_order': 1.3538}), Edge([15, 21], features={'wiberg_bond_order': 1.0775}), Edge([16, 17], features={'wiberg_bond_order': 1.4541}), Edge([17, 18], features={'wiberg_bond_order': 1.4305}),
-                Edge([18, 19], features={'wiberg_bond_order': 1.3784}), Edge([20, 21], features={'wiberg_bond_order': 1.4728}), Edge([20, 24], features={'wiberg_bond_order': 1.2457}), Edge([21, 22], features={'wiberg_bond_order': 1.2279}),
-                Edge([22, 23], features={'wiberg_bond_order': 1.2305}), Edge([23, 24], features={'wiberg_bond_order': 1.554}), Edge([24, 25], features={'wiberg_bond_order': 1.0439}), Edge([26, 28], features={'wiberg_bond_order': 1.0553}),
-                Edge([26, 29], features={'wiberg_bond_order': 1.2463}), Edge([26, 30], features={'wiberg_bond_order': 1.2875})
+                Edge([2, 3], features={'wiberg_bond_order': 1.4785}, label='NBO', id='nbo-'),
+                Edge([2, 6], features={'wiberg_bond_order': 1.2435}, label='NBO', id='nbo-'),
+                Edge([3, 4], features={'wiberg_bond_order': 1.2259}, label='NBO', id='nbo-'),
+                Edge([3, 9], features={'wiberg_bond_order': 1.0752}, label='NBO', id='nbo-'),
+                Edge([4, 5], features={'wiberg_bond_order': 1.2267}, label='NBO', id='nbo-'),
+                Edge([5, 6], features={'wiberg_bond_order': 1.5581}, label='NBO', id='nbo-'),
+                Edge([6, 7], features={'wiberg_bond_order': 1.0438}, label='NBO', id='nbo-'),
+                Edge([8, 9], features={'wiberg_bond_order': 1.3553}, label='NBO', id='nbo-'),
+                Edge([8, 13], features={'wiberg_bond_order': 1.3698}, label='NBO', id='nbo-'),
+                Edge([9, 10], features={'wiberg_bond_order': 1.3595}, label='NBO', id='nbo-'),
+                Edge([10, 11], features={'wiberg_bond_order': 1.4483}, label='NBO', id='nbo-'),
+                Edge([11, 12], features={'wiberg_bond_order': 1.4358}, label='NBO', id='nbo-'),
+                Edge([12, 13], features={'wiberg_bond_order': 1.3751}, label='NBO', id='nbo-'),
+                Edge([13, 19], features={'wiberg_bond_order': 1.0384}, label='NBO', id='nbo-'),
+                Edge([14, 15], features={'wiberg_bond_order': 1.3568}, label='NBO', id='nbo-'),
+                Edge([14, 19], features={'wiberg_bond_order': 1.3691}, label='NBO', id='nbo-'),
+                Edge([15, 16], features={'wiberg_bond_order': 1.3538}, label='NBO', id='nbo-'),
+                Edge([15, 21], features={'wiberg_bond_order': 1.0775}, label='NBO', id='nbo-'),
+                Edge([16, 17], features={'wiberg_bond_order': 1.4541}, label='NBO', id='nbo-'),
+                Edge([17, 18], features={'wiberg_bond_order': 1.4305}, label='NBO', id='nbo-'),
+                Edge([18, 19], features={'wiberg_bond_order': 1.3784}, label='NBO', id='nbo-'),
+                Edge([20, 21], features={'wiberg_bond_order': 1.4728}, label='NBO', id='nbo-'),
+                Edge([20, 24], features={'wiberg_bond_order': 1.2457}, label='NBO', id='nbo-'),
+                Edge([21, 22], features={'wiberg_bond_order': 1.2279}, label='NBO', id='nbo-'),
+                Edge([22, 23], features={'wiberg_bond_order': 1.2305}, label='NBO', id='nbo-'),
+                Edge([23, 24], features={'wiberg_bond_order': 1.554}, label='NBO', id='nbo-'),
+                Edge([24, 25], features={'wiberg_bond_order': 1.0439}, label='NBO', id='nbo-'),
+                Edge([26, 28], features={'wiberg_bond_order': 1.0553}, label='NBO', id='nbo-'),
+                Edge([26, 29], features={'wiberg_bond_order': 1.2463}, label='NBO', id='nbo-'),
+                Edge([26, 30], features={'wiberg_bond_order': 1.2875}, label='NBO', id='nbo-')
             ]
         ],
 
@@ -748,14 +811,36 @@ class TestGraphGenerator(unittest.TestCase):
             [EdgeFeature.BOND_DISTANCE],
             1,
             [
-                Edge([2, 3], features={'bond_distance': 1.327352}), Edge([2, 6], features={'bond_distance': 1.376780}), Edge([3, 4], features={'bond_distance': 1.738008}), Edge([3, 9], features={'bond_distance': 1.470177}),
-                Edge([4, 5], features={'bond_distance': 1.724577}), Edge([5, 6], features={'bond_distance': 1.388826}), Edge([6, 7], features={'bond_distance': 1.493880}), Edge([8, 9], features={'bond_distance': 1.345686}),
-                Edge([8, 13], features={'bond_distance': 1.344363}), Edge([9, 10], features={'bond_distance': 1.410199}), Edge([10, 11], features={'bond_distance': 1.399380}), Edge([11, 12], features={'bond_distance': 1.402615}),
-                Edge([12, 13], features={'bond_distance': 1.409355}), Edge([13, 19], features={'bond_distance': 1.495214}), Edge([14, 15], features={'bond_distance': 1.345307}), Edge([14, 19], features={'bond_distance': 1.343885}),
-                Edge([15, 16], features={'bond_distance': 1.411362}), Edge([15, 21], features={'bond_distance': 1.468893}), Edge([16, 17], features={'bond_distance': 1.398391}), Edge([17, 18], features={'bond_distance': 1.403130}),
-                Edge([18, 19], features={'bond_distance': 1.408509}), Edge([20, 21], features={'bond_distance': 1.327983}), Edge([20, 24], features={'bond_distance': 1.376516}), Edge([21, 22], features={'bond_distance': 1.737262}),
-                Edge([22, 23], features={'bond_distance': 1.722296}), Edge([23, 24], features={'bond_distance': 1.388434}), Edge([24, 25], features={'bond_distance': 1.493701}), Edge([26, 28], features={'bond_distance': 1.544322}),
-                Edge([26, 29], features={'bond_distance': 1.482748}), Edge([26, 30], features={'bond_distance': 1.471084})
+                Edge([2, 3], features={'bond_distance': 1.327352}, label='NBO', id='nbo-'),
+                Edge([2, 6], features={'bond_distance': 1.376780}, label='NBO', id='nbo-'),
+                Edge([3, 4], features={'bond_distance': 1.738008}, label='NBO', id='nbo-'),
+                Edge([3, 9], features={'bond_distance': 1.470177}, label='NBO', id='nbo-'),
+                Edge([4, 5], features={'bond_distance': 1.724577}, label='NBO', id='nbo-'),
+                Edge([5, 6], features={'bond_distance': 1.388826}, label='NBO', id='nbo-'),
+                Edge([6, 7], features={'bond_distance': 1.493880}, label='NBO', id='nbo-'),
+                Edge([8, 9], features={'bond_distance': 1.345686}, label='NBO', id='nbo-'),
+                Edge([8, 13], features={'bond_distance': 1.344363}, label='NBO', id='nbo-'),
+                Edge([9, 10], features={'bond_distance': 1.410199}, label='NBO', id='nbo-'),
+                Edge([10, 11], features={'bond_distance': 1.399380}, label='NBO', id='nbo-'),
+                Edge([11, 12], features={'bond_distance': 1.402615}, label='NBO', id='nbo-'),
+                Edge([12, 13], features={'bond_distance': 1.409355}, label='NBO', id='nbo-'),
+                Edge([13, 19], features={'bond_distance': 1.495214}, label='NBO', id='nbo-'),
+                Edge([14, 15], features={'bond_distance': 1.345307}, label='NBO', id='nbo-'),
+                Edge([14, 19], features={'bond_distance': 1.343885}, label='NBO', id='nbo-'),
+                Edge([15, 16], features={'bond_distance': 1.411362}, label='NBO', id='nbo-'),
+                Edge([15, 21], features={'bond_distance': 1.468893}, label='NBO', id='nbo-'),
+                Edge([16, 17], features={'bond_distance': 1.398391}, label='NBO', id='nbo-'),
+                Edge([17, 18], features={'bond_distance': 1.403130}, label='NBO', id='nbo-'),
+                Edge([18, 19], features={'bond_distance': 1.408509}, label='NBO', id='nbo-'),
+                Edge([20, 21], features={'bond_distance': 1.327983}, label='NBO', id='nbo-'),
+                Edge([20, 24], features={'bond_distance': 1.376516}, label='NBO', id='nbo-'),
+                Edge([21, 22], features={'bond_distance': 1.737262}, label='NBO', id='nbo-'),
+                Edge([22, 23], features={'bond_distance': 1.722296}, label='NBO', id='nbo-'),
+                Edge([23, 24], features={'bond_distance': 1.388434}, label='NBO', id='nbo-'),
+                Edge([24, 25], features={'bond_distance': 1.493701}, label='NBO', id='nbo-'),
+                Edge([26, 28], features={'bond_distance': 1.544322}, label='NBO', id='nbo-'),
+                Edge([26, 29], features={'bond_distance': 1.482748}, label='NBO', id='nbo-'),
+                Edge([26, 30], features={'bond_distance': 1.471084}, label='NBO', id='nbo-')
             ]
         ],
     ])
@@ -1339,7 +1424,7 @@ class TestGraphGenerator(unittest.TestCase):
                 'bond_max_energy': -0.74646,
                 'bond_max_occupation': 1.97899,
                 'bond_max_0': 0.34105
-            })
+            }, label='NBO', id='nbo-')
         ],
 
         [
@@ -1351,7 +1436,7 @@ class TestGraphGenerator(unittest.TestCase):
                 'bond_average_energy': -0.74646,
                 'bond_average_occupation': 1.97899,
                 'bond_average_0': 0.34105
-            })
+            }, label='NBO', id='nbo-')
         ],
 
         [
@@ -1365,7 +1450,7 @@ class TestGraphGenerator(unittest.TestCase):
                 'bond_max_1': 0.9983,
                 'bond_max_2': 0.00125,
                 'bond_max_3': 0.0004
-            })
+            }, label='NBO', id='nbo-')
         ],
 
         [
@@ -1379,7 +1464,7 @@ class TestGraphGenerator(unittest.TestCase):
                 'bond_average_1': 0.823025,
                 'bond_average_2': 0.00195,
                 'bond_average_3': 0.00035,
-            })
+            }, label='NBO', id='nbo-')
         ],
 
         [
@@ -1393,7 +1478,7 @@ class TestGraphGenerator(unittest.TestCase):
                 'antibond_min_1': 0.9983,
                 'antibond_min_2': 0.00125,
                 'antibond_min_3': 0.0004
-            })
+            }, label='NBO', id='nbo-')
         ],
 
         [
@@ -1407,7 +1492,7 @@ class TestGraphGenerator(unittest.TestCase):
                 'antibond_average_1': 0.823025,
                 'antibond_average_2': 0.00195,
                 'antibond_average_3': 0.00035
-            })
+            }, label='NBO', id='nbo-')
         ],
 
         [
@@ -1427,7 +1512,7 @@ class TestGraphGenerator(unittest.TestCase):
                 'antibond_average_1': 0.823025,
                 'antibond_average_2': 0.00195,
                 'antibond_average_3': 0.00035
-            })
+            }, label='NBO', id='nbo-')
         ],
 
         [
@@ -1441,7 +1526,7 @@ class TestGraphGenerator(unittest.TestCase):
                 'bond_average_1': 0.6517228070175439,
                 'bond_average_2': 0.0020701754385964913,
                 'bond_average_3': 0.0003280701754385965
-            })
+            }, label='NBO', id='nbo-')
         ],
 
         [
@@ -1455,7 +1540,7 @@ class TestGraphGenerator(unittest.TestCase):
                 'antibond_average_1': 0.6517228070175439,
                 'antibond_average_2': 0.0020701754385964913,
                 'antibond_average_3': 0.0003280701754385965
-            })
+            }, label='NBO', id='nbo-')
         ],
 
         [
@@ -1464,7 +1549,7 @@ class TestGraphGenerator(unittest.TestCase):
             Edge([2, 3], features={
                 'n_bn': 2,
                 'bond_energy_min_max_difference': 0.41408
-            })
+            }, label='NBO', id='nbo-')
         ],
 
         [
@@ -1473,7 +1558,7 @@ class TestGraphGenerator(unittest.TestCase):
             Edge([2, 3], features={
                 'n_bn': 2,
                 'antibond_energy_min_max_difference': 0.52645
-            })
+            }, label='NBO', id='nbo-')
         ],
 
         [
@@ -1482,7 +1567,7 @@ class TestGraphGenerator(unittest.TestCase):
             Edge([0, 5], features={
                 'n_bn': 0,
                 'bond_energy_min_max_difference': 0.0
-            })
+            }, label='NBO', id='nbo-')
         ],
 
         [
@@ -1491,7 +1576,7 @@ class TestGraphGenerator(unittest.TestCase):
             Edge([0, 5], features={
                 'n_bn': 0,
                 'antibond_energy_min_max_difference': 0.0
-            })
+            }, label='NBO', id='nbo-')
         ],
 
         [
@@ -1501,7 +1586,7 @@ class TestGraphGenerator(unittest.TestCase):
                 'n_bn': 2,
                 'bond_energy_min_max_difference': 0.41408,
                 'antibond_energy_min_max_difference': 0.52645
-            })
+            }, label='NBO', id='nbo-')
         ],
 
         [
@@ -1510,7 +1595,7 @@ class TestGraphGenerator(unittest.TestCase):
             Edge([2, 6], features={
                 'n_bn': 1,
                 'bond_energy_min_max_difference': 0.0
-            })
+            }, label='NBO', id='nbo-')
         ],
 
     ])
@@ -1877,37 +1962,37 @@ class TestGraphGenerator(unittest.TestCase):
         [
             TEST_FILE_OREDIA,
             [
-                Edge([1, 0], features=[]),
-                Edge([2, 3], features=[]),
-                Edge([2, 11], features=[]),
-                Edge([3, 4], features=[]),
-                Edge([4, 5], features=[]),
-                Edge([4, 12], features=[]),
-                Edge([5, 6], features=[]),
-                Edge([6, 7], features=[]),
-                Edge([6, 11], features=[]),
-                Edge([7, 8], features=[]),
-                Edge([8, 9], features=[]),
-                Edge([9, 10], features=[]),
-                Edge([10, 11], features=[]),
-                Edge([12, 13], features=[]),
-                Edge([12, 17], features=[]),
-                Edge([13, 14], features=[]),
-                Edge([14, 15], features=[]),
-                Edge([15, 16], features=[]),
-                Edge([16, 17], features=[]),
-                Edge([18, 19], features=[]),
-                Edge([19, 20], features=[]),
-                Edge([19, 23], features=[]),
-                Edge([20, 21], features=[]),
-                Edge([21, 22], features=[]),
-                Edge([21, 24], features=[]),
-                Edge([25, 26], features=[]),
-                Edge([26, 27], features=[]),
-                Edge([26, 30], features=[]),
-                Edge([27, 28], features=[]),
-                Edge([28, 29], features=[]),
-                Edge([28, 31], features=[])
+                Edge([1, 0], features=[], label='NBO', id='nbo-'),
+                Edge([2, 3], features=[], label='NBO', id='nbo-'),
+                Edge([2, 11], features=[], label='NBO', id='nbo-'),
+                Edge([3, 4], features=[], label='NBO', id='nbo-'),
+                Edge([4, 5], features=[], label='NBO', id='nbo-'),
+                Edge([4, 12], features=[], label='NBO', id='nbo-'),
+                Edge([5, 6], features=[], label='NBO', id='nbo-'),
+                Edge([6, 7], features=[], label='NBO', id='nbo-'),
+                Edge([6, 11], features=[], label='NBO', id='nbo-'),
+                Edge([7, 8], features=[], label='NBO', id='nbo-'),
+                Edge([8, 9], features=[], label='NBO', id='nbo-'),
+                Edge([9, 10], features=[], label='NBO', id='nbo-'),
+                Edge([10, 11], features=[], label='NBO', id='nbo-'),
+                Edge([12, 13], features=[], label='NBO', id='nbo-'),
+                Edge([12, 17], features=[], label='NBO', id='nbo-'),
+                Edge([13, 14], features=[], label='NBO', id='nbo-'),
+                Edge([14, 15], features=[], label='NBO', id='nbo-'),
+                Edge([15, 16], features=[], label='NBO', id='nbo-'),
+                Edge([16, 17], features=[], label='NBO', id='nbo-'),
+                Edge([18, 19], features=[], label='NBO', id='nbo-'),
+                Edge([19, 20], features=[], label='NBO', id='nbo-'),
+                Edge([19, 23], features=[], label='NBO', id='nbo-'),
+                Edge([20, 21], features=[], label='NBO', id='nbo-'),
+                Edge([21, 22], features=[], label='NBO', id='nbo-'),
+                Edge([21, 24], features=[], label='NBO', id='nbo-'),
+                Edge([25, 26], features=[], label='NBO', id='nbo-'),
+                Edge([26, 27], features=[], label='NBO', id='nbo-'),
+                Edge([26, 30], features=[], label='NBO', id='nbo-'),
+                Edge([27, 28], features=[], label='NBO', id='nbo-'),
+                Edge([28, 29], features=[], label='NBO', id='nbo-'),
+                Edge([28, 31], features=[], label='NBO', id='nbo-')
             ]
         ],
 
@@ -2882,13 +2967,41 @@ class TestGraphGenerator(unittest.TestCase):
             [],
             [SopaEdgeFeature.STABILISATION_ENERGY_MAX, SopaEdgeFeature.DONOR_NBO_TYPE, SopaEdgeFeature.ACCEPTOR_NBO_TYPE],
             [
-                Edge([1, 0], {'stabilisation_energy_max': 15.10, 'donor_nbo_type': 'LP', 'acceptor_nbo_type': 'LV'}, is_directed=True),
-                Edge([2, 0], {'stabilisation_energy_max': 25.68, 'donor_nbo_type': 'LP', 'acceptor_nbo_type': 'LV'}, is_directed=True),
-                Edge([8, 0], {'stabilisation_energy_max': 22.74, 'donor_nbo_type': 'LP', 'acceptor_nbo_type': 'LV'}, is_directed=True),
-                Edge([14, 0], {'stabilisation_energy_max': 21.99, 'donor_nbo_type': 'LP', 'acceptor_nbo_type': 'LV'}, is_directed=True),
-                Edge([20, 0], {'stabilisation_energy_max': 23.34, 'donor_nbo_type': 'LP', 'acceptor_nbo_type': 'LV'}, is_directed=True),
-                Edge([27, 0], {'stabilisation_energy_max': 16.63, 'donor_nbo_type': 'LP', 'acceptor_nbo_type': 'LV'}, is_directed=True),
-                Edge([28, 0], {'stabilisation_energy_max': 12.43, 'donor_nbo_type': 'LP', 'acceptor_nbo_type': 'LV'}, is_directed=True)
+                Edge([1, 0], {
+                    'stabilisation_energy_max': 15.10,
+                    'donor_nbo_type': 'LP',
+                    'acceptor_nbo_type': 'LV'
+                }, is_directed=True, label='SOPA', id='sopa-0'),
+                Edge([2, 0], {
+                    'stabilisation_energy_max': 25.68,
+                    'donor_nbo_type': 'LP',
+                    'acceptor_nbo_type': 'LV'
+                }, is_directed=True, label='SOPA', id='sopa-1'),
+                Edge([8, 0], {
+                    'stabilisation_energy_max': 22.74,
+                    'donor_nbo_type': 'LP',
+                    'acceptor_nbo_type': 'LV'
+                }, is_directed=True, label='SOPA', id='sopa-2'),
+                Edge([14, 0], {
+                    'stabilisation_energy_max': 21.99,
+                    'donor_nbo_type': 'LP',
+                    'acceptor_nbo_type': 'LV'
+                }, is_directed=True, label='SOPA', id='sopa-3'),
+                Edge([20, 0], {
+                    'stabilisation_energy_max': 23.34,
+                    'donor_nbo_type': 'LP',
+                    'acceptor_nbo_type': 'LV'
+                }, is_directed=True, label='SOPA', id='sopa-4'),
+                Edge([27, 0], {
+                    'stabilisation_energy_max': 16.63,
+                    'donor_nbo_type': 'LP',
+                    'acceptor_nbo_type': 'LV'
+                }, is_directed=True, label='SOPA', id='sopa-5'),
+                Edge([28, 0], {
+                    'stabilisation_energy_max': 12.43,
+                    'donor_nbo_type': 'LP',
+                    'acceptor_nbo_type': 'LV'
+                }, is_directed=True, label='SOPA', id='sopa-6')
             ]
         ],
 
@@ -2898,10 +3011,30 @@ class TestGraphGenerator(unittest.TestCase):
             [EdgeFeature.WIBERG_BOND_ORDER],
             [SopaEdgeFeature.STABILISATION_ENERGY_MAX, SopaEdgeFeature.DONOR_NBO_TYPE, SopaEdgeFeature.ACCEPTOR_NBO_TYPE],
             [
-                Edge([2, 0], {'wiberg_bond_order': 0.0936, 'stabilisation_energy_max': 25.68, 'donor_nbo_type': 'LP', 'acceptor_nbo_type': 'LV'}, is_directed=True),
-                Edge([8, 0], {'wiberg_bond_order': 0.0752, 'stabilisation_energy_max': 22.74, 'donor_nbo_type': 'LP', 'acceptor_nbo_type': 'LV'}, is_directed=True),
-                Edge([14, 0], {'wiberg_bond_order': 0.0723, 'stabilisation_energy_max': 21.99, 'donor_nbo_type': 'LP', 'acceptor_nbo_type': 'LV'}, is_directed=True),
-                Edge([20, 0], {'wiberg_bond_order': 0.0864, 'stabilisation_energy_max': 23.34, 'donor_nbo_type': 'LP', 'acceptor_nbo_type': 'LV'}, is_directed=True),
+                Edge([2, 0], {
+                    'wiberg_bond_order': 0.0936,
+                    'stabilisation_energy_max': 25.68,
+                    'donor_nbo_type': 'LP',
+                    'acceptor_nbo_type': 'LV'
+                }, is_directed=True, label='SOPA', id='sopa-1'),
+                Edge([8, 0], {
+                    'wiberg_bond_order': 0.0752,
+                    'stabilisation_energy_max': 22.74,
+                    'donor_nbo_type': 'LP',
+                    'acceptor_nbo_type': 'LV'
+                }, is_directed=True, label='SOPA', id='sopa-2'),
+                Edge([14, 0], {
+                    'wiberg_bond_order': 0.0723,
+                    'stabilisation_energy_max': 21.99,
+                    'donor_nbo_type': 'LP',
+                    'acceptor_nbo_type': 'LV'
+                }, is_directed=True, label='SOPA', id='sopa-3'),
+                Edge([20, 0], {
+                    'wiberg_bond_order': 0.0864,
+                    'stabilisation_energy_max': 23.34,
+                    'donor_nbo_type': 'LP',
+                    'acceptor_nbo_type': 'LV'
+                }, is_directed=True, label='SOPA', id='sopa-4'),
             ]
         ],
 
@@ -2911,13 +3044,13 @@ class TestGraphGenerator(unittest.TestCase):
             [],
             [SopaEdgeFeature.STABILISATION_ENERGY_AVERAGE],
             [
-                Edge([1, 0], {'stabilisation_energy_average': 7.84}, is_directed=True),
-                Edge([2, 0], {'stabilisation_energy_average': 25.68}, is_directed=True),
-                Edge([8, 0], {'stabilisation_energy_average': 22.74}, is_directed=True),
-                Edge([14, 0], {'stabilisation_energy_average': 21.99}, is_directed=True),
-                Edge([20, 0], {'stabilisation_energy_average': 23.34}, is_directed=True),
-                Edge([27, 0], {'stabilisation_energy_average': 8.036666}, is_directed=True),
-                Edge([28, 0], {'stabilisation_energy_average': 6.47}, is_directed=True)
+                Edge([1, 0], {'stabilisation_energy_average': 7.84}, is_directed=True, label='SOPA', id='sopa-0'),
+                Edge([2, 0], {'stabilisation_energy_average': 25.68}, is_directed=True, label='SOPA', id='sopa-1'),
+                Edge([8, 0], {'stabilisation_energy_average': 22.74}, is_directed=True, label='SOPA', id='sopa-2'),
+                Edge([14, 0], {'stabilisation_energy_average': 21.99}, is_directed=True, label='SOPA', id='sopa-3'),
+                Edge([20, 0], {'stabilisation_energy_average': 23.34}, is_directed=True, label='SOPA', id='sopa-4'),
+                Edge([27, 0], {'stabilisation_energy_average': 8.036666}, is_directed=True, label='SOPA', id='sopa-5'),
+                Edge([28, 0], {'stabilisation_energy_average': 6.47}, is_directed=True, label='SOPA', id='sopa-6')
             ]
         ],
 
@@ -2936,7 +3069,6 @@ class TestGraphGenerator(unittest.TestCase):
 
         # get result
         result = gg._get_sopa_edges(qm_data)
-        print(result)
 
         Utils.assert_are_almost_equal(result, expected, places=5)
 

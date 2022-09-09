@@ -593,8 +593,14 @@ class GraphGenerator:
             Edge: The edge object.
         """
 
+        # get edge features
         edge_features = self._get_edge_features(bond_atom_indices, qm_data)
-        return Edge(bond_atom_indices, features=edge_features)
+
+        # get edge id and label
+        edge_label = 'NBO'
+        edge_id = 'nbo-'
+
+        return Edge(bond_atom_indices, features=edge_features, label=edge_label, id=edge_id)
 
     def _get_nodes(self, qm_data: QmData, include_misc_data: bool = True) -> list[Node]:
 
@@ -779,11 +785,13 @@ class GraphGenerator:
             node_features['hydrogen_count'] = hydrogen_count
 
         if include_misc_data:
-            # get node label and position
+
+            # get node id, label and position
+            node_id = 'node-' + str(i)
             node_label = ElementLookUpTable.get_element_identifier(qm_data.atomic_numbers[i])
             node_position = qm_data.geometric_data[i]
 
-            return Node(features=node_features, position=node_position, label=node_label)
+            return Node(features=node_features, position=node_position, label=node_label, id=node_id)
         return Node(features=node_features)
 
     def _adjust_node_references(self, edges: list[Edge], qm_data: QmData):
@@ -1352,7 +1360,11 @@ class GraphGenerator:
                 # add additional features
                 features = features | self._get_edge_features(adjacency_list[i], qm_data)
 
-                edges.append(Edge(adjacency_list[i], features=features, is_directed=True))
+                # set edge id and label
+                edge_label = 'SOPA'
+                edge_id = 'sopa-' + str(i)
+
+                edges.append(Edge(adjacency_list[i], features=features, is_directed=True, label=edge_label, id=edge_id))
 
         return edges
 
