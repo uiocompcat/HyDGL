@@ -12,3 +12,4 @@ class EdgeType(Enum):
     BOND_ORDER_METAL = auto()
 
     SOPA = auto()
+    SOPA_NBO = auto()

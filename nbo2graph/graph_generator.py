@@ -53,6 +53,8 @@ class GraphGenerator:
             edges += self._get_edges(qm_data)
         if EdgeType.SOPA in self._settings.edge_types:
             edges += self._get_sopa_edges(qm_data)
+        if EdgeType.SOPA_NBO in self._settings.edge_types:
+            edges += self._get_sopa_nbo_edges(qm_data)
 
         # rescale node references in edges if explicit hydrogens were omitted
         if self._settings.hydrogen_mode == HydrogenMode.OMIT:
@@ -1515,6 +1517,34 @@ class GraphGenerator:
                 resolved_stabilisation_energies.append(min_energies)
 
         return resolved_stabilisation_energies
+
+    def _get_sopa_nbo_edges(self, qm_data: QmData) -> list[list[int]]:
+
+        """Generates a set of edges based on SOPA data (experimental).
+
+        Returns:
+            list[Edge]: List of edges.
+        """
+
+        # get NBO + metal bond order adjacency
+        adjacency_list = self._get_nbo_bonding_orbital_adjacency_list(qm_data) + self._get_bond_order_metal_adjacency_list(qm_data)
+
+        # get hydride bonds and append if not already in list
+        hydride_bonds = self._get_hydride_bond_indices(qm_data)
+        for hydride_bond in hydride_bonds:
+
+            if hydride_bond not in adjacency_list and list(reversed(hydride_bond)) not in adjacency_list:
+                adjacency_list.append(hydride_bond)
+
+        set_list = list(sorted([list(item) for item in set(tuple(atom_indices) for atom_indices in adjacency_list)]))
+
+        sopa_edges = self._get_sopa_edges(qm_data)
+        filtered_sopa_edges = []
+        for sopa_edge in sopa_edges:
+            if sopa_edge.node_indices in set_list or reversed(sopa_edge.node_indices) in set_list:
+                filtered_sopa_edges.append(sopa_edge)
+
+        return filtered_sopa_edges
 
     def _get_meta_data(self, qm_data: QmData):
 
