@@ -340,7 +340,7 @@ class TestGraph(unittest.TestCase):
             ),
             {
                 'graph': nx.MultiGraph(),
-                'id': 'TestGraph',
+                'meta_data': {'id': 'TestGraph'},
                 'targets': {},
                 'nodes': [(0), (1)],
                 'edges': [(0, 1)]
@@ -355,7 +355,7 @@ class TestGraph(unittest.TestCase):
             ),
             {
                 'graph': nx.MultiGraph(),
-                'id': 'TestGraph',
+                'meta_data': {'id': 'TestGraph'},
                 'targets': {'target_a': 12.34, 'target_b': 23.45, 'target_c': 34.56},
                 'nodes': [(0, {'feature_0': 0, 'feature_1': 1}), (1, {'feature_0': 1, 'feature_1': 0})],
                 'edges': [(0, 1, {'feature_0': -2, 'feature_1': 2})]
@@ -370,7 +370,7 @@ class TestGraph(unittest.TestCase):
             ),
             {
                 'graph': nx.MultiDiGraph(),
-                'id': 'TestGraph',
+                'meta_data': {'id': 'TestGraph'},
                 'targets': {'target_a': 12.34, 'target_b': 23.45, 'target_c': 34.56},
                 'nodes': [(0, {'feature_0': 0, 'feature_1': 1}), (1, {'feature_0': 1, 'feature_1': 0})],
                 'edges': [(0, 1, {'feature_0': -2, 'feature_1': 2})]
@@ -381,11 +381,11 @@ class TestGraph(unittest.TestCase):
             Graph(
                 [Node(features=[0, 1], position=[0, 1, 2], label='A'), Node(features=[1, 0], position=[3, 4, 5], label='B')],
                 [Edge([0, 1], features=[-2, 2], is_directed=True)],
-                targets={'a': 12.34, 'b': 23.45, 'c': 34.56}, meta_data={'id': 'TestGraph'}
+                targets={'a': 12.34, 'b': 23.45, 'c': 34.56}, meta_data={'id': 'TestGraph', 'some_meta_info': 123}
             ),
             {
                 'graph': nx.MultiDiGraph(),
-                'id': 'TestGraph',
+                'meta_data': {'id': 'TestGraph', 'some_meta_info': 123},
                 'targets': {'target_a': 12.34, 'target_b': 23.45, 'target_c': 34.56},
                 'nodes': [(0, {'feature_0': 0, 'feature_1': 1, 'node_label': 'A', 'node_position': [0, 1, 2]}), (1, {'feature_0': 1, 'feature_1': 0, 'node_label': 'B', 'node_position': [3, 4, 5]})],
                 'edges': [(0, 1, {'feature_0': -2, 'feature_1': 2})]
@@ -398,7 +398,7 @@ class TestGraph(unittest.TestCase):
         # setup expected graph
         expected_graph = expected['graph']
 
-        expected_graph.graph['id'] = expected['id']
+        expected_graph.graph['meta_data'] = expected['meta_data']
 
         if not expected['targets'] == {}:
             for key in expected['targets'].keys():

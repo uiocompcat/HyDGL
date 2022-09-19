@@ -42,7 +42,6 @@ class Graph:
         """
 
         # graph elements
-        id = None
         nodes = []
         edges = []
         targets = {}
@@ -51,8 +50,10 @@ class Graph:
         graph_level_keys = nx_graph.graph.keys()
 
         # obrain id
-        if 'id' in graph_level_keys:
-            id = nx_graph.graph['id']
+        if 'meta_data' in graph_level_keys:
+            meta_data = nx_graph.graph['meta_data']
+        else:
+            meta_data = {'id': None}
 
         # The following obtains feature and target lists for the graph, nodes and edges.
         # The 'target_' and 'feature_' prefixes are removed before adding them to the
@@ -96,7 +97,7 @@ class Graph:
                     edge_features[edge_feature_key[len('feature_'):]] = edge[2][edge_feature_key]
             edges.append(Edge([int(edge[0]), int(edge[1])], features=edge_features, is_directed=nx.is_directed(nx_graph)))
 
-        return cls(nodes=nodes, edges=edges, targets=targets, graph_features=graph_features, meta_data={'id': id})
+        return cls(nodes=nodes, edges=edges, targets=targets, graph_features=graph_features, meta_data=meta_data)
 
     @property
     def id(self):
@@ -208,8 +209,8 @@ class Graph:
         else:
             raise NotImplementedError('The graph has directed as well as undirected edges which is not supported by the networkx library.')
 
-        # add CSD code
-        nx_graph.graph['id'] = str(self.id)
+        # add meta data
+        nx_graph.graph['meta_data'] = self.meta_data
 
         # add nodes
         for i, node in enumerate(self.nodes):
