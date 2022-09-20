@@ -6,7 +6,8 @@ HyDGL
     :target: https://circleci.com/gh/hkneiding/HyDGL
 .. image:: https://codecov.io/gh/hkneiding/HyDGL/branch/main/graph/badge.svg?token=UB88TKUCY7
     :target: https://codecov.io/gh/hkneiding/HyDGL
-.. image:: https://readthedocs.org/projects/docs/badge/?version=latest
+.. image:: https://readthedocs.org/projects/docs/badge/?version=
+    :target:
 
 
 ``HyDGL`` is a Python parser to generate descriptive graphs based on quantum chemistry data ready for use in Graph Neural Networks. In particular it provides the following features:
