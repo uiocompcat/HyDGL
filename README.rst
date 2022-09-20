@@ -47,7 +47,7 @@ Afterwards you can import the library with:
 
 >>> import HyDGL
 
-A more detailed guide on the usage can be found in the `documentation <link>`_.
+A more detailed guide on the usage can be found in the `documentation <https://hydgl.readthedocs.io/en/latest/index.html>`_.
 
 What is under the hood?
 -----------
