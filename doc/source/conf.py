@@ -2,9 +2,9 @@
 
 # -- Project information
 
-project = 'Lumache'
-copyright = '2021, Graziella'
-author = 'Graziella'
+project = 'HyGDL'
+copyright = '2022, Kneiding'
+author = 'Hannes Kneiding'
 
 release = '0.1'
 version = '0.1.0'

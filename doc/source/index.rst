@@ -22,6 +22,7 @@ Contents
 --------
 
 .. toctree::
+   :caption: Contents
 
    requirements
    installation
