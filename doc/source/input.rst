@@ -1,5 +1,5 @@
 Input
-====
+=====
 
 The input required for the generation of graphs is a dictionary containing the relevant QM data in a specific format. For each molecule there needs to be a dictionary holding all of the following data:
 
@@ -131,4 +131,4 @@ The input required for the generation of graphs is a dictionary containing the r
       A list of the vibrational frequencies.
 
 
-For the tmQMg the dictionaries formatted as ``JSON`` files can be found `here <>`_. If you want to use your own data you have to setup the QM calculations and subsequent data extraction yourself.
+For the tmQMg the dictionaries formatted as ``JSON`` files can be found `here <www.google.com>`_. If you want to use your own data you have to setup the QM calculations and subsequent data extraction yourself.

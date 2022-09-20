@@ -1,5 +1,5 @@
 Requirements
-=====
+============
 
 This package is developed and tested on a Python 3.9.x version but any higher version should also work without any problems. The package requires installations of the following packages:
 
