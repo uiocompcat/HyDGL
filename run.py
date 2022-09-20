@@ -5,30 +5,30 @@ import pandas as pd
 import numpy as np
 from sklearn.cluster import k_means
 from tqdm import tqdm
-from nbo2graph.edge import Edge
-from nbo2graph.enums.bond_order_type import BondOrderType
-from nbo2graph.enums.edge_feature import EdgeFeature
-from nbo2graph.enums.edge_type import EdgeType
-from nbo2graph.enums.graph_feature import GraphFeature
-from nbo2graph.enums.hydrogen_mode import HydrogenMode
-from nbo2graph.enums.node_feature import NodeFeature
-from nbo2graph.enums.qm_target import QmTarget
-from nbo2graph.enums.sopa_edge_feature import SopaEdgeFeature
-from nbo2graph.enums.sopa_resolution_mode import SopaResolutionMode
-from nbo2graph.file_handler import FileHandler
-from nbo2graph.graph import Graph
-from nbo2graph.node import Node
-from nbo2graph.graph_generator_settings import GraphGeneratorSettings
-from nbo2graph.qm_data import QmData
-from nbo2graph.element_look_up_table import ElementLookUpTable
-# from nbo2graph.datasets.tmQMg import tmQMg
+from HyDGL.edge import Edge
+from HyDGL.enums.bond_order_type import BondOrderType
+from HyDGL.enums.edge_feature import EdgeFeature
+from HyDGL.enums.edge_type import EdgeType
+from HyDGL.enums.graph_feature import GraphFeature
+from HyDGL.enums.hydrogen_mode import HydrogenMode
+from HyDGL.enums.node_feature import NodeFeature
+from HyDGL.enums.qm_target import QmTarget
+from HyDGL.enums.sopa_edge_feature import SopaEdgeFeature
+from HyDGL.enums.sopa_resolution_mode import SopaResolutionMode
+from HyDGL.file_handler import FileHandler
+from HyDGL.graph import Graph
+from HyDGL.node import Node
+from HyDGL.graph_generator_settings import GraphGeneratorSettings
+from HyDGL.qm_data import QmData
+from HyDGL.element_look_up_table import ElementLookUpTable
+# from HyDGL.datasets.tmQMg import tmQMg
 from time import sleep
-from nbo2graph.tools import Tools
+from HyDGL.tools import Tools
 
 
 from scripts.data_parser import DataParser
 from scripts.tmQMg import tmQMg
-from nbo2graph.graph_generator import GraphGenerator
+from HyDGL.graph_generator import GraphGenerator
 
 import networkx as nx
 
@@ -283,8 +283,10 @@ def show_molecule():
 # - - - entry point - - - #
 if __name__ == "__main__":
 
-    ggs = GraphGeneratorSettings.baseline([])
-    get_edge_bond_orders(ggs)
+    qm_data = DataParser('/home/hkneiding/Documents/UiO/Data/tmQMg/raw/' + 'OREDIA.log').parse()
+    qm_data_object = QmData.from_dict(qm_data)
+
+    FileHandler.write_binary_file('/home/hkneiding/Desktop/a.pickle', qm_data_object)
 
     # # list of all files
     # files = [x for x in os.listdir(ext_data_dir)]

@@ -12,29 +12,23 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            # conda env create -q || conda env update -q
-            # source activate adj
+
             conda install -c conda-forge parameterized 
             conda install -qy conda-build anaconda-client pytest pytest-cov
 
             conda install -y pytorch==1.9.0 cudatoolkit=10.2 -c pytorch
-            # conda install -y pytorch==1.9.0 torchvision torchaudio cudatoolkit=10.2 -c pytorch
-            # conda install -y pytorch torchvision torchaudio cudatoolkit=11.3 -c pytorch
             
-            # conda install -c conda-forge pytorch_geometric 
             conda install -y pyg -c pyg -c conda-forge
             conda install -y -c plotly plotly 
 
             conda config --set auto_update_conda no
             conda info -a
-            #conda build conda.recipe --no-test
-            #conda install -y --use-local nbo2graph      
 
       - run:
           name: run tests
           command: |
             # source activate adj
-            pytest --color=yes -v --cov=nbo2graph tests
+            pytest --color=yes -v --cov=HyDGL tests
             conda install -c conda-forge codecov
             codecov -t eacef7a6-3ec3-47f5-b294-9fb90e474591
 

@@ -9,7 +9,7 @@
 			"_parent": {
 				"$ref": "AAAAAAFF+h6SjaM2Hec="
 			},
-			"name": "nbo2graph",
+			"name": "HyDGL",
 			"ownedElements": [
 				{
 					"_type": "UMLClassDiagram",
@@ -63,7 +63,7 @@
 											"top": 126,
 											"width": 1351,
 											"height": 13,
-											"text": "nbo2graph"
+											"text": "HyDGL"
 										},
 										{
 											"_type": "LabelView",
@@ -77,7 +77,7 @@
 											"top": -272,
 											"width": 100.43896484375,
 											"height": 13,
-											"text": "(from nbo2graph)"
+											"text": "(from HyDGL)"
 										},
 										{
 											"_type": "LabelView",
@@ -199,7 +199,7 @@
 											"top": -1384,
 											"width": 100.43896484375,
 											"height": 13,
-											"text": "(from nbo2graph)"
+											"text": "(from HyDGL)"
 										},
 										{
 											"_type": "LabelView",
@@ -336,7 +336,7 @@
 											"top": 64,
 											"width": 100.43896484375,
 											"height": 13,
-											"text": "(from nbo2graph)"
+											"text": "(from HyDGL)"
 										},
 										{
 											"_type": "LabelView",
@@ -599,7 +599,7 @@
 											"top": 192,
 											"width": 100.43896484375,
 											"height": 13,
-											"text": "(from nbo2graph)"
+											"text": "(from HyDGL)"
 										},
 										{
 											"_type": "LabelView",
@@ -794,7 +794,7 @@
 											"top": -752,
 											"width": 100.43896484375,
 											"height": 13,
-											"text": "(from nbo2graph)"
+											"text": "(from HyDGL)"
 										},
 										{
 											"_type": "LabelView",
@@ -1396,7 +1396,7 @@
 											"top": 224,
 											"width": 100.43896484375,
 											"height": 13,
-											"text": "(from nbo2graph)"
+											"text": "(from HyDGL)"
 										},
 										{
 											"_type": "LabelView",
@@ -1666,7 +1666,7 @@
 											"top": 800,
 											"width": 100.43896484375,
 											"height": 13,
-											"text": "(from nbo2graph)"
+											"text": "(from HyDGL)"
 										},
 										{
 											"_type": "LabelView",
@@ -3796,7 +3796,7 @@
 											"top": -496,
 											"width": 100.43896484375,
 											"height": 13,
-											"text": "(from nbo2graph)"
+											"text": "(from HyDGL)"
 										},
 										{
 											"_type": "LabelView",
@@ -4010,7 +4010,7 @@
 											"top": -1008,
 											"width": 100.43896484375,
 											"height": 13,
-											"text": "(from nbo2graph)"
+											"text": "(from HyDGL)"
 										},
 										{
 											"_type": "LabelView",
@@ -4222,7 +4222,7 @@
 											"top": -896,
 											"width": 100.43896484375,
 											"height": 13,
-											"text": "(from nbo2graph)"
+											"text": "(from HyDGL)"
 										},
 										{
 											"_type": "LabelView",
@@ -4622,7 +4622,7 @@
 											"top": -136,
 											"width": 100.43896484375,
 											"height": 13,
-											"text": "(from nbo2graph)"
+											"text": "(from HyDGL)"
 										},
 										{
 											"_type": "LabelView",
@@ -5012,7 +5012,7 @@
 											"top": -1240,
 											"width": 100.43896484375,
 											"height": 13,
-											"text": "(from nbo2graph)"
+											"text": "(from HyDGL)"
 										},
 										{
 											"_type": "LabelView",
@@ -5286,7 +5286,7 @@
 											"top": 32,
 											"width": 100.43896484375,
 											"height": 13,
-											"text": "(from nbo2graph)"
+											"text": "(from HyDGL)"
 										},
 										{
 											"_type": "LabelView",
@@ -5501,7 +5501,7 @@
 											"top": -32,
 											"width": 100.43896484375,
 											"height": 13,
-											"text": "(from nbo2graph)"
+											"text": "(from HyDGL)"
 										},
 										{
 											"_type": "LabelView",
@@ -6044,7 +6044,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "nbo2graph",
+					"name": "HyDGL",
 					"ownedElements": [
 						{
 							"_type": "UMLClass",

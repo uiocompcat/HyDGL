@@ -6,7 +6,7 @@ To generate graphs we need to setup a ``GraphGenerator`` object that operates ba
 .. code-block:: python
    :linenos:
 
-    import nbo2graph as n2g
+    import HyDGL as n2g
 
     # get the QM data dictionary for the moleulce
     qm_data_dict = # your code for obtaining the dictionary
@@ -27,7 +27,7 @@ The above code will generate the graphs without target values for the use in mac
 .. code-block:: python
    :linenos:
 
-    import nbo2graph as n2g
+    import HyDGL as n2g
 
     # get the QM data dictionary for the moleulce
     qm_data_dict = # your code for obtaining the dictionary

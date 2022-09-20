@@ -1,15 +1,15 @@
 ===============================
-nbo2graph
+HyDGL
 ===============================
 
 
-.. image:: https://circleci.com/gh/hkneiding/nbo2graph.svg?style=svg&circle-token=dcb019393b2ff6c2e7afef3f326541f79366f256
-    :target: https://circleci.com/gh/hkneiding/nbo2graph
-.. image:: https://codecov.io/gh/hkneiding/nbo2graph/branch/main/graph/badge.svg?token=UB88TKUCY7
-    :target: https://codecov.io/gh/hkneiding/nbo2graph
+.. image:: https://circleci.com/gh/hkneiding/HyDGL.svg?style=svg&circle-token=dcb019393b2ff6c2e7afef3f326541f79366f256
+    :target: https://circleci.com/gh/hkneiding/HyDGL
+.. image:: https://codecov.io/gh/hkneiding/HyDGL/branch/main/graph/badge.svg?token=UB88TKUCY7
+    :target: https://codecov.io/gh/hkneiding/HyDGL
 
 
-``nbo2graph`` is a Python parser to generate descriptive graphs based on quantum chemistry data ready for use in Graph Neural Networks. In particular it provides the following features:
+``HyDGL`` is a Python parser to generate descriptive graphs based on quantum chemistry data ready for use in Graph Neural Networks. In particular it provides the following features:
 
 - adaptable generation of graph representations based on quantum chemistry data
 
@@ -38,20 +38,20 @@ How to use
 
 The package can be installed directly from this repository with ``pip``::
     
-    pip install git+https://github.com/hkneiding/nbo2graph
+    pip install git+https://github.com/hkneiding/HyDGL
 
-which installs ``nbo2graph`` as a library to your Python installation or virtual environment.
+which installs ``HyDGL`` as a library to your Python installation or virtual environment.
 
 Afterwards you can import the library with:
 
->>> import nbo2graph
+>>> import HyDGL
 
 A more detailed guide on the usage can be found in the `documentation <link>`_.
 
 What is under the hood?
 -----------
 
-There are two main parts in the ``nbo2graph`` package. The first one is the ``GraphGenerator`` class that generates graphs based to specified parameters. Secondly there is the ``Graph`` class which represents a full graph in terms of nodes, edges, their respective features, graph-level features and attributes/labels. Furthemore, it includes functionality to produce object in a format ready to use with the ``pytorch_geometric`` package. The remaining classes are mainly miscellaneous helper classes and enums.\
+There are two main parts in the ``HyDGL`` package. The first one is the ``GraphGenerator`` class that generates graphs based to specified parameters. Secondly there is the ``Graph`` class which represents a full graph in terms of nodes, edges, their respective features, graph-level features and attributes/labels. Furthemore, it includes functionality to produce object in a format ready to use with the ``pytorch_geometric`` package. The remaining classes are mainly miscellaneous helper classes and enums.\
 This general structure is displayed by the following UML diagram.
 
 .. image:: ./doc/uml.png

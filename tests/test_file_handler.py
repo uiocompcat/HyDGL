@@ -3,7 +3,7 @@ import pickle
 import unittest
 from parameterized import parameterized
 
-from nbo2graph.file_handler import FileHandler
+from HyDGL.file_handler import FileHandler
 from tests.utils import TEST_FILE_LALMER, TEST_FILE_QM_DATA_OREDIA, TEST_FILE_JSON, Utils
 
 
@@ -59,7 +59,7 @@ class TestFileHandler(unittest.TestCase):
     ])
     def test_write_file(self, content):
 
-        tmp_file_path = '/tmp/nbo2graph-test-file.txt'
+        tmp_file_path = '/tmp/HyDGL-test-file.txt'
 
         FileHandler.write_file(tmp_file_path, content)
         result = FileHandler.read_file(tmp_file_path)
@@ -108,7 +108,7 @@ class TestFileHandler(unittest.TestCase):
     ])
     def test_write_binary_file(self, file_path):
 
-        tmp_file_path = '/tmp/nbo2graph-test-file.bin'
+        tmp_file_path = '/tmp/HyDGL-test-file.bin'
 
         content = FileHandler.read_binary_file(file_path)
         FileHandler.write_binary_file(tmp_file_path, content)
@@ -124,11 +124,11 @@ class TestFileHandler(unittest.TestCase):
     ])
     def test_clear_directory(self):
 
-        FileHandler.write_file('/tmp/nbo2graph-test-file.txt', 'asdfasf')
-        FileHandler.clear_directory('/tmp/', ['nbo2graph-test-file.txt', 'nbo2graph-test-file2.txt'])
+        FileHandler.write_file('/tmp/HyDGL-test-file.txt', 'asdfasf')
+        FileHandler.clear_directory('/tmp/', ['HyDGL-test-file.txt', 'HyDGL-test-file2.txt'])
 
-        self.assertFalse(os.path.isfile('/tmp/nbo2graph-test-file.txt'))
-        self.assertFalse(os.path.isfile('/tmp/nbo2graph-test-file2.txt'))
+        self.assertFalse(os.path.isfile('/tmp/HyDGL-test-file.txt'))
+        self.assertFalse(os.path.isfile('/tmp/HyDGL-test-file2.txt'))
 
     @parameterized.expand([
 
@@ -157,7 +157,7 @@ class TestFileHandler(unittest.TestCase):
     ])
     def test_write_dict_to_json_file(self, file_path):
 
-        tmp_file_path = '/tmp/nbo2graph-test-file.json'
+        tmp_file_path = '/tmp/HyDGL-test-file.json'
 
         content = FileHandler.read_dict_from_json_file(file_path)
         FileHandler.write_dict_to_json_file(tmp_file_path, content)

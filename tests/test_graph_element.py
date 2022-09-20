@@ -2,7 +2,7 @@ import unittest
 from parameterized import parameterized
 
 from tests.utils import Utils
-from nbo2graph.graph_element import GraphElement
+from HyDGL.graph_element import GraphElement
 
 
 class TestGraphGeneratorSettings(unittest.TestCase):

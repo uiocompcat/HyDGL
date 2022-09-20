@@ -7,9 +7,9 @@ import scipy as sp
 import pandas as pd
 
 from tmQMg import tmQMg
-from nbo2graph.enums.qm_target import QmTarget
-from nbo2graph.element_look_up_table import ElementLookUpTable
-from nbo2graph.graph_generator_settings import GraphGeneratorSettings
+from HyDGL.enums.qm_target import QmTarget
+from HyDGL.element_look_up_table import ElementLookUpTable
+from HyDGL.graph_generator_settings import GraphGeneratorSettings
 from nets import GilmerNetGraphLevelFeatures, GilmerNetGraphLevelFeaturesDropout, GilmerNetGraphLevelFeaturesEdgeDropout, GilmerNetGraphLevelFeaturesLayerNorm
 from trainer import Trainer
 import tools

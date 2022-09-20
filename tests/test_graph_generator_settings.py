@@ -1,10 +1,10 @@
 import unittest
 from parameterized import parameterized
 
-from nbo2graph.enums.hydrogen_mode import HydrogenMode
-from nbo2graph.enums.sopa_resolution_mode import SopaResolutionMode
-from nbo2graph.enums.bond_order_type import BondOrderType
-from nbo2graph.graph_generator_settings import GraphGeneratorSettings
+from HyDGL.enums.hydrogen_mode import HydrogenMode
+from HyDGL.enums.sopa_resolution_mode import SopaResolutionMode
+from HyDGL.enums.bond_order_type import BondOrderType
+from HyDGL.graph_generator_settings import GraphGeneratorSettings
 
 
 class TestGraphGeneratorSettings(unittest.TestCase):

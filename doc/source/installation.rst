@@ -5,13 +5,13 @@ Use pip to install the package directly from its GitHub repository
 
 .. code-block:: console
 
-  $ pip install git+https://github.com/hkneiding/nbo2graph
+  $ pip install git+https://github.com/hkneiding/HyDGL
 
-which installs ``nbo2graph`` as a library to your python installation or virtual environment.
+which installs ``HyDGL`` as a library to your python installation or virtual environment.
 
 Check that the installation was successful by running Python and importing the package:
 
->>> import nbo2graph
+>>> import HyDGL
 
 .. note::
 

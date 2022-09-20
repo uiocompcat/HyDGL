@@ -1,7 +1,7 @@
-Welcome to the nbo2graph documentation!
+Welcome to the HyDGL documentation!
 ===================================
 
-`nbo2graph <https://github.com/hkneiding/nbo2graph>`_ is a Python library to generate descriptive graphs based on quantum chemistry data ready for use in Graph Neural Networks. In particular it provides the following features:
+`HyDGL <https://github.com/hkneiding/HyDGL>`_ is a Python library to generate descriptive graphs based on quantum chemistry data ready for use in Graph Neural Networks. In particular it provides the following features:
 
 - adaptable generation of graph representations based on quantum chemistry data
 

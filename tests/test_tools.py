@@ -2,7 +2,7 @@ import unittest
 from parameterized import parameterized
 
 from tests.utils import Utils
-from nbo2graph.tools import Tools
+from HyDGL.tools import Tools
 
 
 class TestTools(unittest.TestCase):

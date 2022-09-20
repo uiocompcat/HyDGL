@@ -1,9 +1,9 @@
 import unittest
 from parameterized import parameterized
 
-from nbo2graph.qm_data import QmData
-from nbo2graph.enums.nbo_type import NboType
-from nbo2graph.file_handler import FileHandler
+from HyDGL.qm_data import QmData
+from HyDGL.enums.nbo_type import NboType
+from HyDGL.file_handler import FileHandler
 from tests.utils import Utils, TEST_FILE_QM_DATA_OREDIA
 
 

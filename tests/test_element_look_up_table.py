@@ -1,7 +1,7 @@
 import unittest
 from parameterized import parameterized
 
-from nbo2graph.element_look_up_table import ElementLookUpTable
+from HyDGL.element_look_up_table import ElementLookUpTable
 
 
 class TestElementLookUpTable(unittest.TestCase):

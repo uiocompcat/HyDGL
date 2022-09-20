@@ -1,7 +1,7 @@
 [report]
 omit =
     setup.py
-    nbo2graph/__main__.py
-    nbo2graph/_version.py
+    HyDGL/__main__.py
+    HyDGL/_version.py
     versioneer.py
     tests/*

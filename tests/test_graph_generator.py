@@ -1,23 +1,23 @@
 import unittest
 from parameterized import parameterized
-from nbo2graph.enums.nbo_type import NboType
-from nbo2graph.file_handler import FileHandler
-from nbo2graph.nbo_data_point import NboDataPoint
+from HyDGL.enums.nbo_type import NboType
+from HyDGL.file_handler import FileHandler
+from HyDGL.nbo_data_point import NboDataPoint
 
-from nbo2graph.node import Node
-from nbo2graph.edge import Edge
-from nbo2graph.enums.edge_feature import EdgeFeature
-from nbo2graph.enums.node_feature import NodeFeature
-from nbo2graph.enums.graph_feature import GraphFeature
-from nbo2graph.enums.hydrogen_mode import HydrogenMode
-from nbo2graph.enums.qm_target import QmTarget
-from nbo2graph.graph_generator import GraphGenerator
-from nbo2graph.enums.bond_order_type import BondOrderType
-from nbo2graph.enums.edge_type import EdgeType
-from nbo2graph.graph_generator_settings import GraphGeneratorSettings
-from nbo2graph.enums.sopa_edge_feature import SopaEdgeFeature
-from nbo2graph.enums.sopa_resolution_mode import SopaResolutionMode
-from nbo2graph.qm_data import QmData
+from HyDGL.node import Node
+from HyDGL.edge import Edge
+from HyDGL.enums.edge_feature import EdgeFeature
+from HyDGL.enums.node_feature import NodeFeature
+from HyDGL.enums.graph_feature import GraphFeature
+from HyDGL.enums.hydrogen_mode import HydrogenMode
+from HyDGL.enums.qm_target import QmTarget
+from HyDGL.graph_generator import GraphGenerator
+from HyDGL.enums.bond_order_type import BondOrderType
+from HyDGL.enums.edge_type import EdgeType
+from HyDGL.graph_generator_settings import GraphGeneratorSettings
+from HyDGL.enums.sopa_edge_feature import SopaEdgeFeature
+from HyDGL.enums.sopa_resolution_mode import SopaResolutionMode
+from HyDGL.qm_data import QmData
 from tests.utils import Utils, TEST_FILE_LALMER, TEST_FILE_OREDIA, TEST_FILE_ZUYHEG
 
 

@@ -4,9 +4,9 @@ import networkx as nx
 from torch_geometric.data import Data
 from parameterized import parameterized
 
-from nbo2graph.node import Node
-from nbo2graph.edge import Edge
-from nbo2graph.graph import Graph
+from HyDGL.node import Node
+from HyDGL.edge import Edge
+from HyDGL.graph import Graph
 from tests.utils import Utils
 
 
