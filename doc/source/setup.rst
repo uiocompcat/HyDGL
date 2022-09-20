@@ -1,6 +1,8 @@
 Get started
 ===========
 
+This page discusses the prerequisites and outlines the installation procedure.
+
 ============
 Requirements
 ============
