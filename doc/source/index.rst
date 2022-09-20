@@ -21,7 +21,5 @@ The package can be used for any types of molecules but is aimed at transition me
 .. toctree::
    :caption: Contents
 
-   requirements
-   installation
    input
    usage
