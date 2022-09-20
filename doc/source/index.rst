@@ -25,4 +25,3 @@ The package can be used for any types of molecules but is aimed at transition me
    installation
    input
    usage
-   asdf
