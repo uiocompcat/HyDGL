@@ -1,5 +1,5 @@
 Input
-===
+====
 
 The input required for the generation of graphs is a dictionary containing the relevant QM data in a specific format. For each molecule there needs to be a dictionary holding all of the following data:
 

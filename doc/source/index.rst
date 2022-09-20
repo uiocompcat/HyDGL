@@ -18,9 +18,6 @@ The package can be used for any types of molecules but is aimed at transition me
 
    This project is under active development. If you encounter any problems, errors or bugs please do not hesitate to open an issue or directly contact me via mail (hanneskn@uio.no).
 
-Contents
---------
-
 .. toctree::
    :caption: Contents
 

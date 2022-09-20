@@ -1,5 +1,5 @@
 Installation
-===
+====
 
 Use pip to install the package directly from its GitHub repository
 
