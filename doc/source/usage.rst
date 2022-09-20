@@ -6,18 +6,18 @@ To generate graphs we need to setup a ``GraphGenerator`` object that operates ba
 .. code-block:: python
    :linenos:
 
-    import HyDGL as n2g
+    import HyDGL as HyDGL
 
     # get the QM data dictionary for the moleulce
     qm_data_dict = # your code for obtaining the dictionary
 
     # get the default settings for baseline graphs 
-    ggs = n2g.GraphGeneratorSettings.baseline()
+    ggs = HyDGL.GraphGeneratorSettings.baseline()
     # setup the graph generator with these settings
-    gg = n2g.GraphGenerator(settings=ggs)
+    gg = HyDGL.GraphGenerator(settings=ggs)
     # generate a graph according to these settings using a
     # dict of the relevant QM data of a specific molecule
-    graph = gg.generate_graph(n2g.QmData.from_dict(qm_data_dict))
+    graph = gg.generate_graph(HyDGL.QmData.from_dict(qm_data_dict))
 
 
 Aside from ``.baseline()`` there are also ``.uNatQ()`` ``.dNatQ()`` implemented.  Their exact specifications can be found in the `publication <>`_.
@@ -27,22 +27,22 @@ The above code will generate the graphs without target values for the use in mac
 .. code-block:: python
    :linenos:
 
-    import HyDGL as n2g
+    import HyDGL
 
     # get the QM data dictionary for the moleulce
     qm_data_dict = # your code for obtaining the dictionary
 
     # set up the list of target identifiers
-    target_list = [n2g.enums.QmTarget.POLARISABILITY, 
-                   n2g.enums.QmTarget.TZVP_DIPOLE_MOMENT]
+    target_list = [HyDGL.enums.QmTarget.POLARISABILITY, 
+                   HyDGL.enums.QmTarget.TZVP_DIPOLE_MOMENT]
 
     # get the default settings for baseline graphs 
-    ggs = n2g.GraphGeneratorSettings.baseline(target_list)
+    ggs = HyDGL.GraphGeneratorSettings.baseline(target_list)
     # setup the graph generator with these settings
-    gg = n2g.GraphGenerator(settings=ggs)
+    gg = HyDGL.GraphGenerator(settings=ggs)
     # generate a graph according to these settings using a
     # dict of the relevant QM data of a specific molecule
-    graph = gg.generate_graph(n2g.QmData.from_dict(qm_data_dict))
+    graph = gg.generate_graph(HyDGL.QmData.from_dict(qm_data_dict))
 
 =================
 Graph visualisation
