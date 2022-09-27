@@ -52,7 +52,7 @@ A more detailed guide on the usage can be found in the `documentation <https://h
 What is under the hood?
 -----------
 
-There are two main parts in the ``HyDGL`` package. The first one is the ``GraphGenerator`` class that generates graphs based to specified parameters. Secondly there is the ``Graph`` class which represents a full graph in terms of nodes, edges, their respective features, graph-level features and attributes/labels. Furthemore, it includes functionality to produce object in a format ready to use with the ``pytorch_geometric`` package. The remaining classes are mainly miscellaneous helper classes and enums.\
+There are two main parts in the ``HyDGL`` package. The first one is the ``GraphGenerator`` class that generates graphs based on specified parameters. Secondly there is the ``Graph`` class which represents a full graph in terms of nodes, edges, their respective features, graph-level features and attributes/labels. Furthemore, it includes functionality to produce objects in a format ready to use with the ``networkx`` and ``pytorch_geometric`` package. The remaining classes are mainly miscellaneous helper classes and enums.\
 This general structure is displayed by the following UML diagram.
 
 .. image:: ./doc/uml.png
