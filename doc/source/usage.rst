@@ -17,10 +17,10 @@ To generate graphs we need to setup a ``GraphGenerator`` object that operates ba
     gg = HyDGL.GraphGenerator(settings=ggs)
     # generate a graph according to these settings using a
     # dict of the relevant QM data of a specific molecule
-    graph = gg.generate_graph(HyDGL.QmData.from_dict(qm_data_dict))
+    hydgl_graph = gg.generate_graph(HyDGL.QmData.from_dict(qm_data_dict))
 
 
-Aside from ``.baseline()`` there are also ``.uNatQ()`` ``.dNatQ()`` implemented.  Their exact specifications can be found in the `publication <https://chemrxiv.org/engage/chemrxiv/article-details/62b8daaf7da6ce76b221a831>`_.
+Aside from ``.baseline()`` also the ``.uNatQ()`` and ``.dNatQ()`` representations are implemented. Their exact specifications can be found in the `publication <https://chemrxiv.org/engage/chemrxiv/article-details/62b8daaf7da6ce76b221a831>`_.
 
 The above code will generate the graphs without target values for the use in machine learning applications. To include such targets we can pass a list of target identifiers to the constructor to imbue all generated graphs with these targets. For this we need to make use of the enumeration class ``QmTarget``. In the example below we use two targets, the polarisability and dipole moment.
 
@@ -42,7 +42,7 @@ The above code will generate the graphs without target values for the use in mac
     gg = HyDGL.GraphGenerator(settings=ggs)
     # generate a graph according to these settings using a
     # dict of the relevant QM data of a specific molecule
-    graph = gg.generate_graph(HyDGL.QmData.from_dict(qm_data_dict))
+    hydgl_graph = gg.generate_graph(HyDGL.QmData.from_dict(qm_data_dict))
 
 ============
 Graph export
@@ -54,9 +54,9 @@ Graph objects can be exported either as ``networkx`` or ``pytorch_geometric`` gr
    :linenos:
 
     # get networkx object
-    graph.get_networkx_graph_object()
+    nx_graph = hydgl_graph.get_networkx_graph_object()
     # get pytorch object
-    graph.get_pytorch_data_object()
+    pyg_graph = hydgl_graph.get_pytorch_data_object()
 
 Using the respective libraries you can further manipulate the graphs of write them to disc.
 
@@ -71,7 +71,7 @@ Graph objects can be imported from ``networkx`` using:
 .. code-block:: python
    :linenos:
 
-    Graph.from_networkx(nx_graph)
+    hydgl_graph = Graph.from_networkx(nx_graph)
 
 This will display the graph in your browser and is done by using the ``plotly`` library. For advanced settings concerning the rendering of plots refer to `their documentation <https://plotly.com/python/>`_.
 
