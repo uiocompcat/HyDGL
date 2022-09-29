@@ -130,5 +130,5 @@ The input required for the generation of graphs is a dictionary containing the r
    frequencies: list[float]
       A list of the vibrational frequencies.
 
-
-For the tmQMg the dictionaries formatted as ``JSON`` files can be found `here <www.google.com>`_. If you want to use your own data you have to setup the QM calculations and subsequent data extraction yourself.
+..
+   For the tmQMg the dictionaries formatted as ``JSON`` files can be found `here <www.google.com>`_. If you want to use your own data you have to setup the QM calculations and subsequent data extraction yourself.
