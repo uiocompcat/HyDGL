@@ -15,6 +15,64 @@ class TestGraph(unittest.TestCase):
     @parameterized.expand([
 
         [
+            Graph([Node(features=[0], label='A', position=[0,0,0]),
+                   Node(features=[0], label='A', position=[0.5,0.5,0.5]), 
+                   Node(features=[0], label='B', position=[1,1,1]),
+                   Node(features=[0], label='B', position=[1.5,1.5,1.5]), 
+                   Node(features=[0], label='C', position=[2,2,2])],
+                  [Edge([0, 1], features=[0]),
+                   Edge([0, 2], features=[0]),
+                   Edge([0, 3], features=[0]),
+                   Edge([3, 2], features=[0]),
+                   Edge([2, 4], features=[0])], meta_data={'id': 'TestGraph'}),
+            '5\nid: TestGraph\nA 0 0 0\nA 0.5 0.5 0.5\nB 1 1 1\nB 1.5 1.5 1.5\nC 2 2 2\n'
+        ],
+
+    ])
+    def test_get_xyz_data_with_incomplete_data(self, graph, expected):
+
+        self.assertEqual(graph.get_xyz_data(), expected)
+
+    @parameterized.expand([
+
+        [
+            Graph([Node(features=[0], label='A', position=[0,0,0]),
+                   Node(features=[0], label='A'), 
+                   Node(features=[0], label='B', position=[1,1,1]),
+                   Node(features=[0], label='B', position=[1.5,1.5,1.5]), 
+                   Node(features=[0], label='C', position=[2,2,2])],
+                  [Edge([0, 1], features=[0]),
+                   Edge([0, 2], features=[0]),
+                   Edge([0, 3], features=[0]),
+                   Edge([3, 2], features=[0]),
+                   Edge([2, 4], features=[0])], meta_data={'id': 'TestGraph'}),
+            ValueError
+        ],
+
+        [
+            Graph([Node(features=[0], label='A', position=[0,0,0]),
+                   Node(features=[0], position=[0.5,0.5,0.5]), 
+                   Node(features=[0], label='B', position=[1,1,1]),
+                   Node(features=[0], label='B', position=[1.5,1.5,1.5]), 
+                   Node(features=[0], label='C', position=[2,2,2])],
+                  [Edge([0, 1], features=[0]),
+                   Edge([0, 2], features=[0]),
+                   Edge([0, 3], features=[0]),
+                   Edge([3, 2], features=[0]),
+                   Edge([2, 4], features=[0])], meta_data={'id': 'TestGraph'}),
+            ValueError
+        ],
+
+    ])
+    def test_get_xyz_data(self, graph, expected_exception):
+
+        self.assertRaises(expected_exception, graph.get_xyz_data)
+
+
+
+    @parameterized.expand([
+
+        [
             Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
                   [Edge([0, 1], features=[0]), Edge([0, 2], features=[0]), Edge([0, 3], features=[0]), Edge([3, 2], features=[0]), Edge([2, 4], features=[0])], meta_data={'id': 'TestGraph'}),
             True

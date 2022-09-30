@@ -508,6 +508,29 @@ class Graph:
             node_label_dict[i] = self.nodes_labels_list[i]
         return node_label_dict
 
+    def get_xyz_data(self):
+
+        """Gets the xyz data of the graph.
+
+        Returns:
+            str: The xyz data.        
+        """
+
+        xyz = str(len(self.nodes)) + '\n'
+        xyz += ' | '.join([key + ': ' + str(self.meta_data[key]) for key in self.meta_data.keys()]) + '\n'
+        for i, node in enumerate(self.nodes):
+            
+            if not node.label:
+                raise ValueError('Node ' + str(i) + ' does not contain required information about element.')
+
+            if not node.position or len(node.position) != 3:
+                raise ValueError('Node ' + str(i) + ' does not contain required information about position.')
+
+
+            xyz += node.label + ' ' + str(node.position[0]) + ' ' + str(node.position[1]) + ' ' + str(node.position[2]) + '\n'
+
+        return xyz
+
     def visualise(self):
 
         """Plots the graph with appropriate nodes and edges using plotly."""
