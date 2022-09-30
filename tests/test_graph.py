@@ -68,8 +68,6 @@ class TestGraph(unittest.TestCase):
 
         self.assertRaises(expected_exception, graph.get_xyz_data)
 
-
-
     @parameterized.expand([
 
         [
