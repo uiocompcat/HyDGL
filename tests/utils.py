@@ -22,7 +22,7 @@ class Utils():
         Utils.tc.assertEqual(type(a), type(b))
 
         # check if not list
-        if a is None or type(a) in [str, int, float, bool]:
+        if a is None or type(a) in [str, int, float, bool, complex]:
             Utils.tc.assertAlmostEqual(a, b, places=places)
         elif type(a) == dict:
             Utils.dict_are_almost_equal(a, b, places=places)
