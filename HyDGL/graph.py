@@ -478,7 +478,7 @@ class Graph:
             list[float]: The spectrum.
         """
 
-        eigen_values = np.linalg.eig(self.get_adjacency_matrix())[0].tolist()
+        eigen_values = np.linalg.eig(self.get_adjacency_matrix())[0].astype(complex).tolist()
         eigen_values.sort(key=lambda x: (x.real, x.imag/2), reverse=True)
         return eigen_values
 

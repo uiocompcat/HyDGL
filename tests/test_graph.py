@@ -261,13 +261,13 @@ class TestGraph(unittest.TestCase):
         [
             Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
                   [Edge([0, 1], features=[0], is_directed=True), Edge([0, 2], features=[0], is_directed=False), Edge([0, 3], features=[0], is_directed=True), Edge([3, 2], features=[0], is_directed=True), Edge([2, 4], features=[0], is_directed=False)]),
-            [1.61803399, 0.0, 0.0, -0.61803399, -1.0]
+            [1.61803399+0j, 0.0+0j, 0.0+0j, -0.61803399+0j, -1.0+0j]
         ],
 
         [
             Graph([Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0]), Node(features=[0])],
                   [Edge([0, 1], features=[0], is_directed=False), Edge([0, 2], features=[0], is_directed=True), Edge([0, 3], features=[0], is_directed=False), Edge([3, 2], features=[0], is_directed=True), Edge([2, 4], features=[0], is_directed=False)]),
-            [1.41421356, 1.0, 0.0, -1.0, -1.41421356]
+            [1.41421356+0j, 1.0+0j, 0.0+0j, -1.0+0j, -1.41421356+0j]
         ],
 
     ])
