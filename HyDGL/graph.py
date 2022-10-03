@@ -479,7 +479,7 @@ class Graph:
         """
 
         eigen_values = np.linalg.eig(self.get_adjacency_matrix())[0].tolist()
-        eigen_values.sort(reverse=True)
+        eigen_values.sort(key=lambda x: (x.real, x.imag/2), reverse=True)
         return eigen_values
 
     def get_node_position_dict(self):
