@@ -26,7 +26,8 @@ class TestGraphGeneratorSettings(unittest.TestCase):
                                    bond_threshold_metal=None,
                                    sopa_interaction_threshold=0,
                                    sopa_contribution_threshold=0.5,
-                                   sopa_resolution_mode=SopaResolutionMode.AVERAGE)
+                                   sopa_resolution_mode=SopaResolutionMode.AVERAGE,
+                                   max_bond_distance=2.5)
         ],
 
         # [

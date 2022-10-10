@@ -18,6 +18,7 @@ DEFAULT_HYDROGEN_COUNT_THRESHOLD = 0.5
 DEFAULT_SOPA_RESOLUTION_MODE = SopaResolutionMode.AVERAGE
 DEFAULT_SOPA_INTERACTION_THRESHOLD = 0
 DEFAULT_SOPA_CONTRIBUTION_THRESHOLD = 0.5
+DEFAULT_MAX_BOND_DISTANCE = 2.5
 
 
 class GraphGeneratorSettings:
@@ -38,7 +39,8 @@ class GraphGeneratorSettings:
                  sopa_interaction_threshold: float,
                  sopa_contribution_threshold: float,
                  bond_threshold: float,
-                 bond_threshold_metal: float):
+                 bond_threshold_metal: float,
+                 max_bond_distance: float):
 
         """Constructor
 
@@ -57,6 +59,7 @@ class GraphGeneratorSettings:
             sopa_contribution_threshold (float): Threshold value specifying when to consider atoms for NBO interactions with more than one involved atom (in %).
             bond_threshold (float): Threshold value defining the lower bound for considering bonds.
             bond_threshold_metal (float): Threshold value defining the lower bound for considering metal bonds.
+            max_bond_distance (float): The maximum bond distance allowed for considering any bonds.
 
         """
 
@@ -78,6 +81,8 @@ class GraphGeneratorSettings:
             self.bond_threshold_metal = self.bond_threshold
         else:
             self.bond_threshold_metal = bond_threshold_metal
+
+        self.max_bond_distance = max_bond_distance
 
         # hydrogen mode
         self.hydrogen_mode = hydrogen_mode
@@ -119,7 +124,8 @@ class GraphGeneratorSettings:
             self.antibond_orbital_indices == other.antibond_orbital_indices and \
             self.sopa_resolution_mode == other.sopa_resolution_mode and \
             self.sopa_contribution_threshold == other.sopa_contribution_threshold and \
-            self.sopa_edge_features == other.sopa_edge_features
+            self.sopa_edge_features == other.sopa_edge_features and \
+            self.max_bond_distance == other.max_bond_distance
 
     @classmethod
     def default(cls,
@@ -136,7 +142,8 @@ class GraphGeneratorSettings:
                 hydrogen_count_threshold: float = DEFAULT_HYDROGEN_COUNT_THRESHOLD,
                 sopa_resolution_mode: SopaResolutionMode = DEFAULT_SOPA_RESOLUTION_MODE,
                 sopa_interaction_threshold: float = DEFAULT_SOPA_INTERACTION_THRESHOLD,
-                sopa_contribution_threshold: float = DEFAULT_SOPA_CONTRIBUTION_THRESHOLD):
+                sopa_contribution_threshold: float = DEFAULT_SOPA_CONTRIBUTION_THRESHOLD,
+                max_bond_distance: float = DEFAULT_MAX_BOND_DISTANCE):
 
         return cls(node_features=node_features,
                    edge_features=edge_features,
@@ -151,7 +158,8 @@ class GraphGeneratorSettings:
                    hydrogen_count_threshold=hydrogen_count_threshold,
                    sopa_resolution_mode=sopa_resolution_mode,
                    sopa_interaction_threshold=sopa_interaction_threshold,
-                   sopa_contribution_threshold=sopa_contribution_threshold)
+                   sopa_contribution_threshold=sopa_contribution_threshold,
+                   max_bond_distance=max_bond_distance)
 
     @classmethod
     def baseline(cls, targets):
@@ -173,7 +181,8 @@ class GraphGeneratorSettings:
                    targets=targets,
                    sopa_resolution_mode=None,
                    sopa_interaction_threshold=None,
-                   sopa_contribution_threshold=None)
+                   sopa_contribution_threshold=None,
+                   max_bond_distance=DEFAULT_MAX_BOND_DISTANCE)
 
     @classmethod
     def uNatQ(cls, targets):
@@ -219,7 +228,8 @@ class GraphGeneratorSettings:
                    targets=targets,
                    sopa_resolution_mode=None,
                    sopa_interaction_threshold=None,
-                   sopa_contribution_threshold=None)
+                   sopa_contribution_threshold=None,
+                   max_bond_distance=DEFAULT_MAX_BOND_DISTANCE)
 
     @classmethod
     def dNatQ(cls, targets):
@@ -271,7 +281,8 @@ class GraphGeneratorSettings:
                    targets=targets,
                    sopa_resolution_mode=SopaResolutionMode.MAX,
                    sopa_interaction_threshold=1,
-                   sopa_contribution_threshold=0)
+                   sopa_contribution_threshold=0,
+                   max_bond_distance=DEFAULT_MAX_BOND_DISTANCE)
 
     def _get_orbtials_to_extract_indices(self, mode: OrbitalOccupationType):
 

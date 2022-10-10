@@ -217,6 +217,10 @@ class GraphGenerator:
                 if qm_data.atomic_numbers[j] in ElementLookUpTable.transition_metal_atomic_numbers:
                     continue
 
+                # skip if bond length larger than max allowed
+                if qm_data.bond_distance_matrix[i][j] > self._settings.max_bond_distance:
+                    continue
+
                 # if larger than threshold --> add bond
                 if (index_matrix[i][j]) > threshold:
 
@@ -253,6 +257,10 @@ class GraphGenerator:
                 # skip if metal atom
                 if qm_data.atomic_numbers[i] not in ElementLookUpTable.transition_metal_atomic_numbers and \
                    qm_data.atomic_numbers[j] not in ElementLookUpTable.transition_metal_atomic_numbers:
+                    continue
+
+                # skip if bond length larger than max allowed
+                if qm_data.bond_distance_matrix[i][j] > self._settings.max_bond_distance:
                     continue
 
                 # if larger than threshold --> add bond

@@ -1203,6 +1203,18 @@ class TestGraphGenerator(unittest.TestCase):
         [
             TEST_FILE_LALMER,
             HydrogenMode.EXPLICIT,
+            [EdgeType.BOND_ORDER_METAL],
+            BondOrderType.WIBERG,
+            0,
+            0,
+            [
+                [0, 1], [0, 2], [0, 8], [0, 14], [0, 20], [0, 27], [0, 28] 
+            ]
+        ],
+
+        [
+            TEST_FILE_LALMER,
+            HydrogenMode.EXPLICIT,
             [EdgeType.BOND_ORDER_METAL, EdgeType.BOND_ORDER_NON_METAL],
             BondOrderType.WIBERG,
             1,
