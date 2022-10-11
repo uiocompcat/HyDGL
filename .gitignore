@@ -1,4 +1,5 @@
 run.py
+data_parser.py
 
 # weights and biases raw data dir
 wandb/
