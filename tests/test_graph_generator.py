@@ -1538,7 +1538,7 @@ class TestGraphGenerator(unittest.TestCase):
                 'bond_average_1': 0.6517228070175439,
                 'bond_average_2': 0.0020701754385964913,
                 'bond_average_3': 0.0003280701754385965
-            }, label='NBO', id='nbo-')
+            }, label='BO', id='bo-')
         ],
 
         [
@@ -1552,7 +1552,7 @@ class TestGraphGenerator(unittest.TestCase):
                 'antibond_average_1': 0.6517228070175439,
                 'antibond_average_2': 0.0020701754385964913,
                 'antibond_average_3': 0.0003280701754385965
-            }, label='NBO', id='nbo-')
+            }, label='BO', id='bo-')
         ],
 
         [
@@ -1579,7 +1579,7 @@ class TestGraphGenerator(unittest.TestCase):
             Edge([0, 5], features={
                 'n_bn': 0,
                 'bond_energy_min_max_difference': 0.0
-            }, label='NBO', id='nbo-')
+            }, label='BO', id='bo-')
         ],
 
         [
@@ -1588,7 +1588,7 @@ class TestGraphGenerator(unittest.TestCase):
             Edge([0, 5], features={
                 'n_bn': 0,
                 'antibond_energy_min_max_difference': 0.0
-            }, label='NBO', id='nbo-')
+            }, label='BO', id='bo-')
         ],
 
         [
@@ -1974,7 +1974,7 @@ class TestGraphGenerator(unittest.TestCase):
         [
             TEST_FILE_OREDIA,
             [
-                Edge([1, 0], features=[], label='NBO', id='nbo-'),
+                Edge([1, 0], features=[], label='BO', id='bo-'),
                 Edge([2, 3], features=[], label='NBO', id='nbo-'),
                 Edge([2, 11], features=[], label='NBO', id='nbo-'),
                 Edge([3, 4], features=[], label='NBO', id='nbo-'),

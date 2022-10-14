@@ -604,9 +604,14 @@ class GraphGenerator:
         # get edge features
         edge_features = self._get_edge_features(bond_atom_indices, qm_data)
 
-        # get edge id and label
-        edge_label = 'NBO'
-        edge_id = 'nbo-'
+        # check if NBO edge or not and assign label/id
+        if bond_atom_indices in [x.atom_indices for x in qm_data.bond_pair_data] or \
+            bond_atom_indices in [x.atom_indices[0:2] for x in qm_data.bond_3c_data] + [x.atom_indices[1:3] for x in qm_data.bond_3c_data]:
+            edge_label = 'NBO'
+            edge_id = 'nbo-'
+        else: 
+            edge_label = 'BO'
+            edge_id = 'bo-'
 
         return Edge(bond_atom_indices, features=edge_features, label=edge_label, id=edge_id)
 
