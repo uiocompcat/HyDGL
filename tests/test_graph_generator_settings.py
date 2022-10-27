@@ -27,7 +27,7 @@ class TestGraphGeneratorSettings(unittest.TestCase):
                                    sopa_interaction_threshold=0,
                                    sopa_contribution_threshold=0.5,
                                    sopa_resolution_mode=SopaResolutionMode.AVERAGE,
-                                   max_bond_distance=2.5)
+                                   max_bond_distance=3.0)
         ],
 
         # [
