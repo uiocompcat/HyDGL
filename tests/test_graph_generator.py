@@ -1483,7 +1483,7 @@ class TestGraphGenerator(unittest.TestCase):
             [2, 3],
             [EdgeFeature.ANTIBOND_ORBITAL_MIN, EdgeFeature.ANTIBOND_ORBITAL_S_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_P_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_D_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_F_SYMMETRY],
             Edge([2, 3], features={
-                'n_bn': 2,
+                'n_nbn': 2,
                 'antibond_min_energy': -0.15285,
                 'antibond_min_occupation': 0.47234,
                 'antibond_min_0': 0.0,
@@ -1497,7 +1497,7 @@ class TestGraphGenerator(unittest.TestCase):
             [2, 3],
             [EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_S_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_P_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_D_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_F_SYMMETRY],
             Edge([2, 3], features={
-                'n_bn': 2,
+                'n_nbn': 2,
                 'antibond_average_energy': 0.110375,
                 'antibond_average_occupation': 0.247345,
                 'antibond_average_0': 0.174625,
@@ -1511,7 +1511,7 @@ class TestGraphGenerator(unittest.TestCase):
             [2, 3],
             [EdgeFeature.ANTIBOND_ORBITAL_MIN, EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_S_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_P_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_D_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_F_SYMMETRY],
             Edge([2, 3], features={
-                'n_bn': 2,
+                'n_nbn': 2,
                 'antibond_min_energy': -0.15285,
                 'antibond_min_occupation': 0.47234,
                 'antibond_min_0': 0.0,
@@ -1545,7 +1545,7 @@ class TestGraphGenerator(unittest.TestCase):
             [0, 5],
             [EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_S_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_P_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_D_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_F_SYMMETRY],
             Edge([0, 5], features={
-                'n_bn': 0,
+                'n_nbn': 0,
                 'antibond_average_energy': 0.0,
                 'antibond_average_occupation': 0.0,
                 'antibond_average_0': 0.3458798245614035,
@@ -1568,7 +1568,7 @@ class TestGraphGenerator(unittest.TestCase):
             [2, 3],
             [EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE],
             Edge([2, 3], features={
-                'n_bn': 2,
+                'n_nbn': 2,
                 'antibond_energy_min_max_difference': 0.52645
             }, label='NBO', id='nbo-')
         ],
@@ -1586,7 +1586,7 @@ class TestGraphGenerator(unittest.TestCase):
             [0, 5],
             [EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE],
             Edge([0, 5], features={
-                'n_bn': 0,
+                'n_nbn': 0,
                 'antibond_energy_min_max_difference': 0.0
             }, label='BO', id='bo-')
         ],
@@ -1596,6 +1596,7 @@ class TestGraphGenerator(unittest.TestCase):
             [EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE, EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE],
             Edge([2, 3], features={
                 'n_bn': 2,
+                'n_nbn': 2,
                 'bond_energy_min_max_difference': 0.41408,
                 'antibond_energy_min_max_difference': 0.52645
             }, label='NBO', id='nbo-')
@@ -1723,7 +1724,7 @@ class TestGraphGenerator(unittest.TestCase):
             [EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE, EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_MIN,
              EdgeFeature.ANTIBOND_ORBITAL_S_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_P_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_D_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_F_SYMMETRY],
             {
-                'n_bn': 1,
+                'n_nbn': 2,
                 'antibond_energy_min_max_difference': 0.0,
                 'antibond_average_energy': 0.27167,
                 'antibond_average_occupation': 0.11428,
@@ -1745,7 +1746,7 @@ class TestGraphGenerator(unittest.TestCase):
             [8, 9],
             [EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE, EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_MIN],
             {
-                'n_bn': 1,
+                'n_nbn': 2,
                 'antibond_energy_min_max_difference': 0.0,
                 'antibond_average_energy': 0.27167,
                 'antibond_average_occupation': 0.11428,
@@ -1760,7 +1761,7 @@ class TestGraphGenerator(unittest.TestCase):
             [EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE, EdgeFeature.ANTIBOND_ORBITAL_AVERAGE, EdgeFeature.ANTIBOND_ORBITAL_MIN,
              EdgeFeature.ANTIBOND_ORBITAL_S_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_P_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_D_SYMMETRY, EdgeFeature.ANTIBOND_ORBITAL_F_SYMMETRY],
             {
-                'n_bn': 1,
+                'n_nbn': 2,
                 'antibond_energy_min_max_difference': 0.0,
                 'antibond_average_energy': 0.27167,
                 'antibond_average_occupation': 0.11428,

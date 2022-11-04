@@ -364,10 +364,7 @@ class GraphGenerator:
         # add number of bond/antibond orbitals if requested
         if EdgeFeature.BOND_ORBITAL_MAX in self._settings.edge_features or \
                 EdgeFeature.BOND_ORBITAL_AVERAGE in self._settings.edge_features or \
-                EdgeFeature.ANTIBOND_ORBITAL_MIN in self._settings.edge_features or \
-                EdgeFeature.ANTIBOND_ORBITAL_AVERAGE in self._settings.edge_features or \
-                EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features or \
-                EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features:
+                EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features:
 
             if bond_atom_indices in bond_3c_atom_indices:
                 edge_features['n_bn'] = len([x.energy for x in qm_data.bond_3c_data if x.contains_atom_indices(bond_atom_indices)])
@@ -375,6 +372,19 @@ class GraphGenerator:
                 edge_features['n_bn'] = len([x.energy for x in qm_data.bond_pair_data if x.atom_indices == bond_atom_indices])
             else:
                 edge_features['n_bn'] = 0
+
+        # add number of bond/antibond orbitals if requested
+        if EdgeFeature.ANTIBOND_ORBITAL_MIN in self._settings.edge_features or \
+                EdgeFeature.ANTIBOND_ORBITAL_AVERAGE in self._settings.edge_features or \
+                EdgeFeature.ANTIBOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features:
+
+            if bond_atom_indices in bond_3c_atom_indices:
+                edge_features['n_nbn'] = len([x.energy for x in qm_data.antibond_3c_data if x.contains_atom_indices(bond_atom_indices)]) + \
+                                        len([x.energy for x in qm_data.nonbond_3c_data if x.contains_atom_indices(bond_atom_indices)])
+            elif bond_atom_indices in bond_pair_atom_indices:
+                edge_features['n_nbn'] = len([x.energy for x in qm_data.antibond_pair_data if x.atom_indices == bond_atom_indices])
+            else:
+                edge_features['n_nbn'] = 0
 
         if EdgeFeature.BOND_ENERGY_MIN_MAX_DIFFERENCE in self._settings.edge_features:
 
