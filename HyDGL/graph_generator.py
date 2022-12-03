@@ -152,6 +152,11 @@ class GraphGenerator:
                    qm_data.atomic_numbers[qm_data.bond_pair_data[i].atom_indices[1]] == 1:
                     continue
 
+            # skip if bond length larger than max allowed
+            if qm_data.bond_distance_matrix[qm_data.bond_pair_data[i].atom_indices[0]][qm_data.bond_pair_data[i].atom_indices[1]] > self._settings.max_bond_distance:
+                continue
+
+
             if not qm_data.bond_pair_data[i].atom_indices in adjacency_list:
                 adjacency_list.append(qm_data.bond_pair_data[i].atom_indices)
 
