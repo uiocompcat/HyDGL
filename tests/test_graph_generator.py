@@ -376,37 +376,37 @@ class TestGraphGenerator(unittest.TestCase):
             BondOrderType.WIBERG,
             [NodeFeature.LONE_PAIR_MAX, NodeFeature.LONE_PAIR_S_SYMMETRY, NodeFeature.LONE_PAIR_P_SYMMETRY, NodeFeature.LONE_PAIR_D_SYMMETRY, NodeFeature.LONE_PAIR_F_SYMMETRY],
             [
-                Node(features={'n_lone_pairs': 5, 'lone_pair_max_energy': -0.62573, 'lone_pair_max_occupation': 1.99593, 'lone_pair_max_0': 0.0001, 'lone_pair_max_1': 0.0, 'lone_pair_max_2': 0.9998, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 2, 'lone_pair_max_energy': -0.56001, 'lone_pair_max_occupation': 1.99619, 'lone_pair_max_0': 0.1619, 'lone_pair_max_1': 0.8369, 'lone_pair_max_2': 0.0011, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 1, 'lone_pair_max_energy': -0.50043, 'lone_pair_max_occupation': 1.86184, 'lone_pair_max_0': 0.3127, 'lone_pair_max_1': 0.6867, 'lone_pair_max_2': 0.0005, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_0': 0.0, 'lone_pair_max_1': 0.0, 'lone_pair_max_2': 0.0, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 2, 'lone_pair_max_energy': -0.37741, 'lone_pair_max_occupation': 1.55738, 'lone_pair_max_0': 0.0, 'lone_pair_max_1': 0.9979, 'lone_pair_max_2': 0.002, 'lone_pair_max_3': 0.0001}),
-                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_0': 0.0, 'lone_pair_max_1': 0.0, 'lone_pair_max_2': 0.0, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_0': 0.0, 'lone_pair_max_1': 0.0, 'lone_pair_max_2': 0.0, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_0': 0.0, 'lone_pair_max_1': 0.0, 'lone_pair_max_2': 0.0, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 1, 'lone_pair_max_energy': -0.48921, 'lone_pair_max_occupation': 1.87884, 'lone_pair_max_0': 0.2791, 'lone_pair_max_1': 0.7203, 'lone_pair_max_2': 0.0005, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_0': 0.0, 'lone_pair_max_1': 0.0, 'lone_pair_max_2': 0.0, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_0': 0.0, 'lone_pair_max_1': 0.0, 'lone_pair_max_2': 0.0, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_0': 0.0, 'lone_pair_max_1': 0.0, 'lone_pair_max_2': 0.0, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_0': 0.0, 'lone_pair_max_1': 0.0, 'lone_pair_max_2': 0.0, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_0': 0.0, 'lone_pair_max_1': 0.0, 'lone_pair_max_2': 0.0, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 1, 'lone_pair_max_energy': -0.48483, 'lone_pair_max_occupation': 1.87975, 'lone_pair_max_0': 0.2796, 'lone_pair_max_1': 0.7198, 'lone_pair_max_2': 0.0006, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_0': 0.0, 'lone_pair_max_1': 0.0, 'lone_pair_max_2': 0.0, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_0': 0.0, 'lone_pair_max_1': 0.0, 'lone_pair_max_2': 0.0, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_0': 0.0, 'lone_pair_max_1': 0.0, 'lone_pair_max_2': 0.0, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_0': 0.0, 'lone_pair_max_1': 0.0, 'lone_pair_max_2': 0.0, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_0': 0.0, 'lone_pair_max_1': 0.0, 'lone_pair_max_2': 0.0, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 1, 'lone_pair_max_energy': -0.49310, 'lone_pair_max_occupation': 1.8649, 'lone_pair_max_0': 0.3133, 'lone_pair_max_1': 0.686, 'lone_pair_max_2': 0.0006, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_0': 0.0, 'lone_pair_max_1': 0.0, 'lone_pair_max_2': 0.0, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 2, 'lone_pair_max_energy': -0.36939, 'lone_pair_max_occupation': 1.55195, 'lone_pair_max_0': 0.0001, 'lone_pair_max_1': 0.9978, 'lone_pair_max_2': 0.002, 'lone_pair_max_3': 0.0001}),
-                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_0': 0.0, 'lone_pair_max_1': 0.0, 'lone_pair_max_2': 0.0, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_0': 0.0, 'lone_pair_max_1': 0.0, 'lone_pair_max_2': 0.0, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_0': 0.0, 'lone_pair_max_1': 0.0, 'lone_pair_max_2': 0.0, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_0': 0.0, 'lone_pair_max_1': 0.0, 'lone_pair_max_2': 0.0, 'lone_pair_max_3': 0.0}),
-                Node(features={'n_lone_pairs': 3, 'lone_pair_max_energy': -0.41714, 'lone_pair_max_occupation': 1.88616, 'lone_pair_max_0': 0.0003, 'lone_pair_max_1': 0.9976, 'lone_pair_max_2': 0.002, 'lone_pair_max_3': 0.0001}),
-                Node(features={'n_lone_pairs': 3, 'lone_pair_max_energy': -0.4117, 'lone_pair_max_occupation': 1.86643, 'lone_pair_max_0': 0.0002, 'lone_pair_max_1': 0.9972, 'lone_pair_max_2': 0.0025, 'lone_pair_max_3': 0.0001}),
-                Node(features={'n_lone_pairs': 3, 'lone_pair_max_energy': -0.4003, 'lone_pair_max_occupation': 1.79398, 'lone_pair_max_0': 0.0, 'lone_pair_max_1': 0.9964, 'lone_pair_max_2': 0.0035, 'lone_pair_max_3': 0.0001}),
-                Node(features={'n_lone_pairs': 3, 'lone_pair_max_energy': -0.39761, 'lone_pair_max_occupation': 1.77785, 'lone_pair_max_0': 0.0, 'lone_pair_max_1': 0.9961, 'lone_pair_max_2': 0.0038, 'lone_pair_max_3': 0.0001})
+                Node(features={'n_lone_pairs': 5, 'lone_pair_max_energy': -0.62573, 'lone_pair_max_occupation': 1.99593, 'lone_pair_max_s_occupation': 0.0001, 'lone_pair_max_p_occupation': 0.0, 'lone_pair_max_d_occupation': 0.9998, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 2, 'lone_pair_max_energy': -0.56001, 'lone_pair_max_occupation': 1.99619, 'lone_pair_max_s_occupation': 0.1619, 'lone_pair_max_p_occupation': 0.8369, 'lone_pair_max_d_occupation': 0.0011, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 1, 'lone_pair_max_energy': -0.50043, 'lone_pair_max_occupation': 1.86184, 'lone_pair_max_s_occupation': 0.3127, 'lone_pair_max_p_occupation': 0.6867, 'lone_pair_max_d_occupation': 0.0005, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_s_occupation': 0.0, 'lone_pair_max_p_occupation': 0.0, 'lone_pair_max_d_occupation': 0.0, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 2, 'lone_pair_max_energy': -0.37741, 'lone_pair_max_occupation': 1.55738, 'lone_pair_max_s_occupation': 0.0, 'lone_pair_max_p_occupation': 0.9979, 'lone_pair_max_d_occupation': 0.002, 'lone_pair_max_f_occupation': 0.0001}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_s_occupation': 0.0, 'lone_pair_max_p_occupation': 0.0, 'lone_pair_max_d_occupation': 0.0, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_s_occupation': 0.0, 'lone_pair_max_p_occupation': 0.0, 'lone_pair_max_d_occupation': 0.0, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_s_occupation': 0.0, 'lone_pair_max_p_occupation': 0.0, 'lone_pair_max_d_occupation': 0.0, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 1, 'lone_pair_max_energy': -0.48921, 'lone_pair_max_occupation': 1.87884, 'lone_pair_max_s_occupation': 0.2791, 'lone_pair_max_p_occupation': 0.7203, 'lone_pair_max_d_occupation': 0.0005, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_s_occupation': 0.0, 'lone_pair_max_p_occupation': 0.0, 'lone_pair_max_d_occupation': 0.0, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_s_occupation': 0.0, 'lone_pair_max_p_occupation': 0.0, 'lone_pair_max_d_occupation': 0.0, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_s_occupation': 0.0, 'lone_pair_max_p_occupation': 0.0, 'lone_pair_max_d_occupation': 0.0, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_s_occupation': 0.0, 'lone_pair_max_p_occupation': 0.0, 'lone_pair_max_d_occupation': 0.0, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_s_occupation': 0.0, 'lone_pair_max_p_occupation': 0.0, 'lone_pair_max_d_occupation': 0.0, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 1, 'lone_pair_max_energy': -0.48483, 'lone_pair_max_occupation': 1.87975, 'lone_pair_max_s_occupation': 0.2796, 'lone_pair_max_p_occupation': 0.7198, 'lone_pair_max_d_occupation': 0.0006, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_s_occupation': 0.0, 'lone_pair_max_p_occupation': 0.0, 'lone_pair_max_d_occupation': 0.0, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_s_occupation': 0.0, 'lone_pair_max_p_occupation': 0.0, 'lone_pair_max_d_occupation': 0.0, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_s_occupation': 0.0, 'lone_pair_max_p_occupation': 0.0, 'lone_pair_max_d_occupation': 0.0, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_s_occupation': 0.0, 'lone_pair_max_p_occupation': 0.0, 'lone_pair_max_d_occupation': 0.0, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_s_occupation': 0.0, 'lone_pair_max_p_occupation': 0.0, 'lone_pair_max_d_occupation': 0.0, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 1, 'lone_pair_max_energy': -0.49310, 'lone_pair_max_occupation': 1.8649, 'lone_pair_max_s_occupation': 0.3133, 'lone_pair_max_p_occupation': 0.686, 'lone_pair_max_d_occupation': 0.0006, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_s_occupation': 0.0, 'lone_pair_max_p_occupation': 0.0, 'lone_pair_max_d_occupation': 0.0, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 2, 'lone_pair_max_energy': -0.36939, 'lone_pair_max_occupation': 1.55195, 'lone_pair_max_s_occupation': 0.0001, 'lone_pair_max_p_occupation': 0.9978, 'lone_pair_max_d_occupation': 0.002, 'lone_pair_max_f_occupation': 0.0001}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_s_occupation': 0.0, 'lone_pair_max_p_occupation': 0.0, 'lone_pair_max_d_occupation': 0.0, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_s_occupation': 0.0, 'lone_pair_max_p_occupation': 0.0, 'lone_pair_max_d_occupation': 0.0, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_s_occupation': 0.0, 'lone_pair_max_p_occupation': 0.0, 'lone_pair_max_d_occupation': 0.0, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 0, 'lone_pair_max_energy': 0.0, 'lone_pair_max_occupation': 0.0, 'lone_pair_max_s_occupation': 0.0, 'lone_pair_max_p_occupation': 0.0, 'lone_pair_max_d_occupation': 0.0, 'lone_pair_max_f_occupation': 0.0}),
+                Node(features={'n_lone_pairs': 3, 'lone_pair_max_energy': -0.41714, 'lone_pair_max_occupation': 1.88616, 'lone_pair_max_s_occupation': 0.0003, 'lone_pair_max_p_occupation': 0.9976, 'lone_pair_max_d_occupation': 0.002, 'lone_pair_max_f_occupation': 0.0001}),
+                Node(features={'n_lone_pairs': 3, 'lone_pair_max_energy': -0.4117, 'lone_pair_max_occupation': 1.86643, 'lone_pair_max_s_occupation': 0.0002, 'lone_pair_max_p_occupation': 0.9972, 'lone_pair_max_d_occupation': 0.0025, 'lone_pair_max_f_occupation': 0.0001}),
+                Node(features={'n_lone_pairs': 3, 'lone_pair_max_energy': -0.4003, 'lone_pair_max_occupation': 1.79398, 'lone_pair_max_s_occupation': 0.0, 'lone_pair_max_p_occupation': 0.9964, 'lone_pair_max_d_occupation': 0.0035, 'lone_pair_max_f_occupation': 0.0001}),
+                Node(features={'n_lone_pairs': 3, 'lone_pair_max_energy': -0.39761, 'lone_pair_max_occupation': 1.77785, 'lone_pair_max_s_occupation': 0.0, 'lone_pair_max_p_occupation': 0.9961, 'lone_pair_max_d_occupation': 0.0038, 'lone_pair_max_f_occupation': 0.0001})
             ]
         ],
 
@@ -612,10 +612,10 @@ class TestGraphGenerator(unittest.TestCase):
                 'n_lone_pairs': 5,
                 'lone_pair_average_energy': -0.627936,
                 'lone_pair_average_occupation': 1.996892,
-                'lone_pair_average_0': 0.00014,
-                'lone_pair_average_1': 0.0,
-                'lone_pair_average_2': 0.99984,
-                'lone_pair_average_3': 0.0
+                'lone_pair_average_s_occupation': 0.00014,
+                'lone_pair_average_p_occupation': 0.0,
+                'lone_pair_average_d_occupation': 0.99984,
+                'lone_pair_average_f_occupation': 0.0
             }, position=[-0.106076, -0.278587, -0.332310], label='Cd', id='node-0')
         ],
 
@@ -643,10 +643,10 @@ class TestGraphGenerator(unittest.TestCase):
                 'n_lone_vacancies': 1,
                 'lone_vacancy_average_energy': -0.04626,
                 'lone_vacancy_average_occupation': 0.30391,
-                'lone_vacancy_average_0': 0.9988,
-                'lone_vacancy_average_1': 0.0002,
-                'lone_vacancy_average_2': 0.001,
-                'lone_vacancy_average_3': 0.0
+                'lone_vacancy_average_s_occupation': 0.9988,
+                'lone_vacancy_average_p_occupation': 0.0002,
+                'lone_vacancy_average_d_occupation': 0.001,
+                'lone_vacancy_average_f_occupation': 0.0
             }, position=[-0.106076, -0.278587, -0.332310], label='Cd', id='node-0')
         ],
 
@@ -660,10 +660,10 @@ class TestGraphGenerator(unittest.TestCase):
                 'n_lone_vacancies': 1,
                 'lone_vacancy_min_energy': -0.04626,
                 'lone_vacancy_min_occupation': 0.30391,
-                'lone_vacancy_min_0': 0.9988,
-                'lone_vacancy_min_1': 0.0002,
-                'lone_vacancy_min_2': 0.001,
-                'lone_vacancy_min_3': 0.0
+                'lone_vacancy_min_s_occupation': 0.9988,
+                'lone_vacancy_min_p_occupation': 0.0002,
+                'lone_vacancy_min_d_occupation': 0.001,
+                'lone_vacancy_min_f_occupation': 0.0
             }, position=[-0.106076, -0.278587, -0.332310], label='Cd', id='node-0')
         ],
 
@@ -677,10 +677,10 @@ class TestGraphGenerator(unittest.TestCase):
                 'n_lone_vacancies': 2,
                 'lone_vacancy_average_energy': 0.4279,
                 'lone_vacancy_average_occupation': 0.570795,
-                'lone_vacancy_average_0': 0.43415,
-                'lone_vacancy_average_1': 0.0003,
-                'lone_vacancy_average_2': 0.5655,
-                'lone_vacancy_average_3': 0.00005
+                'lone_vacancy_average_s_occupation': 0.43415,
+                'lone_vacancy_average_p_occupation': 0.0003,
+                'lone_vacancy_average_d_occupation': 0.5655,
+                'lone_vacancy_average_f_occupation': 0.00005
             }, position=[-1.339211, 0.079206, -0.361021], label='Ir', id='node-0')
         ],
 
@@ -694,10 +694,10 @@ class TestGraphGenerator(unittest.TestCase):
                 'n_lone_vacancies': 2,
                 'lone_vacancy_min_energy': -0.16639,
                 'lone_vacancy_min_occupation': 0.76906,
-                'lone_vacancy_min_0': 0.0015,
-                'lone_vacancy_min_1': 0.0001,
-                'lone_vacancy_min_2': 0.9984,
-                'lone_vacancy_min_3': 0.0
+                'lone_vacancy_min_s_occupation': 0.0015,
+                'lone_vacancy_min_p_occupation': 0.0001,
+                'lone_vacancy_min_d_occupation': 0.9984,
+                'lone_vacancy_min_f_occupation': 0.0
             }, position=[-1.339211, 0.079206, -0.361021], label='Ir', id='node-0')
         ],
 
@@ -721,10 +721,10 @@ class TestGraphGenerator(unittest.TestCase):
             [NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S_SYMMETRY, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P_SYMMETRY, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D_SYMMETRY, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_F_SYMMETRY],
             0,
             Node(features={
-                'natural_electron_configuration_0': 0.31,
-                'natural_electron_configuration_1': 0.01,
-                'natural_electron_configuration_2': 9.98,
-                'natural_electron_configuration_3': 0.0
+                'natural_electron_configuration_s_occupation': 0.31,
+                'natural_electron_configuration_p_occupation': 0.01,
+                'natural_electron_configuration_d_occupation': 9.98,
+                'natural_electron_configuration_f_occupation': 0.0
             }, position=[-0.106076, -0.278587, -0.332310], label='Cd', id='node-0')
         ],
 
@@ -735,10 +735,10 @@ class TestGraphGenerator(unittest.TestCase):
             [NodeFeature.NATURAL_ELECTRON_CONFIGURATION_S_SYMMETRY, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_P_SYMMETRY, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_D_SYMMETRY, NodeFeature.NATURAL_ELECTRON_CONFIGURATION_F_SYMMETRY],
             3,
             Node(features={
-                'natural_electron_configuration_0': 0.97,
-                'natural_electron_configuration_1': 3.01,
-                'natural_electron_configuration_2': 0.01,
-                'natural_electron_configuration_3': 0.0
+                'natural_electron_configuration_s_occupation': 0.97,
+                'natural_electron_configuration_p_occupation': 3.01,
+                'natural_electron_configuration_d_occupation': 0.01,
+                'natural_electron_configuration_f_occupation': 0.0
             }, position=[-3.291283, -0.056813, -0.234670], label='C', id='node-3')
         ],
 
@@ -1435,7 +1435,7 @@ class TestGraphGenerator(unittest.TestCase):
                 'n_bn': 1,
                 'bond_max_energy': -0.74646,
                 'bond_max_occupation': 1.97899,
-                'bond_max_0': 0.34105
+                'bond_max_s_occupation': 0.34105
             }, label='NBO', id='nbo-')
         ],
 
@@ -1447,7 +1447,7 @@ class TestGraphGenerator(unittest.TestCase):
                 'n_bn': 1,
                 'bond_average_energy': -0.74646,
                 'bond_average_occupation': 1.97899,
-                'bond_average_0': 0.34105
+                'bond_average_s_occupation': 0.34105
             }, label='NBO', id='nbo-')
         ],
 
@@ -1458,10 +1458,10 @@ class TestGraphGenerator(unittest.TestCase):
                 'n_bn': 2,
                 'bond_max_energy': -0.47335,
                 'bond_max_occupation': 1.86181,
-                'bond_max_0': 0.0,
-                'bond_max_1': 0.9983,
-                'bond_max_2': 0.00125,
-                'bond_max_3': 0.0004
+                'bond_max_s_occupation': 0.0,
+                'bond_max_p_occupation': 0.9983,
+                'bond_max_d_occupation': 0.00125,
+                'bond_max_f_occupation': 0.0004
             }, label='NBO', id='nbo-')
         ],
 
@@ -1472,10 +1472,10 @@ class TestGraphGenerator(unittest.TestCase):
                 'n_bn': 2,
                 'bond_average_energy': -0.68039,
                 'bond_average_occupation': 1.924115,
-                'bond_average_0': 0.174625,
-                'bond_average_1': 0.823025,
-                'bond_average_2': 0.00195,
-                'bond_average_3': 0.00035,
+                'bond_average_s_occupation': 0.174625,
+                'bond_average_p_occupation': 0.823025,
+                'bond_average_d_occupation': 0.00195,
+                'bond_average_f_occupation': 0.00035,
             }, label='NBO', id='nbo-')
         ],
 
@@ -1486,10 +1486,10 @@ class TestGraphGenerator(unittest.TestCase):
                 'n_nbn': 2,
                 'antibond_min_energy': -0.15285,
                 'antibond_min_occupation': 0.47234,
-                'antibond_min_0': 0.0,
-                'antibond_min_1': 0.9983,
-                'antibond_min_2': 0.00125,
-                'antibond_min_3': 0.0004
+                'antibond_min_s_occupation': 0.0,
+                'antibond_min_p_occupation': 0.9983,
+                'antibond_min_d_occupation': 0.00125,
+                'antibond_min_f_occupation': 0.0004
             }, label='NBO', id='nbo-')
         ],
 
@@ -1500,10 +1500,10 @@ class TestGraphGenerator(unittest.TestCase):
                 'n_nbn': 2,
                 'antibond_average_energy': 0.110375,
                 'antibond_average_occupation': 0.247345,
-                'antibond_average_0': 0.174625,
-                'antibond_average_1': 0.823025,
-                'antibond_average_2': 0.00195,
-                'antibond_average_3': 0.00035
+                'antibond_average_s_occupation': 0.174625,
+                'antibond_average_p_occupation': 0.823025,
+                'antibond_average_d_occupation': 0.00195,
+                'antibond_average_f_occupation': 0.00035
             }, label='NBO', id='nbo-')
         ],
 
@@ -1514,16 +1514,16 @@ class TestGraphGenerator(unittest.TestCase):
                 'n_nbn': 2,
                 'antibond_min_energy': -0.15285,
                 'antibond_min_occupation': 0.47234,
-                'antibond_min_0': 0.0,
-                'antibond_min_1': 0.9983,
-                'antibond_min_2': 0.00125,
-                'antibond_min_3': 0.0004,
+                'antibond_min_s_occupation': 0.0,
+                'antibond_min_p_occupation': 0.9983,
+                'antibond_min_d_occupation': 0.00125,
+                'antibond_min_f_occupation': 0.0004,
                 'antibond_average_energy': 0.110375,
                 'antibond_average_occupation': 0.247345,
-                'antibond_average_0': 0.174625,
-                'antibond_average_1': 0.823025,
-                'antibond_average_2': 0.00195,
-                'antibond_average_3': 0.00035
+                'antibond_average_s_occupation': 0.174625,
+                'antibond_average_p_occupation': 0.823025,
+                'antibond_average_d_occupation': 0.00195,
+                'antibond_average_f_occupation': 0.00035
             }, label='NBO', id='nbo-')
         ],
 
@@ -1534,10 +1534,10 @@ class TestGraphGenerator(unittest.TestCase):
                 'n_bn': 0,
                 'bond_average_energy': 0.0,
                 'bond_average_occupation': 0.0,
-                'bond_average_0': 0.3458798245614035,
-                'bond_average_1': 0.6517228070175439,
-                'bond_average_2': 0.0020701754385964913,
-                'bond_average_3': 0.0003280701754385965
+                'bond_average_s_occupation': 0.3458798245614035,
+                'bond_average_p_occupation': 0.6517228070175439,
+                'bond_average_d_occupation': 0.0020701754385964913,
+                'bond_average_f_occupation': 0.0003280701754385965
             }, label='BO', id='bo-')
         ],
 
@@ -1548,10 +1548,10 @@ class TestGraphGenerator(unittest.TestCase):
                 'n_nbn': 0,
                 'antibond_average_energy': 0.0,
                 'antibond_average_occupation': 0.0,
-                'antibond_average_0': 0.3458798245614035,
-                'antibond_average_1': 0.6517228070175439,
-                'antibond_average_2': 0.0020701754385964913,
-                'antibond_average_3': 0.0003280701754385965
+                'antibond_average_s_occupation': 0.3458798245614035,
+                'antibond_average_p_occupation': 0.6517228070175439,
+                'antibond_average_d_occupation': 0.0020701754385964913,
+                'antibond_average_f_occupation': 0.0003280701754385965
             }, label='BO', id='bo-')
         ],
 
@@ -1668,16 +1668,16 @@ class TestGraphGenerator(unittest.TestCase):
                 'bond_energy_min_max_difference': 0.0,
                 'bond_average_energy': -0.41717,
                 'bond_average_occupation': 1.76966,
-                'bond_average_0': 0.20673333333333332,
-                'bond_average_1': 0.7872,
-                'bond_average_2': 0.005666666666666667,
-                'bond_average_3': 0.0004,
+                'bond_average_s_occupation': 0.20673333333333332,
+                'bond_average_p_occupation': 0.7872,
+                'bond_average_d_occupation': 0.005666666666666667,
+                'bond_average_f_occupation': 0.0004,
                 'bond_max_energy': -0.41717,
                 'bond_max_occupation': 1.76966,
-                'bond_max_0': 0.20673333333333332,
-                'bond_max_1': 0.7872,
-                'bond_max_2': 0.005666666666666667,
-                'bond_max_3': 0.0004,
+                'bond_max_s_occupation': 0.20673333333333332,
+                'bond_max_p_occupation': 0.7872,
+                'bond_max_d_occupation': 0.005666666666666667,
+                'bond_max_f_occupation': 0.0004,
             }
         ],
 
@@ -1705,16 +1705,16 @@ class TestGraphGenerator(unittest.TestCase):
                 'bond_energy_min_max_difference': 0.0,
                 'bond_average_energy': -0.41717,
                 'bond_average_occupation': 1.76966,
-                'bond_average_0': 0.20673333333333332,
-                'bond_average_1': 0.7872,
-                'bond_average_2': 0.005666666666666667,
-                'bond_average_3': 0.0004,
+                'bond_average_s_occupation': 0.20673333333333332,
+                'bond_average_p_occupation': 0.7872,
+                'bond_average_d_occupation': 0.005666666666666667,
+                'bond_average_f_occupation': 0.0004,
                 'bond_max_energy': -0.41717,
                 'bond_max_occupation': 1.76966,
-                'bond_max_0': 0.20673333333333332,
-                'bond_max_1': 0.7872,
-                'bond_max_2': 0.005666666666666667,
-                'bond_max_3': 0.0004
+                'bond_max_s_occupation': 0.20673333333333332,
+                'bond_max_p_occupation': 0.7872,
+                'bond_max_d_occupation': 0.005666666666666667,
+                'bond_max_f_occupation': 0.0004
             }
         ],
 
@@ -1728,16 +1728,16 @@ class TestGraphGenerator(unittest.TestCase):
                 'antibond_energy_min_max_difference': 0.0,
                 'antibond_average_energy': 0.27167,
                 'antibond_average_occupation': 0.11428,
-                'antibond_average_0': 0.34376666666666666,
-                'antibond_average_1': 0.6507333333333333,
-                'antibond_average_2': 0.005166666666666666,
-                'antibond_average_3': 0.00036666666666666667,
+                'antibond_average_s_occupation': 0.34376666666666666,
+                'antibond_average_p_occupation': 0.6507333333333333,
+                'antibond_average_d_occupation': 0.005166666666666666,
+                'antibond_average_f_occupation': 0.00036666666666666667,
                 'antibond_min_energy': 0.27167,
                 'antibond_min_occupation': 0.11428,
-                'antibond_min_0': 0.34376666666666666,
-                'antibond_min_1': 0.6507333333333333,
-                'antibond_min_2': 0.005166666666666666,
-                'antibond_min_3': 0.00036666666666666667
+                'antibond_min_s_occupation': 0.34376666666666666,
+                'antibond_min_p_occupation': 0.6507333333333333,
+                'antibond_min_d_occupation': 0.005166666666666666,
+                'antibond_min_f_occupation': 0.00036666666666666667
             }
         ],
 
@@ -1765,16 +1765,16 @@ class TestGraphGenerator(unittest.TestCase):
                 'antibond_energy_min_max_difference': 0.0,
                 'antibond_average_energy': 0.27167,
                 'antibond_average_occupation': 0.11428,
-                'antibond_average_0': 0.34376666666666666,
-                'antibond_average_1': 0.6507333333333333,
-                'antibond_average_2': 0.005166666666666666,
-                'antibond_average_3': 0.00036666666666666667,
+                'antibond_average_s_occupation': 0.34376666666666666,
+                'antibond_average_p_occupation': 0.6507333333333333,
+                'antibond_average_d_occupation': 0.005166666666666666,
+                'antibond_average_f_occupation': 0.00036666666666666667,
                 'antibond_min_energy': 0.27167,
                 'antibond_min_occupation': 0.11428,
-                'antibond_min_0': 0.34376666666666666,
-                'antibond_min_1': 0.6507333333333333,
-                'antibond_min_2': 0.005166666666666666,
-                'antibond_min_3': 0.00036666666666666667
+                'antibond_min_s_occupation': 0.34376666666666666,
+                'antibond_min_p_occupation': 0.6507333333333333,
+                'antibond_min_d_occupation': 0.005166666666666666,
+                'antibond_min_f_occupation': 0.00036666666666666667
             }
         ],
 
@@ -3132,14 +3132,14 @@ class TestGraphGenerator(unittest.TestCase):
              SopaEdgeFeature.DONOR_NBO_F_SYMMETRY, SopaEdgeFeature.ACCEPTOR_NBO_S_SYMMETRY, SopaEdgeFeature.ACCEPTOR_NBO_P_SYMMETRY,
              SopaEdgeFeature.ACCEPTOR_NBO_D_SYMMETRY, SopaEdgeFeature.ACCEPTOR_NBO_F_SYMMETRY],
             {
-                'donor_nbo_0': 0.0005,
-                'donor_nbo_1': 0.0,
-                'donor_nbo_2': 0.9995,
-                'donor_nbo_3': 0.0,
-                'acceptor_nbo_0': 0.0,
-                'acceptor_nbo_1': 0.99835,
-                'acceptor_nbo_2': 0.00125,
-                'acceptor_nbo_3': 0.0004
+                'donor_nbo_s_occupation': 0.0005,
+                'donor_nbo_p_occupation': 0.0,
+                'donor_nbo_d_occupation': 0.9995,
+                'donor_nbo_f_occupation': 0.0,
+                'acceptor_nbo_s_occupation': 0.0,
+                'acceptor_nbo_p_occupation': 0.99835,
+                'acceptor_nbo_d_occupation': 0.00125,
+                'acceptor_nbo_f_occupation': 0.0004
             }
         ],
 

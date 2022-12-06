@@ -511,7 +511,7 @@ class GraphGenerator:
 
         # get values for orbital symmetries of energy extremum
         for k in nbo_orbital_indices:
-            nbo_features[base_name + '_' + str(k)] = nbo_data[selected_index].orbital_occupations[k]
+            nbo_features[base_name + '_' + ['s', 'p','d', 'f'][k] + '_occupation'] = nbo_data[selected_index].orbital_occupations[k]
 
         return nbo_features
 
@@ -545,7 +545,7 @@ class GraphGenerator:
 
         # get values for orbital symmetries of energy extremum
         for k in nbo_orbital_indices:
-            nbo_features[base_name + '_' + str(k)] = mean([x[k] for x in symmetries])
+            nbo_features[base_name + '_' + ['s', 'p','d', 'f'][k] + '_occupation'] = mean([x[k] for x in symmetries])
 
         return nbo_features
 
@@ -572,7 +572,7 @@ class GraphGenerator:
 
         # get values for orbital symmetries of energy extremum
         for k in nbo_orbital_indices:
-            nbo_features[base_name + '_' + str(k)] = symmetries[k]
+            nbo_features[base_name + '_' + ['s', 'p','d', 'f'][k] + '_occupation'] = symmetries[k]
 
         return nbo_features
 
@@ -723,7 +723,7 @@ class GraphGenerator:
 
         # add natural electron configuration (requested orbital occupancies)
         for k in self._settings.natural_orbital_configuration_indices:
-            node_features['natural_electron_configuration_' + str(k)] = qm_data.natural_electron_configuration[i][k]
+            node_features['natural_electron_configuration_' + ['s', 'p','d', 'f'][k] + '_occupation'] = qm_data.natural_electron_configuration[i][k]
 
         # add bond order totals
 
@@ -1436,7 +1436,7 @@ class GraphGenerator:
             edge_features['donor_nbo_occupation'] = donor_nbo.occupation
 
         for k in self._settings.donor_orbital_indices:
-            edge_features['donor_nbo_' + str(k)] = donor_nbo.orbital_occupations[k]
+            edge_features['donor_nbo_' + ['s', 'p','d', 'f'][k] + '_occupation'] = donor_nbo.orbital_occupations[k]
 
         # acceptor features
         if SopaEdgeFeature.ACCEPTOR_NBO_TYPE in self._settings.sopa_edge_features:
@@ -1453,7 +1453,7 @@ class GraphGenerator:
             edge_features['acceptor_nbo_occupation'] = acceptor_nbo.occupation
 
         for k in self._settings.acceptor_orbital_indices:
-            edge_features['acceptor_nbo_' + str(k)] = acceptor_nbo.orbital_occupations[k]
+            edge_features['acceptor_nbo_' + ['s', 'p','d', 'f'][k] + '_occupation'] = acceptor_nbo.orbital_occupations[k]
 
         return edge_features
 
