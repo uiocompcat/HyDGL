@@ -177,15 +177,10 @@ class GraphGenerator:
             if qm_data.bond_distance_matrix[qm_data.bond_3c_data[i].atom_indices[1]][qm_data.bond_3c_data[i].atom_indices[2]] > self._settings.max_bond_distance:
                 continue
 
-            # NOTE: For a 3c bond A-B-C This only connects A with B and B with C.
-            # For some situations (e.g. in Boranes) this might not reflect the
-            # relevant physics.
             if not qm_data.bond_3c_data[i].atom_indices[0:2] in adjacency_list:
                 adjacency_list.append(qm_data.bond_3c_data[i].atom_indices[0:2])
-
             if not qm_data.bond_3c_data[i].atom_indices[1:2] in adjacency_list:
                 adjacency_list.append(qm_data.bond_3c_data[i].atom_indices[0:2])
-
             if not qm_data.bond_3c_data[i].atom_indices[1:3] in adjacency_list:
                 adjacency_list.append(qm_data.bond_3c_data[i].atom_indices[1:3])
 
