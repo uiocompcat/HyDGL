@@ -146,43 +146,52 @@ class GraphGenerator:
         # iterate through two-atom bonds
         for i in range(len(qm_data.bond_pair_data)):
 
+            # reassign indices for readability
+            index_a = qm_data.bond_pair_data[i].atom_indices[0]
+            index_b = qm_data.bond_pair_data[i].atom_indices[1]
+
             # ignore hydrogens in omit and implicit mode
             if self._settings.hydrogen_mode == HydrogenMode.OMIT:
-                if qm_data.atomic_numbers[qm_data.bond_pair_data[i].atom_indices[0]] == 1 or \
-                   qm_data.atomic_numbers[qm_data.bond_pair_data[i].atom_indices[1]] == 1:
+                if qm_data.atomic_numbers[index_a] == 1 or \
+                   qm_data.atomic_numbers[index_b] == 1:
                     continue
 
             # skip if bond length larger than max allowed
-            if qm_data.bond_distance_matrix[qm_data.bond_pair_data[i].atom_indices[0]][qm_data.bond_pair_data[i].atom_indices[1]] > self._settings.max_bond_distance:
+            if qm_data.bond_distance_matrix[index_a][index_b] > self._settings.max_bond_distance:
                 continue
 
-            if not qm_data.bond_pair_data[i].atom_indices in adjacency_list:
-                adjacency_list.append(qm_data.bond_pair_data[i].atom_indices)
+            if not [index_a, index_b] in adjacency_list:
+                adjacency_list.append([index_a, index_b])
 
         # iterate through three-atom bonds
         for i in range(len(qm_data.bond_3c_data)):
 
+            # reassign indices for readability
+            index_a = qm_data.bond_3c_data[i].atom_indices[0]
+            index_b = qm_data.bond_3c_data[i].atom_indices[1]
+            index_c = qm_data.bond_3c_data[i].atom_indices[2]
+
             # ignore hydrogens in omit and implicit mode
             if self._settings.hydrogen_mode == HydrogenMode.OMIT:
-                if qm_data.atomic_numbers[qm_data.bond_3c_data[i].atom_indices[0]] == 1 or \
-                   qm_data.atomic_numbers[qm_data.bond_3c_data[i].atom_indices[1]] == 1 or \
-                   qm_data.atomic_numbers[qm_data.bond_3c_data[i].atom_indices[2]] == 1:
+                if qm_data.atomic_numbers[index_a] == 1 or \
+                   qm_data.atomic_numbers[index_b] == 1 or \
+                   qm_data.atomic_numbers[index_c] == 1:
                     continue
 
             # skip if bond length larger than max allowed
-            if qm_data.bond_distance_matrix[qm_data.bond_3c_data[i].atom_indices[0]][qm_data.bond_3c_data[i].atom_indices[1]] > self._settings.max_bond_distance:
+            if qm_data.bond_distance_matrix[index_a][index_b] > self._settings.max_bond_distance:
                 continue
-            if qm_data.bond_distance_matrix[qm_data.bond_3c_data[i].atom_indices[1]][qm_data.bond_3c_data[i].atom_indices[2]] > self._settings.max_bond_distance:
+            if qm_data.bond_distance_matrix[index_a][index_c] > self._settings.max_bond_distance:
                 continue
-            if qm_data.bond_distance_matrix[qm_data.bond_3c_data[i].atom_indices[1]][qm_data.bond_3c_data[i].atom_indices[2]] > self._settings.max_bond_distance:
+            if qm_data.bond_distance_matrix[index_b][index_c] > self._settings.max_bond_distance:
                 continue
 
-            if not qm_data.bond_3c_data[i].atom_indices[0:2] in adjacency_list:
-                adjacency_list.append(qm_data.bond_3c_data[i].atom_indices[0:2])
-            if not qm_data.bond_3c_data[i].atom_indices[1:2] in adjacency_list:
-                adjacency_list.append(qm_data.bond_3c_data[i].atom_indices[0:2])
-            if not qm_data.bond_3c_data[i].atom_indices[1:3] in adjacency_list:
-                adjacency_list.append(qm_data.bond_3c_data[i].atom_indices[1:3])
+            if not [index_a, index_b] in adjacency_list:
+                adjacency_list.append([index_a, index_b])
+            if not [index_a, index_c] in adjacency_list:
+                adjacency_list.append([index_a, index_c])
+            if not [index_b, index_c] in adjacency_list:
+                adjacency_list.append([index_b, index_c])
 
         return sorted(adjacency_list)
 
