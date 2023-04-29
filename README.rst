@@ -20,7 +20,7 @@ HyDGL
 
 So far most graph representation learning approaches in quantum chemistry focus on organic molecules and build graphs based on geometry using basic features. For the accurate prediction of more complicated compounds (such as transition metal complexes) richer representations are required that include more of the relevant physics. This package provides the functionality to generate such graphs mainly based on Natural Bond Orbital (NBO) data and is the code associated with the paper `Deep Learning Metal Complex Properties with Natural Quantum Graphs`_.
 
-.. _Deep Learning Metal Complex Properties with Natural Quantum Graphs: https://chemrxiv.org/engage/chemrxiv/article-details/62b8daaf7da6ce76b221a831 
+.. _Deep Learning Metal Complex Properties with Natural Quantum Graphs: https://doi.org/10.1039/D2DD00129B
 
 The package can be used for any types of molecules but is aimed at transition metal complexes, more precisely the tmQM data set.
 
