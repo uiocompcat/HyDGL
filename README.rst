@@ -1,8 +1,8 @@
 ===============================
 HyDGL
 ===============================
-.. image:: https://dl.circleci.com/status-badge/img/gh/hkneiding/HyDGL/tree/main.svg?style=svg
-    :target: https://dl.circleci.com/status-badge/redirect/gh/hkneiding/HyDGL/tree/main
+.. image:: https://dl.circleci.com/status-badge/img/gh/uiocompcat/HyDGL/tree/main.svg?style=svg
+    :target: https://dl.circleci.com/status-badge/redirect/gh/uiocompcat/HyDGL/tree/main
 .. image:: https://codecov.io/gh/hkneiding/HyDGL/branch/main/graph/badge.svg?token=UB88TKUCY7
     :target: https://codecov.io/gh/hkneiding/HyDGL
 .. image:: https://readthedocs.org/projects/hydgl/badge/?version=latest
