@@ -19,13 +19,13 @@ class TestGraph(unittest.TestCase):
                    Node(features=[0], label='A', position=[0.5,0.5,0.5]), 
                    Node(features=[0], label='B', position=[1,1,1]),
                    Node(features=[0], label='B', position=[1.5,1.5,1.5]), 
-                   Node(features=[0], label='C', position=[2,2,2])],
+                   Node(features=[0], label='C', position=[2e1,2e-1,0])],
                   [Edge([0, 1], features=[0]),
                    Edge([0, 2], features=[0]),
                    Edge([0, 3], features=[0]),
                    Edge([3, 2], features=[0]),
                    Edge([2, 4], features=[0])], meta_data={'id': 'TestGraph'}),
-            '5\nid: TestGraph\nA 0 0 0\nA 0.5 0.5 0.5\nB 1 1 1\nB 1.5 1.5 1.5\nC 2 2 2\n'
+            '5\nid: TestGraph\nA 0.0000 0.0000 0.0000\nA 0.5000 0.5000 0.5000\nB 1.0000 1.0000 1.0000\nB 1.5000 1.5000 1.5000\nC 20.0000 0.2000 0.0000\n'
         ],
 
     ])

@@ -527,7 +527,7 @@ class Graph:
                 raise ValueError('Node ' + str(i) + ' does not contain required information about position.')
 
 
-            xyz += node.label + ' ' + str(node.position[0]) + ' ' + str(node.position[1]) + ' ' + str(node.position[2]) + '\n'
+            xyz += node.label + ' ' + '{:.4f}'.format(node.position[0]) + ' ' + '{:.4f}'.format(node.position[1]) + ' ' + '{:.4f}'.format(node.position[2]) + '\n'
 
         return xyz
 
