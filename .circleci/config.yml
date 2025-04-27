@@ -13,8 +13,6 @@ jobs:
           name: install dependencies
           command: |
 
-            conda install python=3.11.0
-
             conda install -c conda-forge parameterized 
             conda install -qy conda-build anaconda-client pytest pytest-cov
 
