@@ -338,9 +338,9 @@ class TestGraph(unittest.TestCase):
     def test_get_pytorch_data_object(self, graph, edge_class_feature_dict, expected):
 
         result = graph.get_pytorch_data_object(edge_class_feature_dict=edge_class_feature_dict)
-        self.assertEqual(len(result.keys), len(expected.keys))
+        self.assertEqual(len(result.keys()), len(expected.keys()))
 
-        for key in result.keys:
+        for key in result.keys():
             if key == 'num_nodes' or key == 'id':
                 self.assertTrue(result[key] == expected[key])
             else:
