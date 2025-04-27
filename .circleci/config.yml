@@ -17,8 +17,8 @@ jobs:
             conda install -qy conda-build anaconda-client pytest pytest-cov
 
             conda install conda-forge::pytorch-cpu
+            pip install torch_geometric
             
-            conda install -y pyg -c pyg
             conda install -y -c plotly plotly 
 
             conda config --set auto_update_conda no
