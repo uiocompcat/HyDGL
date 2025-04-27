@@ -162,7 +162,7 @@ class GraphGeneratorSettings:
                    max_bond_distance=max_bond_distance)
 
     @classmethod
-    def baseline(cls, targets):
+    def baseline(cls, targets=[]):
 
         return cls(node_features=[NodeFeature.ATOMIC_NUMBER,
                                   NodeFeature.NODE_DEGREE,
@@ -185,7 +185,7 @@ class GraphGeneratorSettings:
                    max_bond_distance=DEFAULT_MAX_BOND_DISTANCE)
 
     @classmethod
-    def uNatQ(cls, targets):
+    def uNatQ(cls, targets=[]):
 
         return cls(node_features=[NodeFeature.ATOMIC_NUMBER,
                                   NodeFeature.NATURAL_ATOMIC_CHARGE,
@@ -232,7 +232,7 @@ class GraphGeneratorSettings:
                    max_bond_distance=DEFAULT_MAX_BOND_DISTANCE)
 
     @classmethod
-    def dNatQ(cls, targets):
+    def dNatQ(cls, targets=[]):
 
         return cls(node_features=[NodeFeature.ATOMIC_NUMBER,
                                   NodeFeature.NATURAL_ATOMIC_CHARGE,
