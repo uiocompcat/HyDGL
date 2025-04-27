@@ -18,7 +18,7 @@ jobs:
 
             conda install -y pytorch cudatoolkit -c pytorch
             
-            conda install -y pyg -c pyg -c conda-forge
+            conda install -y pyg -c pyg
             conda install -y -c plotly plotly 
 
             conda config --set auto_update_conda no
