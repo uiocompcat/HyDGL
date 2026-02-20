@@ -55,9 +55,3 @@ There are two main parts in the ``HyDGL`` package. The first one is the ``GraphG
 This general structure is displayed by the following UML diagram.
 
 .. image:: ./doc/uml.png
-
-
-Difficulties?
------------
-
-If you encounter any problems, errors or bugs please do not hesitate to open an issue or directly contact me via mail (hanneskn@uio.no).
