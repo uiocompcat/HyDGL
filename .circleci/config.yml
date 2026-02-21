@@ -16,7 +16,7 @@ jobs:
             conda install -c conda-forge parameterized 
             conda install -qy conda-build anaconda-client pytest pytest-cov
 
-            conda install conda-forge::pytorch-cpu
+            pip install torch --index-url https://download.pytorch.org/whl/cpu
             pip install torch_geometric
             
             conda install -y -c plotly plotly 
