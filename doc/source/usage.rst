@@ -6,7 +6,7 @@ To generate graphs we need to setup a ``GraphGenerator`` object that operates ba
 .. code-block:: python
    :linenos:
 
-    import HyDGL as HyDGL
+    import HyDGL
 
     # get the QM data dictionary for the moleulce
     qm_data_dict = # your code for obtaining the dictionary
