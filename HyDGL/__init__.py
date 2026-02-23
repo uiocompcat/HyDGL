@@ -7,30 +7,25 @@ __all__ = [
     "FileHandler",
 ]
 
-def QmData(*args, **kwargs):
-    from .qm_data import QmData as _QmData
-    return _QmData(*args, **kwargs)
-
-def Graph(*args, **kwargs):
-    from .graph import Graph as _Graph
-    return _Graph(*args, **kwargs)
-
-def GraphGenerator(*args, **kwargs):
-    from .graph_generator import GraphGenerator as _GraphGenerator
-    return _GraphGenerator(*args, **kwargs)
-
-def GraphGeneratorSettings(*args, **kwargs):
-    from .graph_generator_settings import (
-        GraphGeneratorSettings as _GraphGeneratorSettings,
-    )
-    return _GraphGeneratorSettings(*args, **kwargs)
-
-def ElementLookUpTable(*args, **kwargs):
-    from .element_look_up_table import ElementLookUpTable as _ElementLookUpTable
-    return _ElementLookUpTable(*args, **kwargs)
-
-def FileHandler(*args, **kwargs):
-    from .file_handler import FileHandler as _FileHandler
-    return _FileHandler(*args, **kwargs)
+def __getattr__(name):
+    if name == "GraphGeneratorSettings":
+        from .graph_generator_settings import GraphGeneratorSettings
+        return GraphGeneratorSettings
+    if name == "Graph":
+        from .graph import Graph
+        return Graph
+    if name == "GraphGenerator":
+        from .graph_generator import GraphGenerator
+        return GraphGenerator
+    if name == "QmData":
+        from .qm_data import QmData
+        return QmData
+    if name == "ElementLookUpTable":
+        from .element_look_up_table import ElementLookUpTable
+        return ElementLookUpTable
+    if name == "FileHandler":
+        from .file_handler import FileHandler
+        return FileHandler
+    raise AttributeError(f"module {__name__} has no attribute {name}")
 
 __version__ = '0.1'
